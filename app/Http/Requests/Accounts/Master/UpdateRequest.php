@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Accounts\Master;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class UpdateRequest extends FormRequest
 {
@@ -23,9 +24,10 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
+        $id=encryptor('decrypt',$r->uptoken);
         return [
             'head_name'=> 'required',
-            'head_code'=> 'required'
+            'head_code'=> 'required|unique:master_accounts,head_code,'.$id
         ];
     }
     public function messages(){

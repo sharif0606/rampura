@@ -25,8 +25,8 @@ class AddNewRequest extends FormRequest
     {
         return [
             'head_name'=> 'required',
-            'head_code'=> 'required'
-        ];
+            'head_code'=> 'required|unique:master_accounts,head_code'
+        ]; 
     }
     public function messages(){
         return [
