@@ -146,9 +146,11 @@ class BeparianPurchaseController extends Controller
      * @param  \App\Models\beparian_purchase  $beparian_purchase
      * @return \Illuminate\Http\Response
      */
-    public function show(beparian_purchase $beparian_purchase)
+    public function show($id)
     {
-        //
+        $show_data= Beparian_purchase::findOrFail(encryptor('decrypt',$id));
+        $purDetail= Purchase_details::where('beparian_purchase_id',$show_data->id)->get();
+        return view('beparianPurchase.show',compact('show_data','purDetail'));
     }
 
     /**

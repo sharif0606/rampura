@@ -47,6 +47,9 @@
                                 <td>{{$st[$pur->status]}}</td>
                                 <td>{{$pst[$pur->payment_status]}}</td>
                                 <td class="white-space-nowrap">
+                                    <a href="{{route(currentUser().'.purchase.show',encryptor('encrypt',$pur->id))}}">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>&nbsp;
                                     <a href="{{route(currentUser().'.purchase.edit',encryptor('encrypt',$pur->id))}}">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>

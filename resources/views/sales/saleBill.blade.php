@@ -8,7 +8,10 @@
     <div class="row match-height">
         <div class="col-12">
             <div class="card">
-                <div class="card-content">
+                <div class="text-end">
+                    <button type="button" class="btn btn-info" onclick="printDiv('result_show')">Print</button>
+                </div>
+                <div class="card-content" id="result_show">
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="text-center">
@@ -123,3 +126,14 @@
     </div>
 </section>
 @endsection
+@push('scripts')
+<script>
+    function printDiv(divName) {
+		var printContents = document.getElementById(divName).innerHTML;
+		var originalContents = document.body.innerHTML;
+		document.body.innerHTML = printContents;
+		window.print();
+		document.body.innerHTML = originalContents;
+	}
+</script>
+@endpush

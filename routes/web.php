@@ -154,6 +154,7 @@ Route::group(['middleware'=>isOwner::class],function(){
 
         //Sale
         Route::resource('sales',sales::class,['as'=>'owner']);
+        Route::get('/sale-view{id}', [sales::class,'saleView'])->name('owner.sales.view');
         Route::get('/product_sc', [sales::class,'product_sc'])->name('owner.sales.product_sc');
         Route::get('/product_sc_d', [sales::class,'product_sc_d'])->name('owner.sales.product_sc_d');
 

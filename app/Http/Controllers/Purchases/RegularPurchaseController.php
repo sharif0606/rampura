@@ -146,9 +146,11 @@ class RegularPurchaseController extends Controller
      * @param  \App\Models\Purchases\regular_purchase  $regular_purchase
      * @return \Illuminate\Http\Response
      */
-    public function show(regular_purchase $regular_purchase)
+    public function show($id)
     {
-        //
+        $show_data= Regular_purchase::findOrFail(encryptor('decrypt',$id));
+        $purDetail= Purchase_details::where('regular_purchase_id',$show_data->id)->get();
+        return view('regularPurchase.show',compact('show_data','purDetail'));
     }
 
     /**
