@@ -4,7 +4,7 @@ namespace App\Models\Sales;
 
 use App\Models\Products\Product;
 use App\Models\Settings\Branch;
-use App\Models\Customers\customer;
+use App\Models\Customers\Customer;
 use App\Models\Stock\Stock;
 use App\Models\Settings\Warehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +15,7 @@ class Sales extends Model
 {
     use HasFactory,SoftDeletes;
     public function customer(){
-        return $this->belongsTo(customer::class);
+        return $this->belongsTo(Customer::class);
     }
     public function branch(){
         return $this->belongsTo(Branch::class);
