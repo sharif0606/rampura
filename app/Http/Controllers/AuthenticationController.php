@@ -34,7 +34,7 @@ class AuthenticationController extends Controller
                     $user->contact_no=$request->PhoneNumber;
                     $user->email=$request->EmailAddress;
                     $user->password=Hash::make($request->password);
-                    $user->company_id=$company->id;
+                    $user->company_id=1;//$company->id;
                     $user->role_id=2;
                     if($user->save())
                         return redirect('login')->with($this->resMessageHtml(true,null,'Successfully Registred'));
