@@ -7,10 +7,16 @@
 @endpush
 @section('content')
 <style>
-    @media screen and (max-width: 800px) {
-  .tbl-scroll {
-    overflow: scroll;
-  }
+@media screen and (max-width: 800px) {
+    .tbl-scroll {
+        overflow: scroll;
+    }
+}
+body{
+    font-size: 11px !important;
+}
+.form-control{
+    font-size: 11px !important;
 }
 </style>
     <section id="multiple-column-form">
@@ -109,43 +115,43 @@
                                     <table class="table mb-5">
                                         <thead>
                                             <tr class="bg-primary text-white text-center">
-                                                <th class="p-2" data-title="Description of Goods">Des.of.goods</th>
-                                                <th class="p-2" data-title="Lot no/ Lc no">Lot/Lc No</th>
-                                                <th class="p-2" data-title="Trade Marek/ Brand">Brand</th>
-                                                <th class="p-2" data-title="Quantity Bag">Qty Bag</th>
-                                                <th class="p-2" data-title="Quantity kg">Qty Kg</th>
-                                                <th class="p-2" data-title="Less Quantity kg">L.Qty Kg</th>
-                                                <th class="p-2" data-title="Actual Quantity">A.Quantity</th>
-                                                <th class="p-2" data-title="Discount in Kg" >Dis.kg</th>
-                                                <th class="p-2" data-title="Rate in kg">Rate Kg</th>
-                                                <th class="p-2" >Amount</th>
-                                                <th class="p-2" data-title="Purchase Commission">P.Com</th>
-                                                <th class="p-2" data-title="Transport Cost">Tr.Cost</th>
-                                                <th class="p-2" data-title="Unloading Cost">Un.Cost</th>
-                                                <th class="p-2" data-title="Sales income per bag(2tk)">S.income.per.bag</th>
-                                                <th class="p-2" data-title="Total Amount">T.Amount</th>
-                                                <th class="p-2">Action</th>
+                                                <th class="py-2 px-1" data-title="Description of Goods">Des.of.goods</th>
+                                                <th class="py-2 px-1" data-title="Lot no/ Lc no">Lot/Lc No</th>
+                                                <th class="py-2 px-1" data-title="Trade Marek/ Brand">Brand</th>
+                                                <th class="py-2 px-1" data-title="Quantity Bag">Qty Bag</th>
+                                                <th class="py-2 px-1" data-title="Quantity kg">Qty Kg</th>
+                                                <th class="py-2 px-1" data-title="Less Quantity kg">L.Qty Kg</th>
+                                                <th class="py-2 px-1" data-title="Actual Quantity">A.Quantity</th>
+                                                <th class="py-2 px-1" data-title="Discount in Kg" >Dis.kg</th>
+                                                <th class="py-2 px-1" data-title="Rate in kg">Rate Kg</th>
+                                                <th class="py-2 px-1" >Amount</th>
+                                                <th class="py-2 px-1" data-title="Purchase Commission">P.Com</th>
+                                                <th class="py-2 px-1" data-title="Transport Cost">Tr.Cost</th>
+                                                <th class="py-2 px-1" data-title="Unloading Cost">Un.Cost</th>
+                                                <th class="py-2 px-1" data-title="Sales income per bag(2tk)">S.income.per.bag</th>
+                                                <th class="py-2 px-1" data-title="Total Amount">T.Amount</th>
+                                                <th class="py-2 px-1">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="details_data">
                                             @forelse ($purchaseDetails as $p)
                                             <tr class="text-center">
-                                                <td class="p-2"><input type="hidden" name="product_id[]" value="{{$p->product_id}}">{{$p->product?->product_name}}</td>
-                                                <td class="p-2"><input onkeyup="get_cal(this)" name="lot_no[]" type="text" value="{{$p->lot_no}}" class="form-control lot_no"></td>
-                                                <td class="p-2"><input onkeyup="get_cal(this)" name="brand[]" type="text" value="{{$p->brand}}" class="form-control brand"></td>
-                                                <td class="p-2"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" value="{{$p->quantity_bag}}" class="form-control qty_bag"></td>
-                                                <td class="p-2"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" value="{{$p->quantity_kg}}" class="form-control qty_kg"></td>
-                                                <td class="p-2"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" value="{{$p->less_quantity_kg}}" class="form-control less_qty_kg"></td>
-                                                <td class="p-2"><input name="actual_qty[]" readonly type="text" class="form-control actual_qty" value="{{$p->actual_quantity}}"></td>
-                                                <td class="p-2"><input name="discount[]" type="text" class="form-control qty_discount" value="{{$p->discount}}"></td>
-                                                <td class="p-2"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value="{{$p->rate_kg}}"></td>
-                                                <td class="p-2"><input name="amount[]" readonly type="text" class="form-control amount" value="{{$p->amount}}"></td>
-                                                <td class="p-2"><input onkeyup="get_cal(this)" name="purchase_commission[]" type="text" class="form-control purchase_commission" value="{{$p->purchase_commission}}"></td>
-                                                <td class="p-2"><input onkeyup="get_cal(this)" name="transport_cost[]" type="text" class="form-control transport_cost" value="{{$p->transport_cost}}"></td>
-                                                <td class="p-2"><input onkeyup="get_cal(this)" name="unloading_cost[]" type="text" class="form-control unloading_cost" value="{{$p->unloading_cost}}"></td>
-                                                <td class="p-2"><input name="sales_income_per_bag[]" readonly type="text" class="form-control sales_income_per_bag" value="{{$p->sale_income_per_bag}}"></td>
-                                                <td class="p-2"><input name="total_amount[]" readonly type="text" class="form-control total_amount" value="{{$p->total_amount}}"></input></td>
-                                                <td class="p-2 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>
+                                                <td class="py-2 px-1"><input type="hidden" name="product_id[]" value="{{$p->product_id}}">{{$p->product?->product_name}}</td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="lot_no[]" type="text" value="{{$p->lot_no}}" class="form-control lot_no"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="brand[]" type="text" value="{{$p->brand}}" class="form-control brand"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" value="{{$p->quantity_bag}}" class="form-control qty_bag"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" value="{{$p->quantity_kg}}" class="form-control qty_kg"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" value="{{$p->less_quantity_kg}}" class="form-control less_qty_kg"></td>
+                                                <td class="py-2 px-1"><input name="actual_qty[]" readonly type="text" class="form-control actual_qty" value="{{$p->actual_quantity}}"></td>
+                                                <td class="py-2 px-1"><input name="discount[]" type="text" class="form-control qty_discount" value="{{$p->discount}}"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value="{{$p->rate_kg}}"></td>
+                                                <td class="py-2 px-1"><input name="amount[]" readonly type="text" class="form-control amount" value="{{$p->amount}}"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="purchase_commission[]" type="text" class="form-control purchase_commission" value="{{$p->purchase_commission}}"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="transport_cost[]" type="text" class="form-control transport_cost" value="{{$p->transport_cost}}"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="unloading_cost[]" type="text" class="form-control unloading_cost" value="{{$p->unloading_cost}}"></td>
+                                                <td class="py-2 px-1"><input name="sales_income_per_bag[]" readonly type="text" class="form-control sales_income_per_bag" value="{{$p->sale_income_per_bag}}"></td>
+                                                <td class="py-2 px-1"><input name="total_amount[]" readonly type="text" class="form-control total_amount" value="{{$p->total_amount}}"></input></td>
+                                                <td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>
                                             </tr>
                                             @empty
                                             <tr class="text-center">

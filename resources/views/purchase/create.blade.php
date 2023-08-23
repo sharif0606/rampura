@@ -7,10 +7,16 @@
 @endpush
 @section('content')
 <style>
-    @media screen and (max-width: 800px) {
-  .tbl-scroll {
-    overflow: scroll;
-  }
+@media screen and (max-width: 800px) {
+    .tbl-scroll {
+        overflow: scroll;
+    }
+}
+body{
+    font-size: 11px !important;
+}
+.form-control{
+    font-size: 11px !important;
 }
 </style>
     <section id="multiple-column-form">
