@@ -38,7 +38,7 @@ class JournalVoucherController extends Controller
     public function create()
     {
         $paymethod=array();
-        $account_data=Child_one::whereIn('head_code',[11001,11002])->where(company())->get();
+        $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
         
         if($account_data){
             foreach($account_data as $ad){
