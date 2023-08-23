@@ -36,25 +36,29 @@ class ReportController extends Controller
 
     public function salesReport(Request $request)
     {
+        // dd($request->all());
+        $customers = Customer::where(company())->get();
 
-        if ($request->fdate) {
-            $tdate = $request->tdate ? $request->tdate : $request->fdate;
-            
-            // Convert the input dates to Carbon instances and format them to compare only dates.
-            $fdate = Carbon::parse($request->fdate)->toDateString();
-            $tdate = Carbon::parse($tdate)->toDateString();
-        
-            $data = Sales_details::join('sales', 'sales.id', '=', 'sales_details.sales_id')
-                ->whereBetween(DB::raw('DATE(sales_details.created_at)'), [$fdate, $tdate])
-                ->groupBy('sales_details.lot_no')
-                ->select('sales.*', 'sales_details.*')
-                ->get();
-        } else {
-            $data = Sales_details::join('sales', 'sales.id', '=', 'sales_details.sales_id')
-                ->groupBy('sales_details.lot_no')
-                ->select('sales.*', 'sales_details.*')
-                ->get();
+        $query = Sales_details::join('sales', 'sales.id', '=', 'sales_details.sales_id')
+            ->groupBy('sales_details.lot_no')
+            ->select('sales.*', 'sales_details.*');
+
+        if ($request->customer) {
+            $query->where('sales.customer_id', $request->customer);
+            // dd($query->toSql());
         }
-        return view('reports.salesview',compact('data'));
+
+        if ($request->fdate && $request->tdate) {
+            $fdate = Carbon::parse($request->fdate)->toDateString();
+            $tdate = Carbon::parse($request->tdate)->toDateString();
+    
+            $query->whereBetween(DB::raw('DATE(sales.sales_date)'), [$fdate, $tdate]);
+            //  dd($query->toSql());
+        }
+
+        $data = $query->get();
+        
+        return view('reports.salesview', compact('data', 'customers'));
     }
+
 }

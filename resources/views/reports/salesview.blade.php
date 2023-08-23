@@ -30,22 +30,19 @@
                                     </div>
 
 
-                                    {{-- <div class="col-md-2 mt-4">
-                                        <label for="supplierName" class="float-end"><h6>{{__('Customer')}}</h6></label>
+                                    <div class="col-md-2 mt-4">
+                                        <label for="supplierName" class="float-end"><h6>{{__('Party Name')}}</h6></label>
                                     </div>
                                     <div class="col-md-4 mt-4">
-                                        
-                                        <select class="form-control form-select" name="cus" id="cus">
-                                            <option value="">Select Customer</option>
+                                        <select class="form-control form-select" name="customer" id="customer">
+                                            <option value="">Select Party</option>
                                             @forelse($customers as $c)
-                                                <option value="{{$c->id}}" {{isset($_GET['cus'])&& $_GET['cus']==$c->id?'selected':''}}> {{ $c->customer_name}}</option>
+                                                <option value="{{$c->id}}" {{isset($_GET['customer'])&& $_GET['customer']==$c->id?'selected':''}}> {{ $c->customer_name}}</option>
                                             @empty
                                                 <option value="">No data found</option>
                                             @endforelse
                                         </select>
-                                    </div> --}}
-
-
+                                    </div>
                                 </div>
                                 <div class="row m-4">
                                     <div class="col-6 d-flex justify-content-end">
@@ -61,6 +58,7 @@
                                     <thead>
                                         <tr class="bg-primary text-white text-center">
                                             <th class="p-2">{{__('#SL')}}</th>
+                                            <th class="p-2" >{{__('Date')}}</th>
                                             <th class="p-2" data-title="Party Name">{{__('Party Name')}}</th>
                                             <th class="p-2" data-title="Description of Goods">{{__('Des.of Goods')}}</th>
                                             <th class="p-2" data-title="LC / LOT NO">{{__('Lc/Lot no')}}</th>
@@ -84,6 +82,7 @@
                                         @forelse($data as $d)
                                         <tr class="text-center">
                                             <th scope="row">{{ ++$loop->index }}</th>
+                                            <td>{{$d->sales_date}}</td>
                                             <td>{{$d->customer?->customer_name}}</td>
                                             <td>{{$d->product?->product_name}}</td>
                                             <td>{{$d->lot_no}}</td>
