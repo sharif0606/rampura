@@ -116,21 +116,21 @@ body{
                                         <table class="table mb-2">
                                             <thead>
                                                 <tr class="bg-primary text-white text-center">
-                                                    <th class="p-2" data-title="Description of Goods">Des.of.goods</th>
-                                                    <th class="p-2" data-title="Lot no/ Lc no">Lot/Lc No</th>
-                                                    <th class="p-2" data-title="Trade Marek/ Brand">Brand/TM</th>
-                                                    <th class="p-2" data-title="Stock Total Bag">T.Bag</th>
-                                                    <th class="p-2" data-title="Quantity Bag">Qty Bag</th>
-                                                    <th class="p-2" data-title="Stock Total Kg">T.Qty</th>
-                                                    <th class="p-2" data-title="Quantity Kg">Qty Kg</th>
-                                                    {{-- <th class="p-2" data-title="Purchase Price">PP</th> --}}
-                                                    <th class="p-2" data-title="Rate in Kg">R.Kg</th>
-                                                    <th class="p-2" >Amount</th>
-                                                    <th class="p-2" data-title="Sales Commission">S.Com</th>
-                                                    <th class="p-2" data-title="Transport Charge">Tr.Charge</th>
-                                                    <th class="p-2" data-title="Labour Charge">La.Charge</th>
-                                                    <th class="p-2" data-title="Total Amount">T.Amount</th>
-                                                    <th class="p-2">Action</th>
+                                                    <th class="py-2 px-1" data-title="Description of Goods">Des.of.goods</th>
+                                                    <th class="py-2 px-1" data-title="Lot no/ Lc no">Lot/Lc No</th>
+                                                    <th class="py-2 px-1" data-title="Trade Marek/ Brand">Brand/TM</th>
+                                                    <th class="py-2 px-1" data-title="Stock Total Bag">T.Bag</th>
+                                                    <th class="py-2 px-1" data-title="Quantity Bag">Qty Bag</th>
+                                                    <th class="py-2 px-1" data-title="Stock Total Kg">T.Qty</th>
+                                                    <th class="py-2 px-1" data-title="Quantity Kg">Qty Kg</th>
+                                                    {{-- <th class="py-2 px-1" data-title="Purchase Price">PP</th> --}}
+                                                    <th class="py-2 px-1" data-title="Rate in Kg">R.Kg</th>
+                                                    <th class="py-2 px-1" >Amount</th>
+                                                    <th class="py-2 px-1" data-title="Sales Commission">S.Com</th>
+                                                    <th class="py-2 px-1" data-title="Transport Charge">Tr.Charge</th>
+                                                    <th class="py-2 px-1" data-title="Labour Charge">La.Charge</th>
+                                                    <th class="py-2 px-1" data-title="Total Amount">T.Amount</th>
+                                                    <th class="py-2 px-1">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="details_data">
@@ -138,17 +138,17 @@ body{
                                             </tbody>
                                             <tfoot>
                                                 <tr class=" text-end">
-                                                    <th colspan="3" class="text-center p-2">Total</th>
-                                                    <th class="p-2"></th>
-                                                    <th class="p-2 text-center total_bag">0</th>
-                                                    <th class="p-2"></th>
-                                                    <th class="p-2 text-center total_qty_kg">0</th>
-                                                    <th class="p-2 text-center"></th>
-                                                    <th class="p-2 text-center total_am">0</th>
-                                                    <th class="p-2 text-center total_sale_commission">0</th>
-                                                    <th class="p-2 text-center total_trn_charge">0</th>
-                                                    <th class="p-2 text-center total_labour_charge">0</th>
-                                                    <th colspan="2" class="p-2 text-start tgrandtotalP">0</th>
+                                                    <th colspan="3" class="text-center py-2 px-1">Total</th>
+                                                    <th class="py-2 px-1"></th>
+                                                    <th class="py-2 px-1 text-center total_bag">0</th>
+                                                    <th class="py-2 px-1"></th>
+                                                    <th class="py-2 px-1 text-center total_qty_kg">0</th>
+                                                    <th class="py-2 px-1 text-center"></th>
+                                                    <th class="py-2 px-1 text-center total_am">0</th>
+                                                    <th class="py-2 px-1 text-center total_sale_commission">0</th>
+                                                    <th class="py-2 px-1 text-center total_trn_charge">0</th>
+                                                    <th class="py-2 px-1 text-center total_labour_charge">0</th>
+                                                    <th colspan="2" class="py-2 px-1 text-start tgrandtotalP">0</th>
                                                     <input name="tgrandtotal" type="hidden" class="form-control tgrandtotal_p" value="0">
                                                 </tr>
                                             </tfoot>

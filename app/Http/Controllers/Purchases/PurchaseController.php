@@ -84,23 +84,24 @@ class PurchaseController extends Controller
         if($request->item_id){
             $product=Product::where(company())->where('id',$request->item_id)->first();
             $data='<tr class="text-center">';
-            $data.='<td class="p-2">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'"></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="lot_no[]" type="text" class="form-control lot_no"></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="brand[]" type="text" class="form-control brand"></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" class="form-control qty_bag"></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" class="form-control qty_kg"></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" class="form-control less_qty_kg"></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="actual_qty[]" readonly type="text" class="form-control actual_qty" value="0"></td>';
-            $data.='<td class="p-2"><input name="discount[]" type="text" class="form-control qty_discount"></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value=""></td>';
+            $data.='<td class="py-2 px-1">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="lot_no[]" type="text" class="form-control lot_no"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="brand[]" type="text" class="form-control brand"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" class="form-control qty_bag"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" class="form-control qty_kg"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" class="form-control less_qty_kg"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="actual_qty[]" readonly type="text" class="form-control actual_qty" value="0"></td>';
+            $data.='<td class="py-2 px-1"><input name="discount[]" type="text" class="form-control qty_discount"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value=""></td>';
             
-            $data.='<td class="p-2"><input name="amount[]" readonly type="text" class="form-control amount" value="0"></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="purchase_commission[]" type="text" class="form-control purchase_commission"></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="transport_cost[]" type="text" class="form-control transport_cost"></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="unloading_cost[]" type="text" class="form-control unloading_cost"></td>';
-            $data.='<td class="p-2"><input name="sales_income_per_bag[]" readonly type="text" class="form-control sales_income_per_bag" value="0"></td>';
-            $data.='<td class="p-2"><input name="total_amount[]" readonly type="text" class="form-control total_amount" value="0"></input></td>';
-            $data.='<td class="p-2 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>';
+            $data.='<td class="py-2 px-1"><input name="amount[]" readonly type="text" class="form-control amount" value="0"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="purchase_commission[]" type="text" class="form-control purchase_commission"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="transport_cost[]" type="text" class="form-control transport_cost"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="unloading_cost[]" type="text" class="form-control unloading_cost"></td>';
+            $data.='<td class="py-2 px-1"><input name="sales_income_per_bag[]" readonly type="text" class="form-control sales_income_per_bag" value="0"></td>';
+            $data.='<td class="py-2 px-1"><input name="total_amount[]" readonly type="text" class="form-control total_amount" value="0"></input></td>';
+            $data.='<td class="py-2 px-1 price_per_kg"></td>';
+            $data.='<td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>';
             $data.='</tr>';
             
             print_r(json_encode($data));  

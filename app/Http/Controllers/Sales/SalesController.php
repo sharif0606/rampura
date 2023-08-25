@@ -85,20 +85,20 @@ class SalesController extends Controller
             $product=collect(\DB::select("SELECT products.id,products.product_name,products.bar_code,stocks.lot_no,stocks.unit_price,sum(stocks.quantity_bag) as bag_qty, sum(stocks.quantity) as qty, stocks.brand FROM `products` JOIN stocks on stocks.product_id=products.id WHERE stocks.company_id=".company()['company_id']." and stocks.branch_id=".$request->branch_id." and stocks.warehouse_id=".$request->warehouse_id." and stocks.product_id=".$item_id." and stocks.lot_no=".$lot_no." and stocks.brand=".$brand." and stocks.batch_id='".$batch_id."' GROUP BY stocks.batch_id"))->first();
             
             $data='<tr class="productlist text-center">';
-            $data.='<td class="p-2">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'" class="product_id_list"><input name="stockqty[]" type="hidden" value="'.$product->qty.'" class="stockqty"><input name="batch_id[]" type="hidden" value="'.$batch_id.'" class="batch_id_list"></td>';
-            $data.='<td class="p-2"><input readonly name="lot_no[]" type="text" class="form-control lot_no" value="'.$product->lot_no.'"></td>';
-            $data.='<td class="p-2"><input readonly name="brand[]" type="text" class="form-control brand"  value="'.$product->brand.'"></td>';
-            $data.='<td class="p-2"><input  type="text" class="form-control stock_bag" value="'.$product->bag_qty.'" disabled></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" class="form-control qty_bag"></td>';
-            $data.='<td class="p-2"><input  type="text" class="form-control" value="'.$product->qty.'" disabled></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" class="form-control qty_kg"></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value=""></td>';
-            $data.='<td class="p-2"><input name="amount[]" readonly type="text" class="form-control amount" value="0"></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="sale_commission[]" type="text" class="form-control sale_commission" value=""></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="transport_cost[]" type="text" class="form-control transport_cost" value=""></td>';
-            $data.='<td class="p-2"><input onkeyup="get_cal(this)" name="labour_cost[]" type="text" class="form-control labour_cost" value=""></td>';
-            $data.='<td class="p-2"><input name="total_amount[]" readonly type="text" class="form-control total_amount" value="0"></input></td>';
-            $data.='<td class="p-2 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>';
+            $data.='<td class="py-2 px-1">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'" class="product_id_list"><input name="stockqty[]" type="hidden" value="'.$product->qty.'" class="stockqty"><input name="batch_id[]" type="hidden" value="'.$batch_id.'" class="batch_id_list"></td>';
+            $data.='<td class="py-2 px-1"><input readonly name="lot_no[]" type="text" class="form-control lot_no" value="'.$product->lot_no.'"></td>';
+            $data.='<td class="py-2 px-1"><input readonly name="brand[]" type="text" class="form-control brand"  value="'.$product->brand.'"></td>';
+            $data.='<td class="py-2 px-1"><input  type="text" class="form-control stock_bag" value="'.$product->bag_qty.'" disabled></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" class="form-control qty_bag"></td>';
+            $data.='<td class="py-2 px-1"><input  type="text" class="form-control" value="'.$product->qty.'" disabled></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" class="form-control qty_kg"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value=""></td>';
+            $data.='<td class="py-2 px-1"><input name="amount[]" readonly type="text" class="form-control amount" value="0"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="sale_commission[]" type="text" class="form-control sale_commission" value=""></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="transport_cost[]" type="text" class="form-control transport_cost" value=""></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="labour_cost[]" type="text" class="form-control labour_cost" value=""></td>';
+            $data.='<td class="py-2 px-1"><input name="total_amount[]" readonly type="text" class="form-control total_amount" value="0"></input></td>';
+            $data.='<td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>';
             $data.='</tr>';
             
             print_r(json_encode($data));  

@@ -114,22 +114,23 @@ body{
                                     <table class="table mb-5">
                                         <thead>
                                             <tr class="bg-primary text-white text-center">
-                                                <th class="p-2" data-title="Description of Goods">Des.of.goods</th>
-                                                <th class="p-2" data-title="Lot no/ Lc no">Lot/Lc No</th>
-                                                <th class="p-2" data-title="Trade Marek/ Brand">Brand</th>
-                                                <th class="p-2" data-title="Quantity Bag">Qty Bag</th>
-                                                <th class="p-2" data-title="Quantity kg">Qty Kg</th>
-                                                <th class="p-2" data-title="Less Quantity kg">L.Qty Kg</th>
-                                                <th class="p-2" data-title="Actual Quantity">A.Quantity</th>
-                                                <th class="p-2" data-title="Discount in Kg" >Dis.kg</th>
-                                                <th class="p-2" data-title="Rate in kg">Rate Kg</th>
-                                                <th class="p-2" >Amount</th>
-                                                <th class="p-2" data-title="Purchase Commission">P.Com</th>
-                                                <th class="p-2" data-title="Transport Cost">Tr.Cost</th>
-                                                <th class="p-2" data-title="Unloading Cost">Un.Cost</th>
-                                                <th class="p-2" data-title="Sales income per bag(2tk)">S.income.per.bag</th>
-                                                <th class="p-2" data-title="Total Amount">Total Amount</th>
-                                                <th class="p-2">Action</th>
+                                                <th class="py-2 px-1" data-title="Description of Goods">Des.of.goods</th>
+                                                <th class="py-2 px-1" data-title="Lot no/ Lc no">Lot/Lc No</th>
+                                                <th class="py-2 px-1" data-title="Trade Marek/ Brand">Brand</th>
+                                                <th class="py-2 px-1" data-title="Quantity Bag">Qty Bag</th>
+                                                <th class="py-2 px-1" data-title="Quantity kg">Qty Kg</th>
+                                                <th class="py-2 px-1" data-title="Less Quantity kg">L.Qty Kg</th>
+                                                <th class="py-2 px-1" data-title="Actual Quantity">A.Quantity</th>
+                                                <th class="py-2 px-1" data-title="Discount in Kg" >Dis.kg</th>
+                                                <th class="py-2 px-1" data-title="Rate in kg">Rate Kg</th>
+                                                <th class="py-2 px-1" >Amount</th>
+                                                <th class="py-2 px-1" data-title="Purchase Commission">P.Com</th>
+                                                <th class="py-2 px-1" data-title="Transport Cost">Tr.Cost</th>
+                                                <th class="py-2 px-1" data-title="Unloading Cost">Un.Cost</th>
+                                                <th class="py-2 px-1" data-title="Sales income per bag(2tk)">S.income.per.bag</th>
+                                                <th class="py-2 px-1" data-title="Total Amount">Total Amount</th>
+                                                <th class="py-2 px-1" data-title="Price Per Kg">P.KG</th>
+                                                <th class="py-2 px-1">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="details_data">
@@ -270,30 +271,32 @@ function return_row_with_data(item_id){
 }
 //INCREMENT ITEM
 function removerow(e){
-  $(e).parents('tr').remove();
+  $(e).closest('tr').remove();
   total_calculate();
 }
 
 //CALCUALATED SALES PRICE
 function get_cal(e){
-  var quantity_bag = (isNaN(parseFloat($(e).parents('tr').find('.qty_bag').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.qty_bag').val().trim()); 
-  var quantity_kg = (isNaN(parseFloat($(e).parents('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.qty_kg').val().trim()); 
-  var less_quantity_kg = (isNaN(parseFloat($(e).parents('tr').find('.less_qty_kg').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.less_qty_kg').val().trim()); 
-  var rate_in_kg = (isNaN(parseFloat($(e).parents('tr').find('.rate_in_kg').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.rate_in_kg').val().trim()); 
-  var purchase_commission = (isNaN(parseFloat($(e).parents('tr').find('.purchase_commission').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.purchase_commission').val().trim()); 
-  var transport_cost = (isNaN(parseFloat($(e).parents('tr').find('.transport_cost').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.transport_cost').val().trim()); 
-  var unloading_cost = (isNaN(parseFloat($(e).parents('tr').find('.unloading_cost').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.unloading_cost').val().trim()); 
+  var quantity_bag = (isNaN(parseFloat($(e).closest('tr').find('.qty_bag').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_bag').val().trim()); 
+  var quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_kg').val().trim()); 
+  var less_quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()); 
+  var rate_in_kg = (isNaN(parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()); 
+  var purchase_commission = (isNaN(parseFloat($(e).closest('tr').find('.purchase_commission').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.purchase_commission').val().trim()); 
+  var transport_cost = (isNaN(parseFloat($(e).closest('tr').find('.transport_cost').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.transport_cost').val().trim()); 
+  var unloading_cost = (isNaN(parseFloat($(e).closest('tr').find('.unloading_cost').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.unloading_cost').val().trim()); 
 
   var sales_income_per_bag = ((quantity_bag * 2));
   var actual_quantity = ((quantity_kg - less_quantity_kg));
   var cost = ((purchase_commission + transport_cost + unloading_cost + sales_income_per_bag));
   var amount = ((actual_quantity * rate_in_kg));
   var total_amount = ((amount - cost));
+  var pricePerKg = ((total_amount/actual_quantity));
 
-  $(e).parents('tr').find('.sales_income_per_bag').val(sales_income_per_bag);
-  $(e).parents('tr').find('.actual_qty').val(actual_quantity);
-  $(e).parents('tr').find('.amount').val(amount);
-  $(e).parents('tr').find('.total_amount').val(total_amount);
+  $(e).closest('tr').find('.sales_income_per_bag').val(sales_income_per_bag);
+  $(e).closest('tr').find('.actual_qty').val(actual_quantity);
+  $(e).closest('tr').find('.amount').val(amount);
+  $(e).closest('tr').find('.total_amount').val(total_amount);
+  $(e).closest('tr').find('.price_per_kg').text(pricePerKg.toFixed(2));
 
   console.log('sales_income_per_bag:', sales_income_per_bag);
   console.log('actual_quantity:', actual_quantity);

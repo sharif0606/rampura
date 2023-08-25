@@ -130,6 +130,7 @@ body{
                                                 <th class="py-2 px-1" data-title="Unloading Cost">Un.Cost</th>
                                                 <th class="py-2 px-1" data-title="Sales income per bag(2tk)">S.income.per.bag</th>
                                                 <th class="py-2 px-1" data-title="Total Amount">T.Amount</th>
+                                                <th class="py-2 px-1" data-title="Price Per Kg">P.KG</th>
                                                 <th class="py-2 px-1">Action</th>
                                             </tr>
                                         </thead>
@@ -151,6 +152,13 @@ body{
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="unloading_cost[]" type="text" class="form-control unloading_cost" value="{{$p->unloading_cost}}"></td>
                                                 <td class="py-2 px-1"><input name="sales_income_per_bag[]" readonly type="text" class="form-control sales_income_per_bag" value="{{$p->sale_income_per_bag}}"></td>
                                                 <td class="py-2 px-1"><input name="total_amount[]" readonly type="text" class="form-control total_amount" value="{{$p->total_amount}}"></input></td>
+                                                <td class="py-2 px-1 price_per_kg">
+                                                    @php
+                                                        $pricePerKg = $p->total_amount / $p->actual_quantity;
+                                                        $formattedPricePerKg = number_format($pricePerKg, 2);
+                                                    @endphp
+                                                    {{$formattedPricePerKg}}
+                                                </td>
                                                 <td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>
                                             </tr>
                                             @empty
@@ -295,35 +303,38 @@ function return_row_with_data(item_id){
 }
 //INCREMENT ITEM
 function removerow(e){
-  $(e).parents('tr').remove();
+  $(e).closest('tr').remove();
   total_calculate();
 }
 
 //CALCUALATED SALES PRICE
 function get_cal(e){
-  var quantity_bag = (isNaN(parseFloat($(e).parents('tr').find('.qty_bag').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.qty_bag').val().trim()); 
-  var quantity_kg = (isNaN(parseFloat($(e).parents('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.qty_kg').val().trim()); 
-  var less_quantity_kg = (isNaN(parseFloat($(e).parents('tr').find('.less_qty_kg').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.less_qty_kg').val().trim()); 
-  var rate_in_kg = (isNaN(parseFloat($(e).parents('tr').find('.rate_in_kg').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.rate_in_kg').val().trim()); 
-  var purchase_commission = (isNaN(parseFloat($(e).parents('tr').find('.purchase_commission').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.purchase_commission').val().trim()); 
-  var transport_cost = (isNaN(parseFloat($(e).parents('tr').find('.transport_cost').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.transport_cost').val().trim()); 
-  var unloading_cost = (isNaN(parseFloat($(e).parents('tr').find('.unloading_cost').val().trim()))) ? 0 :parseFloat($(e).parents('tr').find('.unloading_cost').val().trim()); 
+  var quantity_bag = (isNaN(parseFloat($(e).closest('tr').find('.qty_bag').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_bag').val().trim()); 
+  var quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_kg').val().trim()); 
+  var less_quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()); 
+  var rate_in_kg = (isNaN(parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()); 
+  var purchase_commission = (isNaN(parseFloat($(e).closest('tr').find('.purchase_commission').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.purchase_commission').val().trim()); 
+  var transport_cost = (isNaN(parseFloat($(e).closest('tr').find('.transport_cost').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.transport_cost').val().trim()); 
+  var unloading_cost = (isNaN(parseFloat($(e).closest('tr').find('.unloading_cost').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.unloading_cost').val().trim()); 
 
   var sales_income_per_bag = ((quantity_bag * 2));
   var actual_quantity = ((quantity_kg - less_quantity_kg));
   var cost = ((purchase_commission + transport_cost + unloading_cost + sales_income_per_bag));
   var amount = ((actual_quantity * rate_in_kg));
   var total_amount = ((amount - cost));
+  var pricePerKg = ((total_amount/actual_quantity));
 
-  $(e).parents('tr').find('.sales_income_per_bag').val(sales_income_per_bag);
-  $(e).parents('tr').find('.actual_qty').val(actual_quantity);
-  $(e).parents('tr').find('.amount').val(amount);
-  $(e).parents('tr').find('.total_amount').val(total_amount);
+  $(e).closest('tr').find('.sales_income_per_bag').val(sales_income_per_bag);
+  $(e).closest('tr').find('.actual_qty').val(actual_quantity);
+  $(e).closest('tr').find('.amount').val(amount);
+  $(e).closest('tr').find('.total_amount').val(total_amount);
+  $(e).closest('tr').find('.price_per_kg').text(pricePerKg.toFixed(2));
 
-  console.log('sales_income_per_bag:', sales_income_per_bag);
-  console.log('actual_quantity:', actual_quantity);
+  console.log('sales income per bag:', sales_income_per_bag);
+  console.log('actual quantity:', actual_quantity);
   console.log('amount:', amount);
-  console.log('total_amount:', total_amount);
+  console.log('total amount:', total_amount);
+  console.log('price per kg:', pricePerKg);
 
   total_calculate();
 }

@@ -2,13 +2,14 @@
 
 @section('pageTitle',trans('Sales Reports'))
 @section('pageSubTitle',trans('Reports'))
-
 @section('content')
 <section id="multiple-column-form">
     <div class="row match-height">
         <div class="col-12">
             <div class="card">
-                <div class="text-end">
+                <div class="text-end print-section">
+                    <input type="checkbox" id="tdHide" class="checkbox-input">
+                    <label for="tdHide" class="hide-button-label">Hide Amount</label>
                     <button type="button" class="btn btn-info" onclick="printDiv('result_show')">Print</button>
                 </div>
                 <div class="card-content" id="result_show">
@@ -40,17 +41,17 @@
                             <thead>
                                 <tr class="bg-primary text-white text-center">
                                     <th class="p-2">{{__('#SL')}}</th>
-                                    <th class="p-2" data-title="Description of Goods">{{__('Des.of Goods')}}</th>
-                                    <th class="p-2" data-title="LC / LOT NO">{{__('Lc/Lot no')}}</th>
-                                    <th class="p-2" data-title="TRADEMARKE/BRAND NAME">{{__('Trade/Brand')}}</th>
-                                    <th class="p-2" data-title="Quantity Bag">{{__('Q.Bag')}}</th>
-                                    <th class="p-2" data-title="Total Quantity in Kg">{{__('T.Q.KG')}}</th>
-                                    <th class="p-2" data-title="Rate in Kg">{{__('R.KG')}}</th>
-                                    <th class="p-2" data-title="Amount">{{__('Amount')}}</th>
-                                    <th class="p-2" data-title="Sales Commission Commission">{{__('S.COM')}}</th>
-                                    <th class="p-2" data-title="Transport Charge">{{__('T.Charge')}}</th>
-                                    <th class="p-2" data-title="Labor Charge">{{__('L.Charge')}}</th>
-                                    <th class="p-2" data-title="Total Amount">{{__('Total Amount')}}</th>
+                                    <th class="p-2" >{{__('Description of Goods')}}</th>
+                                    <th class="p-2" >{{__('Lc/Lot no')}}</th>
+                                    <th class="p-2" >{{__('Brand/Trade Mark')}}</th>
+                                    <th class="p-2" >{{__('Quantity Bag')}}</th>
+                                    <th class="p-2" >{{__('Total Quantity in Kg')}}</th>
+                                    <th class="p-2 td_hide" >{{__('Rate in Kg')}}</th>
+                                    <th class="p-2 td_hide" >{{__('Amount')}}</th>
+                                    <th class="p-2 td_hide" >{{__('Sales Commission Commission')}}</th>
+                                    <th class="p-2 td_hide" >{{__('Transport Charge')}}</th>
+                                    <th class="p-2 td_hide" >{{__('Labor Charge')}}</th>
+                                    <th class="p-2 td_hide" >{{__('Total Amount')}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,12 +73,12 @@
                                     <td>{{$s->brand}}</td>
                                     <td>{{$s->quantity_bag}}</td>
                                     <td>{{$s->quantity_kg}}</td>
-                                    <td>{{$s->rate_kg}}</td>
-                                    <td>{{$s->amount}}</td>
-                                    <td>{{$s->sale_commission}}</td>
-                                    <td>{{$s->transport_cost}}</td>
-                                    <td>{{$s->unloading_cost}}</td>
-                                    <td>{{$s->total_amount}}</td>
+                                    <td class="td_hide">{{$s->rate_kg}}</td>
+                                    <td class="td_hide">{{$s->amount}}</td>
+                                    <td class="td_hide">{{$s->sale_commission}}</td>
+                                    <td class="td_hide">{{$s->transport_cost}}</td>
+                                    <td class="td_hide">{{$s->unloading_cost}}</td>
+                                    <td class="td_hide">{{$s->total_amount}}</td>
                                 </tr>
                                 @php
                                     $totalBagQty += $s->quantity_bag;
@@ -99,12 +100,12 @@
                                     <th colspan="4" class="p-2">Total</th>
                                     <th class="p-2">{{$totalBagQty}}</th>
                                     <th class="p-2">{{$totalQty}}</th>
-                                    <th class="p-2"></th>
-                                    <th class="p-2">{{$amount}}</th>
-                                    <th class="p-2">{{$saleCommission}}</th>
-                                    <th class="p-2">{{$transport}}</th>
-                                    <th class="p-2">{{$labour}}</th>
-                                    <th class="p-2">{{$totalAmount}}</th>
+                                    <th class="p-2 td_hide"></th>
+                                    <th class="p-2 td_hide">{{$amount}}</th>
+                                    <th class="p-2 td_hide">{{$saleCommission}}</th>
+                                    <th class="p-2 td_hide">{{$transport}}</th>
+                                    <th class="p-2 td_hide">{{$labour}}</th>
+                                    <th class="p-2 td_hide">{{$totalAmount}}</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -124,5 +125,28 @@
 		window.print();
 		document.body.innerHTML = originalContents;
 	}
+</script>
+<script>
+// $(document).ready(function() {
+//     $('#tdHide').click(function(){
+//         if($(this).is(':checked')){
+//             $('.td_hide').addClass('d-none');
+//         } else {
+//             $('.td_hide').removeClass('d-none');
+//         }
+//     });
+// });
+$(document).ready(function() {
+    $('#tdHide').change(function(){
+        if($(this).is(':checked')){
+            $('.td_hide').addClass('d-none');
+            $('.hide-button-label').text('Show Amount'); // Change label text
+        } else {
+            $('.td_hide').removeClass('d-none');
+            $('.hide-button-label').text('Hide Amount'); // Change label text back
+        }
+    });
+});
+
 </script>
 @endpush
