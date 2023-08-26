@@ -32,6 +32,27 @@
                     <li class="py-1"><a href="{{route(currentUser().'.warehouse.create')}}">{{__('Add New')}}</a></li>
                 </ul>
             </li>
+            <li class="submenu-item sidebar-item has-sub">
+                <a href="#" class='sidebar-link'> {{__('Country')}}</a>
+                <ul class="submenu">
+                    <li class="py-1"><a href="{{route(currentUser().'.country.index')}}">{{__('List')}}</a></li>
+                    <li class="py-1"><a href="{{route(currentUser().'.country.create')}}">{{__('Add New')}}</a></li>
+                </ul>
+            </li>
+            <li class="submenu-item sidebar-item has-sub">
+                <a href="#" class='sidebar-link'> {{__('Division')}}</a>
+                <ul class="submenu">
+                    <li class="py-1"><a href="{{route(currentUser().'.division.index')}}">{{__('List')}}</a></li>
+                    <li class="py-1"><a href="{{route(currentUser().'.division.create')}}">{{__('Add New')}}</a></li>
+                </ul>
+            </li>
+            <li class="submenu-item sidebar-item has-sub">
+                <a href="#" class='sidebar-link'> {{__('District')}}</a>
+                <ul class="submenu">
+                    <li class="py-1"><a href="{{route(currentUser().'.district.index')}}">{{__('List')}}</a></li>
+                    <li class="py-1"><a href="{{route(currentUser().'.district.create')}}">{{__('Add New')}}</a></li>
+                </ul>
+            </li>
 		</ul>
     </li>
 
@@ -138,17 +159,18 @@
             <li class="py-1"><a href="{{route(currentUser().'.child_two.index')}}" >{{__('Child Two')}}</a></li>
             <li class="py-1"><a href="{{route(currentUser().'.navigate.index')}}">{{__('Navigate View')}}</a></li>
             <li class="py-1"><a href="{{route(currentUser().'.incomeStatement')}}">{{__('Income Statement')}}</a></li>
-            
-            <li class="submenu-item sidebar-item has-sub"><a href="#" class='sidebar-link'>{{__('Voucher')}}</a>
-                <ul class="submenu">
-                    <li class="py-1"><a href="{{route(currentUser().'.credit.index')}}">{{__('Credit Voucher')}}</a></li>
-                    <li class="py-1"><a href="{{route(currentUser().'.debit.index')}}">{{__('Debit Voucher')}}</a></li>
-                    <li class="py-1"><a href="{{route(currentUser().'.journal.index')}}">{{__('Journal Voucher')}}</a></li>
-                </ul>
-            </li>
 		</ul>
     </li>
 
+    <li class="sidebar-item has-sub">
+        <a href="#" class='sidebar-link'><i class="bi bi-receipt"></i><span>{{__('Voucher')}}</span>
+        </a>
+        <ul class="submenu">
+            <li class="py-1"><a href="{{route(currentUser().'.credit.index')}}">{{__('Credit Voucher')}}</a></li>
+            <li class="py-1"><a href="{{route(currentUser().'.debit.index')}}">{{__('Debit Voucher')}}</a></li>
+            <li class="py-1"><a href="{{route(currentUser().'.journal.index')}}">{{__('Journal Voucher')}}</a></li>
+        </ul>
+    </li>
     <li class="sidebar-item has-sub">
         <a href="#" class='sidebar-link'><i class="bi bi-card-checklist"></i><span>{{__('Report')}}</span>
         </a>

@@ -95,11 +95,15 @@ Route::group(['middleware'=>isAdmin::class],function(){
 Route::group(['middleware'=>isOwner::class],function(){
     Route::prefix('owner')->group(function(){
         Route::get('/dashboard', [dash::class,'ownerDashboard'])->name('owner.dashboard');
+        //settings
         Route::resource('company',company::class,['as'=>'owner']);
         Route::resource('users',user::class,['as'=>'owner']);
         Route::resource('brand',brand::class,['as'=>'owner']);
         Route::resource('branch',branch::class,['as'=>'owner']);
         Route::resource('warehouse',warehouse::class,['as'=>'owner']);
+        Route::resource('country',country::class,['as'=>'owner']);
+        Route::resource('division',division::class,['as'=>'owner']);
+        Route::resource('district',district::class,['as'=>'owner']);
 
         //Owner profile
         Route::get('/profile', [profile::class,'ownerProfile'])->name('owner.profile');

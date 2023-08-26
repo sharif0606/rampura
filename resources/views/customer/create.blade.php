@@ -69,7 +69,7 @@
                                             <input type="text" id="openingAmount" class="form-control" value="{{ old('openingAmount')}}" name="openingAmount">
                                         </div>
                                     </div>
-                                    <div class="col-md-4 col-12 d-none">
+                                    <div class="col-md-4 col-12">
                                         <div class="form-group">
                                             <label for="countryName">{{__('Country')}}</label>
                                             <select onchange="show_division(this.value)" class="form-control form-select" name="countryName" id="countryName">
@@ -86,7 +86,7 @@
                                         </div>
                                         
                                     </div>
-                                    <div class="col-md-4 col-12 d-none">
+                                    <div class="col-md-4 col-12">
                                         <div class="form-group">
                                             <label for="divisionName">{{__('Division')}}</label>
                                             <select onchange="show_district(this.value)" class="form-control form-select" name="divisionName" id="divisionName">
@@ -99,7 +99,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 col-12 d-none">
+                                    <div class="col-md-4 col-12">
                                         <div class="form-group">
                                             <label for="districtName">{{__('District')}}</label>
                                             <select class="form-control form-select" name="districtName" id="districtName">
@@ -130,7 +130,6 @@
                                 <div class="row">
                                     <div class="col-12 d-flex justify-content-end">
                                         <button type="submit" class="btn btn-primary me-1 mb-1">{{__('Save')}}</button>
-                                        
                                     </div>
                                 </div>
                             </form>

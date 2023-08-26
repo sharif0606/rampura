@@ -58,7 +58,6 @@
                                     <thead>
                                         <tr class="bg-primary text-white text-center">
                                             <th class="p-2">{{__('#SL')}}</th>
-                                            <th class="p-2" >{{__('Date')}}</th>
                                             <th class="p-2" data-title="Party Name">{{__('Party Name')}}</th>
                                             <th class="p-2" data-title="Description of Goods">{{__('Des.of Goods')}}</th>
                                             <th class="p-2" data-title="LC / LOT NO">{{__('Lc/Lot no')}}</th>
@@ -82,7 +81,6 @@
                                         @forelse($data as $d)
                                         <tr class="text-center">
                                             <th scope="row">{{ ++$loop->index }}</th>
-                                            <td>{{$d->sales_date}}</td>
                                             <td>{{$d->customer?->customer_name}}</td>
                                             <td>{{$d->product?->product_name}}</td>
                                             <td>{{$d->lot_no}}</td>
