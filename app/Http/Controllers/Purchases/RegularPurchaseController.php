@@ -18,6 +18,7 @@ use App\Http\Requests\Purchases\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
 use Exception;
 use DB;
+use Carbon\Carbon;
 
 class RegularPurchaseController extends Controller
 {
@@ -69,6 +70,7 @@ class RegularPurchaseController extends Controller
         try{
             $pur= new Regular_purchase;
             $pur->supplier_id=$request->supplierName;
+            $pur->voucher_no='VR-'.Carbon::now()->format('m-y').'-'. str_pad((Regular_purchase::whereYear('created_at', Carbon::now()->year)->count() + 1),4,"0",STR_PAD_LEFT);
             $pur->purchase_date = date('Y-m-d', strtotime($request->purchase_date));
             $pur->reference_no=$request->reference_no;
             $pur->grand_total=$request->tgrandtotal;

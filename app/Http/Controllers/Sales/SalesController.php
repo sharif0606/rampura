@@ -17,6 +17,7 @@ use App\Http\Requests\Sales\AddNewRequest;
 use App\Http\Traits\ResponseTrait;
 use Exception;
 use DB;
+use Carbon\Carbon;
 
 class SalesController extends Controller
 {
@@ -119,6 +120,7 @@ class SalesController extends Controller
         try{
             $pur= new Sales;
             $pur->customer_id=$request->customerName;
+            $pur->voucher_no='VR-'.Carbon::now()->format('m-y').'-'. str_pad((Sales::whereYear('created_at', Carbon::now()->year)->count() + 1),4,"0",STR_PAD_LEFT);
             $pur->sales_date=date('Y-m-d', strtotime($request->sales_date));
             $pur->reference_no=$request->reference_no;
             $pur->grand_total=$request->tgrandtotal;

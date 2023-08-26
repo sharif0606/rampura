@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_id')->index()->foreign()->references('id')->on('customers')->onDelete('cascade');
+            $table->string('voucher_no')->nullable();
             $table->date('sales_date');
             $table->string('reference_no')->nullable();
             $table->decimal('grand_total',10,2)->default(0);

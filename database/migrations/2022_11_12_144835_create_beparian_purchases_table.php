@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('beparian_purchases', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('supplier_id')->index()->foreign()->references('id')->on('suppliers')->onDelete('cascade');
+            $table->string('voucher_no')->nullable();
             $table->date('purchase_date');
             $table->string('reference_no')->nullable();
             $table->decimal('grand_total',10,2)->default(0);

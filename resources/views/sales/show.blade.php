@@ -8,8 +8,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="text-end print-section">
-                    <input type="checkbox" id="tdHide" class="checkbox-input">
-                    <label for="tdHide" class="hide-button-label">Hide Amount</label>
+                    <button class="btn-danger btn btn-selected" id="amountHideButton">Hide Amount</button>
                     <button type="button" class="btn btn-info" onclick="printDiv('result_show')">Print</button>
                 </div>
                 <div class="card-content" id="result_show">
@@ -23,7 +22,7 @@
                                 </div>
                                 <div>
                                     <label for="">Invoice No:</label>
-                                    <b></b>
+                                    <b>{{$show_data->voucher_no}}</b>
                                 </div>
                             </div>
                             <div class="col-12 d-flex justify-content-between">
@@ -127,26 +126,16 @@
 	}
 </script>
 <script>
-// $(document).ready(function() {
-//     $('#tdHide').click(function(){
-//         if($(this).is(':checked')){
-//             $('.td_hide').addClass('d-none');
-//         } else {
-//             $('.td_hide').removeClass('d-none');
-//         }
-//     });
-// });
 $(document).ready(function() {
-    $('#tdHide').change(function(){
-        if($(this).is(':checked')){
+    $('#amountHideButton').click(function(){
+        if ($(this).hasClass('btn-selected')){
             $('.td_hide').addClass('d-none');
-            $('.hide-button-label').text('Show Amount'); // Change label text
-        } else {
+            $(this).removeClass('btn-danger').addClass('btn-success').removeClass('btn-selected').text('Show Amount');
+        }else{
             $('.td_hide').removeClass('d-none');
-            $('.hide-button-label').text('Hide Amount'); // Change label text back
+            $(this).addClass('btn-danger').removeClass('btn-success').addClass('btn-selected').text('Hide Amount');
         }
     });
 });
-
 </script>
 @endpush

@@ -146,22 +146,3 @@ th[data-title]:not([data-title=""]) {
     font-size: 14px;
     white-space: nowrap;
   }
-
-  /* Style for the checkbox itself (hidden) */
-.print-section .checkbox-input {
-    display: none;
-}
-/* Style for the custom checkbox label (button-like appearance) */
-.print-section .hide-button-label {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: #f44336;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-/* Style for the label when checkbox is checked */
-.print-section .checkbox-input:checked + .hide-button-label {
-    background-color: #4CAF50;
-}
