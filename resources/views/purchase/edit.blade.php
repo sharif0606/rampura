@@ -12,11 +12,9 @@
         overflow: scroll;
     }
 }
-body{
-    font-size: 11px !important;
-}
-.form-control{
-    font-size: 11px !important;
+.tbl_expense{
+    border: 1px solid;
+    border-collapse: collapse;
 }
 </style>
     <section id="multiple-column-form">
@@ -96,14 +94,6 @@ body{
                                 <div class="col-md-4">
                                     <input type="text" id="datepicker" class="form-control" value="{{ old('purchase_date',$purchase->purchase_date)}}" name="purchase_date" placeholder="dd/mm/yyyy" required>
                                 </div>
-
-
-                                <div class="col-md-2 mt-2">
-                                    <label for="reference_no" class="float-end"><h6>Reference Number</h6></label>
-                                </div>
-                                <div class="col-md-4 mt-2">
-                                    <input type="text" class="form-control" value="{{ old('reference_no',$purchase->reference_no)}}" name="reference_no">
-                                </div>
                             </div>
                             <div class="row m-3">
                                 <div class="col-8 offset-2">
@@ -115,22 +105,15 @@ body{
                                     <table class="table mb-5">
                                         <thead>
                                             <tr class="bg-primary text-white text-center">
-                                                <th class="py-2 px-1" data-title="Description of Goods">Des.of.goods</th>
-                                                <th class="py-2 px-1" data-title="Lot no/ Lc no">Lot/Lc No</th>
-                                                <th class="py-2 px-1" data-title="Trade Marek/ Brand">Brand</th>
-                                                <th class="py-2 px-1" data-title="Quantity Bag">Qty Bag</th>
-                                                <th class="py-2 px-1" data-title="Quantity kg">Qty Kg</th>
-                                                <th class="py-2 px-1" data-title="Less Quantity kg">L.Qty Kg</th>
-                                                <th class="py-2 px-1" data-title="Actual Quantity">A.Quantity</th>
-                                                <th class="py-2 px-1" data-title="Discount in Kg" >Dis.kg</th>
-                                                <th class="py-2 px-1" data-title="Rate in kg">Rate Kg</th>
-                                                <th class="py-2 px-1" >Amount</th>
-                                                <th class="py-2 px-1" data-title="Purchase Commission">P.Com</th>
-                                                <th class="py-2 px-1" data-title="Transport Cost">Tr.Cost</th>
-                                                <th class="py-2 px-1" data-title="Unloading Cost">Un.Cost</th>
-                                                <th class="py-2 px-1" data-title="Sales income per bag(2tk)">S.income.per.bag</th>
-                                                <th class="py-2 px-1" data-title="Total Amount">T.Amount</th>
-                                                <th class="py-2 px-1" data-title="Price Per Kg">P.KG</th>
+                                                <th class="py-2 px-1" >Description of Goods</th>
+                                                <th class="py-2 px-1" >Lot/Lc No</th>
+                                                <th class="py-2 px-1" >Trade Marek</th>
+                                                <th class="py-2 px-1" >Quantity Bag</th>
+                                                <th class="py-2 px-1" >Quantity kg</th>
+                                                <th class="py-2 px-1" >Less/Discount Kg</th>
+                                                <th class="py-2 px-1" >Actual Quantity</th>
+                                                <th class="py-2 px-1" >Rate in Per Kg</th>
+                                                <th class="py-2 px-1" >Total Amount</th>
                                                 <th class="py-2 px-1">Action</th>
                                             </tr>
                                         </thead>
@@ -144,28 +127,45 @@ body{
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" value="{{$p->quantity_kg}}" class="form-control qty_kg"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" value="{{$p->less_quantity_kg}}" class="form-control less_qty_kg"></td>
                                                 <td class="py-2 px-1"><input name="actual_qty[]" readonly type="text" class="form-control actual_qty" value="{{$p->actual_quantity}}"></td>
-                                                <td class="py-2 px-1"><input name="discount[]" type="text" class="form-control qty_discount" value="{{$p->discount}}"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value="{{$p->rate_kg}}"></td>
                                                 <td class="py-2 px-1"><input name="amount[]" readonly type="text" class="form-control amount" value="{{$p->amount}}"></td>
-                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="purchase_commission[]" type="text" class="form-control purchase_commission" value="{{$p->purchase_commission}}"></td>
-                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="transport_cost[]" type="text" class="form-control transport_cost" value="{{$p->transport_cost}}"></td>
-                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="unloading_cost[]" type="text" class="form-control unloading_cost" value="{{$p->unloading_cost}}"></td>
-                                                <td class="py-2 px-1"><input name="sales_income_per_bag[]" readonly type="text" class="form-control sales_income_per_bag" value="{{$p->sale_income_per_bag}}"></td>
-                                                <td class="py-2 px-1"><input name="total_amount[]" readonly type="text" class="form-control total_amount" value="{{$p->total_amount}}"></input></td>
-                                                <td class="py-2 px-1 price_per_kg">
-                                                    @php
-                                                        $pricePerKg = $p->total_amount / $p->actual_quantity;
-                                                        $formattedPricePerKg = number_format($pricePerKg, 2);
-                                                    @endphp
-                                                    {{$formattedPricePerKg}}
-                                                </td>
                                                 <td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>
                                             </tr>
+                                            @php
+                                                $qtyKg = $p->quantity_kg;
+                                            @endphp
                                             @empty
                                             <tr class="text-center">
-                                                <td colspan="15">No Data Found</td>
+                                                <td colspan="10">No Data Found</td>
                                             </tr>
                                             @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-lg-12 col-sm-12 col-md-12 mt-3">
+                                    <div><h5>TOTAL EXPENSES:</h5></div>
+                                    <table class="tbl_expense" style="width:100%;">
+                                        <tbody>
+                                            @forelse ($childTow as $ex)
+                                                <tr class="tbl_expense">
+                                                    <th class="tbl_expense" style="padding-left: 8px;">{{$ex->head_name}} <input type="hidden" name="child_two_id[]" value="{{$ex->id}}"></th>
+                                                    <td class="tbl_expense" ><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value="@if(isset($expense[$ex->id])){{$expense[$ex->id]}} @endif" ></td>
+                                                </tr>
+                                            @empty
+                                                
+                                            @endforelse
+                                                <tr class="tbl_expense">
+                                                    <th class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL EXPENSES</h5></th>
+                                                    <td class="tbl_expense text-end" >
+                                                        <h5 class="tgrandtotal">{{$purchase->grand_total}}</h5>
+                                                        <input type="hidden" name="tgrandtotal" class="tgrandtotal_p" value="{{$purchase->grand_total}}">
+                                                        <input type="hidden"  class="sub_total">
+                                                    </td>
+                                                </tr>
+                                                {{-- <tr class="tbl_expense">
+                                                    <th class="tbl_expense" style="padding-left: 8px;">LTR INTEREST</h4></th>
+                                                    <td class="tbl_expense" ><input class="form-control text-end" type="text"></td>
+                                                </tr> --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -174,11 +174,16 @@ body{
 
                             <div class="row mb-1">
                                 <div class="col-8 mt-2 pe-2 text-end">
-                                    <label for="" class="form-group"><h4>Grand Total</h4></label> 
+                                    <label for="" class="form-group"><h5>PER KG EXPENSE/COSTING:</h5></label> 
                                 </div>
-                                <div class="col-4 mt-2 text-end">
-                                    <label for="" class="form-group"><h5 class="tgrandtotal">{{ $purchase->grand_total}}</h5></label>
-                                    <input type="hidden" name="tgrandtotal" class="tgrandtotal_p" value="{{ $purchase->grand_total}}">
+                                <div class="col-4 mt-2 text-start">
+                                    <label for="" class="form-group">
+                                        @php
+                                            $pricePerKg = $purchase->grand_total / $qtyKg;
+                                            $formattedPricePerKg = number_format($pricePerKg, 2);
+                                        @endphp
+                                        <h5 class="perKgCost">{{$formattedPricePerKg}}</h5>
+                                    </label>
                                 </div>
                             </div>
                             
@@ -312,45 +317,55 @@ function get_cal(e){
   var quantity_bag = (isNaN(parseFloat($(e).closest('tr').find('.qty_bag').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_bag').val().trim()); 
   var quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_kg').val().trim()); 
   var less_quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()); 
-  var rate_in_kg = (isNaN(parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()); 
-  var purchase_commission = (isNaN(parseFloat($(e).closest('tr').find('.purchase_commission').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.purchase_commission').val().trim()); 
-  var transport_cost = (isNaN(parseFloat($(e).closest('tr').find('.transport_cost').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.transport_cost').val().trim()); 
-  var unloading_cost = (isNaN(parseFloat($(e).closest('tr').find('.unloading_cost').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.unloading_cost').val().trim()); 
-
-  var sales_income_per_bag = ((quantity_bag * 2));
+  var rate_in_kg = (isNaN(parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim());
+  
+ 
   var actual_quantity = ((quantity_kg - less_quantity_kg));
-  var cost = ((purchase_commission + transport_cost + unloading_cost + sales_income_per_bag));
-  var amount = ((actual_quantity * rate_in_kg));
-  var total_amount = ((amount - cost));
-  var pricePerKg = ((total_amount/actual_quantity));
+  var amount = ((quantity_kg * rate_in_kg));
 
-  $(e).closest('tr').find('.sales_income_per_bag').val(sales_income_per_bag);
+
   $(e).closest('tr').find('.actual_qty').val(actual_quantity);
   $(e).closest('tr').find('.amount').val(amount);
-  $(e).closest('tr').find('.total_amount').val(total_amount);
-  $(e).closest('tr').find('.price_per_kg').text(pricePerKg.toFixed(2));
 
-  console.log('sales income per bag:', sales_income_per_bag);
-  console.log('actual quantity:', actual_quantity);
+
+//   console.log('expense:', purExpense);
+  console.log('actual_quantity:', actual_quantity);
   console.log('amount:', amount);
-  console.log('total amount:', total_amount);
-  console.log('price per kg:', pricePerKg);
 
   total_calculate();
 }
-
-function total_calculate() {
-    // ... existing code ...
-
-    // Calculate the sum of total_amount values
-    var grandtotal = 0;
-    $('.total_amount').each(function() {
-        grandtotal += parseFloat($(this).val());
+function total_expense(e) {
+    var grandExpense = 0;
+    $('.expense_value').each(function() {
+        grandExpense += parseFloat($(this).val()) || 0;
     });
 
+    $(".sub_total").val(grandExpense.toFixed(2));
+
+    total_calculate();
+}
+
+function total_calculate() {
+    var subTotal=(isNaN(parseFloat($('.sub_total').val().trim()))) ? 0 :parseFloat($('.sub_total').val().trim());
+    var quantity_kg=(isNaN(parseFloat($('.qty_kg').val().trim()))) ? 0 :parseFloat($('.qty_kg').val().trim());
+    var less_quantity_kg=(isNaN(parseFloat($('.less_qty_kg').val().trim()))) ? 0 :parseFloat($('.less_qty_kg').val().trim());
+
+    var actual_qty = ((quantity_kg - less_quantity_kg));
+
+    // Calculate the sum of total_amount values
+    
+    var purChaseTotal = 0;
+    $('.amount').each(function() {
+        purChaseTotal += parseFloat($(this).val());
+    });
+
+    var grandTotal=((subTotal+purChaseTotal));
+    var per_kg_costing = (grandTotal/actual_qty);
+
     // Display the sum in the specified element
-    $('.tgrandtotal').text(grandtotal.toFixed(2));
-    $('.tgrandtotal_p').val(grandtotal.toFixed(2));
+    $('.perKgCost').text(per_kg_costing.toFixed(2));
+    $('.tgrandtotal').text(grandTotal.toFixed(2));
+    $('.tgrandtotal_p').val(grandTotal.toFixed(2));
     
 }
 

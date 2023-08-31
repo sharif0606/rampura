@@ -33,10 +33,10 @@
                                         <a href="{{route(currentUser().'.child_two.edit',encryptor('encrypt',$d->id))}}">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <a href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
+                                        <a class="text-danger" href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
                                             <i class="bi bi-trash"></i>
                                         </a>
-                                        <form id="form{{$d->id}}" action="{{route(currentUser().'.child_two.destroy',encryptor('encrypt',$d->id))}}" method="post">
+                                        <form id="form{{$d->id}}" onsubmit="return confirm('Are you sure?')" action="{{route(currentUser().'.child_two.destroy',encryptor('encrypt',$d->id))}}" method="post">
                                             @csrf
                                             @method('delete')
                                             
@@ -50,6 +50,9 @@
                                 @endforelse
                             </tbody>
                         </table>
+                        <div class="d-flex justify-content-end my-3">
+                            {!! $data->links()!!}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -36,7 +36,7 @@
                                         <a class="text-danger" href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
                                             <i class="bi bi-trash"></i>
                                         </a>
-                                        <form id="form{{$d->id}}" action="{{route(currentUser().'.child_one.destroy',encryptor('encrypt',$d->id))}}" method="post">
+                                        <form id="form{{$d->id}}" onsubmit="return confirm('Are you sure?')" action="{{route(currentUser().'.child_one.destroy',encryptor('encrypt',$d->id))}}" method="post">
                                             @csrf
                                             @method('delete')
                                             
