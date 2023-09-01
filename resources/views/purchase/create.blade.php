@@ -136,7 +136,7 @@
                                                 <tr class="tbl_expense">
                                                     <th class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL EXPENSES</h5></th>
                                                     <td class="tbl_expense text-end" >
-                                                        <h5 class="tgrandtotal">0.00</h5>
+                                                        <h5 class="tgrandtotal" >0.00</h5>
                                                         <input type="hidden" name="tgrandtotal" class="tgrandtotal_p">
                                                         <input type="hidden"  class="sub_total">
                                                     </td>
