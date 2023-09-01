@@ -172,12 +172,11 @@
         </ul>
     </li>
     <li class="sidebar-item has-sub">
-        <a href="#" class='sidebar-link'><i class="bi bi-card-checklist"></i><span>{{__('Report')}}</span>
-        </a>
+        <a href="#" class='sidebar-link'><i class="bi bi-card-checklist"></i><span>{{__('Report')}}</span></a>
         <ul class="submenu">
             {{-- <li class="py-1"><a href="{{route(currentUser().'.preport')}}" >{{__('Purchase Report')}}</a></li> --}}
             <li class="py-1"><a href="{{route(currentUser().'.sreport')}}" >{{__('Stock Report')}}</a></li>
             <li class="py-1"><a href="{{route(currentUser().'.salreport')}}" >{{__('Sales Report')}}</a></li>
-		</ul>
+        </ul>
     </li>
 </ul>
