@@ -26,12 +26,13 @@ class AddNewRequest extends FormRequest
         return [
             'sub_head'=> 'required',
             'head_name'=> 'required',
-            'head_code'=> 'required'
+            'head_code'=> 'required|unique:Child_ones,head_code'
         ];
     }
     public function messages(){
         return [
-            'required' => "The :attribute filed is required"
+            'required' => "The :attribute filed is required",
+            'unique' => "This :attribute is already used. Please try another",
         ];
     }
 }

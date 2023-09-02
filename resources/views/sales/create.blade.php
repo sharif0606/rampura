@@ -116,42 +116,48 @@ body{
                                         <table class="table mb-2">
                                             <thead>
                                                 <tr class="bg-primary text-white text-center">
-                                                    <th class="py-2 px-1" data-title="Description of Goods">Des.of.goods</th>
-                                                    <th class="py-2 px-1" data-title="Lot no/ Lc no">Lot/Lc No</th>
-                                                    <th class="py-2 px-1" data-title="Trade Marek/ Brand">Brand/TM</th>
-                                                    <th class="py-2 px-1" data-title="Stock Total Bag">T.Bag</th>
-                                                    <th class="py-2 px-1" data-title="Quantity Bag">Qty Bag</th>
-                                                    <th class="py-2 px-1" data-title="Stock Total Kg">T.Qty</th>
-                                                    <th class="py-2 px-1" data-title="Quantity Kg">Qty Kg</th>
-                                                    {{-- <th class="py-2 px-1" data-title="Purchase Price">PP</th> --}}
-                                                    <th class="py-2 px-1" data-title="Rate in Kg">R.Kg</th>
+                                                    <th class="py-2 px-1" >Description of Goods</th>
+                                                    <th class="py-2 px-1" >Lot/Lc no</th>
+                                                    <th class="py-2 px-1" >Trade Mark</th>
+                                                    <th class="py-2 px-1" >Stock Total Bag</th>
+                                                    <th class="py-2 px-1" >Quantity Bag</th>
+                                                    <th class="py-2 px-1" >Stock Total Kg</th>
+                                                    <th class="py-2 px-1" >Quantity Kg</th>
+                                                    <th class="py-2 px-1" >Rate in Kg</th>
                                                     <th class="py-2 px-1" >Amount</th>
-                                                    <th class="py-2 px-1" data-title="Sales Commission">S.Com</th>
-                                                    <th class="py-2 px-1" data-title="Transport Charge">Tr.Charge</th>
-                                                    <th class="py-2 px-1" data-title="Labour Charge">La.Charge</th>
-                                                    <th class="py-2 px-1" data-title="Total Amount">T.Amount</th>
                                                     <th class="py-2 px-1">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="details_data">
         
                                             </tbody>
-                                            <tfoot>
-                                                <tr class=" text-end">
-                                                    <th colspan="3" class="text-center py-2 px-1">Total</th>
-                                                    <th class="py-2 px-1"></th>
-                                                    <th class="py-2 px-1 text-center total_bag">0</th>
-                                                    <th class="py-2 px-1"></th>
-                                                    <th class="py-2 px-1 text-center total_qty_kg">0</th>
-                                                    <th class="py-2 px-1 text-center"></th>
-                                                    <th class="py-2 px-1 text-center total_am">0</th>
-                                                    <th class="py-2 px-1 text-center total_sale_commission">0</th>
-                                                    <th class="py-2 px-1 text-center total_trn_charge">0</th>
-                                                    <th class="py-2 px-1 text-center total_labour_charge">0</th>
-                                                    <th colspan="2" class="py-2 px-1 text-start tgrandtotalP">0</th>
-                                                    <input name="tgrandtotal" type="hidden" class="form-control tgrandtotal_p" value="0">
-                                                </tr>
-                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <div class="col-lg-12 col-sm-12 col-md-12 mt-3">
+                                        <div><h5>ADD FOR SALES:</h5></div>
+                                        <table class="tbl_expense" style="width:100%;">
+                                            <tbody>
+                                                @forelse ($childTow as $ex)
+                                                    <tr class="tbl_expense">
+                                                        <th class="tbl_expense" style="padding-left: 8px;">{{$ex->head_name}} <input type="hidden" name="child_two_id[]" value="{{$ex->id}}"></th>
+                                                        <td class="tbl_expense" ><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" ></td>
+                                                    </tr>
+                                                @empty
+                                                    
+                                                @endforelse
+                                                    <tr class="tbl_expense">
+                                                        <th class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL RECEIVABLE AMOUNT</h5></th>
+                                                        <td class="tbl_expense text-end" >
+                                                            <h5 class="tgrandtotal" >0.00</h5>
+                                                            <input type="hidden" name="tgrandtotal" class="tgrandtotal_p">
+                                                            <input type="hidden"  class="sub_total">
+                                                        </td>
+                                                    </tr>
+                                                    {{-- <tr class="tbl_expense">
+                                                        <th class="tbl_expense" style="padding-left: 8px;">LTR INTEREST</h4></th>
+                                                        <td class="tbl_expense" ><input class="form-control text-end" type="text"></td>
+                                                    </tr> --}}
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -159,7 +165,6 @@ body{
                                 <div class="row">
                                     <div class="col-12 d-flex justify-content-end">
                                         <button type="submit" class="btn btn-primary me-1 mb-1">{{__('Save')}}</button>
-                                        
                                     </div>
                                 </div>
                             </form>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Accounts\ChildOne;
 
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends FormRequest
@@ -21,17 +22,19 @@ class UpdateRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(Request $r)
     {
+        $id=encryptor('decrypt',$r->uptoken);
         return [
             'sub_head'=> 'required',
             'head_name'=> 'required',
-            'head_code'=> 'required'
+            'head_code'=> 'required|unique:Child_ones,head_code,'.$id
         ];
     }
     public function messages(){
         return [
-            'required' => "The :attribute filed is required"
+            'required' => "The :attribute filed is required",
+            'unique' => "This :attribute is already used. Please try another",
         ];
     }
 }
