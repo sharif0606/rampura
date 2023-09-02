@@ -115,7 +115,7 @@ class BeparianPurchaseController extends Controller
                                             //DB::table('stocks')->where('id',$oldstock[0])->increment('quantity_bag', $pd->quantity_bag);
                                         }else{
                                             $batch_id=rand(111,999).uniqid().$product_id;
-                                        }
+
                                             $stock=new Stock;
                                             $stock->beparian_purchase_id=$pur->id;
                                             $stock->product_id=$product_id;
@@ -131,7 +131,8 @@ class BeparianPurchaseController extends Controller
                                             $stock->total_amount=$pd->amount;
                                             $stock->save();
                                         
-                                        DB::commit();
+                                            DB::commit();
+                                        }
                                     }
                                 }
 
@@ -244,7 +245,7 @@ class BeparianPurchaseController extends Controller
                                                 //DB::table('stocks')->where('id',$oldstock[0])->increment('quantity_bag', $pd->quantity_bag);
                                             }else{
                                                 $batch_id=rand(111,999).uniqid().$product_id;
-                                            }
+                                                
                                                 $stock=new Stock;
                                                 $stock->beparian_purchase_id=$pur->id;
                                                 $stock->product_id=$product_id;
@@ -260,7 +261,8 @@ class BeparianPurchaseController extends Controller
                                                 $stock->total_amount=$pd->amount;
                                                 $stock->save();
                                             
-                                            DB::commit();
+                                                DB::commit();
+                                            }
                                         }
                                     }
     

@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Sales;
 use App\Http\Controllers\Controller;
 
 use App\Models\Sales\Sales;
+use App\Models\Accounts\Child_one;
+use App\Models\Accounts\Child_two;
+use App\Models\Expenses\ExpenseOfSales;
 use App\Models\Stock\Stock;
 use App\Models\Sales\Sales_details;
 use Illuminate\Http\Request;
@@ -49,12 +52,14 @@ class SalesController extends Controller
         if( currentUser()=='owner'){
             $customers = Customer::where(company())->get();
             $Warehouses = Warehouse::where(company())->get();
+            $childone = Child_one::where(company())->where('head_code',5320)->first();
+            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
         }else{
             $customers = Customer::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
         
-        return view('sales.create',compact('branches','customers','Warehouses'));
+        return view('sales.create',compact('branches','customers','Warehouses','childTow'));
     }
 
     /**
@@ -90,15 +95,13 @@ class SalesController extends Controller
             $data.='<td class="py-2 px-1"><input readonly name="lot_no[]" type="text" class="form-control lot_no" value="'.$product->lot_no.'"></td>';
             $data.='<td class="py-2 px-1"><input readonly name="brand[]" type="text" class="form-control brand"  value="'.$product->brand.'"></td>';
             $data.='<td class="py-2 px-1"><input  type="text" class="form-control stock_bag" value="'.$product->bag_qty.'" disabled></td>';
-            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" class="form-control qty_bag"></td>';
             $data.='<td class="py-2 px-1"><input  type="text" class="form-control" value="'.$product->qty.'" disabled></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" class="form-control qty_bag"></td>';
             $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" class="form-control qty_kg"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" class="form-control less_qty_kg"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="actual_qty[]" readonly type="text" class="form-control actual_qty" value="0"></td>';
             $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value=""></td>';
             $data.='<td class="py-2 px-1"><input name="amount[]" readonly type="text" class="form-control amount" value="0"></td>';
-            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="sale_commission[]" type="text" class="form-control sale_commission" value=""></td>';
-            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="transport_cost[]" type="text" class="form-control transport_cost" value=""></td>';
-            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="labour_cost[]" type="text" class="form-control labour_cost" value=""></td>';
-            $data.='<td class="py-2 px-1"><input name="total_amount[]" readonly type="text" class="form-control total_amount" value="0"></input></td>';
             $data.='<td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>';
             $data.='</tr>';
             
@@ -122,7 +125,6 @@ class SalesController extends Controller
             $pur->customer_id=$request->customerName;
             $pur->voucher_no='VR-'.Carbon::now()->format('m-y').'-'. str_pad((Sales::whereYear('created_at', Carbon::now()->year)->count() + 1),4,"0",STR_PAD_LEFT);
             $pur->sales_date=date('Y-m-d', strtotime($request->sales_date));
-            $pur->reference_no=$request->reference_no;
             $pur->grand_total=$request->tgrandtotal;
             $pur->company_id=company()['company_id'];
             $pur->branch_id=$request->branch_id;
@@ -142,29 +144,40 @@ class SalesController extends Controller
                         $pd->brand=$request->brand[$i];
                         $pd->quantity_bag=$request->qty_bag[$i];
                         $pd->quantity_kg=$request->qty_kg[$i];
+                        $pd->less_quantity_kg=$request->less_qty_kg[$i];
+                        $pd->actual_quantity=$request->actual_qty[$i];
                         $pd->rate_kg=$request->rate_in_kg[$i];
                         $pd->amount=$request->amount[$i];
-                        $pd->sale_commission=$request->sale_commission[$i];
-                        $pd->transport_cost=$request->transport_cost[$i];
-                        $pd->unloading_cost=$request->labour_cost[$i];
-                        $pd->total_amount=$request->total_amount[$i];
                         if($pd->save()){
-                            $stock=new Stock;
-                            $stock->product_id=$product_id;
-                            $stock->sales_id=$pur->id;
-                            $stock->company_id=company()['company_id'];
-                            $stock->branch_id=$request->branch_id;
-                            $stock->warehouse_id=$request->warehouse_id;
-                            $stock->quantity='-'.$pd->quantity_kg;
-                            $stock->quantity_bag='-'.$pd->quantity_bag;
-                            $stock->lot_no=$pd->lot_no;
-                            $stock->brand=$pd->brand;
-                            $stock->batch_id=$request->batch_id[$i];
-                            $stock->unit_price=$pd->rate_kg;
-                            $stock->total_amount=$pd->total_amount;
-                            $stock->save();
+                            if($request->child_two_id){
+                                foreach($request->child_two_id as $j=>$child_two_id){
+                                    $ex = new ExpenseOfSales;
+                                    $ex->sales_id=$pur->id;
+                                    $ex->child_two_id=$child_two_id;
+                                    $ex->cost_amount=$request->cost_amount[$j];
+                                    $ex->status= 0;
+                                    if($ex->save()){
+                                        $stock=new Stock;
+                                        $stock->product_id=$product_id;
+                                        $stock->sales_id=$pur->id;
+                                        $stock->company_id=company()['company_id'];
+                                        $stock->branch_id=$request->branch_id;
+                                        $stock->warehouse_id=$request->warehouse_id;
+                                        $stock->quantity='-'.$pd->actual_quantity;
+                                        $stock->quantity_bag='-'.$pd->quantity_bag;
+                                        $stock->lot_no=$pd->lot_no;
+                                        $stock->brand=$pd->brand;
+                                        $stock->batch_id=$request->batch_id[$i];
+                                        $stock->unit_price=$pd->rate_kg;
+                                        $stock->total_amount=$pd->amount;
+                                        $stock->save();
+                                        
+                                        DB::commit();
+                                    }
+                                }
+
+                            }
                             
-                            DB::commit();
                         }
 
                     }
