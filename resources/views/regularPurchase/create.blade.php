@@ -281,6 +281,7 @@ function return_row_with_data(item_id){
 //INCREMENT ITEM
 function removerow(e){
   $(e).closest('tr').remove();
+  total_expense();
   total_calculate();
 }
 
@@ -319,10 +320,7 @@ function total_expense(e) {
 
 function total_calculate() {
     var subTotal=(isNaN(parseFloat($('.sub_total').val().trim()))) ? 0 :parseFloat($('.sub_total').val().trim());
-    var quantity_kg=(isNaN(parseFloat($('.qty_kg').val().trim()))) ? 0 :parseFloat($('.qty_kg').val().trim());
-    var less_quantity_kg=(isNaN(parseFloat($('.less_qty_kg').val().trim()))) ? 0 :parseFloat($('.less_qty_kg').val().trim());
-
-    var actual_qty = ((quantity_kg - less_quantity_kg));
+    
 
     // Calculate the sum of total_amount values
     
@@ -331,8 +329,13 @@ function total_calculate() {
         purChaseTotal += parseFloat($(this).val());
     });
 
+    var actualTotal = 0;
+    $('.actual_qty').each(function() {
+        actualTotal += parseFloat($(this).val());
+    });
+
     var grandTotal=((subTotal+purChaseTotal));
-    var per_kg_costing = (grandTotal/actual_qty);
+    var per_kg_costing = (grandTotal/actualTotal);
 
     // Display the sum in the specified element
     $('.perKgCost').text(per_kg_costing.toFixed(2));

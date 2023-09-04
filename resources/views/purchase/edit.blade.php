@@ -117,6 +117,9 @@
                                                 <th class="py-2 px-1">Action</th>
                                             </tr>
                                         </thead>
+                                            @php
+                                                $actualQtyTotal = 0;
+                                            @endphp
                                         <tbody id="details_data">
                                             @forelse ($purchaseDetails as $p)
                                             <tr class="text-center">
@@ -132,7 +135,7 @@
                                                 <td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>
                                             </tr>
                                             @php
-                                                $qtyKg = $p->quantity_kg;
+                                                $actualQtyTotal += $p->actual_quantity;
                                             @endphp
                                             @empty
                                             <tr class="text-center">
@@ -179,7 +182,7 @@
                                 <div class="col-4 mt-2 text-start">
                                     <label for="" class="form-group">
                                         @php
-                                            $pricePerKg = $purchase->grand_total / $qtyKg;
+                                            $pricePerKg = $purchase->grand_total / $actualQtyTotal;
                                             $formattedPricePerKg = number_format($pricePerKg, 2);
                                         @endphp
                                         <h5 class="perKgCost">{{$formattedPricePerKg}}</h5>
@@ -309,6 +312,7 @@ function return_row_with_data(item_id){
 //INCREMENT ITEM
 function removerow(e){
   $(e).closest('tr').remove();
+  total_expense();
   total_calculate();
 }
 
@@ -347,10 +351,7 @@ function total_expense(e) {
 
 function total_calculate() {
     var subTotal=(isNaN(parseFloat($('.sub_total').val().trim()))) ? 0 :parseFloat($('.sub_total').val().trim());
-    var quantity_kg=(isNaN(parseFloat($('.qty_kg').val().trim()))) ? 0 :parseFloat($('.qty_kg').val().trim());
-    var less_quantity_kg=(isNaN(parseFloat($('.less_qty_kg').val().trim()))) ? 0 :parseFloat($('.less_qty_kg').val().trim());
-
-    var actual_qty = ((quantity_kg - less_quantity_kg));
+    
 
     // Calculate the sum of total_amount values
     
@@ -359,8 +360,13 @@ function total_calculate() {
         purChaseTotal += parseFloat($(this).val());
     });
 
+    var actualTotal = 0;
+    $('.actual_qty').each(function() {
+        actualTotal += parseFloat($(this).val());
+    });
+
     var grandTotal=((subTotal+purChaseTotal));
-    var per_kg_costing = (grandTotal/actual_qty);
+    var per_kg_costing = (grandTotal/actualTotal);
 
     // Display the sum in the specified element
     $('.perKgCost').text(per_kg_costing.toFixed(2));
