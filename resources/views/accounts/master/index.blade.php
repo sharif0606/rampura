@@ -19,7 +19,7 @@
                                     <th scope="col">{{__('Master Head')}}</th>
                                    
                                     <th scope="col">{{__('Opening Balance')}}</th>
-                                    <th class="white-space-nowrap">{{__('ACTION')}}</th>
+                                    {{-- <th class="white-space-nowrap">{{__('ACTION')}}</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -30,9 +30,9 @@
                            
                                     <td>{{$d->opening_balance}}</td>
                                     <td class="white-space-nowrap">
-                                        <a href="{{route(currentUser().'.master.edit',encryptor('encrypt',$d->id))}}">
+                                        {{-- <a href="{{route(currentUser().'.master.edit',encryptor('encrypt',$d->id))}}">
                                             <i class="bi bi-pencil-square"></i>
-                                        </a>
+                                        </a> --}}
                                         {{--<a href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
                                             <i class="bi bi-trash"></i>
                                         </a>
@@ -45,7 +45,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <th colspan="5" class="text-center">No data Found</th>
+                                    <th colspan="3" class="text-center">No data Found</th>
                                 </tr>
                                 @endforelse
                             </tbody>

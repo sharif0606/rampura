@@ -33,7 +33,7 @@
                                     </div>
                                     <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="form-group">
-                                            <label for="upazilaName">Upazila Name<span class="text-danger">*</span></label>
+                                            <label for="upazilaName">Area<span class="text-danger">*</span></label>
                                             <input type="text" id="upazilaName" class="form-control" value="{{ old('upazilaName',$upazila->name)}}" name="upazilaName">
                                             @if($errors->has('upazilaName'))
                                                 <span class="text-danger"> {{ $errors->first('upazilaName') }}</span>
@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="form-group">
-                                            <label for="upazilaBn">Upazila Bangla</label>
+                                            <label for="upazilaBn">Area Bangla</label>
                                             <input type="text" id="upazilaBn" class="form-control" value="{{ old('upazilaBn',$upazila->name_bn)}}" name="upazilaBn">
                                         </div>
                                     </div>

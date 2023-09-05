@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Settings\Location\Country;
 use App\Models\Settings\Location\Division;
 use App\Models\Settings\Location\District;
+use App\Models\Settings\Location\Upazila;
 use App\Models\Suppliers\Supplier;
 use App\Models\Settings\Branch;
 use Illuminate\Http\Request;
@@ -43,8 +44,9 @@ class SupplierController extends Controller
         $countries = Country::all();
         $divisions = Division::all();
         $districts = District::all();
+        $upazilas = Upazila::all();
         $branches = Branch::where(company())->get();
-        return view('supplier.create',compact('countries','divisions','districts','branches'));
+        return view('supplier.create',compact('countries','divisions','districts','branches','upazilas'));
     }
 
     /**
@@ -67,6 +69,7 @@ class SupplierController extends Controller
             $sup->country_id= $request->countryName;
             $sup->division_id= $request->divisionName;
             $sup->district_id= $request->districtName;
+            $sup->upazila_id= $request->upazilaName;
             $sup->post_code= $request->postCode;
             $sup->post_code= $request->postCode;
             $sup->address= $request->address;
@@ -106,9 +109,10 @@ class SupplierController extends Controller
         $countries = Country::all();
         $divisions = Division::all();
         $districts = District::all();
+        $upazilas = Upazila::all();
         $branches = Branch::where(company())->get();
         $supplier = Supplier::findOrFail(encryptor('decrypt',$id));
-        return view('supplier.edit',compact('countries','divisions','districts','supplier','branches'));
+        return view('supplier.edit',compact('countries','divisions','districts','supplier','branches','upazilas'));
     }
 
     /**
@@ -132,6 +136,7 @@ class SupplierController extends Controller
             $sup->country_id= $request->countryName;
             $sup->division_id= $request->divisionName;
             $sup->district_id= $request->districtName;
+            $sup->upazila_id= $request->upazilaName;
             $sup->post_code= $request->postCode;
             $sup->post_code= $request->postCode;
             $sup->address= $request->address;

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Settings\Location\Country;
 use App\Models\Settings\Location\Division;
 use App\Models\Settings\Location\District;
+use App\Models\Settings\Location\Upazila;
 use App\Models\Customers\Customer;
 use App\Models\Settings\Branch;
 use Illuminate\Http\Request;
@@ -43,8 +44,9 @@ class CustomerController extends Controller
         $countries = Country::all();
         $divisions = Division::all();
         $districts = District::all();
+        $upazilas = Upazila::all();
         $branches = Branch::where(company())->get();
-        return view('customer.create',compact('countries','divisions','districts','branches'));
+        return view('customer.create',compact('countries','divisions','districts','branches','upazilas'));
     }
 
     /**
@@ -67,6 +69,7 @@ class CustomerController extends Controller
             $cus->country_id= $request->countryName;
             $cus->division_id= $request->divisionName;
             $cus->district_id= $request->districtName;
+            $cus->upazila_id= $request->upazilaName;
             $cus->post_code= $request->postCode;
             $cus->post_code= $request->postCode;
             $cus->address= $request->address;
@@ -105,9 +108,10 @@ class CustomerController extends Controller
         $countries = Country::all();
         $divisions = Division::all();
         $districts = District::all();
+        $upazilas = Upazila::all();
         $branches = Branch::where(company())->get();
         $customer = Customer::findOrFail(encryptor('decrypt',$id));
-        return view('customer.edit',compact('countries','divisions','districts','customer','branches'));
+        return view('customer.edit',compact('countries','divisions','districts','customer','branches','upazilas'));
     }
 
     /**
@@ -131,6 +135,7 @@ class CustomerController extends Controller
             $sup->country_id= $request->countryName;
             $sup->division_id= $request->divisionName;
             $sup->district_id= $request->districtName;
+            $sup->upazila_id= $request->upazilaName;
             $sup->post_code= $request->postCode;
             $sup->post_code= $request->postCode;
             $sup->address= $request->address;

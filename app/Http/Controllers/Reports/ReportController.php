@@ -28,7 +28,7 @@ class ReportController extends Controller
             $where=" where (date(stocks.`created_at`) BETWEEN '".$request->fdate."' and '".$tdate."') ";
         }
 
-        $stock= DB::select("SELECT products.product_name,stocks.*,sum(stocks.quantity) as qty,sum(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice FROM `stocks` join products on products.id=stocks.product_id $where GROUP BY stocks.lot_no");
+        $stock= DB::select("SELECT products.product_name,stocks.*,sum(stocks.quantity) as qty,sum(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice FROM `stocks` join products on products.id=stocks.product_id $where GROUP BY stocks.lot_no,stocks.brand");
         return view('reports.stockReport',compact('stock'));
     }
 
@@ -40,7 +40,7 @@ class ReportController extends Controller
         $customers = Customer::where(company())->get();
 
         $query = Sales_details::join('sales', 'sales.id', '=', 'sales_details.sales_id')
-            ->groupBy('sales_details.lot_no')
+            ->groupBy('sales_details.sales_id')
             ->select('sales.*', 'sales_details.*');
 
         if ($request->customer) {

@@ -334,18 +334,6 @@ function total_expense(e) {
     total_calculate();
 }
 
-// function total_calculate() {
-//     // Calculate the sum of total_amount values
-//     var grandtotal = 0;
-//     $('.amount').each(function() {
-//         grandtotal += parseFloat($(this).val());
-//     });
-
-//     // Display the sum in the specified element
-//     $('.tgrandtotal_p').val(grandtotal.toFixed(2));
-//     $('.tgrandtotalP').text(grandtotal.toFixed(2));
-    
-// }
 function total_calculate() {
     var subTotal=(isNaN(parseFloat($('.sub_total').val().trim()))) ? 0 :parseFloat($('.sub_total').val().trim());
     

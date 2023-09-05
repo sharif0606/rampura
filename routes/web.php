@@ -104,6 +104,7 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::resource('country',country::class,['as'=>'owner']);
         Route::resource('division',division::class,['as'=>'owner']);
         Route::resource('district',district::class,['as'=>'owner']);
+        Route::resource('upazila',upazila::class,['as'=>'owner']);
 
         //Owner profile
         Route::get('/profile', [profile::class,'ownerProfile'])->name('owner.profile');
@@ -155,6 +156,9 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::resource('rpurchase',rpurchase::class,['as'=>'owner']);
         Route::get('/product_search', [purchase::class,'product_search'])->name('owner.pur.product_search');
         Route::get('/product_search_data', [purchase::class,'product_search_data'])->name('owner.pur.product_search_data');
+
+        //lc check
+        Route::get('/check-lc', [purchase::class, 'checkLcNo'])->name('owner.checkLcNo');
 
         //Sale
         Route::resource('sales',sales::class,['as'=>'owner']);

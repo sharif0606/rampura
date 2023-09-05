@@ -53,6 +53,13 @@
                     <li class="py-1"><a href="{{route(currentUser().'.district.create')}}">{{__('Add New')}}</a></li>
                 </ul>
             </li>
+            <li class="submenu-item sidebar-item has-sub">
+                <a href="#" class='sidebar-link'> {{__('Area')}}</a>
+                <ul class="submenu">
+                    <li class="py-1"><a href="{{route(currentUser().'.upazila.index')}}">{{__('List')}}</a></li>
+                    <li class="py-1"><a href="{{route(currentUser().'.upazila.create')}}">{{__('Add New')}}</a></li>
+                </ul>
+            </li>
 		</ul>
     </li>
 
@@ -121,32 +128,19 @@
             <li class="py-1"><a href="{{route(currentUser().'.transfer.create')}}">{{__('Transfer')}}</a></li>
 		</ul>   
     </li> --}}
-
     <li class="sidebar-item has-sub">
-        <a href="#" class='sidebar-link'><i class="bi bi-people-fill"></i><span>{{__('Supplier')}}</span>
-        </a>
+        <a href="#" class='sidebar-link'><i class="bi bi-people-fill"></i></i><span>{{__('Supplier')}}</span></a>
         <ul class="submenu">
-            <li class="submenu-item sidebar-item has-sub"><a href="#" class='sidebar-link'> {{__('Supplier')}}</a>
-                <ul class="submenu">
-                    <li class="py-1"><a href="{{route(currentUser().'.supplier.index')}}">{{__('List')}}</a></li>
-                    <li class="py-1"><a href="{{route(currentUser().'.supplier.create')}}">{{__('Add New')}}</a></li>
-                </ul>
-            </li>
-		</ul>
+            <li class="py-1"><a href="{{route(currentUser().'.supplier.index')}}">{{__('List')}}</a></li>
+            <li class="py-1"><a href="{{route(currentUser().'.supplier.create')}}">{{__('Add New')}}</a></li>
+		</ul>   
     </li>
-
-
     <li class="sidebar-item has-sub">
-        <a href="#" class='sidebar-link'><i class="bi bi-people-fill"></i><span>{{__('Customer')}}</span>
-        </a>
+        <a href="#" class='sidebar-link'><i class="bi bi-people-fill"></i></i><span>{{__('Customer')}}</span></a>
         <ul class="submenu">
-            <li class="submenu-item sidebar-item has-sub"><a href="#" class='sidebar-link'> {{__('Customer')}}</a>
-                <ul class="submenu">
-                    <li class="py-1"><a href="{{route(currentUser().'.customer.index')}}">{{__('List')}}</a></li>
-                    <li class="py-1"><a href="{{route(currentUser().'.customer.create')}}">{{__('Add New')}}</a></li>
-                </ul>
-            </li>
-		</ul>
+            <li class="py-1"><a href="{{route(currentUser().'.customer.index')}}">{{__('List')}}</a></li>
+            <li class="py-1"><a href="{{route(currentUser().'.customer.create')}}">{{__('Add New')}}</a></li>
+		</ul>   
     </li>
 
     <li class="sidebar-item has-sub">

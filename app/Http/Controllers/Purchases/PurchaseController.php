@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Purchases\Purchase;
 use App\Models\Accounts\Child_one;
 use App\Models\Accounts\Child_two;
+use App\Models\Vouchers\GeneralLedger;
 use App\Models\Expenses\ExpenseOfPurchase;
 use App\Models\Purchases\Purchase_details;
 use App\Models\Stock\Stock;
@@ -64,6 +65,12 @@ class PurchaseController extends Controller
         return view('purchase.create',compact('branches','suppliers','Warehouses','childTow'));
         
     }
+    public function checkLcNo(Request $request)
+    {
+        $lc = $request->input('lc_no');
+        $lcInterest = GeneralLedger::where('lc_no',$lc)->first();
+        return response()->json(['data' => $lcInterest]);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -91,7 +98,7 @@ class PurchaseController extends Controller
             $product=Product::where(company())->where('id',$request->item_id)->first();
             $data='<tr class="text-center">';
             $data.='<td class="py-2 px-1">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'"></td>';
-            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="lot_no[]" type="text" class="form-control lot_no"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" onBlur="Availability(this)" name="lot_no[]" type="text" class="form-control lot_no"></td>';
             $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="brand[]" type="text" class="form-control brand"></td>';
             $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" class="form-control qty_bag"></td>';
             $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" class="form-control qty_kg"></td>';

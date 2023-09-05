@@ -352,6 +352,7 @@ class JournalVoucherController extends Controller
                                 $gl->company_id =company()['company_id'];
                                 $gl->journal_title=!empty($acccode)?$acccode:"";
                                 $gl->rec_date=$request->current_date;
+                                $gl->lc_no=$request->lc_no;
                                 $gl->jv_id=$voucher_no;
                                 $gl->journal_voucher_bkdn_id=$jvb->id;
                                 $gl->created_by=currentUserId();

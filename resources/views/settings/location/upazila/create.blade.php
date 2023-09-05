@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Create Upazila'))
+@section('pageTitle',trans('Create Area'))
 @section('pageSubTitle',trans('Create'))
 
 @section('content')
@@ -22,7 +22,7 @@
                                                 @forelse($districts as $d)
                                                     <option value="{{$d->id}}" {{ old('district_id')==$d->id?"selected":""}}> {{ $d->name}}</option>
                                                 @empty
-                                                    <option value="">No Category found</option>
+                                                    <option value="">No data found</option>
                                                 @endforelse
                                             </select>
                                             @if($errors->has('district_id'))
@@ -32,8 +32,8 @@
                                     </div>
                                     <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="form-group">
-                                            <label for="upazilaName">Upazila Name<span class="text-danger">*</span></label>
-                                            <input type="text" id="upazilaName" class="form-control" value="{{ old('upazilaName')}}" name="upazilaName">
+                                            <label for="upazilaName">Area<span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" value="{{ old('upazilaName')}}" name="upazilaName">
                                             @if($errors->has('upazilaName'))
                                                 <span class="text-danger"> {{ $errors->first('upazilaName') }}</span>
                                             @endif
@@ -41,7 +41,7 @@
                                     </div>
                                     <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="form-group">
-                                            <label for="upazilaBn">Upazila Bangla</label>
+                                            <label for="upazilaBn">Area Bangla</label>
                                             <input type="text" id="upazilaBn" class="form-control" value="{{ old('upazilaBn')}}" name="upazilaBn">
                                         </div>
                                     </div>

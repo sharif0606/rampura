@@ -149,37 +149,33 @@ class SalesController extends Controller
                         $pd->rate_kg=$request->rate_in_kg[$i];
                         $pd->amount=$request->amount[$i];
                         if($pd->save()){
-                            if($request->child_two_id){
-                                foreach($request->child_two_id as $j=>$child_two_id){
-                                    $ex = new ExpenseOfSales;
-                                    $ex->sales_id=$pur->id;
-                                    $ex->child_two_id=$child_two_id;
-                                    $ex->cost_amount=$request->cost_amount[$j];
-                                    $ex->status= 0;
-                                    if($ex->save()){
-                                        $stock=new Stock;
-                                        $stock->product_id=$product_id;
-                                        $stock->sales_id=$pur->id;
-                                        $stock->company_id=company()['company_id'];
-                                        $stock->branch_id=$request->branch_id;
-                                        $stock->warehouse_id=$request->warehouse_id;
-                                        $stock->quantity='-'.$pd->actual_quantity;
-                                        $stock->quantity_bag='-'.$pd->quantity_bag;
-                                        $stock->lot_no=$pd->lot_no;
-                                        $stock->brand=$pd->brand;
-                                        $stock->batch_id=$request->batch_id[$i];
-                                        $stock->unit_price=$pd->rate_kg;
-                                        $stock->total_amount=$pd->amount;
-                                        $stock->save();
-                                        
+                            $stock=new Stock;
+                            $stock->product_id=$product_id;
+                            $stock->sales_id=$pur->id;
+                            $stock->company_id=company()['company_id'];
+                            $stock->branch_id=$request->branch_id;
+                            $stock->warehouse_id=$request->warehouse_id;
+                            $stock->quantity='-'.$pd->actual_quantity;
+                            $stock->quantity_bag='-'.$pd->quantity_bag;
+                            $stock->lot_no=$pd->lot_no;
+                            $stock->brand=$pd->brand;
+                            $stock->batch_id=$pd->batch_id;
+                            $stock->unit_price=$pd->rate_kg;
+                            $stock->total_amount=$pd->amount;
+                            if($stock->save()){
+                                if($request->child_two_id){
+                                    foreach($request->child_two_id as $j=>$child_two_id){
+                                        $ex = new ExpenseOfSales;
+                                        $ex->sales_id=$pur->id;
+                                        $ex->child_two_id=$child_two_id;
+                                        $ex->cost_amount=$request->cost_amount[$j];
+                                        $ex->status= 0;
+                                        $ex->save();
                                         DB::commit();
                                     }
                                 }
-
                             }
-                            
                         }
-
                     }
                 }
                 
@@ -227,6 +223,10 @@ class SalesController extends Controller
             $Warehouses = Warehouse::where(company())->get();
             $sales = Sales::findOrFail(encryptor('decrypt',$id));
             $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
+
+            $childone = Child_one::where(company())->where('head_code',5320)->first();
+            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
+            $expense = ExpenseOfSales::where('sales_id',$sales->id)->pluck('cost_amount','child_two_id');
         }else{
             $customers = Customer::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
@@ -234,7 +234,7 @@ class SalesController extends Controller
             $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
         }
         
-        return view('sales.edit',compact('branches','customers','Warehouses','sales','salesDetails'));
+        return view('sales.edit',compact('branches','customers','Warehouses','sales','salesDetails','childTow','expense'));
     }
 
     /**

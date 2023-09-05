@@ -23,8 +23,8 @@
                             <tr>
                                 <th scope="col">{{__('#SL')}}</th>
                                 <th scope="col">{{__('District')}}</th>
-                                <th scope="col">{{__('Upazila')}}</th>
-                                <th scope="col">{{__('Upazila bn')}}</th>
+                                <th scope="col">{{__('Area')}}</th>
+                                <th scope="col">{{__('Area bn')}}</th>
                                 <th class="white-space-nowrap">{{__('Action') }}</th>
                             </tr>
                         </thead>

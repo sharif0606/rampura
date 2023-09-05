@@ -44,10 +44,16 @@
                                                             <input type="text" class="form-control" name="pay_name" value="{{old('pay_name')}}">
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-sm-6">
+                                                    <div class="col-lg-3 col-sm-6">
                                                         <div class="form-group">
                                                             <label>Purpose</label>
                                                             <input type="text" class="form-control" name="purpose" value="{{old('purpose')}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>LC Number</label>
+                                                            <input type="text" class="form-control" name="lc_no" value="{{old('lc_no')}}">
                                                         </div>
                                                     </div>
                                                 </div>

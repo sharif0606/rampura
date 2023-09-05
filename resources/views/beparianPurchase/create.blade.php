@@ -126,10 +126,18 @@
                                     <table class="tbl_expense" style="width:100%;">
                                         <tbody>
                                             @forelse ($childTow as $ex)
-                                                <tr class="tbl_expense">
-                                                    <th class="tbl_expense" style="padding-left: 8px;">{{$ex->head_name}} <input type="hidden" name="child_two_id[]" value="{{$ex->id}}"></th>
-                                                    <td class="tbl_expense" ><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" ></td>
-                                                </tr>
+                                                @if($ex->head_code != 5322)
+                                                    <tr class="tbl_expense">
+                                                        <th class="tbl_expense" style="padding-left: 8px;">{{$ex->head_name}} <input type="hidden" name="child_two_id[]" value="{{$ex->id}}"></th>
+                                                        <td class="tbl_expense" ><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" ></td>
+                                                    </tr>
+                                                @endif
+                                                @if($ex->head_code == 5322)
+                                                    <tr class="tbl_expense">
+                                                        <th class="tbl_expense" style="padding-left: 8px;">{{$ex->head_name}} <input type="hidden" name="child_two_id[]" value="{{$ex->id}}"></th>
+                                                        <td class="tbl_expense" ><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end ltr_interest" name="cost_amount[]" readonly></td>
+                                                    </tr>
+                                                @endif
                                             @empty
                                                 
                                             @endforelse
@@ -141,10 +149,6 @@
                                                         <input type="hidden"  class="sub_total">
                                                     </td>
                                                 </tr>
-                                                {{-- <tr class="tbl_expense">
-                                                    <th class="tbl_expense" style="padding-left: 8px;">LTR INTEREST</h4></th>
-                                                    <td class="tbl_expense" ><input class="form-control text-end" type="text"></td>
-                                                </tr> --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -341,6 +345,30 @@ function total_calculate() {
     $('.tgrandtotal').text(grandTotal.toFixed(2));
     $('.tgrandtotal_p').val(grandTotal.toFixed(2));
     
+}
+</script>
+<script>
+function Availability(inputField) {
+    var lc = inputField.value;
+    $.ajax({
+        url: '{{route(currentUser().'.checkLcNo')}}',
+        type: 'GET',
+        data: { lc_no: lc },
+        dataType: 'json',
+        success: function(response) {
+            if (response.data) {
+            var ltrInterest = response.data.dr;
+            $('.ltr_interest').val(ltrInterest);
+            } else {
+                $('.ltr_interest').val('');
+            }
+            total_expense();
+        },
+        
+        error: function(xhr, status, error) {
+            console.log(error); // Handle the error if needed
+        }
+    });
 }
 </script>
 <script src="{{ asset('/assets/js/full_screen.js') }}"></script>

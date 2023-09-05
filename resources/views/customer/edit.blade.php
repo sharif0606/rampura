@@ -106,10 +106,23 @@
                                     <div class="col-md-4 col-12">
                                         <div class="form-group">
                                             <label for="districtName">{{__('District')}}</label>
-                                            <select class="form-control form-select" name="districtName" id="districtName">
+                                            <select onchange="show_upazila(this.value)" class="form-control form-select" name="districtName" id="districtName">
                                                 <option value="">Select District</option>
                                                 @forelse($districts as $d)
                                                     <option class="dist dist{{$d->division_id}}" value="{{$d->id}}" {{ old('districtName',$customer->district_id)==$d->id?"selected":""}}> {{ $d->name}}</option>
+                                                @empty
+                                                    <option value="">No data found</option>
+                                                @endforelse
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <div class="form-group">
+                                            <label for="districtName">{{__('Area')}}</label>
+                                            <select class="form-control form-select" name="upazilaName">
+                                                <option value="">Select Area</option>
+                                                @forelse($upazilas as $d)
+                                                    <option class="upa upa{{$d->district_id}}" value="{{$d->id}}" {{ old('upazilaName',$customer->upazila_id)==$d->id?"selected":""}}> {{ $d->name}}</option>
                                                 @empty
                                                     <option value="">No data found</option>
                                                 @endforelse
@@ -151,6 +164,7 @@
     $(document).ready(function(){
         $('.div').hide();
         $('.dist').hide();
+        $('.upa').hide();
     })
 
     function show_division(e){
@@ -160,6 +174,10 @@
     function show_district(e){
         $('.dist').hide();
         $('.dist'+e).show();
+    }
+    function show_upazila(e){
+        $('.upa').hide();
+        $('.upa'+e).show();
     }
 
     
