@@ -135,8 +135,8 @@
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" type="text" value="{{$p->qty+$p->quantity_kg}}" class="form-control" disabled></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" value="{{$p->quantity_bag}}" class="form-control qty_bag"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" value="{{$p->quantity_kg}}" class="form-control qty_kg"></td>
-                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" class="form-control less_qty_kg"></td>
-                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="actual_qty[]" readonly type="text" class="form-control actual_qty" value="0"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" value="{{$p->less_quantity_kg}}" class="form-control less_qty_kg"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="actual_qty[]" readonly type="text" value="{{$p->actual_quantity}}" class="form-control actual_qty" value="0"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value="{{$p->rate_kg}}"></td>
                                                 <td class="py-2 px-1"><input name="amount[]" readonly type="text" class="form-control amount" value="{{$p->amount}}"></td>
                                                 <td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>
@@ -149,9 +149,32 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="col-lg-12 col-sm-12 col-md-12 mt-3">
+                                    <div><h5>ADD FOR SALES:</h5></div>
+                                    <table class="tbl_expense" style="width:100%;">
+                                        <tbody>
+                                            @forelse ($childTow as $ex)
+                                                <tr class="tbl_expense">
+                                                    <th class="tbl_expense" style="padding-left: 8px;">{{$ex->head_name}} <input type="hidden" name="child_two_id[]" value="{{$ex->id}}"></th>
+                                                    <td class="tbl_expense" ><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value="@if(isset($expense[$ex->id])){{$expense[$ex->id]}} @endif"></td>
+                                                </tr>
+                                            @empty
+                                                
+                                            @endforelse
+                                                <tr class="tbl_expense">
+                                                    <th class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL RECEIVABLE AMOUNT</h5></th>
+                                                    <td class="tbl_expense text-end" >
+                                                        <h5 class="tgrandtotal" >{{$sales->grand_total}}</h5>
+                                                        <input type="hidden" name="tgrandtotal" class="tgrandtotal_p" value="{{$sales->grand_total}}">
+                                                        <input type="hidden"  class="sub_total">
+                                                    </td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             
-                            <div class="row">
+                            <div class="row my-3">
                                 <div class="col-12 d-flex justify-content-end">
                                     <button type="submit" class="btn btn-info me-1 mb-1">{{__('Update')}}</button>
                                 </div>
@@ -290,15 +313,20 @@ function removerow(e){
 }
 //END
 //CALCUALATED SALES PRICE
+function removerow(e){
+  $(e).closest('tr').remove();
+  total_expense();
+  total_calculate();
+}
+//END
+//CALCUALATED SALES PRICE
 function get_cal(e){
   var quantity_bag = (isNaN(parseFloat($(e).closest('tr').find('.qty_bag').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_bag').val().trim()); 
   var stock_bag = (isNaN(parseFloat($(e).closest('tr').find('.stock_bag').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.stock_bag').val().trim()); 
   var quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_kg').val().trim()); 
+  var less_quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()); 
   var rate_in_kg = (isNaN(parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()); 
-  var stock = (isNaN(parseFloat($(e).closest('tr').find('.stockqty').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.stockqty').val().trim()); 
-  var sale_commission = (isNaN(parseFloat($(e).closest('tr').find('.sale_commission').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.sale_commission').val().trim()); 
-  var transport_cost = (isNaN(parseFloat($(e).closest('tr').find('.transport_cost').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.transport_cost').val().trim()); 
-  var labour_cost = (isNaN(parseFloat($(e).closest('tr').find('.labour_cost').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.labour_cost').val().trim()); 
+  var stock = (isNaN(parseFloat($(e).closest('tr').find('.stockqty').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.stockqty').val().trim());
 
   if(stock < quantity_kg){
     alert("You cannot sell more than "+stock);
@@ -311,63 +339,46 @@ function get_cal(e){
     quantity_bag=stock_bag;
     $(e).closest('tr').find('.qty_bag').val(quantity_bag)
   }
-
-  var cost = ((sale_commission + transport_cost + labour_cost ));
-  var amount = ((quantity_kg * rate_in_kg));
-  var total_amount = ((amount + cost));
+  
+  var actualQuantity= ((quantity_kg - less_quantity_kg));
+  var amount = ((actualQuantity * rate_in_kg));
 
   
   
+  $(e).closest('tr').find('.actual_qty').val(actualQuantity);
   $(e).closest('tr').find('.amount').val(amount);
-  $(e).closest('tr').find('.total_amount').val(total_amount);
+
+  total_expense();
   total_calculate();
 }
+
+function total_expense(e) {
+    var grandExpense = 0;
+    $('.expense_value').each(function() {
+        grandExpense += parseFloat($(this).val()) || 0;
+    });
+
+    $(".sub_total").val(grandExpense.toFixed(2));
+
+    total_calculate();
+}
+
 function total_calculate() {
+    var subTotal=(isNaN(parseFloat($('.sub_total').val().trim()))) ? 0 :parseFloat($('.sub_total').val().trim());
+    
+
     // Calculate the sum of total_amount values
-    var grandtotal = 0;
-    $('.total_amount').each(function() {
-        grandtotal += parseFloat($(this).val());
-    });
-
-    var totalbag = 0;
-    $('.qty_bag').each(function() {
-        totalbag += parseFloat($(this).val());
-    });
-
-    var totalkg = 0;
-    $('.qty_kg').each(function() {
-        totalkg += parseFloat($(this).val());
-    });
-
-    var totalam = 0;
+    
+    var purChaseTotal = 0;
     $('.amount').each(function() {
-        totalam += parseFloat($(this).val());
+        purChaseTotal += parseFloat($(this).val());
     });
 
-    var totalsalcommission = 0;
-    $('.sale_commission').each(function() {
-        totalsalcommission += parseFloat($(this).val());
-    });
-
-    var totaltrncharge = 0;
-    $('.transport_cost').each(function() {
-        totaltrncharge += parseFloat($(this).val());
-    });
-
-    var totallabourcharge = 0;
-    $('.labour_cost').each(function() {
-        totallabourcharge += parseFloat($(this).val());
-    });
+    var grandTotal=((subTotal+purChaseTotal));
 
     // Display the sum in the specified element
-    $('.tgrandtotal_p').val(grandtotal.toFixed(2));
-    $('.tgrandtotalP').text(grandtotal.toFixed(2));
-    $('.total_bag').text(totalbag.toFixed(2));
-    $('.total_qty_kg').text(totalkg.toFixed(2));
-    $('.total_am').text(totalam.toFixed(2));
-    $('.total_sale_commission').text(totalsalcommission.toFixed(2));
-    $('.total_trn_charge').text(totaltrncharge.toFixed(2));
-    $('.total_labour_charge').text(totallabourcharge.toFixed(2));
+    $('.tgrandtotal').text(grandTotal.toFixed(2));
+    $('.tgrandtotal_p').val(grandTotal.toFixed(2));
     
 }
 

@@ -340,6 +340,7 @@ function get_cal(e){
   console.log('actual_quantity:', actual_quantity);
   console.log('amount:', amount);
 
+  total_expense();
   total_calculate();
 }
 function total_expense(e) {
@@ -381,7 +382,7 @@ function total_calculate() {
 
 </script>
 <script>
-function Availability(inputField) {
+    function Availability(inputField) {
     var lc = inputField.value;
     $.ajax({
         url: '{{route(currentUser().'.checkLcNo')}}',

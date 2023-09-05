@@ -284,6 +284,8 @@ console.log(item_id)
 //INCREMENT ITEM
 function removerow(e){
   $(e).closest('tr').remove();
+
+  total_expense();
   total_calculate();
 }
 //END
@@ -320,6 +322,7 @@ function get_cal(e){
   $(e).closest('tr').find('.actual_qty').val(actualQuantity);
   $(e).closest('tr').find('.amount').val(amount);
 
+  total_expense();
   total_calculate();
 }
 

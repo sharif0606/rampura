@@ -251,18 +251,18 @@ class SalesController extends Controller
             $pur=  Sales::findOrFail(encryptor('decrypt',$id));
             $pur->customer_id=$request->customerName;
             $pur->sales_date=date('Y-m-d', strtotime($request->sales_date));
-            $pur->reference_no=$request->reference_no;
             $pur->grand_total=$request->tgrandtotal;
             $pur->company_id=company()['company_id'];
             $pur->branch_id=$request->branch_id;
             $pur->warehouse_id=$request->warehouse_id;
-            $pur->created_by=currentUserId();
+            $pur->updated_by=currentUserId();
             $pur->payment_status=0;
             $pur->status=1;
             if($pur->save()){
                 if($request->product_id){
                     Sales_details::where('sales_id',$pur->id)->delete();
                     Stock::where('sales_id',$pur->id)->delete();
+                    ExpenseOfSales::where('sales_id',$pur->id)->delete();
                     foreach($request->product_id as $i=>$product_id){
                         if($request->lot_no[$i]>0){
                             $pd=new Sales_details;
@@ -273,12 +273,10 @@ class SalesController extends Controller
                             $pd->brand=$request->brand[$i];
                             $pd->quantity_bag=$request->qty_bag[$i];
                             $pd->quantity_kg=$request->qty_kg[$i];
+                            $pd->less_quantity_kg=$request->less_qty_kg[$i];
+                            $pd->actual_quantity=$request->actual_qty[$i];
                             $pd->rate_kg=$request->rate_in_kg[$i];
                             $pd->amount=$request->amount[$i];
-                            $pd->sale_commission=$request->sale_commission[$i];
-                            $pd->transport_cost=$request->transport_cost[$i];
-                            $pd->unloading_cost=$request->labour_cost[$i];
-                            $pd->total_amount=$request->total_amount[$i];
                             if($pd->save()){
                                 $stock=new Stock;
                                 $stock->product_id=$product_id;
@@ -286,16 +284,26 @@ class SalesController extends Controller
                                 $stock->company_id=company()['company_id'];
                                 $stock->branch_id=$request->branch_id;
                                 $stock->warehouse_id=$request->warehouse_id;
-                                $stock->quantity='-'.$pd->quantity_kg;
+                                $stock->quantity='-'.$pd->actual_quantity;
                                 $stock->quantity_bag='-'.$pd->quantity_bag;
                                 $stock->lot_no=$pd->lot_no;
                                 $stock->brand=$pd->brand;
-                                $stock->batch_id=$request->batch_id[$i];
+                                $stock->batch_id=$pd->batch_id;
                                 $stock->unit_price=$pd->rate_kg;
-                                $stock->total_amount=$pd->total_amount;
-                                $stock->save();
-                                
-                                DB::commit();
+                                $stock->total_amount=$pd->amount;
+                                if($stock->save()){
+                                    if($request->child_two_id){
+                                        foreach($request->child_two_id as $j=>$child_two_id){
+                                            $ex = new ExpenseOfSales;
+                                            $ex->sales_id=$pur->id;
+                                            $ex->child_two_id=$child_two_id;
+                                            $ex->cost_amount=$request->cost_amount[$j];
+                                            $ex->status= 0;
+                                            $ex->save();
+                                            DB::commit();
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

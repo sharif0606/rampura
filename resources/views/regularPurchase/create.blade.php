@@ -309,6 +309,7 @@ function get_cal(e){
   console.log('actual_quantity:', actual_quantity);
   console.log('amount:', amount);
 
+  total_expense();
   total_calculate();
 }
 function total_expense(e) {
