@@ -119,7 +119,7 @@
                         <div style="text-align: end; padding-right: 100px; margin-top:3rem; margin-bottom: 3rem;">
                             <h6>AUTHORISED SIGNTORY</h6>
                         </div>
-                        <table style="width: 100%; margin-top: 1rem;">
+                        <table style="width: 100%; margin-top: 1.5rem;">
                             <tr style="padding-top: 5rem;">
                                 <th style="text-align: center;"><h6>PREPARED BY</h6></th>
                                 <th style="text-align: center;"><h6>CHECKED BY</h6></th>
