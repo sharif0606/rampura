@@ -216,7 +216,8 @@ class PurchaseController extends Controller
     {
         $show_data= Purchase::findOrFail(encryptor('decrypt',$id));
         $purDetail= Purchase_details::where('purchase_id',$show_data->id)->get();
-        return view('purchase.show',compact('show_data','purDetail'));
+        $expense = ExpenseOfPurchase::where('purchase_id',$show_data->id)->get();
+        return view('purchase.show',compact('show_data','purDetail','expense'));
     }
 
     /**

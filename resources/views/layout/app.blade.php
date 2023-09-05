@@ -121,6 +121,20 @@
         $("#datepicker").datepicker();
     });
 </script>
+<script>
+    function printDiv(divName) {
+        var prtContent = document.getElementById(divName);
+        var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+        WinPrint.document.write('<link rel="stylesheet" href="{{ asset('assets/css/main/app.css') }}" type="text/css"/>');
+        WinPrint.document.write(prtContent.innerHTML);
+        WinPrint.document.close();
+        WinPrint.onload =function(){
+            WinPrint.focus();
+            WinPrint.print();
+            WinPrint.close();
+        }
+    }
+</script>
 @stack('scripts')
 
 </body>
