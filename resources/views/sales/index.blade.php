@@ -49,9 +49,9 @@
                                     <a href="{{route(currentUser().'.sales.show',encryptor('encrypt',$s->id))}}">
                                         <i class="bi bi-eye-fill"></i>
                                     </a>&nbsp;
-                                    <a href="{{route(currentUser().'.sales.view',encryptor('encrypt',$s->id))}}">
+                                    {{-- <a href="{{route(currentUser().'.sales.view',encryptor('encrypt',$s->id))}}">
                                         <i class="bi bi-eye-fill"></i>
-                                    </a>&nbsp;
+                                    </a>&nbsp; --}}
                                     <a href="{{route(currentUser().'.sales.edit',encryptor('encrypt',$s->id))}}">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>

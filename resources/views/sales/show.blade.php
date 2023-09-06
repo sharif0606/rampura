@@ -26,7 +26,7 @@
                                     <p>R.S TOWER 193, KHATUNGONJ, CHATTOGRAM</p>
                                     <p>IMPORT, EXPORTER, WHOLESALER, RETAILSALER & COMMISSION AGENT</p>
                                     <p>E-MAIL: <a href="#" style="border-bottom: solid 1px; border-color:blue;">rampursyndicate@yahoo.com</a> Contact: +88 01707-377372 & +88 01758-982661</p>
-                                    <h6>SALES INVOICE</h6>
+                                    <h6 style="padding-bottom: 3.5rem;">SALES INVOICE</h6>
                                 </th>
                             </tr>
                             <tr>
@@ -43,16 +43,16 @@
                         <table class="tbl_expense" style="width:100%">
                             <tbody>
                                 <tr class="tbl_expense">
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">{{__('#SL')}}</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">Description of Goods</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">Lot/Lc No</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">Trade Marek</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">Quantity Bag</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">Quantity kg</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">Less/Discount Kg</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">Actual Quantity</th>
-                                    <th class="tbl_expense td_hide" style="text-align: center; padding: 5px;">Rate in Per Kg</th>
-                                    <th class="tbl_expense td_hide" style="text-align: center; padding: 5px;">Total Amount</th>
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">{{__('SL NO')}}</th>
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">DESCRIPTION OF GOODS</th>
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">LOT/ LC NO</th>
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">TRADE MARK</th>
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">QUANTITY BAG</th>
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">QUANTITY KG</th>
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">LESS/ DISCOUNT KG</th>
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">ACTUAL QUANTITY IN KG</th>
+                                    <th class="tbl_expense td_hide" style="text-align: center; padding: 5px;">RATE IN PER KG</th>
+                                    <th class="tbl_expense td_hide" style="text-align: center; padding: 5px;">TOTAL AMOUNT</th>
                                 </tr>
                                 @forelse($salesDetail as $s)
                                 <tr class="tbl_expense">
@@ -95,10 +95,10 @@
                             </tbody>
                         </table>
                         <div class="td_hide" style="margin-top: 5px; margin-bottom: 5px;"><h6>Note: Merchandise sold is non - refundable (Call for Delivery +01837-772467)</h6></div>
-                        <div class="td_hide" style="text-align: end; padding-right: 100px; margin-top:3rem; margin-bottom: 3rem;">
+                        <div class="td_hide" style="text-align: end; padding-right: 100px; margin-top:5rem; margin-bottom: 4rem;">
                             <h6>AUTHORISED SIGNTORY</h6>
                         </div>
-                        <table class="td_hide" style="width: 100%; margin-top: 1.5rem;">
+                        <table class="td_hide" style="width: 100%; margin-top: 2rem;">
                             <tr style="padding-top: 5rem;">
                                 <th style="text-align: center;"><h6>PREPARED BY</h6></th>
                                 <th style="text-align: center;"><h6>CHECKED BY</h6></th>
