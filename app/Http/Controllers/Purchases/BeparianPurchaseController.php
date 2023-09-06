@@ -163,7 +163,8 @@ class BeparianPurchaseController extends Controller
     {
         $show_data= Beparian_purchase::findOrFail(encryptor('decrypt',$id));
         $purDetail= Purchase_details::where('beparian_purchase_id',$show_data->id)->get();
-        return view('beparianPurchase.show',compact('show_data','purDetail'));
+        $expense = ExpenseOfPurchase::where('beparian_purchase_id',$show_data->id)->get();
+        return view('beparianPurchase.show',compact('show_data','purDetail','expense'));
     }
 
     /**

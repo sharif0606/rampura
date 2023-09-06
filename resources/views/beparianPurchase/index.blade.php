@@ -27,7 +27,6 @@
                                 <th scope="col">{{__('#SL')}}</th>
                                 <th scope="col">{{__('Supplier')}}</th>
                                 <th scope="col">{{__('Date')}}</th>
-                                <th scope="col">{{__('Reference Number')}}</th>
                                 <th scope="col">{{__('GrandTotal')}}</th>
                                 <th scope="col">{{__('Warehouse')}}</th>
                                 <th scope="col">{{__('Status')}}</th>
@@ -41,7 +40,6 @@
                                 <th scope="row">{{ ++$loop->index }}</th>
                                 <td>{{$pur->supplier?->supplier_name}}</td>
                                 <td>{{$pur->purchase_date}}</td>
-                                <td>{{$pur->reference_no}}</td>
                                 <td>{{$pur->grand_total}}</td>
                                 <td>{{$pur->warehouse?->name}}</td>
                                 <td>{{$st[$pur->status]}}</td>
@@ -64,7 +62,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <th colspan="9" class="text-center">No Data Found</th>
+                                <th colspan="8" class="text-center">No Data Found</th>
                             </tr>
                             @endforelse
                         </tbody>

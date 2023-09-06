@@ -40,7 +40,7 @@
                                 </td>
                                 <td style="text-align: end;">
                                     <p style="padding-right: 100px;"><b>INVOICE:</b>&nbsp; &nbsp; {{$show_data->voucher_no}}</p>
-                                    <p style="padding-right: 120px;"><b>DATE:</b>&nbsp; &nbsp; {{$show_data->purchase_date}}</p>
+                                    <p style="padding-right: 120px;"><b>DATE:</b>&nbsp; &nbsp; {{ date('d-M-Y', strtotime($show_data->purchase_date)) }}</p>
                                 </td>
                             </tr>
                         </table>
