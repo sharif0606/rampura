@@ -23,6 +23,7 @@
                             <tr>
                                 <th scope="col">{{__('#SL')}}</th>
                                 <th scope="col">{{__('Voucher No')}}</th>
+                                <th scope="col">{{__('LC No')}}</th>
                                 <th scope="col">{{__('Date')}}</th>
                                 <th scope="col">{{__('Pay Name')}}</th>
                                 <th scope="col">{{__('Purpose')}}</th>
@@ -35,6 +36,14 @@
                             <tr>
                                 <th scope="row">{{ ++$loop->index }}</th>
                                 <td>{{$cr->voucher_no}}</td>
+                                <td>
+                                    @foreach($cr->generalLedgers as $key => $generalLedger)
+                                        {{$generalLedger->lc_no}}
+                                        @if($key === 0)
+                                            @break
+                                        @endif
+                                    @endforeach
+                                </td>
                                 <td>{{date('d/m,Y',strtotime($cr->current_date))}}</td>
                                 <td>{{$cr->pay_name}}</td>
                                 <td>{{$cr->purpose}}</td>

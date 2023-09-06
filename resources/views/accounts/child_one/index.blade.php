@@ -30,17 +30,19 @@
                                    
                                     <td>{{$d->opening_balance}}</td>
                                     <td class="white-space-nowrap">
-                                        <a href="{{route(currentUser().'.child_one.edit',encryptor('encrypt',$d->id))}}">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                        <a class="text-danger" href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                        <form id="form{{$d->id}}" onsubmit="return confirm('Are you sure?')" action="{{route(currentUser().'.child_one.destroy',encryptor('encrypt',$d->id))}}" method="post">
-                                            @csrf
-                                            @method('delete')
-                                            
-                                        </form>
+                                        @if($d->head_code != 5310 && $d->head_code != 5320)
+                                            <a href="{{route(currentUser().'.child_one.edit',encryptor('encrypt',$d->id))}}">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                            <a class="text-danger" href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                            <form id="form{{$d->id}}" onsubmit="return confirm('Are you sure?')" action="{{route(currentUser().'.child_one.destroy',encryptor('encrypt',$d->id))}}" method="post">
+                                                @csrf
+                                                @method('delete')
+                                                
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty
