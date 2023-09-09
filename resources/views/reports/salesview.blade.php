@@ -66,8 +66,8 @@
                                             <th class="p-2" data-title="Total Quantity in Kg">{{__('Total Kg')}}</th>
                                             <th class="p-2" data-title="Rate in Kg">{{__('Rate in kg')}}</th>
                                             <th class="p-2" data-title="Amount">{{__('Amount')}}</th>
-                                            <th class="p-2" data-title="Sales Commission Income">{{__('S.Com')}}</th>
-                                            <th class="p-2" data-title="Total Amount">{{__('Total Amount')}}</th>
+                                            {{-- <th class="p-2" data-title="Sales Commission Income">{{__('S.Com')}}</th>
+                                            <th class="p-2" data-title="Total Amount">{{__('Total Amount')}}</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -75,8 +75,8 @@
                                             $totalBagQty = 0;
                                             $totalQty = 0;
                                             $amount = 0;
-                                            $saleCommission = 0;
-                                            $totalAmount = 0;
+                                            // $saleCommission = 0;
+                                            // $totalAmount = 0;
                                         @endphp
                                         @forelse($data as $d)
                                         <tr class="text-center">
@@ -89,19 +89,19 @@
                                             <td>{{$d->quantity_kg}}</td>
                                             <td>{{$d->rate_kg}}</td>
                                             <td>{{$d->amount}}</td>
-                                            <td>{{$d->sale_commission}}</td>
-                                            <td>{{$d->total_amount}}</td>
+                                            {{-- <td>{{$d->sale_commission}}</td>
+                                            <td>{{$d->total_amount}}</td> --}}
                                         </tr>
                                         @php
                                             $totalBagQty += $d->quantity_bag;
                                             $totalQty += $d->quantity_kg;
                                             $amount += $d->amount;
-                                            $saleCommission += $d->sale_commission;
-                                            $totalAmount += $d->total_amount;
+                                            // $saleCommission += $d->sale_commission;
+                                            // $totalAmount += $d->total_amount;
                                         @endphp
                                         @empty
                                         <tr>
-                                            <th colspan="11" class="text-center">No data Found</th>
+                                            <th colspan="9" class="text-center">No data Found</th>
                                         </tr>
                                         @endforelse
                                     </tbody>
@@ -112,8 +112,8 @@
                                             <th class="p-2">{{$totalQty}}</th>
                                             <th class="p-2"></th>
                                             <th class="p-2">{{$amount}}</th>
-                                            <th class="p-2">{{$saleCommission}}</th>
-                                            <th class="p-2">{{$totalAmount}}</th>
+                                            {{-- <th class="p-2">{{$saleCommission}}</th>
+                                            <th class="p-2">{{$totalAmount}}</th> --}}
                                         </tr>
                                     </tfoot>
                                 </table>

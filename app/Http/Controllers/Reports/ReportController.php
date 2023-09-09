@@ -11,6 +11,7 @@ use App\Models\Sales\Sales;
 use App\Models\Stock\Stock;
 use App\Models\Suppliers\Supplier;
 use App\Models\Customers\Customer;
+use App\Models\Purchases\Purchase_details;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
@@ -33,6 +34,33 @@ class ReportController extends Controller
     }
 
    
+
+    public function purchaseReport(Request $request)
+    {
+        // dd($request->all());
+        $suppliers = Supplier::where(company())->get();
+
+        $query = Purchase_details::join('purchases', 'purchases.id', '=', 'purchase_details.purchase_id')
+            ->groupBy('purchase_details.purchase_id')
+            ->select('purchases.*', 'purchase_details.*');
+
+        if ($request->supplier) {
+            $query->where('purchases.supplier_id', $request->supplier);
+            // dd($query->toSql());
+        }
+
+        if ($request->fdate && $request->tdate) {
+            $fdate = Carbon::parse($request->fdate)->toDateString();
+            $tdate = Carbon::parse($request->tdate)->toDateString();
+    
+            $query->whereBetween(DB::raw('DATE(purchases.purchase_date)'), [$fdate, $tdate]);
+            //  dd($query->toSql());
+        }
+
+        $data = $query->get();
+        
+        return view('reports.pview', compact('data', 'suppliers'));
+    }
 
     public function salesReport(Request $request)
     {

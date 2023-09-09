@@ -12,6 +12,8 @@
             <div class="card">
                 <div class="text-end">
                     <button type="button" class="btn btn-info" onclick="printDiv('result_show')">Print</button>
+                    <button id="btn-export" onclick="exportHTML();">Export</button>
+                    <button id="btn-export-pdf" onclick="exportPDF();">Export PDF</button>
                 </div>
                 <div class="card-content" id="result_show">
                     <style>
@@ -134,4 +136,34 @@
 @endsection
 @push('scripts')
 {{-- <script src="{{ asset('/assets/js/full_screen.js') }}"></script> --}}
+<script>
+    function exportHTML(){
+       var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+            "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+            "xmlns='http://www.w3.org/TR/REC-html40'>"+
+            "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+       var footer = "</body></html>";
+       var sourceHTML = header+document.getElementById("result_show").innerHTML+footer;
+       
+       var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+       var fileDownload = document.createElement("a");
+       document.body.appendChild(fileDownload);
+       fileDownload.href = source;
+       fileDownload.download = 'document.doc';
+       fileDownload.click();
+       document.body.removeChild(fileDownload);
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+<script>
+    function exportPDF(){
+        var pdf = new jsPDF();
+        pdf.html(document.getElementById('result_show'), {
+            callback: function () {
+                pdf.save('document.pdf');
+            }
+        });
+    }
+</script>
 @endpush
