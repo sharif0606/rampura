@@ -12,8 +12,8 @@
             <div class="card">
                 <div class="text-end">
                     <button type="button" class="btn btn-info" onclick="printDiv('result_show')">Print</button>
-                    <button id="btn-export" onclick="exportHTML();">Export</button>
-                    <button id="btn-export-pdf" onclick="exportPDF();">Export PDF</button>
+                    {{-- <button id="btn-export" onclick="exportHTML();">Export</button>
+                    <button id="btn-export-pdf" onclick="exportPDF();">Export PDF</button> --}}
                 </div>
                 <div class="card-content" id="result_show">
                     <style>
