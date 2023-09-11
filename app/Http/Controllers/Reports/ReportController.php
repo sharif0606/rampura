@@ -18,9 +18,6 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
- 
-    
-
     public function stockreport(Request $request)
     {
         $where=false;
@@ -42,7 +39,7 @@ class ReportController extends Controller
 
         $query = Purchase_details::join('purchases', 'purchases.id', '=', 'purchase_details.purchase_id')
             ->groupBy('purchase_details.purchase_id')
-            ->select('purchases.*', 'purchase_details.*');
+            ->select('purchases.*', 'purchase_details.*')->where(company());
 
         if ($request->supplier) {
             $query->where('purchases.supplier_id', $request->supplier);
@@ -69,7 +66,7 @@ class ReportController extends Controller
 
         $query = Sales_details::join('sales', 'sales.id', '=', 'sales_details.sales_id')
             ->groupBy('sales_details.sales_id')
-            ->select('sales.*', 'sales_details.*');
+            ->select('sales.*', 'sales_details.*')->where(company());
 
         if ($request->customer) {
             $query->where('sales.customer_id', $request->customer);
