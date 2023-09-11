@@ -5,7 +5,7 @@
 @if(Session::has('response'))
     {!!Session::get('response')['message']!!}
 @endif
-<form action="{{route('register.store')}}" method="post">
+{{-- <form action="{{route('register.store')}}" method="post">
     @csrf
     <div class="form-group position-relative has-icon-left mb-3">
         <input name="FullName" value="{{old('FullName')}}" type="text" class="form-control form-control-xl" placeholder="Full Name">
@@ -67,6 +67,6 @@
 <div class="text-center mt-3 text-lg fs-4">
     <p class='text-gray-600'>Already have an account? <a href="{{route('login')}}" class="font-bold">Log
             in</a>.</p>
-</div>
+</div> --}}
 
 @endsection

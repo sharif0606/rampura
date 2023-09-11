@@ -31,11 +31,11 @@
     </div>
     <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-2">{{__('Log in')}}</button>
 </form>
-<div class="text-center mt-3 text-lg fs-4">
+{{-- <div class="text-center mt-3 text-lg fs-4">
     <p class="text-gray-600 m-0">Don't have an account? <a href="{{route('register')}}" class="font-bold">{{__('Sign
             up')}}</a>.</p>
     <p><a class="font-bold" href="auth-forgot-password.html">Forgot password?</a>.</p>
-</div>
+</div> --}}
 
 
 @endsection
