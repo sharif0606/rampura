@@ -49,13 +49,7 @@
             border-color: rgb(9, 95, 9);
             border-collapse: collapse;
         }
-        
-        /* .section-heading{
-            font-family: Montserrat !important;
-        } */
         body{
-            /* background-color: rgb(252, 245, 245); */
-            /* font-family: Montserrat !important; */
             font-family: 'AdorshoLipi', sans-serif;
         }
        
