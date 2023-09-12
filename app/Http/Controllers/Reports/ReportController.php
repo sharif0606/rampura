@@ -11,6 +11,8 @@ use App\Models\Sales\Sales;
 use App\Models\Stock\Stock;
 use App\Models\Suppliers\Supplier;
 use App\Models\Customers\Customer;
+use App\Models\Expenses\ExpenseOfPurchase;
+use App\Models\Expenses\ExpenseOfSales;
 use App\Models\Purchases\Purchase_details;
 use Illuminate\Http\Request;
 use DB;
@@ -84,6 +86,23 @@ class ReportController extends Controller
         $data = $query->get();
         
         return view('reports.salesview', compact('data', 'customers'));
+    }
+
+    public function srota(Request $request)
+    {
+        return view('reports.srota');
+    }
+    public function srotaView(Request $request)
+    {
+        // dd($request->all());
+        
+        $lotNumber = $request->input('lot');
+        $purchase = Purchase_details::where('lot_no',$lotNumber)->get();
+        $sales = Sales_details::where('lot_no',$lotNumber)->get();
+        $purExpense = ExpenseOfPurchase::where('lot_no',$lotNumber)->where('status',0)->get();
+        $salExpense = ExpenseOfSales::where('lot_no',$lotNumber)->where('status',0)->get();
+        
+        return view('reports.srotaView', compact('purchase', 'sales','purExpense','salExpense'));
     }
 
 }

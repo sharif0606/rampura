@@ -6,7 +6,13 @@
 {{-- <link rel="stylesheet" href="{{ asset('assets/css/main/full-screen.css') }}"> --}}
 @endpush
 @section('content')
-
+<style>
+    @media screen and (max-width: 800px) {
+  .tbl_scroll {
+    overflow: scroll;
+  }
+}
+</style>
 <section id="multiple-column-form">
     <div class="row match-height">
         <div class="col-12">
@@ -44,46 +50,48 @@
                                 </td>
                             </tr>
                         </table>
-                        <table class="tbl_expense" style="width:100%">
-                            <tbody>
-                                <tr class="tbl_expense">
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">{{__('SL NO')}}</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">DESCRIPTION OF GOODS</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">LOT/ LC NO</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">TRADE MARK</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">QUANTITY BAG</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">QUANTITY KG</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">LESS/ DISCOUNT KG</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">ACTUAL QUANTITY IN KG</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">RATE IN PER KG</th>
-                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">TOTAL AMOUNT</th>
-                                </tr>
-                                @php
-                                    $actualQtyTotal = 0;
-                                @endphp
-                                @forelse($purDetail as $s)
-                                <tr class="tbl_expense">
-                                    <th class="tbl_expense" scope="row" style="text-align: center; padding: 5px;">{{ ++$loop->index }}</th>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->product?->product_name}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->lot_no}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->brand}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity_bag}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity_kg}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->less_quantity_kg}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->actual_quantity}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->rate_kg}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->amount}}</td>
-                                </tr>
-                                @php
-                                    $actualQtyTotal += $s->actual_quantity;
-                                @endphp
-                                @empty
-                                <tr>
-                                    <th colspan="10">No data Found</th>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                        <div class="tbl_scroll">
+                            <table class="tbl_expense" style="width:100%">
+                                <tbody>
+                                    <tr class="tbl_expense">
+                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">{{__('SL NO')}}</th>
+                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">DESCRIPTION OF GOODS</th>
+                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">LOT/ LC NO</th>
+                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">TRADE MARK</th>
+                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">QUANTITY BAG</th>
+                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">QUANTITY KG</th>
+                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">LESS/ DISCOUNT KG</th>
+                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">ACTUAL QUANTITY IN KG</th>
+                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">RATE IN PER KG</th>
+                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">TOTAL AMOUNT</th>
+                                    </tr>
+                                    @php
+                                        $actualQtyTotal = 0;
+                                    @endphp
+                                    @forelse($purDetail as $s)
+                                    <tr class="tbl_expense">
+                                        <th class="tbl_expense" scope="row" style="text-align: center; padding: 5px;">{{ ++$loop->index }}</th>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->product?->product_name}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->lot_no}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->brand}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity_bag}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity_kg}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->less_quantity_kg}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->actual_quantity}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->rate_kg}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->amount}}</td>
+                                    </tr>
+                                    @php
+                                        $actualQtyTotal += $s->actual_quantity;
+                                    @endphp
+                                    @empty
+                                    <tr>
+                                        <th colspan="10">No data Found</th>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
 
                         <div style="margin-top: 3rem;"><h5>TOTAL EXPENSES:</h5></div>
                         <table class="tbl_expense" style="width:100%;">

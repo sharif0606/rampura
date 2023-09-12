@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('sales_id')->index()->foreign()->references('id')->on('sales')->onDelete('cascade');
             $table->bigInteger('child_two_id')->nullable();
             $table->decimal('cost_amount',14,2)->nullable();
+            $table->string('lot_no')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
         });

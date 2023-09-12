@@ -169,6 +169,7 @@ class SalesController extends Controller
                                         $ex->sales_id=$pur->id;
                                         $ex->child_two_id=$child_two_id;
                                         $ex->cost_amount=$request->cost_amount[$j];
+                                        $ex->lot_no=$pd->lot_no;
                                         $ex->status= 0;
                                         $ex->save();
                                         DB::commit();
@@ -299,6 +300,7 @@ class SalesController extends Controller
                                             $ex->sales_id=$pur->id;
                                             $ex->child_two_id=$child_two_id;
                                             $ex->cost_amount=$request->cost_amount[$j];
+                                            $ex->lot_no=$pd->lot_no;
                                             $ex->status= 0;
                                             $ex->save();
                                             DB::commit();

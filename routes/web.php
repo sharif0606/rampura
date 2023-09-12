@@ -120,6 +120,8 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/sreport',[report::class,'stockreport'])->name('owner.sreport');
         Route::get('/salreport',[report::class,'salesReport'])->name('owner.salreport');
         Route::get('/purchase-report',[report::class,'purchaseReport'])->name('owner.purchase_report');
+        Route::get('/srota',[report::class,'srota'])->name('owner.srota');
+        Route::get('/srota-view',[report::class,'srotaView'])->name('owner.srota_view');
         
         
 

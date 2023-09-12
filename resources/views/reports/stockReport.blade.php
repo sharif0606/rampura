@@ -4,7 +4,13 @@
 @section('pageSubTitle',trans('Reports'))
 
 @section('content')
-  <!-- // Basic multiple Column Form section start -->
+<style>
+    @media screen and (max-width: 800px) {
+  .tbl_scroll {
+    overflow: scroll;
+  }
+}
+</style>
 <section id="multiple-column-form">
     <div class="row match-height">
         <div class="col-12">
@@ -37,65 +43,67 @@
                                     
                                 </div>
                             </div>
-                            <table class="table mb-5">
-                                <thead>
-                                    <tr class="bg-primary text-white text-center">
-                                        <th class="p-2">{{__('#SL')}}</th>
-                                        <th class="p-2" data-title="Description of Goods">{{__('Des.of Goods')}}</th>
-                                        <th class="p-2" data-title="LC / LOT NO">{{__('Lc/Lot no')}}</th>
-                                        <th class="p-2" data-title="TRADEMARKE/BRAND NAME">{{__('Trade/Brand')}}</th>
-                                        <th class="p-2" data-title="TOTAL BAG">{{__('Total Bag')}}</th>
-                                        <th class="p-2" data-title="TOTAL KG">{{__('Total Kg')}}</th>
-                                        <th class="p-2" data-title="Warehouse Name">{{__('Werehouse')}}</th>
-                                        <th class="p-2" data-title="Approximate Costing Per Kg (Pucrchases Costing)">{{__('Rate in kg')}}</th>
-                                        <th class="p-2" data-title="Total Amount">{{__('Total Amount')}}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $totalBagQty = 0;
-                                        $totalQty = 0;
-                                        $totalAmount = 0;
-                                    @endphp
-
-                                    @forelse($stock as $s)
-                                    <tr class="text-center">
-                                        <th scope="row">{{ ++$loop->index }}</th>
-                                        <td>{{$s->product_name}}</td>
-                                        <td>{{$s->lot_no}}</td>
-                                        <td>{{$s->brand}}</td>
-                                        <td>{{$s->bagQty}}</td>
-                                        <td>{{$s->qty}}</td>
-                                        <td>
-                                            @php
-                                                $wh= App\Models\Settings\Warehouse::where('id',$s->warehouse_id)->first();
-                                            @endphp
-                                            {{$wh->name}}
-                                        </td>
-                                        <td>{{$s->unit_price}}</td>
-                                        <td>{{$s->qty*$s->avunitprice}}</td>
-                                    </tr>
-                                    @php
-                                        $totalBagQty += $s->bagQty;
-                                        $totalQty += $s->qty;
-                                        $totalAmount += ($s->qty * $s->avunitprice);
-                                    @endphp
-                                    @empty
-                                    <tr>
-                                        <th colspan="9" class="text-center">No data Found</th>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                                <tfoot>
-                                    <tr class="text-center">
-                                        <th colspan="4" class="p-2">Total</th>
-                                        <th class="p-2">{{$totalBagQty}}</th>
-                                        <th class="p-2">{{$totalQty}}</th>
-                                        <th class="p-2" colspan="2"></th>
-                                        <th class="p-2">{{$totalAmount}}</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                            <div class="tbl_scroll">
+                                <table class="table mb-5">
+                                    <thead>
+                                        <tr class="bg-primary text-white text-center">
+                                            <th class="p-2">{{__('#SL')}}</th>
+                                            <th class="p-2" data-title="Description of Goods">{{__('Des.of Goods')}}</th>
+                                            <th class="p-2" data-title="LC / LOT NO">{{__('Lc/Lot no')}}</th>
+                                            <th class="p-2" data-title="TRADEMARKE/BRAND NAME">{{__('Trade/Brand')}}</th>
+                                            <th class="p-2" data-title="TOTAL BAG">{{__('Total Bag')}}</th>
+                                            <th class="p-2" data-title="TOTAL KG">{{__('Total Kg')}}</th>
+                                            <th class="p-2" data-title="Warehouse Name">{{__('Werehouse')}}</th>
+                                            <th class="p-2" data-title="Approximate Costing Per Kg (Pucrchases Costing)">{{__('Rate in kg')}}</th>
+                                            <th class="p-2" data-title="Total Amount">{{__('Total Amount')}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $totalBagQty = 0;
+                                            $totalQty = 0;
+                                            $totalAmount = 0;
+                                        @endphp
+    
+                                        @forelse($stock as $s)
+                                        <tr class="text-center">
+                                            <th scope="row">{{ ++$loop->index }}</th>
+                                            <td>{{$s->product_name}}</td>
+                                            <td>{{$s->lot_no}}</td>
+                                            <td>{{$s->brand}}</td>
+                                            <td>{{$s->bagQty}}</td>
+                                            <td>{{$s->qty}}</td>
+                                            <td>
+                                                @php
+                                                    $wh= App\Models\Settings\Warehouse::where('id',$s->warehouse_id)->first();
+                                                @endphp
+                                                {{$wh->name}}
+                                            </td>
+                                            <td>{{$s->unit_price}}</td>
+                                            <td>{{$s->qty*$s->avunitprice}}</td>
+                                        </tr>
+                                        @php
+                                            $totalBagQty += $s->bagQty;
+                                            $totalQty += $s->qty;
+                                            $totalAmount += ($s->qty * $s->avunitprice);
+                                        @endphp
+                                        @empty
+                                        <tr>
+                                            <th colspan="9" class="text-center">No data Found</th>
+                                        </tr>
+                                        @endforelse
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="text-center">
+                                            <th colspan="4" class="p-2">Total</th>
+                                            <th class="p-2">{{$totalBagQty}}</th>
+                                            <th class="p-2">{{$totalQty}}</th>
+                                            <th class="p-2" colspan="2"></th>
+                                            <th class="p-2">{{$totalAmount}}</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </form>
                     </div>
                 </div>
