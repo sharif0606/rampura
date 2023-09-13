@@ -104,5 +104,18 @@ class ReportController extends Controller
         
         return view('reports.srotaView', compact('purchase', 'sales','purExpense','salExpense'));
     }
+    // public function srotaView(Request $request)
+    // {
+    //     // dd($request->all());
+        
+    //     $lotNumber = $request->input('lot');
+    //     $purchase = Purchase_details::where('lot_no',$lotNumber)->get();
+    //     $purExpense = ExpenseOfPurchase::where('lot_no',$lotNumber)->where('status',0)->get();
+    //     $sales = Sales_details::where('lot_no',$lotNumber)->get();
+    //     $firstSalesId = $sales->first()->sales_id;
+    //     $salExpense = ExpenseOfSales::where('sales_id',$firstSalesId)->where('status',0)->get();
+        
+    //     return view('reports.srotaView', compact('purchase', 'sales','purExpense','salExpense'));
+    // }
 
 }

@@ -5,6 +5,7 @@ namespace App\Models\Sales;
 use App\Models\Products\Product;
 use App\Models\Settings\Branch;
 use App\Models\Customers\Customer;
+use App\Models\Expenses\ExpenseOfSales;
 use App\Models\Stock\Stock;
 use App\Models\Settings\Warehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,5 +23,8 @@ class Sales extends Model
     }
     public function warehouse(){
         return $this->belongsTo(Warehouse::class);
+    }
+    public function expense(){
+        return $this->hasMany(ExpenseOfSales::class,'sales_id','id');
     }
 }

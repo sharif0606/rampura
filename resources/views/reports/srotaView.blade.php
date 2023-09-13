@@ -171,6 +171,10 @@
                             <table style="width: 100%;">
                                 @forelse ($sales as $s)
                                     <tr>
+                                        <th style="text-align: left;">Customer:</th>
+                                        <th style="text-align: right;">{{$s->sales?->customer?->customer_name}}</th>
+                                    </tr>
+                                    <tr>
                                         <th style="text-align: left;">বিক্রয়:</th>
                                         <th style="text-align: right;">{{$s->amount}}</th>
                                     </tr>
@@ -178,23 +182,25 @@
                                         $subSalesAmount += $s->amount;
                                         $subSalesActualQty += $s->actual_quantity;
                                     @endphp
+                                    @if($s->sales?->expense)
+                                        @foreach ($s->sales?->expense as $ex)
+                                            @if($ex->cost_amount != null)
+                                                <tr>
+                                                    <th style="text-align: left;">{{$ex->expense?->head_name}}</th>
+                                                    <th style="text-align: right;">{{$ex->cost_amount}}</th>
+                                                </tr>
+                                                @php
+                                                    $subsalesExpense += $ex->cost_amount;
+                                                @endphp
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 @empty
                                     <tr>
                                         <th colspan="2" style="text-align: center;">No data found</th>
                                     </tr>
                                 @endforelse
-                                @forelse ($salExpense as $ex)
-                                    @if($ex->cost_amount != null)
-                                        <tr>
-                                            <th style="text-align: left;">{{$ex->expense?->head_name}}</th>
-                                            <th style="text-align: right;">{{$ex->cost_amount}}</th>
-                                        </tr>
-                                        @php
-                                            $subsalesExpense += $ex->cost_amount;
-                                        @endphp
-                                    @endif
-                                @empty
-                                @endforelse
+                               
                             </table>
                         </th>
                         <th  style="color: green; text-align: center;">
