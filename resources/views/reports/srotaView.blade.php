@@ -130,7 +130,7 @@
                         <span style="background-color: green; color:white; padding: 5px; border: transparent; border-radius: 5px;">বেপারীর চৌথা</span>
                         <p style="margin-top: 6px; margin-bottom: 0px; color: green;">কমিশন এজেন্ট</p>
                         <h1 style="color: green; margin: 0px;"> মেসার্স রামপুর সিন্ডিকেট</h1>
-                        <span style="color: green; border-bottom: solid 2px; border-top: solid 2px; margin-top: 4px; margin-bottom: 4px;">সুপারী, মরিচ ও ভূষা মালের আড়ৎ</span>
+                        <span style="color: green; border-bottom: solid 1.5px; border-top: solid 1.5px; margin-top: 4px; margin-bottom: 4px;">সুপারী, মরিচ ও ভূষা মালের আড়ৎ</span>
                         <p style="margin: 2px; color: green;">১৯৩, খাতুনগঞ্জ, চট্টগ্রাম।</p>
                     </th>
                 </tr>
