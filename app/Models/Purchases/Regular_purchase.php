@@ -2,6 +2,7 @@
 
 namespace App\Models\Purchases;
 
+use App\Models\Expenses\ExpenseOfPurchase;
 use App\Models\Settings\Branch;
 use App\Models\Suppliers\Supplier;
 use App\Models\Settings\Warehouse;
@@ -20,5 +21,8 @@ class Regular_purchase extends Model
     }
     public function warehouse(){
         return $this->belongsTo(Warehouse::class,'warehouse_id','id');
+    }
+    public function expense(){
+        return $this->hasMany(ExpenseOfPurchase::class,'regular_purchase_id','id');
     }
 }
