@@ -139,22 +139,9 @@ class PurchaseController extends Controller
             $pur->payment_status=0;
             $pur->status=1;
             if($pur->save()){
-                if($request->child_two_id){
-                    foreach($request->child_two_id as $j=>$child_two_id){
-                        $ex = new ExpenseOfPurchase;
-                        $ex->company_id=company()['company_id'];
-                        $ex->purchase_id=$pur->id;
-                        $ex->child_two_id=$child_two_id;
-                        $ex->cost_amount=$request->cost_amount[$j];
-                        $ex->lot_no=$request->lot_no[0];
-                        $ex->status= 0;
-                        $ex->save();
-                    }
-                }
                 if($request->product_id){
                     foreach($request->product_id as $i=>$product_id){
                         $pd=new Purchase_details;
-                        $pd->company_id=company()['company_id'];
                         $pd->purchase_id=$pur->id;
                         $pd->product_id=$product_id;
                         $pd->lot_no=$request->lot_no[$i];
@@ -166,7 +153,17 @@ class PurchaseController extends Controller
                         $pd->rate_kg=$request->rate_in_kg[$i];
                         $pd->amount=$request->amount[$i];
                         if($pd->save()){
-                            
+                            if($request->child_two_id){
+                                foreach($request->child_two_id as $j=>$child_two_id){
+                                    $ex = new ExpenseOfPurchase;
+                                    $ex->purchase_id=$pur->id;
+                                    $ex->child_two_id=$child_two_id;
+                                    $ex->cost_amount=$request->cost_amount[$j];
+                                    $ex->lot_no=$pd->lot_no;
+                                    $ex->status= 0;
+                                    $ex->save();
+                                }
+                            }
                             $oldstock = Stock::where('unit_price',$pd->rate_kg)->where('product_id',$product_id)->where('branch_id',$request->branch_id)->where('warehouse_id',$request->warehouse_id)->where('lot_no',$pd->lot_no)->where('brand',$pd->brand)->where(company())->pluck('batch_id');
                             if(count($oldstock)> 0){
                                 $batch_id=$oldstock[0];

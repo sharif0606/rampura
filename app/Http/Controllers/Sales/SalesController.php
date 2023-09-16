@@ -134,9 +134,22 @@ class SalesController extends Controller
             $pur->payment_status=0;
             $pur->status=1;
             if($pur->save()){
+                if($request->child_two_id){
+                    foreach($request->child_two_id as $j=>$child_two_id){
+                        $ex = new ExpenseOfSales;
+                        $ex->company_id=company()['company_id'];
+                        $ex->sales_id=$pur->id;
+                        $ex->child_two_id=$child_two_id;
+                        $ex->cost_amount=$request->cost_amount[$j];
+                        $ex->lot_no=$request->lot_no[0];
+                        $ex->status= 0;
+                        $ex->save();
+                    }
+                }
                 if($request->product_id){
                     foreach($request->product_id as $i=>$product_id){
                         $pd=new Sales_details;
+                        $pd->company_id=company()['company_id'];
                         $pd->sales_id=$pur->id;
                         $pd->product_id=$product_id;
                         $pd->lot_no=$request->lot_no[$i];
@@ -162,20 +175,8 @@ class SalesController extends Controller
                             $stock->batch_id=$pd->batch_id;
                             $stock->unit_price=$pd->rate_kg;
                             $stock->total_amount=$pd->amount;
-                            if($stock->save()){
-                                if($request->child_two_id){
-                                    foreach($request->child_two_id as $j=>$child_two_id){
-                                        $ex = new ExpenseOfSales;
-                                        $ex->sales_id=$pur->id;
-                                        $ex->child_two_id=$child_two_id;
-                                        $ex->cost_amount=$request->cost_amount[$j];
-                                        $ex->lot_no=$pd->lot_no;
-                                        $ex->status= 0;
-                                        $ex->save();
-                                        DB::commit();
-                                    }
-                                }
-                            }
+                            $stock->save();
+                            DB::commit();
                         }
                     }
                 }

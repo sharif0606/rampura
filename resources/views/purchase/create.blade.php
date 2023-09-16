@@ -25,73 +25,68 @@
                         <form class="form" method="post" action="{{route(currentUser().'.purchase.store')}}">
                             @csrf
                             <div class="row">
-                                @if( currentUser()=='owner')
-                                    <div class="col-md-2 mt-2">
-                                        <label for="branch_id" class="float-end" ><h6>Branches Name<span class="text-danger">*</span></h6></label>
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        <select required onchange="change_data(this.value)" class="form-control form-select" name="branch_id" id="branch_id">
-                                            {{-- <option value="">Select Branches</option>     --}}
-                                        @forelse($branches as $b)
-                                                <option value="{{ $b->id }}" {{old('branch_id')==$b->id?'selected':''}}>{{ $b->name }}</option>
-                                            @empty
-                                                <option value="">No branch found</option>
-                                            @endforelse          
-                                        </select>      
-                                    </div>
-                                    @if($errors->has('branch_id'))
-                                        <span class="text-danger"> {{ $errors->first('branch_id') }}</span>
-                                    @endif
-                                    
-                                @else
-                                    <input type="hidden" value="{{ branch()['branch_id']}}" name="branch_id">
-                                @endif
                                 
-                                    
-                                <div class="col-md-2 mt-2">
-                                    <label for="supplierName" class="float-end"><h6>Supplier<span class="text-danger">*</span></h6></label>
-                                </div>
-                                <div class="col-md-4">
-                                    
-                                    <select required class="form-control form-select" name="supplierName" id="supplierName">
-                                        <option value="">Select Supplier</option>
-                                        @forelse($suppliers as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName')==$d->id?"selected":""}}> {{ $d->supplier_name}}</option>
-                                        @empty
-                                            <option value="">No Supplier found</option>
-                                        @endforelse
-                                    </select>
-                                </div>
-                                
-                                @if($errors->has('supplierName'))
-                                <span class="text-danger"> {{ $errors->first('supplierName') }}</span>
-                                @endif
-
-
-                                <div class="col-md-2 mt-2">
-                                    <label for="warehouse_id" class="float-end"><h6>Warehouse<span class="text-danger">*</span></h6></label>
-                                </div>
-                                <div class="col-md-4">
-                                    <select required class="form-control form-select" name="warehouse_id" id="warehouse_id">
-                                        <option value="">Select Warehouse</option>
-                                        @forelse($Warehouses as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('warehouse_id')==$d->id?"selected":""}}> {{ $d->name}}</option>
-                                        @empty
-                                            <option value="">No Warehouse found</option>
-                                        @endforelse
-                                    </select>
-                                </div>
-                                
-                                @if($errors->has('warehouse_id'))
-                                    <span class="text-danger"> {{ $errors->first('warehouse_id') }}</span>
-                                @endif 
-                                
-
-                                <div class="col-md-2 mt-2">
-                                    <label for="date" class="float-end"><h6>Date<span class="text-danger">*</span></h6></label>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="text" id="datepicker" class="form-control" value="{{ old('purchase_date')}}" name="purchase_date" placeholder="dd/mm/yyyy" required>
+                                <div class="col-lg-10 offset-lg-1">
+                                    <table style="width: 100%;">
+                                        <tbody>
+                                            <tr>
+                                                @if( currentUser()=='owner')
+                                                    <th style="width: 10%; padding-bottom: .7rem;">   
+                                                        <label for="branch_id" ><h6>Branches Name<span class="text-danger">*</span></h6></label>
+                                                    </th>
+                                                    <td style="widht: 40%; padding-bottom: .7rem;">
+                                                        <select required onchange="change_data(this.value)" class="form-control form-select" name="branch_id" id="branch_id">
+                                                            {{-- <option value="">Select Branches</option>     --}}
+                                                            @forelse($branches as $b)
+                                                                <option value="{{ $b->id }}" {{old('branch_id')==$b->id?'selected':''}}>{{ $b->name }}</option>
+                                                            @empty
+                                                                <option value="">No branch found</option>
+                                                            @endforelse          
+                                                        </select>  
+                                                        @if($errors->has('branch_id'))
+                                                        <span class="text-danger"> {{ $errors->first('branch_id') }}</span>
+                                                        @endif    
+                                                    </td>
+                                                @else
+                                                    <th colspan="2"><input type="hidden" value="{{ branch()['branch_id']}}" name="branch_id"></th> 
+                                                @endif
+                                                <th style="width: 10%; padding-bottom: .7rem;">
+                                                    <label for="supplierName"><h6>Supplier<span class="text-danger">*</span></h6></label>
+                                                </th>
+                                                <td style="width: 40%; padding-bottom: .7rem;">
+                                                    <select required class="form-control form-select" name="supplierName" id="supplierName">
+                                                        <option value="">Select Supplier</option>
+                                                        @forelse($suppliers as $d)
+                                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName')==$d->id?"selected":""}}> {{ $d->supplier_name}}</option>
+                                                        @empty
+                                                            <option value="">No Supplier found</option>
+                                                        @endforelse
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th style="width: 10%;">
+                                                    <label for="warehouse_id"><h6>Warehouse<span class="text-danger">*</span></h6></label>
+                                                </th>
+                                                <td style="width: 40%;">
+                                                    <select required class="form-control form-select" name="warehouse_id" id="warehouse_id">
+                                                        <option value="">Select Warehouse</option>
+                                                        @forelse($Warehouses as $d)
+                                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('warehouse_id')==$d->id?"selected":""}}> {{ $d->name}}</option>
+                                                        @empty
+                                                            <option value="">No Warehouse found</option>
+                                                        @endforelse
+                                                    </select>
+                                                </td>
+                                                <th style="width: 10%;">
+                                                    <label for="date"><h6>Date<span class="text-danger">*</span></h6></label>
+                                                </th>
+                                                <td style="width: 40%;">
+                                                    <input type="text" id="datepicker" class="form-control" value="{{ old('purchase_date')}}" name="purchase_date" placeholder="dd/mm/yyyy" required>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                             <div class="row m-3">

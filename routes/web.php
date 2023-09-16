@@ -38,6 +38,8 @@ use App\Http\Controllers\Accounts\ChildTwoController as child_two;
 use App\Http\Controllers\Accounts\NavigationHeadViewController as navigate;
 use App\Http\Controllers\Accounts\IncomeStatementController as statement;
 
+use App\Http\Controllers\Vouchers\CustomerVoucherController as cusVoucher;
+use App\Http\Controllers\Vouchers\SupplierVoucherController as supVoucher;
 use App\Http\Controllers\Vouchers\CreditVoucherController as credit;
 use App\Http\Controllers\Vouchers\DebitVoucherController as debit;
 use App\Http\Controllers\Vouchers\JournalVoucherController as journal;
@@ -147,6 +149,8 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('incomeStatement_details',[statement::class,'details'])->name('owner.incomeStatement.details');
 
         //Voucher
+        Route::resource('cusVoucher',cusVoucher::class,['as'=>'owner']);
+        Route::resource('supVoucher',supVoucher::class,['as'=>'owner']);
         Route::resource('credit',credit::class,['as'=>'owner']);
         Route::resource('debit',debit::class,['as'=>'owner']);
         Route::get('get_head', [credit::class, 'get_head'])->name('owner.get_head');

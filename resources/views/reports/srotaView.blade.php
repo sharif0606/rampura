@@ -135,19 +135,19 @@
                     </th>
                 </tr>
                 <tr>
-                    {{-- <th style="text-align: left; color: green; padding: 7px 0 7px 0;">নং</th>
-                    <td></td> --}}
+                    <th style="text-align: left; color: green; padding: 7px 0 7px 0;">নং</th>
+                    <td></td>
                     <th style="text-align: right; color: green; padding: 7px 0 7px 0;">তারিখঃ</th>
                     <td style="width: 20%; padding: 7px 0 7px 0;"><input type="text" class="tinput"></td>
                 </tr>
-                {{-- <tr>
+                <tr>
                     <th style="text-align: left; color: green; padding: 7px 0 7px 0;">নাম</th>
                     <td colspan="3" style="padding: 7px 0 7px 0;"><input type="text" class="tinput"></td>
                 </tr>
                 <tr>
                     <th style="text-align: left; color: green; padding: 7px 0 7px 0;">ঠিকানা</th>
                     <td colspan="3" style="padding: 7px 0 7px 0;"><input type="text" class="tinput"></td>
-                </tr> --}}
+                </tr>
             </thead>
         </table>
         <div style="background-color: rgb(219, 239, 219); height: 830px;">
@@ -173,11 +173,62 @@
                         <th class="tbl_table" style="color: green; text-align: center;">খরচ</th>
                     </tr>
                     <tr >
-                        <th class="tbl_table_border_right"  style="color: green;">
-                            @forelse ($purchase as $pur)
-                                <table style="width: 100%; padding-bottom: 1.5rem;">
+                        <th class="tbl_table_border_right" style="color: green;">
+                            <table style="width: 100%;">
+                                @forelse ($sales as $s)
                                     <tr>
-                                        <th colspan="2" style="text-align: left;"><span style="border-bottom: solid 1px;">{{$pur->product?->product_name}}, Lot No: {{$pur->lot_no}}</span></th>
+                                        <th style="text-align: left;">কাস্টমার:</th>
+                                        <th style="text-align: right;">{{$s->sales?->customer?->customer_name}}</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="2" style="text-align: left;"><span style="border-bottom: solid 1px;">{{$s->product?->product_name}}, Lot No: {{$s->lot_no}}</span></th>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: left;">{{$s->quantity_bag}} Bag , {{$s->actual_quantity}} KG *{{$s->rate_kg}}/- </th>
+                                        <th style="text-align: right;">{{$s->amount}}</th>
+                                    </tr>
+                                    @php
+                                        $subSalesAmount += $s->amount;
+                                        $subSalesActualQty += $s->actual_quantity;
+                                    @endphp
+                                    {{-- @if($s->sales?->expense)
+                                        @foreach ($s->sales?->expense as $ex)
+                                            @if($ex->cost_amount != null)
+                                                <tr>
+                                                    <th style="text-align: left;">{{$ex->expense?->head_name}}</th>
+                                                    <th style="text-align: right;">{{$ex->cost_amount}}</th>
+                                                </tr>
+                                                @php
+                                                    $subsalesExpense += $ex->cost_amount;
+                                                @endphp
+                                            @endif
+                                        @endforeach
+                                    @endif --}}
+                                @empty
+                                @endforelse
+                                    @if($salExpense)
+                                        @foreach ($salExpense as $ex)
+                                            @if($ex->cost_amount != null)
+                                            <tr>
+                                                <th style="text-align: left;">{{$ex->expense?->head_name}}</th>
+                                                <th style="text-align: right;">{{$ex->cost_amount}}</th>
+                                            </tr>
+                                            @php
+                                                $subsalesExpense += $ex->cost_amount;
+                                            @endphp
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                    {{-- <tr>
+                                        <th colspan="2" style="text-align: right;"><span style="border-top: double;">{{$s->sales?->grand_total}}</span></th>
+                                    </tr> --}}
+                            </table>
+                        </th>
+                        <th style="color: green;">
+                            <table style="width: 100%; padding-bottom: 1.5rem;">
+                                @forelse ($purchase as $pur)
+                                    <tr>
+                                        <th colspan="2" style="text-align: left;"><span style="border-bottom: solid 1px;">{{$pur->product?->product_name}}, Lot No: {{$pur->lot_no}}, Trade: {{$pur->brand}}</span></th>
                                     </tr>
                                     <tr>
                                         <th style="text-align: left;">{{$pur->quantity_bag}} Bag , {{$pur->actual_quantity}} KG *{{$pur->rate_kg}}/- </th>
@@ -189,7 +240,7 @@
                                         $subPurActualQty += $pur->actual_quantity;
                                     @endphp
 
-                                    @if($pur->purchase?->expense)
+                                    {{-- @if($pur->purchase?->expense)
                                         @foreach ($pur->purchase?->expense as $ex)
                                             @if($ex->cost_amount != null)
                                             <tr>
@@ -201,9 +252,9 @@
                                             @endphp
                                             @endif
                                         @endforeach
-                                    @endif
+                                    @endif --}}
 
-                                    @if($pur->beparian_purchase?->expense)
+                                    {{-- @if($pur->beparian_purchase?->expense)
                                         @foreach ($pur->beparian_purchase?->expense as $ex)
                                             @if($ex->cost_amount != null)
                                             <tr>
@@ -229,8 +280,23 @@
                                             @endphp
                                             @endif
                                         @endforeach
+                                    @endif --}}
+                                @empty
+                                @endforelse
+                                    @if($purExpense)
+                                        @foreach ($purExpense as $ex)
+                                            @if($ex->cost_amount != null)
+                                            <tr>
+                                                <th style="text-align: left;">{{$ex->expense?->head_name}}</th>
+                                                <th style="text-align: right;">{{$ex->cost_amount}}</th>
+                                            </tr>
+                                            @php
+                                                $subPurchaseExpense += $ex->cost_amount;
+                                            @endphp
+                                            @endif
+                                        @endforeach
                                     @endif
-                                    @if($pur->purchase?->grand_total)
+                                    {{-- @if($pur->purchase?->grand_total)
                                     <tr>
                                         <th colspan="2" style="text-align: right;"><span style="border-top: double;">{{$pur->purchase?->grand_total}}</span></th>
                                     </tr>
@@ -244,54 +310,47 @@
                                     <tr>
                                         <th colspan="2" style="text-align: right;"><span style="border-top: double;">{{$pur->regular_purchase?->grand_total}}</span></th>
                                     </tr>
-                                    @endif
+                                    @endif --}}
                                 </table>
-                            @empty
-                            @endforelse
                         </th>
-                        <th style="color: green; text-align: center;">
-                            @forelse ($sales as $s)
-                                <table style="width: 100%; padding-bottom: 1.5rem;">
-                                    <tr>
-                                        <th style="text-align: left;">কাস্টমার:</th>
-                                        <th style="text-align: right;">{{$s->sales?->customer?->customer_name}}</th>
-                                    </tr>
-                                    <tr>
-                                        <th colspan="2" style="text-align: left;"><span style="border-bottom: solid 1px;">{{$s->product?->product_name}}, Lot No: {{$s->lot_no}}</span></th>
-                                    </tr>
-                                    <tr>
-                                        <th style="text-align: left;">{{$s->quantity_bag}} Bag , {{$s->actual_quantity}} KG *{{$s->rate_kg}}/- </th>
-                                        <th style="text-align: right;">{{$s->amount}}</th>
-                                    </tr>
-                                    @php
-                                        $subSalesAmount += $s->amount;
-                                        $subSalesActualQty += $s->actual_quantity;
-                                    @endphp
-                                    @if($s->sales?->expense)
-                                        @foreach ($s->sales?->expense as $ex)
-                                            @if($ex->cost_amount != null)
-                                                <tr>
-                                                    <th style="text-align: left;">{{$ex->expense?->head_name}}</th>
-                                                    <th style="text-align: right;">{{$ex->cost_amount}}</th>
-                                                </tr>
-                                                @php
-                                                    $subsalesExpense += $ex->cost_amount;
-                                                @endphp
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                    <tr>
-                                        <th colspan="2" style="text-align: right;"><span style="border-top: double;">{{$s->sales?->grand_total}}</span></th>
-                                    </tr>
-                                </table>
-                            @empty
-                            @endforelse
-                        </th>
+                        
                     </tr>
                     
                 </tbody>
                 <tfoot class="tbl_table">
                     <tr>
+                        <th class="tbl_table_border_right">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <th style="text-align: left;"><span style="color: green;">মোট</span></th>
+                                    <td style="text-align: right;">
+                                        @php
+                                            $totalSalesAmount= $subSalesAmount + $subsalesExpense;
+                                        @endphp
+                                        <span style="color: green;">{{$totalSalesAmount}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align: left;"><span style="color: green;">বিক্রীত পণ্যের ক্রয়মূল্য</span></th>
+                                    <td style="text-align: right;">
+                                        @php
+                                            $totalSalesAmount= $subSalesAmount + $subsalesExpense;
+                                            $totalPurchaseAmount= $subPurchaseAmount + $subPurchaseExpense;
+
+                                            if($subPurActualQty != 0){
+                                                $rate_per_kg = $totalPurchaseAmount / $subPurActualQty;
+                                            }
+                                            
+                                            
+                                            $salesFromPurchase = $subSalesActualQty * $rate_per_kg;
+                                            $formattedAmount = number_format($salesFromPurchase, 2, '.', '');
+                                        @endphp
+                                        <span style="color: green;">{{$formattedAmount}}</span>
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                        </th>
                         <th class="tbl_table_border_right">
                             <table style="width: 100%;">
                                 <tr>
@@ -326,38 +385,7 @@
                                 
                             </table>
                         </th>
-                        <th class="tbl_table_border_right">
-                            <table style="width: 100%;">
-                                <tr>
-                                    <th style="text-align: left;"><span style="color: green;">মোট</span></th>
-                                    <td style="text-align: right;">
-                                        @php
-                                            $totalSalesAmount= $subSalesAmount + $subsalesExpense;
-                                        @endphp
-                                        <span style="color: green;">{{$totalSalesAmount}}</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th style="text-align: left;"><span style="color: green;">বিক্রীত পণ্যের ক্রয়মূল্য</span></th>
-                                    <td style="text-align: right;">
-                                        @php
-                                            $totalSalesAmount= $subSalesAmount + $subsalesExpense;
-                                            $totalPurchaseAmount= $subPurchaseAmount + $subPurchaseExpense;
-
-                                            if($subPurActualQty != 0){
-                                                $rate_per_kg = $totalPurchaseAmount / $subPurActualQty;
-                                            }
-                                            
-                                            
-                                            $salesFromPurchase = $subSalesActualQty * $rate_per_kg;
-                                            $formattedAmount = number_format($salesFromPurchase, 2, '.', '');
-                                        @endphp
-                                        <span style="color: green;">{{$formattedAmount}}</span>
-                                    </td>
-                                </tr>
-                                
-                            </table>
-                        </th>
+                        
                     </tr>
                     <tr>
                         <th class="tbl_table_border_right " style="padding-top: 1rem;">
