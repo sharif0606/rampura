@@ -365,7 +365,6 @@ function get_cal(e){
   total_expense();
   total_calculate();
 }
-
 //row reapeter
 function addRow(){
 
