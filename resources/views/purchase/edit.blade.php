@@ -148,32 +148,45 @@
                                 <div class="col-lg-12 col-sm-12 col-md-12 mt-3">
                                     <div><h5>TOTAL EXPENSES:</h5></div>
                                     <table class="tbl_expense" style="width:100%;">
-                                        <tbody>
-                                            @forelse ($childTow as $ex)
-                                                @if($ex->head_code != 5322)
-                                                    <tr class="tbl_expense">
-                                                        <th class="tbl_expense" style="padding-left: 8px;">{{$ex->head_name}} <input type="hidden" name="child_two_id[]" value="{{$ex->id}}"></th>
-                                                        <td class="tbl_expense" ><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]"  value="@if(isset($expense[$ex->id])){{$expense[$ex->id]}} @endif"></td>
-                                                    </tr>
-                                                @endif
-                                                @if($ex->head_code == 5322)
-                                                    <tr class="tbl_expense">
-                                                        <th class="tbl_expense" style="padding-left: 8px;">{{$ex->head_name}} <input type="hidden" name="child_two_id[]" value="{{$ex->id}}"></th>
-                                                        <td class="tbl_expense" ><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value="@if(isset($expense[$ex->id])){{$expense[$ex->id]}} @endif" readonly></td>
-                                                    </tr>
-                                                @endif
-                                            @empty
-                                                
-                                            @endforelse
+                                        <tbody id="expense">
+                                            <tr class="tbl_expense text-center">
+                                                <th class="tbl_expense">Expense Head</th>
+                                                <th class="tbl_expense">Lc Number</th>
+                                                <th colspan="2" class="tbl_expense">Cost Amount</th>
+                                            </tr>
+                                            @forelse ($expense as $item)
                                                 <tr class="tbl_expense">
-                                                    <th class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL EXPENSES</h5></th>
-                                                    <td class="tbl_expense text-end" >
-                                                        <h5 class="tgrandtotal" style=" padding-right: 10px;">{{$purchase->grand_total}}</h5>
-                                                        <input type="hidden" name="tgrandtotal" class="tgrandtotal_p" value="{{$purchase->grand_total}}">
-                                                        <input type="hidden"  class="sub_total">
+                                                    <td class="tbl_expense">
+                                                        <select name="child_two_id[]" class="form-select">
+                                                            <option value="">select</option>
+                                                            @forelse ($childTow as $ex)
+                                                                <option value="{{$ex->id}}" {{old('child_two_id',$item->child_two_id)==$ex->id?'selected':''}}>{{$ex->head_name}}</option>
+                                                            @empty
+                                                                <option value="">No Data Found</option>
+                                                            @endforelse
+                                                        </select>
+                                                    </td>
+                                                    <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" value="{{$item->lot_no}}" required></td>
+                                                    <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value="{{$item->cost_amount}}" required></td>
+                                                    <td class="tbl_expense">
+                                                        <span class="text-primary" onClick='addRow();'><i class="bi bi-plus-square-fill"></i></span>
+                                                        <span class="text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></span>
                                                     </td>
                                                 </tr>
+                                            @empty
+                                            @endforelse
+                                            
                                         </tbody>
+                                        <tfoot>
+                                            <tr class="tbl_expense">
+                                                <th class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL EXPENSES</h5></th>
+                                                <td class="tbl_expense text-end" >
+                                                    <h5 class="tgrandtotal" style=" padding-right: 10px;">{{$purchase->grand_total}}</h5>
+                                                    <input type="hidden" name="tgrandtotal" class="tgrandtotal_p" value="{{$purchase->grand_total}}">
+                                                    <input type="hidden"  class="sub_total">
+                                                </td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
@@ -344,6 +357,36 @@ function get_cal(e){
   total_calculate();
 }
 
+//row reapeter
+function addRow(){
+
+var row=`<tr class="tbl_expense">
+            <td class="tbl_expense">
+                <select name="child_two_id[]" class="form-select">
+                    <option value="">select</option>
+                    @forelse ($childTow as $ex)
+                        <option value="{{$ex->id}}">{{$ex->head_name}}</option>
+                    @empty
+                        <option value="">No Data Found</option>
+                    @endforelse
+                </select>
+            </td>
+            <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" required></td>
+            <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
+            <td class="tbl_expense text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></td>
+        </tr>`;
+    $('#expense').append(row);
+}
+
+function RemoveRow(e) {
+    if (confirm("Are you sure you want to remove this row?")) {
+        $(e).closest('tr').remove();
+        
+        total_expense();
+        total_calculate();
+    }
+}
+//row reapeter
 
 function total_expense(e) {
     var grandExpense = 0;

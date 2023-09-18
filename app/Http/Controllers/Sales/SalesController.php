@@ -141,7 +141,7 @@ class SalesController extends Controller
                         $ex->sales_id=$pur->id;
                         $ex->child_two_id=$child_two_id;
                         $ex->cost_amount=$request->cost_amount[$j];
-                        $ex->lot_no=$request->lot_no[0];
+                        $ex->lot_no=$request->lc_no[$j];
                         $ex->status= 0;
                         $ex->save();
                     }
@@ -229,7 +229,8 @@ class SalesController extends Controller
 
             $childone = Child_one::where(company())->where('head_code',5320)->first();
             $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
-            $expense = ExpenseOfSales::where('sales_id',$sales->id)->pluck('cost_amount','child_two_id');
+            // $expense = ExpenseOfSales::where('sales_id',$sales->id)->pluck('cost_amount','child_two_id');
+            $expense = ExpenseOfSales::where('sales_id',$sales->id)->get();
         }else{
             $customers = Customer::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
@@ -262,15 +263,28 @@ class SalesController extends Controller
             $pur->payment_status=0;
             $pur->status=1;
             if($pur->save()){
+                if($request->child_two_id){
+                    ExpenseOfSales::where('sales_id',$pur->id)->delete();
+                    foreach($request->child_two_id as $j=>$child_two_id){
+                        $ex = new ExpenseOfSales;
+                        $ex->company_id=company()['company_id'];
+                        $ex->sales_id=$pur->id;
+                        $ex->child_two_id=$child_two_id;
+                        $ex->cost_amount=$request->cost_amount[$j];
+                        $ex->lot_no=$request->lc_no[$j];
+                        $ex->status= 0;
+                        $ex->save();
+                    }
+                }
                 if($request->product_id){
                     Sales_details::where('sales_id',$pur->id)->delete();
                     Stock::where('sales_id',$pur->id)->delete();
-                    ExpenseOfSales::where('sales_id',$pur->id)->delete();
                     foreach($request->product_id as $i=>$product_id){
                         if($request->lot_no[$i]>0){
                             $pd=new Sales_details;
                             $pd->sales_id=$pur->id;
                             $pd->product_id=$product_id;
+                            $pd->company_id=company()['company_id'];
                             $pd->lot_no=$request->lot_no[$i];
                             $pd->batch_id=$request->batch_id[$i];
                             $pd->brand=$request->brand[$i];
@@ -294,20 +308,9 @@ class SalesController extends Controller
                                 $stock->batch_id=$pd->batch_id;
                                 $stock->unit_price=$pd->rate_kg;
                                 $stock->total_amount=$pd->amount;
-                                if($stock->save()){
-                                    if($request->child_two_id){
-                                        foreach($request->child_two_id as $j=>$child_two_id){
-                                            $ex = new ExpenseOfSales;
-                                            $ex->sales_id=$pur->id;
-                                            $ex->child_two_id=$child_two_id;
-                                            $ex->cost_amount=$request->cost_amount[$j];
-                                            $ex->lot_no=$pd->lot_no;
-                                            $ex->status= 0;
-                                            $ex->save();
-                                            DB::commit();
-                                        }
-                                    }
-                                }
+                                $stock->save();
+                                    
+                                
                             }
                         }
                     }
