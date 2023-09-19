@@ -36,8 +36,8 @@ class SalesController extends Controller
             $sales = Sales::where(company())->paginate(10);
         else
             $sales = Sales::where(company())->where(branch())->paginate(10);
-            
-        
+
+
         return view('sales.index',compact('sales'));
     }
 
@@ -58,7 +58,7 @@ class SalesController extends Controller
             $customers = Customer::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
-        
+
         return view('sales.create',compact('branches','customers','Warehouses','childTow'));
     }
 
@@ -75,9 +75,9 @@ class SalesController extends Controller
             else
                 $product=DB::select("SELECT products.id,products.product_name,products.bar_code,stocks.lot_no,stocks.unit_price,stocks.batch_id,stocks.brand,sum(stocks.quantity_bag) as bag_qty,sum(stocks.quantity) as qty FROM `products` JOIN stocks on stocks.product_id=products.id WHERE stocks.company_id=".company()['company_id']." and stocks.branch_id=".$request->branch_id." and stocks.warehouse_id=".$request->warehouse_id." and (stocks.lot_no like '%". $request->name ."%' or stocks.brand like '%". $request->name ."%') and (stocks.batch_id is not null or stocks.batch_id != '') GROUP BY stocks.product_id,stocks.lot_no,stocks.brand,stocks.batch_id");
             //$dd="SELECT products.id,products.product_name,products.bar_code,stocks.lot_no,stocks.brand,sum(stocks.quantity_bag) as qty FROM `products` JOIN stocks on stocks.product_id=products.id WHERE stocks.company_id=".company()['company_id']." and stocks.branch_id=".$request->branch_id." and stocks.warehouse_id=".$request->warehouse_id." and (stocks.lot_no like '%". $request->name ."%' or stocks.brand like '%". $request->name ."%') GROUP BY stocks.id";
-            print_r(json_encode($product));  
+            print_r(json_encode($product));
         }
-        
+
     }
     /**
      * Show the form for creating a new resource.
@@ -89,7 +89,7 @@ class SalesController extends Controller
         if($request->item_id){
             list($item_id,$lot_no,$brand,$batch_id)=explode("^",$request->item_id);
             $product=collect(\DB::select("SELECT products.id,products.product_name,products.bar_code,stocks.lot_no,stocks.unit_price,sum(stocks.quantity_bag) as bag_qty, sum(stocks.quantity) as qty, stocks.brand FROM `products` JOIN stocks on stocks.product_id=products.id WHERE stocks.company_id=".company()['company_id']." and stocks.branch_id=".$request->branch_id." and stocks.warehouse_id=".$request->warehouse_id." and stocks.product_id=".$item_id." and stocks.lot_no='".$lot_no."' and stocks.brand='".$brand."' and stocks.batch_id='".$batch_id."' GROUP BY stocks.batch_id"))->first();
-            
+
             $data='<tr class="productlist text-center">';
             $data.='<td class="py-2 px-1">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'" class="product_id_list"><input name="stockqty[]" type="hidden" value="'.$product->qty.'" class="stockqty"><input name="batch_id[]" type="hidden" value="'.$batch_id.'" class="batch_id_list"></td>';
             $data.='<td class="py-2 px-1"><input readonly name="lot_no[]" type="text" class="form-control lot_no" value="'.$product->lot_no.'"></td>';
@@ -104,10 +104,10 @@ class SalesController extends Controller
             $data.='<td class="py-2 px-1"><input name="amount[]" readonly type="text" class="form-control amount" value="0"></td>';
             $data.='<td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>';
             $data.='</tr>';
-            
-            print_r(json_encode($data));  
+
+            print_r(json_encode($data));
         }
-        
+
     }
 
     /**
@@ -118,7 +118,7 @@ class SalesController extends Controller
      */
     public function store(AddNewRequest $request)
     {
-       
+
         DB::beginTransaction();
         try{
             $pur= new Sales;
@@ -180,7 +180,7 @@ class SalesController extends Controller
                         }
                     }
                 }
-                
+
                 return redirect()->route(currentUser().'.sales.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
@@ -211,6 +211,13 @@ class SalesController extends Controller
         $salesDetail= Sales_details::where('sales_id',$show_data->id)->get();
         return view('sales.saleBill',compact('show_data','salesDetail'));
     }
+    public function saleMemo($id)
+    {
+        $show_data= Sales::findOrFail(encryptor('decrypt',$id));
+        $salesDetail= Sales_details::where('sales_id',$show_data->id)->get();
+        $expense = ExpenseOfSales::where('sales_id',$show_data->id)->get();
+        return view('sales.memo',compact('show_data','salesDetail','expense'));
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -237,7 +244,7 @@ class SalesController extends Controller
             $sales = Sales::findOrFail(encryptor('decrypt',$id));
             $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
         }
-        
+
         return view('sales.edit',compact('branches','customers','Warehouses','sales','salesDetails','childTow','expense'));
     }
 
@@ -309,13 +316,13 @@ class SalesController extends Controller
                                 $stock->unit_price=$pd->rate_kg;
                                 $stock->total_amount=$pd->amount;
                                 $stock->save();
-                                    
-                                
+
+
                             }
                         }
                     }
                 }
-                
+
                 return redirect()->route(currentUser().'.sales.index')->with($this->resMessageHtml(true,null,'Successfully Update'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));

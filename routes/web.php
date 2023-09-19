@@ -90,7 +90,7 @@ Route::group(['middleware'=>isAdmin::class],function(){
         Route::resource('thana',thana::class,['as'=>'admin']);
         Route::resource('unit',unit::class,['as'=>'admin']);
         Route::resource('currency',currency::class,['as'=>'admin']);
-        
+
     });
 });
 
@@ -116,7 +116,7 @@ Route::group(['middleware'=>isOwner::class],function(){
         //Supplier and Customer
         Route::resource('supplier',supplier::class,['as'=>'owner']);
         Route::resource('customer',customer::class,['as'=>'owner']);
-        
+
 
         //report
         Route::get('/sreport',[report::class,'stockreport'])->name('owner.sreport');
@@ -124,8 +124,8 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/purchase-report',[report::class,'purchaseReport'])->name('owner.purchase_report');
         Route::get('/srota',[report::class,'srota'])->name('owner.srota');
         Route::get('/srota-view',[report::class,'srotaView'])->name('owner.srota_view');
-        
-        
+
+
 
         //Product
         Route::resource('category',category::class,['as'=>'owner']);
@@ -136,7 +136,7 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/qrcodepreview',[product::class,'qrcodepreview'])->name('owner.qrcodepreview');
         Route::get('/barcodepreview',[product::class,'barcodepreview'])->name('owner.barcodepreview');
         Route::get('/labelprint',[product::class,'labelprint'])->name('owner.labelprint');
-        
+
 
         //Accounts
         Route::resource('master',master::class,['as'=>'owner']);
@@ -170,6 +170,7 @@ Route::group(['middleware'=>isOwner::class],function(){
         //Sale
         Route::resource('sales',sales::class,['as'=>'owner']);
         Route::get('/sale-view{id}', [sales::class,'saleView'])->name('owner.sales.view');
+        Route::get('/sale-memo{id}', [sales::class,'saleMemo'])->name('owner.sales.memo');
         Route::get('/product_sc', [sales::class,'product_sc'])->name('owner.sales.product_sc');
         Route::get('/product_sc_d', [sales::class,'product_sc_d'])->name('owner.sales.product_sc_d');
 
@@ -183,14 +184,14 @@ Route::group(['middleware'=>isOwner::class],function(){
 Route::group(['middleware'=>isSalesmanager::class],function(){
     Route::prefix('salesmanager')->group(function(){
         Route::get('/dashboard', [dash::class,'salesmanagerDashboard'])->name('salesmanager.dashboard');
-        
+
     });
 });
 
 Route::group(['middleware'=>isSalesman::class],function(){
     Route::prefix('salesman')->group(function(){
         Route::get('/dashboard', [dash::class,'salesmanDashboard'])->name('salesman.dashboard');
-        
+
     });
 });
 
