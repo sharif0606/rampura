@@ -180,13 +180,13 @@
                                                 <select  class="form-control form-select" name="payment_head[]">
                                                     @if($paymethod)
                                                         @foreach($paymethod as $d)
-                                                            <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}-{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
+                                                            <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
                                                         @endforeach
                                                     @endif
                                                 </select>
                                             </td>
                                             <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" placeholder="Lc Number"></td>
-                                            <td class="tbl_expense"><input type="number" onkeyup="total_payment(this)" class="form-control pay_value text-end" name="pay_amount[]"></td>
+                                            <td class="tbl_expense"><input type="number" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]"></td>
                                             <td class="tbl_expense text-primary" onClick='addPaymentRow();'><i class="bi bi-plus-square-fill"></i></td>
                                         </tr>
                                         
@@ -202,7 +202,8 @@
                                         <tr class="tbl_expense">
                                             <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL PAYMENT</h5></th>
                                             <td class="tbl_expense text-end" >
-                                                <input type="text" onkeyup="total_calculate()" name="total_payment" class="form-control text-end tpayment_p">
+                                                <h5 class="tpayment" >0.00</h5>
+                                                <input type="hidden" name="total_payment" class="tpayment_p">
                                             </td>
                                         </tr>
                                         <tr class="tbl_expense">
@@ -339,6 +340,7 @@ function return_row_with_data(item_id){
 function removerow(e){
   $(e).closest('tr').remove();
   total_expense();
+  payment();
   total_calculate();
 }
 
@@ -363,6 +365,7 @@ function get_cal(e){
   console.log('amount:', amount);
 
   total_expense();
+  payment();
   total_calculate();
 }
 //row reapeter
@@ -393,13 +396,13 @@ var row=`<tr class="tbl_expense">
                 <select  class="form-control form-select" name="payment_head[]">
                     @if($paymethod)
                         @foreach($paymethod as $d)
-                            <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}-{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
+                            <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
                         @endforeach
                     @endif
                 </select>
             </td>
             <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" placeholder="Lc Number"></td>
-            <td class="tbl_expense"><input type="number" onkeyup="total_payment(this)" class="form-control pay_value text-end" name="pay_amount[]"></td>
+            <td class="tbl_expense"><input type="number" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]"></td>
             <td class="tbl_expense text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></td>
         </tr>`;
     $('#payment').append(row);
@@ -410,6 +413,7 @@ function RemoveRow(e) {
         $(e).closest('tr').remove();
         
         total_expense();
+        payment();
         total_calculate();
     }
 }
@@ -423,12 +427,25 @@ function total_expense(e) {
 
     $(".sub_total").val(grandExpense.toFixed(2));
 
+   
+    payment();
+    total_calculate();
+}
+function payment(e) {
+    var t_payment = 0;
+    $('.pay_value').each(function() {
+        t_payment += parseFloat($(this).val()) || 0;
+    });
+
+    $(".tpayment").text(t_payment.toFixed(2));
+    $(".tpayment_p").val(t_payment.toFixed(2));
+
     total_calculate();
 }
 
 function total_calculate() {
     var subTotal=(isNaN(parseFloat($('.sub_total').val().trim()))) ? 0 :parseFloat($('.sub_total').val().trim());
-    var payment=(isNaN(parseFloat($('.tpayment_p').val().trim()))) ? 0 :parseFloat($('.tpayment_p').val().trim());
+    var totalPayment=(isNaN(parseFloat($('.tpayment_p').val().trim()))) ? 0 :parseFloat($('.tpayment_p').val().trim());
     
 
     // Calculate the sum of total_amount values
@@ -444,7 +461,7 @@ function total_calculate() {
     });
 
     var grandTotal=((subTotal+purChaseTotal));
-    var totalDue = (grandTotal - payment);
+    var totalDue = (grandTotal - totalPayment);
     var per_kg_costing = (grandTotal/actualTotal);
 
     // Display the sum in the specified element

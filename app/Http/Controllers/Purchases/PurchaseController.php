@@ -20,6 +20,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Purchases\AddNewRequest;
 use App\Http\Requests\Purchases\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
+use App\Models\Suppliers\SupplierPayment;
+use App\Models\Suppliers\SupplierPaymentDetails;
 use Exception;
 use DB;
 use Carbon\Carbon;
@@ -218,23 +220,42 @@ class PurchaseController extends Controller
                                 $stock->total_amount=$pd->amount;
                                 $stock->save();
                             
-                                DB::commit();
+                                
                             }
                         }
                     }
                 }
 
-                if($request->payment_head){
-                    foreach($request->payment_head as $i=>$ph){
-                        $payment=new paymentdetails;
-                        $payment->p_table_name=explode($ph,'~')[0];
-                        $payment->p_table_id=explode($ph,'~')[1];
-                        $payment->p_head_name=explode($ph,'~')[2];
-                        $payment->p_head_code=explode($ph,'~')[3];
-                        $payment->lc=$request->lc_no_payment[$i];
-                        $payment->amount=$request->pay_amount[$i];
+                if($request->total_pay_amount){
+                    $payment=new SupplierPayment;
+                    $payment->company_id=company()['company_id'];
+                    $payment->supplier_id=$request->supplierName;
+                    $payment->purchase_date=date('Y-m-d', strtotime($request->purchase_date));
+                    $payment->purchase_invoice=$pur->voucher_no;
+                    $payment->total_amount=$request->total_pay_amount;
+                    $payment->total_payment=$request->total_payment;
+                    $payment->total_due=$request->total_due;
+                    if($payment->save()){
+                        if($request->payment_head){
+                            foreach($request->payment_head as $i=>$ph){
+                                
+                                $pay=new SupplierPaymentDetails;
+                                $pay->company_id=company()['company_id'];
+                                $pay->purchase_id=$pur->id;
+                                $pay->supplier_id=$request->supplierName;
+                                $pay->ptable_name=explode('~',$ph)[0];
+                                $pay->ptable_id=explode('~',$ph)[1];
+                                $pay->phead_name=explode('~',$ph)[2];
+                                $pay->phead_code=explode('~',$ph)[3];
+                                $pay->lc_no=$request->lc_no_payment[$i];
+                                $pay->amount=$request->pay_amount[$i];
+                                $pay->status=0;
+                                $pay->save();
+                            }
+                        }
                     }
                 }
+                DB::commit();
                 
                 return redirect()->route(currentUser().'.purchase.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             }else
