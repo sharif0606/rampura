@@ -163,8 +163,8 @@
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.credit.index')}}">{{__('Credit Voucher')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.debit.index')}}">{{__('Debit Voucher')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.journal.index')}}">{{__('Journal Voucher')}}</a></li>
-            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.cusVoucher.index')}}">{{__('Customer Voucher')}}</a></li>
-            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.supVoucher.index')}}">{{__('Supplier Voucher')}}</a></li>
+            {{-- <li class="py-1 submenu-item"><a href="{{route(currentUser().'.cusVoucher.index')}}">{{__('Customer Voucher')}}</a></li>
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.supVoucher.index')}}">{{__('Supplier Voucher')}}</a></li> --}}
         </ul>
     </li>
     <li class="sidebar-item has-sub">
