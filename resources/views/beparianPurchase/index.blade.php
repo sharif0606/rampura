@@ -67,12 +67,12 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="my-3">
+                        {!! $purchases->links()!!}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- Bordered table end -->
-
-
 @endsection

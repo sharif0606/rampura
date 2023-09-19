@@ -62,6 +62,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="my-3">
+                        {!! $products->links()!!}
+                    </div>
                 </div>
             </div>
         </div>

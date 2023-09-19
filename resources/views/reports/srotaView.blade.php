@@ -204,9 +204,9 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <tr>
+                                        {{-- <tr>
                                             <th colspan="2" style="text-align: right;"><span style="border-top: double;">{{$s->sales?->grand_total}}</span></th>
-                                        </tr>
+                                        </tr> --}}
                                 </table>
                             @empty
                             @endforelse
@@ -268,7 +268,7 @@
                                             @endif
                                         @endforeach
                                     @endif
-                                    @if($pur->purchase?->grand_total)
+                                    {{-- @if($pur->purchase?->grand_total)
                                     <tr>
                                         <th colspan="2" style="text-align: right;"><span style="border-top: double;">{{$pur->purchase?->grand_total}}</span></th>
                                     </tr>
@@ -282,7 +282,7 @@
                                     <tr>
                                         <th colspan="2" style="text-align: right;"><span style="border-top: double;">{{$pur->regular_purchase?->grand_total}}</span></th>
                                     </tr>
-                                    @endif
+                                    @endif --}}
                                 </table>
                             @empty
                             @endforelse
