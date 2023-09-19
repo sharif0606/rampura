@@ -30,7 +30,7 @@
                     <tr>
                         <th width="41%"></th>
                         <th width="18%"
-                            style="font-size: 20px; background-color: rgb(70, 70, 230); color: white;  border-radius: 5px;">
+                            style="font-size: 20px; background-color: rgb(70, 70, 230); color: white;  border-radius: 5px; text-align:center">
                             কমিশন এজেন্ট
                         </th>
                         <th></th>
