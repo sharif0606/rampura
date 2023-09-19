@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('supplier_payment_details', function (Blueprint $table) {
+        Schema::create('customer_payment_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
-            $table->unsignedBigInteger('supplier_id')->nullable()->index()->foreign()->references('id')->on('suppliers')->onDelete('cascade');
-            $table->integer('supplier_payment_id')->nullable();
-            $table->unsignedBigInteger('purchase_id')->nullable()->index()->foreign()->references('id')->on('purchases')->onDelete('cascade');
-            $table->unsignedBigInteger('beparian_purchase_id')->nullable()->index()->foreign()->references('id')->on('beparian_purchases')->onDelete('cascade');
-            $table->unsignedBigInteger('regular_purchase_id')->nullable()->index()->foreign()->references('id')->on('regular_purchases')->onDelete('cascade');
+            $table->unsignedBigInteger('customer_id')->index()->foreign()->references('id')->on('customers')->onDelete('cascade');
+            $table->integer('customer_payment_id')->nullable();
+            $table->unsignedBigInteger('sales_id')->index()->foreign()->references('id')->on('sales')->onDelete('cascade');
             $table->string('p_table_name')->nullable();
             $table->unsignedBigInteger('p_table_id')->nullable();
             $table->string('p_head_name')->nullable();
@@ -39,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('supplier_payment_details');
+        Schema::dropIfExists('customer_payment_details');
     }
 };

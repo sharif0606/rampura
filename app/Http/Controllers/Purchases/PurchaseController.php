@@ -228,25 +228,27 @@ class PurchaseController extends Controller
 
                 if($request->total_pay_amount){
                     $payment=new SupplierPayment;
-                    $payment->company_id=company()['company_id'];
-                    $payment->supplier_id=$request->supplierName;
-                    $payment->purchase_date=date('Y-m-d', strtotime($request->purchase_date));
-                    $payment->purchase_invoice=$pur->voucher_no;
-                    $payment->total_amount=$request->total_pay_amount;
-                    $payment->total_payment=$request->total_payment;
-                    $payment->total_due=$request->total_due;
+                    $payment->purchase_id = $pur->id;
+                    $payment->company_id = company()['company_id'];
+                    $payment->supplier_id = $request->supplierName;
+                    $payment->purchase_date = date('Y-m-d', strtotime($request->purchase_date));
+                    $payment->purchase_invoice = $pur->voucher_no;
+                    $payment->total_amount = $request->total_pay_amount;
+                    $payment->total_payment = $request->total_payment;
+                    $payment->total_due = $request->total_due;
+                    $payment->status=0;
                     if($payment->save()){
                         if($request->payment_head){
                             foreach($request->payment_head as $i=>$ph){
-                                
                                 $pay=new SupplierPaymentDetails;
+                                $pay->purchase_id = $pur->id;
                                 $pay->company_id=company()['company_id'];
-                                $pay->purchase_id=$pur->id;
+                                $pay->supplier_payment_id=$payment->id;
                                 $pay->supplier_id=$request->supplierName;
-                                $pay->ptable_name=explode('~',$ph)[0];
-                                $pay->ptable_id=explode('~',$ph)[1];
-                                $pay->phead_name=explode('~',$ph)[2];
-                                $pay->phead_code=explode('~',$ph)[3];
+                                $pay->p_table_name=explode('~',$ph)[0];
+                                $pay->p_table_id=explode('~',$ph)[1];
+                                $pay->p_head_name=explode('~',$ph)[2];
+                                $pay->p_head_code=explode('~',$ph)[3];
                                 $pay->lc_no=$request->lc_no_payment[$i];
                                 $pay->amount=$request->pay_amount[$i];
                                 $pay->status=0;
@@ -299,13 +301,43 @@ class PurchaseController extends Controller
             $childone = Child_one::where(company())->where('head_code',5310)->first();
             $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
             // $expense = ExpenseOfPurchase::where('purchase_id',$purchase->id)->pluck('cost_amount','child_two_id');
-            $expense = ExpenseOfPurchase::where('purchase_id',$purchase->id)->get();
+            $expense = ExpenseOfPurchase::where(company())->where('purchase_id',$purchase->id)->get();
+            $supplerPayment = SupplierPayment::where(company())->where('purchase_id',$purchase->id)->first();
+            $supplierPaymentDetails = SupplierPaymentDetails::where(company())->where('supplier_payment_id',$supplerPayment->id)->get();
         }else{
             $suppliers = Supplier::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
+
+        $paymethod=array();
+        $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
         
-        return view('purchase.edit',compact('branches','suppliers','Warehouses','purchase','purchaseDetails','childTow','expense'));
+        if($account_data){
+            foreach($account_data as $ad){
+                $shead=Child_two::where('child_one_id',$ad->id);
+                if($shead->count() > 0){
+					$shead=$shead->get();
+                    foreach($shead as $sh){
+                        $paymethod[]=array(
+                                        'id'=>$sh->id,
+                                        'head_code'=>$sh->head_code,
+                                        'head_name'=>$sh->head_name,
+                                        'table_name'=>'child_twos'
+                                    );
+                    }
+                }else{
+                    $paymethod[]=array(
+                        'id'=>$ad->id,
+                        'head_code'=>$ad->head_code,
+                        'head_name'=>$ad->head_name,
+                        'table_name'=>'child_ones'
+                    );
+                }
+                
+            }
+        }
+        
+        return view('purchase.edit',compact('branches','suppliers','Warehouses','purchase','purchaseDetails','childTow','expense','paymethod','supplerPayment','supplierPaymentDetails'));
     }
 
     /**
@@ -382,13 +414,45 @@ class PurchaseController extends Controller
                                     $stock->quantity_bag=$pd->quantity_bag;
                                     $stock->total_amount=$pd->amount;
                                     $stock->save();
-                                
-                                    DB::commit();
                                 }
                             }
                         }
                     }
                 }
+                if($request->total_pay_amount){
+                    SupplierPayment::where('purchase_id',$pur->id)->delete();
+                    SupplierPaymentDetails::where('purchase_id',$pur->id)->delete();
+                    $payment=new SupplierPayment;
+                    $payment->purchase_id = $pur->id;
+                    $payment->company_id = company()['company_id'];
+                    $payment->supplier_id = $request->supplierName;
+                    $payment->purchase_date = date('Y-m-d', strtotime($request->purchase_date));
+                    $payment->purchase_invoice = $pur->voucher_no;
+                    $payment->total_amount = $request->total_pay_amount;
+                    $payment->total_payment = $request->total_payment;
+                    $payment->total_due = $request->total_due;
+                    $payment->status=0;
+                    if($payment->save()){
+                        if($request->payment_head){
+                            foreach($request->payment_head as $i=>$ph){
+                                $pay=new SupplierPaymentDetails;
+                                $pay->purchase_id = $pur->id;
+                                $pay->company_id=company()['company_id'];
+                                $pay->supplier_payment_id=$payment->id;
+                                $pay->supplier_id=$request->supplierName;
+                                $pay->p_table_name=explode('~',$ph)[0];
+                                $pay->p_table_id=explode('~',$ph)[1];
+                                $pay->p_head_name=explode('~',$ph)[2];
+                                $pay->p_head_code=explode('~',$ph)[3];
+                                $pay->lc_no=$request->lc_no_payment[$i];
+                                $pay->amount=$request->pay_amount[$i];
+                                $pay->status=0;
+                                $pay->save();
+                            }
+                        }
+                    }
+                }
+                DB::commit();
                 
                 return redirect()->route(currentUser().'.purchase.index')->with($this->resMessageHtml(true,null,'Successfully Update'));
             }else

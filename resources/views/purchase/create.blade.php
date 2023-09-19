@@ -138,7 +138,7 @@
                                                 </td>
                                                 <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" required></td>
                                                 <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
-                                                <td class="tbl_expense text-primary" onClick='addRow();'><i class="bi bi-plus-square-fill"></i></td>
+                                                <td class="tbl_expense text-primary text-center fs-3" onClick='addRow();' style="width: 3%;"><i class="bi bi-plus-square-fill"></i></td>
                                             </tr>
                                             
                                         </tbody>
@@ -165,56 +165,57 @@
                                     <label for="" class="form-group"><h5 class="perKgCost">0.00</h5></label>
                                 </div>
                             </div>
-
-                            <div class="col-lg-12 col-sm-12 col-md-12">
-                                <div><h5>Payment:</h5></div>
-                                <table class="tbl_expense" style="width:100%;">
-                                    <tbody id="payment">
-                                        <tr class="tbl_expense text-center">
-                                            <th class="tbl_expense">Payment Type</th>
-                                            <th class="tbl_expense">Lc Number</th>
-                                            <th colspan="2" class="tbl_expense"> Amount</th>
-                                        </tr>
-                                        <tr class="tbl_expense">
-                                            <td class="tbl_expense">
-                                                <select  class="form-control form-select" name="payment_head[]">
-                                                    @if($paymethod)
-                                                        @foreach($paymethod as $d)
-                                                            <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </td>
-                                            <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" placeholder="Lc Number"></td>
-                                            <td class="tbl_expense"><input type="number" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]"></td>
-                                            <td class="tbl_expense text-primary" onClick='addPaymentRow();'><i class="bi bi-plus-square-fill"></i></td>
-                                        </tr>
-                                        
-                                    </tbody>
-                                    <tfoot>
-                                        <tr class="tbl_expense">
-                                            <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL AMOUNT</h5></th>
-                                            <td class="tbl_expense text-end" >
-                                                <h5 class="tgrandtotal" >0.00</h5>
-                                                <input type="hidden" name="total_pay_amount" class="tgrandtotal_p">
-                                            </td>
-                                        </tr>
-                                        <tr class="tbl_expense">
-                                            <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL PAYMENT</h5></th>
-                                            <td class="tbl_expense text-end" >
-                                                <h5 class="tpayment" >0.00</h5>
-                                                <input type="hidden" name="total_payment" class="tpayment_p">
-                                            </td>
-                                        </tr>
-                                        <tr class="tbl_expense">
-                                            <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL DUE</h5></th>
-                                            <td class="tbl_expense text-end" >
-                                                <h5 class="tdue" >0.00</h5>
-                                                <input type="hidden" name="total_due" class="tdue_p">
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12 col-md-12">
+                                    <div><h5>Payment:</h5></div>
+                                    <table class="tbl_expense" style="width:100%;">
+                                        <tbody id="payment">
+                                            <tr class="tbl_expense text-center">
+                                                <th class="tbl_expense">Payment Type</th>
+                                                <th class="tbl_expense">Lc Number</th>
+                                                <th colspan="2" class="tbl_expense"> Amount</th>
+                                            </tr>
+                                            <tr class="tbl_expense">
+                                                <td class="tbl_expense">
+                                                    <select  class="form-control form-select" name="payment_head[]">
+                                                        @if($paymethod)
+                                                            @foreach($paymethod as $d)
+                                                                <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
+                                                            @endforeach
+                                                        @endif
+                                                    </select>
+                                                </td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" placeholder="Lc Number"></td>
+                                                <td class="tbl_expense"><input type="number" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]"></td>
+                                                <td class="tbl_expense text-primary text-center fs-3" onClick='addPaymentRow();' style="width: 3%;"><i class="bi bi-plus-square-fill"></i></td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="tbl_expense">
+                                                <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL AMOUNT</h5></th>
+                                                <td class="tbl_expense text-end" >
+                                                    <h5 class="tgrandtotal" >0.00</h5>
+                                                    <input type="hidden" name="total_pay_amount" class="tgrandtotal_p">
+                                                </td>
+                                            </tr>
+                                            <tr class="tbl_expense">
+                                                <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL PAYMENT</h5></th>
+                                                <td class="tbl_expense text-end" >
+                                                    <h5 class="tpayment" >0.00</h5>
+                                                    <input type="hidden" name="total_payment" class="tpayment_p">
+                                                </td>
+                                            </tr>
+                                            <tr class="tbl_expense">
+                                                <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL DUE</h5></th>
+                                                <td class="tbl_expense text-end" >
+                                                    <h5 class="tdue" >0.00</h5>
+                                                    <input type="hidden" name="total_due" class="tdue_p">
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
 
                              
@@ -384,7 +385,7 @@ var row=`<tr class="tbl_expense">
             </td>
             <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" required></td>
             <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
-            <td class="tbl_expense text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></td>
+            <td class="tbl_expense text-danger text-center fs-3" onClick='RemoveRow(this);' style="width: 3%;"><i class="bi bi-trash"></i></td>
         </tr>`;
     $('#expense').append(row);
 }
@@ -403,7 +404,7 @@ var row=`<tr class="tbl_expense">
             </td>
             <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" placeholder="Lc Number"></td>
             <td class="tbl_expense"><input type="number" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]"></td>
-            <td class="tbl_expense text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></td>
+            <td class="tbl_expense text-danger text-center fs-3" onClick='RemoveRow(this);' style="width: 3%;"><i class="bi bi-trash"></i></td>
         </tr>`;
     $('#payment').append(row);
 }

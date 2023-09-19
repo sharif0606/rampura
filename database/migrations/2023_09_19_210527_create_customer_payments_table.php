@@ -13,15 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('supplier_payments', function (Blueprint $table) {
+        Schema::create('customer_payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('purchase_id')->nullable()->index()->foreign()->references('id')->on('purchases')->onDelete('cascade');
+            $table->unsignedBigInteger('sales_id')->index()->foreign()->references('id')->on('sales')->onDelete('cascade');
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
-            $table->unsignedBigInteger('supplier_id')->nullable()->index()->foreign()->references('id')->on('suppliers')->onDelete('cascade');
-            $table->date('purchase_date')->nullable();
-            $table->string('purchase_invoice')->nullable();
-            $table->string('beparian_purchase_invoice')->nullable();
-            $table->string('regular_purchase_invoice')->nullable();
+            $table->unsignedBigInteger('customer_id')->index()->foreign()->references('id')->on('customers')->onDelete('cascade');
+            $table->date('sales_date')->nullable();
+            $table->string('sales_invoice')->nullable();
             $table->decimal('total_amount',14,2)->default(0)->nullable();
             $table->decimal('total_payment',14,2)->default(0)->nullable();
             $table->decimal('total_due',14,2)->default(0)->nullable();
@@ -37,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('supplier_payments');
+        Schema::dropIfExists('customer_payments');
     }
 };

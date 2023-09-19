@@ -167,8 +167,8 @@
                                                         </select>
                                                     </td>
                                                     <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" value="{{$item->lot_no}}" required></td>
-                                                    <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value="{{$item->cost_amount}}" required></td>
-                                                    <td class="tbl_expense">
+                                                    <td class="tbl_expense"><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value="{{$item->cost_amount}}" required></td>
+                                                    <td class="tbl_expense text-center fs-4" style="width: 3%;">
                                                         <span class="text-primary" onClick='addRow();'><i class="bi bi-plus-square-fill"></i></span>
                                                         <span class="text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></span>
                                                     </td>
@@ -179,7 +179,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr class="tbl_expense">
-                                                <th class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL EXPENSES</h5></th>
+                                                <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL EXPENSES</h5></th>
                                                 <td class="tbl_expense text-end" >
                                                     <h5 class="tgrandtotal" style=" padding-right: 10px;">{{$purchase->grand_total}}</h5>
                                                     <input type="hidden" name="tgrandtotal" class="tgrandtotal_p" value="{{$purchase->grand_total}}">
@@ -206,8 +206,67 @@
                                     </label>
                                 </div>
                             </div>
-                            
+
                             <div class="row">
+                                <div class="col-lg-12 col-sm-12 col-md-12">
+                                    <div><h5>Payment:</h5></div>
+                                    <table class="tbl_expense" style="width:100%;">
+                                        <tbody id="payment">
+                                            <tr class="tbl_expense text-center">
+                                                <th class="tbl_expense">Payment Type</th>
+                                                <th class="tbl_expense">Lc Number</th>
+                                                <th colspan="2" class="tbl_expense"> Amount</th>
+                                            </tr>
+                                            @forelse ($supplierPaymentDetails as $spd)
+                                                <tr class="tbl_expense">
+                                                    <td class="tbl_expense">
+                                                        <select  class="form-control form-select" name="payment_head[]">
+                                                            @if($paymethod)
+                                                                @foreach($paymethod as $d)
+                                                                    <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}" {{old('payment_head',$spd->p_table_id)== $d['id']?'selected':''}}>{{$d['head_name']}}-{{$d['head_code']}}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                    </td>
+                                                    <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" value="{{$spd->lc_no}}" placeholder="Lc Number"></td>
+                                                    <td class="tbl_expense"><input type="text" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]" value="{{$spd->amount}}"></td>
+                                                    <td class="tbl_expense text-primary text-center fs-4" style="width: 3%;">
+                                                        <span class="text-primary" onClick='addPaymentRow();'><i class="bi bi-plus-square-fill"></i></span>
+                                                        <span class="text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></span>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                            @endforelse
+                                            
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="tbl_expense">
+                                                <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL AMOUNT</h5></th>
+                                                <td class="tbl_expense text-end" >
+                                                    <h5 class="tgrandtotal" >{{$supplerPayment->total_amount}}</h5>
+                                                    <input type="hidden" name="total_pay_amount" class="tgrandtotal_p" value="{{$supplerPayment->total_amount}}">
+                                                </td>
+                                            </tr>
+                                            <tr class="tbl_expense">
+                                                <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL PAYMENT</h5></th>
+                                                <td class="tbl_expense text-end" >
+                                                    <h5 class="tpayment" >{{$supplerPayment->total_payment}}</h5>
+                                                    <input type="hidden" name="total_payment" class="tpayment_p" value="{{$supplerPayment->total_payment}}">
+                                                </td>
+                                            </tr>
+                                            <tr class="tbl_expense">
+                                                <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL DUE</h5></th>
+                                                <td class="tbl_expense text-end" >
+                                                    <h5 class="tdue" >{{$supplerPayment->total_due}}</h5>
+                                                    <input type="hidden" name="total_due" class="tdue_p" value="{{$supplerPayment->total_due}}" >
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-3">
                                 <div class="col-12 d-flex justify-content-end">
                                     <button type="submit" class="btn btn-info me-1 mb-1">Update</button>
                                 </div>
@@ -330,6 +389,7 @@ function return_row_with_data(item_id){
 function removerow(e){
   $(e).closest('tr').remove();
   total_expense();
+  payment();
   total_calculate();
 }
 
@@ -354,6 +414,7 @@ function get_cal(e){
   console.log('amount:', amount);
 
   total_expense();
+  payment();
   total_calculate();
 }
 
@@ -372,10 +433,29 @@ var row=`<tr class="tbl_expense">
                 </select>
             </td>
             <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" required></td>
-            <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
-            <td class="tbl_expense text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></td>
+            <td class="tbl_expense"><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
+            <td class="tbl_expense text-danger text-center fs-3" onClick='RemoveRow(this);' style="width: 3%;"><i class="bi bi-trash"></i></td>
         </tr>`;
     $('#expense').append(row);
+}
+
+function addPaymentRow(){
+
+var row=`<tr class="tbl_expense">
+            <td class="tbl_expense">
+                <select  class="form-control form-select" name="payment_head[]">
+                    @if($paymethod)
+                        @foreach($paymethod as $d)
+                            <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </td>
+            <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" placeholder="Lc Number"></td>
+            <td class="tbl_expense"><input type="text" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]"></td>
+            <td class="tbl_expense text-danger text-center fs-3" onClick='RemoveRow(this);' style="width: 3%;"><i class="bi bi-trash"></i></td>
+        </tr>`;
+    $('#payment').append(row);
 }
 
 function RemoveRow(e) {
@@ -383,6 +463,7 @@ function RemoveRow(e) {
         $(e).closest('tr').remove();
         
         total_expense();
+        payment();
         total_calculate();
     }
 }
@@ -396,11 +477,24 @@ function total_expense(e) {
 
     $(".sub_total").val(grandExpense.toFixed(2));
 
+    payment();
+    total_calculate();
+}
+function payment(e) {
+    var t_payment = 0;
+    $('.pay_value').each(function() {
+        t_payment += parseFloat($(this).val()) || 0;
+    });
+
+    $(".tpayment").text(t_payment.toFixed(2));
+    $(".tpayment_p").val(t_payment.toFixed(2));
+
     total_calculate();
 }
 
 function total_calculate() {
     var subTotal=(isNaN(parseFloat($('.sub_total').val().trim()))) ? 0 :parseFloat($('.sub_total').val().trim());
+    var totalPayment=(isNaN(parseFloat($('.tpayment_p').val().trim()))) ? 0 :parseFloat($('.tpayment_p').val().trim());
     
 
     // Calculate the sum of total_amount values
@@ -416,12 +510,15 @@ function total_calculate() {
     });
 
     var grandTotal=((subTotal+purChaseTotal));
+    var totalDue = (grandTotal - totalPayment);
     var per_kg_costing = (grandTotal/actualTotal);
 
     // Display the sum in the specified element
     $('.perKgCost').text(per_kg_costing.toFixed(2));
     $('.tgrandtotal').text(grandTotal.toFixed(2));
     $('.tgrandtotal_p').val(grandTotal.toFixed(2));
+    $('.tdue').text(totalDue.toFixed(2));
+    $('.tdue_p').val(totalDue.toFixed(2));
     
 }
 

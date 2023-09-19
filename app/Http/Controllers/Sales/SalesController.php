@@ -18,6 +18,8 @@ use App\Models\Customers\Customer;
 use App\Models\Products\Product;
 use App\Http\Requests\Sales\AddNewRequest;
 use App\Http\Traits\ResponseTrait;
+use App\Models\Customers\CustomerPayment;
+use App\Models\Customers\CustomerPaymentDetails;
 use Exception;
 use DB;
 use Carbon\Carbon;
@@ -59,7 +61,35 @@ class SalesController extends Controller
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
 
-        return view('sales.create',compact('branches','customers','Warehouses','childTow'));
+        $paymethod=array();
+        $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
+        
+        if($account_data){
+            foreach($account_data as $ad){
+                $shead=Child_two::where('child_one_id',$ad->id);
+                if($shead->count() > 0){
+					$shead=$shead->get();
+                    foreach($shead as $sh){
+                        $paymethod[]=array(
+                                        'id'=>$sh->id,
+                                        'head_code'=>$sh->head_code,
+                                        'head_name'=>$sh->head_name,
+                                        'table_name'=>'child_twos'
+                                    );
+                    }
+                }else{
+                    $paymethod[]=array(
+                        'id'=>$ad->id,
+                        'head_code'=>$ad->head_code,
+                        'head_name'=>$ad->head_name,
+                        'table_name'=>'child_ones'
+                    );
+                }
+                
+            }
+        }
+
+        return view('sales.create',compact('branches','customers','Warehouses','childTow','paymethod'));
     }
 
     /**
@@ -181,6 +211,38 @@ class SalesController extends Controller
                     }
                 }
 
+                if($request->total_pay_amount){
+                    $payment=new CustomerPayment;
+                    $payment->sales_id = $pur->id;
+                    $payment->company_id = company()['company_id'];
+                    $payment->customer_id = $request->customerName;
+                    $payment->sales_date = date('Y-m-d', strtotime($request->sales_date));
+                    $payment->sales_invoice = $pur->voucher_no;
+                    $payment->total_amount = $request->total_pay_amount;
+                    $payment->total_payment = $request->total_payment;
+                    $payment->total_due = $request->total_due;
+                    $payment->status=0;
+                    if($payment->save()){
+                        if($request->payment_head){
+                            foreach($request->payment_head as $i=>$ph){
+                                $pay=new CustomerPaymentDetails;
+                                $pay->sales_id = $pur->id;
+                                $pay->company_id=company()['company_id'];
+                                $pay->customer_payment_id=$payment->id;
+                                $pay->customer_id=$request->customerName;
+                                $pay->p_table_name=explode('~',$ph)[0];
+                                $pay->p_table_id=explode('~',$ph)[1];
+                                $pay->p_head_name=explode('~',$ph)[2];
+                                $pay->p_head_code=explode('~',$ph)[3];
+                                $pay->lc_no=$request->lc_no_payment[$i];
+                                $pay->amount=$request->pay_amount[$i];
+                                $pay->status=0;
+                                $pay->save();
+                            }
+                        }
+                    }
+                }
+
                 return redirect()->route(currentUser().'.sales.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
@@ -238,6 +300,8 @@ class SalesController extends Controller
             $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
             // $expense = ExpenseOfSales::where('sales_id',$sales->id)->pluck('cost_amount','child_two_id');
             $expense = ExpenseOfSales::where('sales_id',$sales->id)->get();
+            $customerPayment = CustomerPayment::where(company())->where('sales_id',$sales->id)->first();
+            $customerPaymentDetails = CustomerPaymentDetails::where(company())->where('customer_payment_id',$customerPayment->id)->get();
         }else{
             $customers = Customer::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
@@ -245,7 +309,35 @@ class SalesController extends Controller
             $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
         }
 
-        return view('sales.edit',compact('branches','customers','Warehouses','sales','salesDetails','childTow','expense'));
+        $paymethod=array();
+        $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
+        
+        if($account_data){
+            foreach($account_data as $ad){
+                $shead=Child_two::where('child_one_id',$ad->id);
+                if($shead->count() > 0){
+					$shead=$shead->get();
+                    foreach($shead as $sh){
+                        $paymethod[]=array(
+                                        'id'=>$sh->id,
+                                        'head_code'=>$sh->head_code,
+                                        'head_name'=>$sh->head_name,
+                                        'table_name'=>'child_twos'
+                                    );
+                    }
+                }else{
+                    $paymethod[]=array(
+                        'id'=>$ad->id,
+                        'head_code'=>$ad->head_code,
+                        'head_name'=>$ad->head_name,
+                        'table_name'=>'child_ones'
+                    );
+                }
+                
+            }
+        }
+
+        return view('sales.edit',compact('branches','customers','Warehouses','sales','salesDetails','childTow','expense','paymethod','customerPayment','customerPaymentDetails'));
     }
 
     /**
@@ -318,6 +410,39 @@ class SalesController extends Controller
                                 $stock->save();
 
 
+                            }
+                        }
+                    }
+                }
+                if($request->total_pay_amount){
+                    CustomerPayment::where('sales_id',$pur->id)->delete();
+                    CustomerPaymentDetails::where('sales_id',$pur->id)->delete();
+                    $payment=new CustomerPayment;
+                    $payment->sales_id = $pur->id;
+                    $payment->company_id = company()['company_id'];
+                    $payment->customer_id = $request->customerName;
+                    $payment->sales_date = date('Y-m-d', strtotime($request->sales_date));
+                    $payment->sales_invoice = $pur->voucher_no;
+                    $payment->total_amount = $request->total_pay_amount;
+                    $payment->total_payment = $request->total_payment;
+                    $payment->total_due = $request->total_due;
+                    $payment->status=0;
+                    if($payment->save()){
+                        if($request->payment_head){
+                            foreach($request->payment_head as $i=>$ph){
+                                $pay=new CustomerPaymentDetails;
+                                $pay->sales_id = $pur->id;
+                                $pay->company_id=company()['company_id'];
+                                $pay->customer_payment_id=$payment->id;
+                                $pay->customer_id=$request->customerName;
+                                $pay->p_table_name=explode('~',$ph)[0];
+                                $pay->p_table_id=explode('~',$ph)[1];
+                                $pay->p_head_name=explode('~',$ph)[2];
+                                $pay->p_head_code=explode('~',$ph)[3];
+                                $pay->lc_no=$request->lc_no_payment[$i];
+                                $pay->amount=$request->pay_amount[$i];
+                                $pay->status=0;
+                                $pay->save();
                             }
                         }
                     }
