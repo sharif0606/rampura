@@ -206,7 +206,6 @@ class SalesController extends Controller
                             $stock->unit_price=$pd->rate_kg;
                             $stock->total_amount=$pd->amount;
                             $stock->save();
-                            DB::commit();
                         }
                     }
                 }
@@ -242,7 +241,7 @@ class SalesController extends Controller
                         }
                     }
                 }
-
+                DB::commit();
                 return redirect()->route(currentUser().'.sales.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
@@ -408,8 +407,6 @@ class SalesController extends Controller
                                 $stock->unit_price=$pd->rate_kg;
                                 $stock->total_amount=$pd->amount;
                                 $stock->save();
-
-
                             }
                         }
                     }
@@ -447,7 +444,7 @@ class SalesController extends Controller
                         }
                     }
                 }
-
+                DB::commit();
                 return redirect()->route(currentUser().'.sales.index')->with($this->resMessageHtml(true,null,'Successfully Update'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));

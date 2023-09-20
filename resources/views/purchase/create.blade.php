@@ -138,7 +138,7 @@
                                                 </td>
                                                 <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" required></td>
                                                 <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
-                                                <td class="tbl_expense text-primary text-center fs-3" onClick='addRow();' style="width: 3%;"><i class="bi bi-plus-square-fill"></i></td>
+                                                <td class="tbl_expense text-primary text-center" onClick='addRow();' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-plus-square-fill"></i></td>
                                             </tr>
                                             
                                         </tbody>
@@ -187,7 +187,7 @@
                                                 </td>
                                                 <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" placeholder="Lc Number"></td>
                                                 <td class="tbl_expense"><input type="number" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]"></td>
-                                                <td class="tbl_expense text-primary text-center fs-3" onClick='addPaymentRow();' style="width: 3%;"><i class="bi bi-plus-square-fill"></i></td>
+                                                <td class="tbl_expense text-primary text-center" onClick='addPaymentRow();' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-plus-square-fill"></i></td>
                                             </tr>
                                             
                                         </tbody>
@@ -385,7 +385,7 @@ var row=`<tr class="tbl_expense">
             </td>
             <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" required></td>
             <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
-            <td class="tbl_expense text-danger text-center fs-3" onClick='RemoveRow(this);' style="width: 3%;"><i class="bi bi-trash"></i></td>
+            <td class="tbl_expense text-danger text-center" onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
         </tr>`;
     $('#expense').append(row);
 }
@@ -404,7 +404,7 @@ var row=`<tr class="tbl_expense">
             </td>
             <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" placeholder="Lc Number"></td>
             <td class="tbl_expense"><input type="number" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]"></td>
-            <td class="tbl_expense text-danger text-center fs-3" onClick='RemoveRow(this);' style="width: 3%;"><i class="bi bi-trash"></i></td>
+            <td class="tbl_expense text-danger text-center" onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
         </tr>`;
     $('#payment').append(row);
 }

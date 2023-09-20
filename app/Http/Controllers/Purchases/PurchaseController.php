@@ -398,7 +398,7 @@ class PurchaseController extends Controller
                                     //DB::table('stocks')->where('id',$oldstock[0])->increment('quantity', $pd->actual_quantity);
                                     //DB::table('stocks')->where('id',$oldstock[0])->increment('quantity_bag', $pd->quantity_bag);
                                 }else{
-                                    $batch_id=rand(111,999).uniqid().$product_id;
+                                    $batch_id=$request->batch_id;
                                     
                                     $stock=new Stock;
                                     $stock->purchase_id=$pur->id;

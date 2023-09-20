@@ -6,6 +6,7 @@ use App\Models\Expenses\ExpenseOfPurchase;
 use App\Models\Settings\Branch;
 use App\Models\Suppliers\Supplier;
 use App\Models\Settings\Warehouse;
+use App\Models\Stock\Stock;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,6 +25,9 @@ class Purchase extends Model
     }
     public function expense(){
         return $this->hasMany(ExpenseOfPurchase::class,'purchase_id','id');
+    }
+    public function stock(){
+        return $this->hasMany(Stock::class,'purchase_id','id');
     }
 
     
