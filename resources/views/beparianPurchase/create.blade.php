@@ -106,7 +106,7 @@
                                             <tr class="bg-primary text-white">
                                                 <th class="py-2 px-1" >Description of Goods</th>
                                                 <th class="py-2 px-1" >Lot/Lc No</th>
-                                                <th class="py-2 px-1" >Trade Marek</th>
+                                                <th class="py-2 px-1" >Trade Mark</th>
                                                 <th class="py-2 px-1" >Quantity Bag</th>
                                                 <th class="py-2 px-1" >Quantity kg</th>
                                                 <th class="py-2 px-1" >Less/Discount Kg</th>
