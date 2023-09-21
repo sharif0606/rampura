@@ -168,14 +168,32 @@
                                                             @endforelse
                                                         </select>
                                                     </td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" value="{{$item->lot_no}}" required></td>
-                                                    <td class="tbl_expense"><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value="{{$item->cost_amount}}" required></td>
+                                                    <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" value="{{$item->lot_no}}"></td>
+                                                    <td class="tbl_expense"><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value="{{$item->cost_amount}}"></td>
                                                     <td class="tbl_expense text-center fs-4" style="width: 3%;">
                                                         <span class="text-primary" onClick='addRow();'><i class="bi bi-plus-square-fill"></i></span>
                                                         <span class="text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></span>
                                                     </td>
                                                 </tr>
                                             @empty
+                                                <tr class="tbl_expense">
+                                                    <td class="tbl_expense">
+                                                        <select name="child_two_id[]" class="form-select">
+                                                            <option value="">select</option>
+                                                            @forelse ($childTow as $ex)
+                                                                <option value="{{$ex->id}}">{{$ex->head_name}}</option>
+                                                            @empty
+                                                                <option value="">No Data Found</option>
+                                                            @endforelse
+                                                        </select>
+                                                    </td>
+                                                    <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" value=""></td>
+                                                    <td class="tbl_expense"><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value=""></td>
+                                                    <td class="tbl_expense text-center fs-4" style="width: 3%;">
+                                                        <span class="text-primary" onClick='addRow();'><i class="bi bi-plus-square-fill"></i></span>
+                                                        <span class="text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></span>
+                                                    </td>
+                                                </tr>
                                             @endforelse
                                             
                                         </tbody>
@@ -238,6 +256,23 @@
                                                     </td>
                                                 </tr>
                                             @empty
+                                                <tr class="tbl_expense">
+                                                    <td class="tbl_expense">
+                                                        <select  class="form-control form-select" name="payment_head[]">
+                                                            @if($paymethod)
+                                                                @foreach($paymethod as $d)
+                                                                    <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                    </td>
+                                                    <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" value="" placeholder="Lc Number"></td>
+                                                    <td class="tbl_expense"><input type="text" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]" value=""></td>
+                                                    <td class="tbl_expense text-primary text-center fs-4" style="width: 3%;">
+                                                        <span class="text-primary" onClick='addPaymentRow();'><i class="bi bi-plus-square-fill"></i></span>
+                                                        <span class="text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></span>
+                                                    </td>
+                                                </tr>
                                             @endforelse
                                             
                                         </tbody>

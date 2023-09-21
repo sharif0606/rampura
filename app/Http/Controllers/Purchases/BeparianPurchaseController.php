@@ -319,7 +319,6 @@ class BeparianPurchaseController extends Controller
                 if($request->product_id){
                     Purchase_details::where('beparian_purchase_id',$pur->id)->delete();
                     Stock::where('beparian_purchase_id',$pur->id)->delete();
-                    ExpenseOfPurchase::where('beparian_purchase_id',$pur->id)->delete();
                     foreach($request->product_id as $i=>$product_id){
                         if($request->lot_no[$i]>0){
                             $pd=new Purchase_details;
@@ -358,8 +357,6 @@ class BeparianPurchaseController extends Controller
                                     $stock->quantity_bag=$pd->quantity_bag;
                                     $stock->total_amount=$pd->amount;
                                     $stock->save();
-                                
-                                    DB::commit();
                                 }
                             }
                         }
@@ -398,6 +395,7 @@ class BeparianPurchaseController extends Controller
                         }
                     }
                 }
+                DB::commit();
                 
                 return redirect()->route(currentUser().'.bpurchase.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             }else

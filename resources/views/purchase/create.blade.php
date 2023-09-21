@@ -136,8 +136,8 @@
                                                         @endforelse
                                                     </select>
                                                 </td>
-                                                <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" required></td>
-                                                <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number"></td>
+                                                <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]"></td>
                                                 <td class="tbl_expense text-primary text-center" onClick='addRow();' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-plus-square-fill"></i></td>
                                             </tr>
                                             
