@@ -168,7 +168,7 @@
                                                             @endforelse
                                                         </select>
                                                     </td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" value="{{$item->lot_no}}"></td>
+                                                    <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number" value="{{$item->lot_no}}"><span class="error-message" style="color: red; display: none;"></span></td>
                                                     <td class="tbl_expense"><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value="{{$item->cost_amount}}"></td>
                                                     <td class="tbl_expense text-center fs-4" style="width: 3%;">
                                                         <span class="text-primary" onClick='addRow();'><i class="bi bi-plus-square-fill"></i></span>
@@ -187,7 +187,7 @@
                                                             @endforelse
                                                         </select>
                                                     </td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" value=""></td>
+                                                    <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number" value=""><span class="error-message" style="color: red; display: none;"></span></td>
                                                     <td class="tbl_expense"><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value=""></td>
                                                     <td class="tbl_expense text-center fs-4" style="width: 3%;">
                                                         <span class="text-primary" onClick='addRow();'><i class="bi bi-plus-square-fill"></i></span>
@@ -248,7 +248,7 @@
                                                             @endif
                                                         </select>
                                                     </td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" value="{{$spd->lc_no}}" placeholder="Lc Number"></td>
+                                                    <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no_payment[]" value="{{$spd->lc_no}}" placeholder="Lc Number"><span class="error-message" style="color: red; display: none;"></span></td>
                                                     <td class="tbl_expense"><input type="text" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]" value="{{$spd->amount}}"></td>
                                                     <td class="tbl_expense text-primary text-center fs-4" style="width: 3%;">
                                                         <span class="text-primary" onClick='addPaymentRow();'><i class="bi bi-plus-square-fill"></i></span>
@@ -266,7 +266,7 @@
                                                             @endif
                                                         </select>
                                                     </td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" value="" placeholder="Lc Number"></td>
+                                                    <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no_payment[]" value="" placeholder="Lc Number"><span class="error-message" style="color: red; display: none;"></span></td>
                                                     <td class="tbl_expense"><input type="text" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]" value=""></td>
                                                     <td class="tbl_expense text-primary text-center fs-4" style="width: 3%;">
                                                         <span class="text-primary" onClick='addPaymentRow();'><i class="bi bi-plus-square-fill"></i></span>
@@ -470,8 +470,8 @@ var row=`<tr class="tbl_expense">
                     @endforelse
                 </select>
             </td>
-            <td class="tbl_expense"><input type="text" class="form-control" name="lc_no[]" placeholder="Lc Number" required></td>
-            <td class="tbl_expense"><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
+            <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number" required><span class="error-message" style="color: red; display: none;"></span></td>
+            <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
             <td class="tbl_expense text-danger text-center" onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
         </tr>`;
     $('#expense').append(row);
@@ -489,8 +489,8 @@ var row=`<tr class="tbl_expense">
                     @endif
                 </select>
             </td>
-            <td class="tbl_expense"><input type="text" class="form-control" name="lc_no_payment[]" placeholder="Lc Number"></td>
-            <td class="tbl_expense"><input type="text" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]"></td>
+            <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no_payment[]" placeholder="Lc Number" required><span class="error-message" style="color: red; display: none;"></span></td>
+            <td class="tbl_expense"><input type="number" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]" required></td>
             <td class="tbl_expense text-danger text-center" onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
         </tr>`;
     $('#payment').append(row);
@@ -506,6 +506,31 @@ function RemoveRow(e) {
     }
 }
 //row reapeter
+function checking_lc_no(input) {
+    var lcNumber = input.value.trim();
+    var lotNumbers = [];
+
+    $('.lot_no').each(function() {
+        var lotNumber = $(this).val().trim();
+        if (lotNumber !== '') {
+            lotNumbers.push(lotNumber);
+        }else{
+            alert("Please insert LC number into the product.");
+         }
+    });
+
+    // Check if the lcNumber matches any lotNumber
+    var isMatched = lotNumbers.includes(lcNumber);
+    // Get the error message element associated with this input
+    var errorMessage = $(input).next('.error-message');
+
+    if (!isMatched) {
+        input.value = ''; // Clear the input value
+        errorMessage.text('not matched.').css('color', 'red').show();
+    } else {
+        errorMessage.hide();
+    }
+}
 
 function total_expense(e) {
     var grandExpense = 0;

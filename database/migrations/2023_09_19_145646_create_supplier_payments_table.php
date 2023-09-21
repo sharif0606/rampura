@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
             $table->unsignedBigInteger('supplier_id')->nullable()->index()->foreign()->references('id')->on('suppliers')->onDelete('cascade');
             $table->date('purchase_date')->nullable();
+            $table->string('voucher_id')->nullable();
             $table->string('purchase_invoice')->nullable();
             $table->string('beparian_purchase_invoice')->nullable();
             $table->string('regular_purchase_invoice')->nullable();
