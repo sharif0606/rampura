@@ -134,10 +134,32 @@
                         <p style="margin: 2px; color: green;">১৯৩, খাতুনগঞ্জ, চট্টগ্রাম।</p>
                     </th>
                 </tr>
-                @if($purchase->first()->purchase)
-                    <?php $id = optional($purchase->first())->purchase?->id; ?>
-                    <?php $supplier = optional($purchase->first())->purchase?->supplier?->supplier_name; ?>
-                    <?php $address = optional($purchase->first())->purchase?->supplier?->address; ?>
+                @php
+                    $id = '';
+                    $supplier = '';
+                    $address = '';
+                @endphp
+                
+                @if($purchase->first()?->purchase)
+                    @php
+                        $id = optional($purchase->first()->purchase)->id;
+                        $supplier = optional($purchase->first()->purchase->supplier)->supplier_name;
+                        $address = optional($purchase->first()->purchase->supplier)->address;
+                    @endphp
+                @endif
+                @if($purchase->first()?->beparian_purchase)
+                    @php
+                        $id = optional($purchase->first()->beparian_purchase)->id;
+                        $supplier = optional($purchase->first()->beparian_purchase->supplier)->supplier_name;
+                        $address = optional($purchase->first()->beparian_purchase->supplier)->address;
+                    @endphp
+                @endif
+                @if($purchase->first()?->regular_purchase)
+                    @php
+                        $id = optional($purchase->first()->regular_purchase)->id;
+                        $supplier = optional($purchase->first()->regular_purchase->supplier)->supplier_name;
+                        $address = optional($purchase->first()->regular_purchase->supplier)->address;
+                    @endphp
                 @endif
                 <tr>
                     <th style="text-align: left; color: green; padding: 7px 0 7px 0;">নং</th>
