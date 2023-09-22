@@ -112,7 +112,6 @@ class BeparianPurchaseController extends Controller
             $pur->branch_id=$request->branch_id;
             $pur->warehouse_id=$request->warehouse_id;
             $pur->created_by=currentUserId();
-
             $pur->payment_status=0;
             $pur->status=1;
             if($pur->save()){
@@ -143,29 +142,20 @@ class BeparianPurchaseController extends Controller
                         $pd->rate_kg=$request->rate_in_kg[$i];
                         $pd->amount=$request->amount[$i];
                         if($pd->save()){
-                            $oldstock = Stock::where('unit_price',$pd->rate_kg)->where('product_id',$product_id)->where('branch_id',$request->branch_id)->where('warehouse_id',$request->warehouse_id)->where('lot_no',$pd->lot_no)->where('brand',$pd->brand)->where(company())->pluck('batch_id');
-                            if(count($oldstock)> 0){
-                                $batch_id=$oldstock[0];
-                                //DB::table('stocks')->where('id',$oldstock[0])->increment('quantity', $pd->actual_quantity);
-                                //DB::table('stocks')->where('id',$oldstock[0])->increment('quantity_bag', $pd->quantity_bag);
-                            }else{
-                                $batch_id=rand(111,999).uniqid().$product_id;
-
-                                $stock=new Stock;
-                                $stock->beparian_purchase_id=$pur->id;
-                                $stock->product_id=$product_id;
-                                $stock->company_id=company()['company_id'];
-                                $stock->branch_id=$request->branch_id;
-                                $stock->warehouse_id=$request->warehouse_id;
-                                $stock->lot_no=$pd->lot_no;
-                                $stock->brand=$pd->brand;
-                                $stock->quantity=$pd->actual_quantity;
-                                $stock->batch_id=$batch_id;
-                                $stock->unit_price=$pd->rate_kg;
-                                $stock->quantity_bag=$pd->quantity_bag;
-                                $stock->total_amount=$pd->amount;
-                                $stock->save();
-                            }  
+                            $stock=new Stock;
+                            $stock->beparian_purchase_id=$pur->id;
+                            $stock->product_id=$product_id;
+                            $stock->company_id=company()['company_id'];
+                            $stock->branch_id=$request->branch_id;
+                            $stock->warehouse_id=$request->warehouse_id;
+                            $stock->lot_no=$pd->lot_no;
+                            $stock->brand=$pd->brand;
+                            $stock->quantity=$pd->actual_quantity;
+                            $stock->batch_id= rand(111,999).uniqid().$product_id;
+                            $stock->unit_price=$pd->rate_kg;
+                            $stock->quantity_bag=$pd->quantity_bag;
+                            $stock->total_amount=$pd->amount;
+                            $stock->save();
                         }
                     }
                 }
@@ -334,30 +324,20 @@ class BeparianPurchaseController extends Controller
                             $pd->rate_kg=$request->rate_in_kg[$i];
                             $pd->amount=$request->amount[$i];
                             if($pd->save()){
-
-                                $oldstock = Stock::where('unit_price',$pd->rate_kg)->where('product_id',$product_id)->where('branch_id',$request->branch_id)->where('warehouse_id',$request->warehouse_id)->where('lot_no',$pd->lot_no)->where('brand',$pd->brand)->where(company())->pluck('batch_id');
-                                if(count($oldstock)> 0){
-                                    $batch_id=$oldstock[0];
-                                    //DB::table('stocks')->where('id',$oldstock[0])->increment('quantity', $pd->actual_quantity);
-                                    //DB::table('stocks')->where('id',$oldstock[0])->increment('quantity_bag', $pd->quantity_bag);
-                                }else{
-                                    $batch_id=$request->batch_id;
-                                    
-                                    $stock=new Stock;
-                                    $stock->beparian_purchase_id=$pur->id;
-                                    $stock->product_id=$product_id;
-                                    $stock->company_id=company()['company_id'];
-                                    $stock->branch_id=$request->branch_id;
-                                    $stock->warehouse_id=$request->warehouse_id;
-                                    $stock->lot_no=$pd->lot_no;
-                                    $stock->brand=$pd->brand;
-                                    $stock->quantity=$pd->actual_quantity;
-                                    $stock->batch_id=$batch_id;
-                                    $stock->unit_price=$pd->rate_kg;
-                                    $stock->quantity_bag=$pd->quantity_bag;
-                                    $stock->total_amount=$pd->amount;
-                                    $stock->save();
-                                }
+                                $stock=new Stock;
+                                $stock->beparian_purchase_id=$pur->id;
+                                $stock->product_id=$product_id;
+                                $stock->company_id=company()['company_id'];
+                                $stock->branch_id=$request->branch_id;
+                                $stock->warehouse_id=$request->warehouse_id;
+                                $stock->lot_no=$pd->lot_no;
+                                $stock->brand=$pd->brand;
+                                $stock->quantity=$pd->actual_quantity;
+                                $stock->batch_id=$request->batch_id;
+                                $stock->unit_price=$pd->rate_kg;
+                                $stock->quantity_bag=$pd->quantity_bag;
+                                $stock->total_amount=$pd->amount;
+                                $stock->save();
                             }
                         }
                     }

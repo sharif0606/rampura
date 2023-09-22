@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('purchase_id')->nullable()->index()->foreign()->references('id')->on('purchases')->onDelete('cascade');
             $table->unsignedBigInteger('beparian_purchase_id')->nullable()->index()->foreign()->references('id')->on('beparian_purchases')->onDelete('cascade');
             $table->unsignedBigInteger('regular_purchase_id')->nullable()->index()->foreign()->references('id')->on('regular_purchases')->onDelete('cascade');
-            $table->string('voucher_id')->nullable();
+            $table->string('invoice_id')->nullable();
             $table->bigInteger('child_two_id')->nullable();
             $table->decimal('cost_amount',14,2)->nullable();
             $table->string('lot_no')->nullable();

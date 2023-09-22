@@ -129,7 +129,7 @@
                                                     <input name="stockqty[]" type="hidden" value="{{$p->qty+$p->quantity_kg}}" class="stockqty">
                                                     <input name="batch_id[]" type="hidden" value="{{$p->batch_id}}" class="batch_id_list">
                                                 </td>
-                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="lot_no[]" type="text" value="{{$p->lot_no}}" class="form-control lot_no"></td>
+                                                <td class="py-2 px-1"><input name="lot_no[]" type="text" value="{{$p->lot_no}}" class="form-control lot_no"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="brand[]" type="text" value="{{$p->brand}}" class="form-control brand"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" type="text" value="{{$p->bag_qty+$p->quantity_bag}}" class="form-control stock_bag" disabled></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" type="text" value="{{$p->qty+$p->quantity_kg}}" class="form-control" disabled></td>
@@ -320,8 +320,6 @@
 
 <script>
 
-
-
 $(function() {
     total_expense(); // call this to get subtotal
     $("#item_search").bind("paste", function(e){
@@ -423,10 +421,6 @@ console.log(item_id)
 	
 }
 //INCREMENT ITEM
-function removerow(e){
-  $(e).closest('tr').remove();
-  total_calculate();
-}
 //END
 //CALCUALATED SALES PRICE
 function removerow(e){
@@ -470,7 +464,7 @@ function get_cal(e){
   total_calculate();
 }
 
-/row reapeter
+//row reapeter
 function addRow(){
 
 var row=`<tr class="tbl_expense">
@@ -541,7 +535,7 @@ function checking_lc_no(input) {
 
     if (!isMatched) {
         input.value = ''; // Clear the input value
-        errorMessage.text('not matched.').css('color', 'red').show();
+        errorMessage.text('No matches found').css('color', 'red').show();
     } else {
         errorMessage.hide();
     }
@@ -555,7 +549,7 @@ function total_expense(e) {
 
     $(".sub_total").val(grandExpense.toFixed(2));
 
-    // payment();
+    payment();
     total_calculate();
 }
 
@@ -568,7 +562,6 @@ function payment(e) {
     $(".tpayment").text(t_payment.toFixed(2));
     $(".tpayment_p").val(t_payment.toFixed(2));
 
-    // total_expense();
     total_calculate();
 }
 
@@ -596,8 +589,6 @@ console.log(subTotal)
 }
 
 //END
-
-
 </script>
 <script src="{{ asset('/assets/js/full_screen.js') }}"></script>
 @endpush

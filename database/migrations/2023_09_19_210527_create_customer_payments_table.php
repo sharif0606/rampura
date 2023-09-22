@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id')->index()->foreign()->references('id')->on('customers')->onDelete('cascade');
             $table->date('sales_date')->nullable();
             $table->string('sales_invoice')->nullable();
-            $table->string('voucher_id')->nullable();
+            $table->string('invoice_id')->nullable();
             $table->decimal('total_amount',14,2)->default(0)->nullable();
             $table->decimal('total_payment',14,2)->default(0)->nullable();
             $table->decimal('total_due',14,2)->default(0)->nullable();

@@ -439,7 +439,7 @@ function checking_lc_no(input) {
 
     if (!isMatched) {
         input.value = ''; // Clear the input value
-        errorMessage.text('not matched.').css('color', 'red').show();
+        errorMessage.text('No matches found').css('color', 'red').show();
     } else {
         errorMessage.hide();
     }
