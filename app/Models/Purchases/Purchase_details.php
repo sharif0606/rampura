@@ -4,6 +4,7 @@ namespace App\Models\Purchases;
 
 use App\Models\Products\Product;
 use App\Models\Suppliers\Supplier;
+use App\Models\Suppliers\SupplierPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,5 +26,15 @@ class Purchase_details extends Model
     }
     public function regular_purchase(){
         return $this->belongsTo(Regular_purchase::class,'regular_purchase_id','id');
+    }
+    
+    public function regular_purchase_payment(){
+        return $this->belongsTo(SupplierPayment::class,'regular_purchase_id','id');
+    }
+    public function beparian_purchase_payment(){
+        return $this->belongsTo(SupplierPayment::class,'beparian_purchase_id','id');
+    }
+    public function purchase_payment(){
+        return $this->belongsTo(SupplierPayment::class,'purchase_id','id');
     }
 }

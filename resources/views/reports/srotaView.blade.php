@@ -299,6 +299,15 @@
                                             @endif
                                         @endforeach
                                     @endif
+                                    {{-- @if($pur->purchase_payment?->payment_detail)
+                                        @foreach ($pur->purchase_payment?->payment_detail as $pm)
+                                            @if($pm->lc_no != null && $pm->lc_no == $pur->lot_no)
+                                            <tr>
+                                                <th colspan="2" style="text-align: right;">{{$pm->payment_detail?->amount}}</th>
+                                            </tr>
+                                            @endif
+                                        @endforeach
+                                    @endif --}}
                                     {{-- @if($pur->purchase?->grand_total)
                                     <tr>
                                         <th colspan="2" style="text-align: right;"><span style="border-top: double;">{{$pur->purchase?->grand_total}}</span></th>
@@ -374,7 +383,7 @@
                                     <th style="text-align: left;"><span style="color: green;">প্রাপ্য</span></th>
                                     <td style="text-align: right;">
                                         @php
-                                            $profit = $totalPurchaseAmount - $totalSalesAmount
+                                            $profit = $totalSalesAmount - $totalPurchaseAmount
                                         @endphp
                                         <span style="color: green;">{{number_format($profit, 0, '.', ','); }}</span>
                                     </td>

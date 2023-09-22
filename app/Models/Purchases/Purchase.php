@@ -7,6 +7,7 @@ use App\Models\Settings\Branch;
 use App\Models\Suppliers\Supplier;
 use App\Models\Settings\Warehouse;
 use App\Models\Stock\Stock;
+use App\Models\Suppliers\SupplierPaymentDetails;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
