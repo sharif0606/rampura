@@ -174,6 +174,7 @@ class PurchaseController extends Controller
                         $ex->purchase_id=$pur->id;
                         $ex->company_id=company()['company_id'];
                         $ex->child_two_id=$child_two_id;
+                        $ex->sign_for_calculate=$request->sign_for_calculate[$j];
                         $ex->cost_amount=$request->cost_amount[$j];
                         $ex->lot_no=$request->lc_no[$j];
                         $ex->status= 0;
@@ -354,6 +355,7 @@ class PurchaseController extends Controller
                         $ex->purchase_id=$pur->id;
                         $ex->company_id=company()['company_id'];
                         $ex->child_two_id=$child_two_id;
+                        $ex->sign_for_calculate=$request->sign_for_calculate[$j];
                         $ex->cost_amount=$request->cost_amount[$j];
                         $ex->lot_no=$request->lc_no[$j];
                         $ex->status= 0;

@@ -156,22 +156,40 @@
                     $totalBag = 0;
                     $totalQty = 0;
                     $totalPayment = 0;
+                    $totalIncome = 0;
+                    $nitTotal = 0;
                     $dueTotal = 0;
                 @endphp
                 <tbody style="height: 400px;">
                     @forelse ($salesDetail as $key => $s)
-                        <tr style="vertical-align: top; {{$key !== count($salesDetail) - 1 ? 'height: 0;' : ''}}">
+                        <tr style="vertical-align: top; height: 0;">
                             <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;">{{$s->product?->product_name}}, {{$s->quantity_bag}} ব্যাগ, {{$s->actual_quantity}} কেজি</th>
                             <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;">{{$s->rate_kg}}</th>
                             <th style="color: #4F709C; background-color: #cdddf1; text-align: right; padding-right: 5px;">
                                 @php 
-                                    $totalAmount += $s->amount;
+                                    $totalAmount += $show_data->grand_total;
                                     $totalBag += $s->quantity_bag;
                                     $totalQty += $s->actual_quantity;
                                 @endphp
-                                {{$formattedAmount = number_format((round($s->amount)), 0, '.', ',');}}
+                                {{$formattedAmount = number_format((round($show_data->grand_total)), 0, '.', ',');}}
                             </th>
                         </tr>
+                        @if($s->sales?->expense)
+                            @foreach ($s->sales?->expense as $ex)
+                                @if($ex->sign_for_calculate != '+' && $ex->sales_id == $show_data->id)
+                                <tr style="vertical-align: top; height: 0;">
+                                    <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;">{{$ex->expense?->head_name}}</th>
+                                    <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;"></th>
+                                    <th style="color: #4F709C; background-color: #cdddf1; text-align: right; padding-right: 5px;">{{ number_format(round($ex->cost_amount),'0', '.', ',')}}</th>
+                                </tr>
+                                @php 
+                                    $totalIncome += $ex->cost_amount;
+                                    $nitTotal = $totalAmount - $totalIncome;
+                                @endphp
+                                @endif
+                            @endforeach
+                        @endif
+                        
                         @if($s->sales?->payment)
                             @foreach ($s->sales?->payment as $pm)
                                 @php
@@ -179,6 +197,13 @@
                                 @endphp
                             @endforeach
                         @endif
+                        {{-- this tr needed for vertical alignment --}}
+                        <tr>
+                            <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;"></th>
+                            <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;"></th>
+                            <th style="color: #4F709C; background-color: #cdddf1; text-align: right; padding-right: 5px;"></th>
+                        </tr>
+                        {{-- this tr needed for vertical alignment --}}
                     @empty
                         <tr>
                             <td colspan="3">No data found</td>
@@ -211,7 +236,7 @@
                             <table style="width: 100%;">
                                 <tbody>
                                     <tr>
-                                        <td style="text-align: right;">{{$formattedAmount = number_format((round($totalAmount)), 0, '.', ',');}}</td>
+                                        <td style="text-align: right;">{{$formattedAmount = number_format((round($nitTotal)), 0, '.', ',');}}</td>
                                     </tr>
                                     <tr>
                                         <td style="text-align: right;">{{$formattedAmount = number_format((round($totalPayment)), 0, '.', ',');}}</td>
@@ -219,7 +244,7 @@
                                     <tr>
                                         <td style="text-align: right;">
                                             @php
-                                                $dueTotal = $totalAmount - $totalPayment;
+                                                $dueTotal = $nitTotal - $totalPayment;
                                             @endphp
                                             <span style="border-top: double;">{{$formattedAmount = number_format((round($dueTotal)), 0, '.', ',');}}</span>
                                         </td>
@@ -230,7 +255,7 @@
                     </tr>
                 </tfoot>
             </table>
-            <div style="transform: rotate(-35deg); position: absolute; margin-top: -190px; font-size: 35px; opacity: 0.19; padding-left: 111px;">
+            <div style="transform: rotate(-35deg); position: absolute; margin-top: -250px; font-size: 35px; opacity: 0.19; padding-left: 111px;">
                 কমিশন ভিত্তিক
             </div>
             <div style="text-align: center; font-size: 20px; color: #4F709C; margin-bottom: 1.5rem;"><b> ধন্যবাদ আবার আসবেন।</b></div>

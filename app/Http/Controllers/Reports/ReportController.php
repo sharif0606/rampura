@@ -23,25 +23,25 @@ class ReportController extends Controller
     public function stockreport(Request $request)
     {
         $company = company()['company_id'];
-        $where=false;
-        if($request->fdate){
-            $tdate=$request->tdate?$request->tdate:$request->fdate;
-            $where=" where (date(stocks.`created_at`) BETWEEN '".$request->fdate."' and '".$tdate."') ";
+        $where = '';
+    
+        if ($request->fdate) {
+            $tdate = $request->tdate ? $request->tdate : $request->fdate;
+            $where = " AND date(stocks.`created_at`) BETWEEN '" . $request->fdate . "' AND '" . $tdate . "'";
         }
-
         // $stock= DB::select("SELECT products.product_name,stocks.*,sum(stocks.quantity) as qty,sum(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice FROM `stocks` join products on products.id=stocks.product_id $where GROUP BY stocks.lot_no,stocks.brand");
-
-        $stock = DB::select("SELECT products.product_name, stocks.*, SUM(stocks.quantity) as qty, SUM(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice 
-                    FROM stocks 
-                    JOIN products ON products.id = stocks.product_id 
-                    WHERE stocks.company_id = ? $where 
-                    GROUP BY stocks.lot_no, stocks.brand", [$company]);
-
-
-
-
-        return view('reports.stockReport',compact('stock'));
+    
+        $sql = "SELECT products.product_name, stocks.*, SUM(stocks.quantity) as qty, SUM(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice 
+                FROM stocks 
+                JOIN products ON products.id = stocks.product_id 
+                WHERE stocks.company_id = ? $where 
+                GROUP BY stocks.lot_no, stocks.brand";
+    
+        $stock = DB::select($sql, [$company]);
+    
+        return view('reports.stockReport', compact('stock'));
     }
+    
 
    
 

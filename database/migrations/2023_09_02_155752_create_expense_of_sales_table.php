@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
             $table->unsignedBigInteger('sales_id')->index()->foreign()->references('id')->on('sales')->onDelete('cascade');
             $table->string('invoice_id')->nullable();
+            $table->string('sign_for_calculate')->nullable();
             $table->bigInteger('child_two_id')->nullable();
             $table->decimal('cost_amount',14,2)->nullable();
             $table->string('lot_no')->nullable();

@@ -156,6 +156,7 @@
                                             <tr class="tbl_expense text-center">
                                                 <th class="tbl_expense">Expense Head</th>
                                                 <th class="tbl_expense">Lc Number</th>
+                                                <th class="tbl_expense">Sign</th>
                                                 <th colspan="2" class="tbl_expense">Cost Amount</th>
                                             </tr>
                                             @forelse ($expense as $item)
@@ -171,6 +172,12 @@
                                                         </select>
                                                     </td>
                                                     <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number" value="{{$item->lot_no}}"><span class="error-message" style="color: red; display: none;"></span></td>
+                                                    <td class="tbl_expense">
+                                                        <select name="sign_for_calculate[]" class="form-select">
+                                                            <option value="+" {{old('sign_for_calculate',$item->sign_for_calculate)== '+'?'selected':''}}>(+)</option>
+                                                            <option value="-" {{old('sign_for_calculate',$item->sign_for_calculate)== '-'?'selected':''}}>(-)</option>
+                                                        </select>
+                                                    </td>
                                                     <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value="{{$item->cost_amount}}"></td>
                                                     <td class="tbl_expense text-center fs-4" style="width: 3%;">
                                                         <span class="text-primary" onClick='addRow();'><i class="bi bi-plus-square-fill"></i></span>
@@ -190,6 +197,12 @@
                                                         </select>
                                                     </td>
                                                     <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number" value=""><span class="error-message" style="color: red; display: none;"></span></td>
+                                                    <td class="tbl_expense">
+                                                        <select name="sign_for_calculate[]" class="form-select">
+                                                            <option value="+" {{old('sign_for_calculate')== '+'?'selected':''}}>(+)</option>
+                                                            <option value="-" {{old('sign_for_calculate')== '-'?'selected':''}}>(-)</option>
+                                                        </select>
+                                                    </td>
                                                     <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value=""></td>
                                                     <td class="tbl_expense text-center fs-4" style="width: 3%;">
                                                         <span class="text-primary" onClick='addRow();'><i class="bi bi-plus-square-fill"></i></span>
@@ -201,7 +214,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr class="tbl_expense">
-                                                <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL RECEIVABLE AMOUNT</h5></th>
+                                                <th colspan="3" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL RECEIVABLE AMOUNT</h5></th>
                                                 <td class="tbl_expense text-end" >
                                                     <h5 class="tgrandtotal" >{{$sales->grand_total}}</h5>
                                                     <input type="hidden" name="tgrandtotal" class="tgrandtotal_p" value="{{$sales->grand_total}}">
@@ -479,6 +492,12 @@ var row=`<tr class="tbl_expense">
                 </select>
             </td>
             <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number"><span class="error-message" style="color: red; display: none;"></span></td>
+            <td class="tbl_expense">
+                <select name="sign_for_calculate[]" class="form-select">
+                    <option value="+" {{old('sign_for_calculate')== '+'?'selected':''}}>(+)</option>
+                    <option value="-" {{old('sign_for_calculate')== '-'?'selected':''}}>(-)</option>
+                </select>
+            </td>
             <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]"></td>
             <td class="tbl_expense text-danger text-center" onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
         </tr>`;

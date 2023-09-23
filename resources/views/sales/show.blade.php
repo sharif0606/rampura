@@ -80,12 +80,12 @@
                                     <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->product?->product_name}}</td>
                                     <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->lot_no}}</td>
                                     <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->brand}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity_bag}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity_kg}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->less_quantity_kg}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->actual_quantity}}</td>
-                                    <td class="tbl_expense td_hide" style="text-align: center; padding: 5px;">{{$s->rate_kg}}</td>
-                                    <td class="tbl_expense td_hide" style="text-align: center; padding: 5px;">{{$s->amount}}</td>
+                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$formattedAmount = number_format((round($s->quantity_bag)), 0, '.', ',');}}</td>
+                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$formattedAmount = number_format((round($s->quantity_kg)), 0, '.', ',');}}</td>
+                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$formattedAmount = number_format((round($s->less_quantity_kg)), 0, '.', ',');}}</td>
+                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$formattedAmount = number_format((round($s->actual_quantity)), 0, '.', ',');}}</td>
+                                    <td class="tbl_expense td_hide" style="text-align: center; padding: 5px;">{{$formattedAmount = number_format((round($s->rate_kg)), 0, '.', ',');}}</td>
+                                    <td class="tbl_expense td_hide" style="text-align: center; padding: 5px;">{{$formattedAmount = number_format((round($s->amount)), 0, '.', ',');}}</td>
                                 </tr>
                                 @empty
                                 <tr>
@@ -102,7 +102,7 @@
                                     @if($ex->cost_amount != null)
                                         <tr class="tbl_expense">
                                             <th class="tbl_expense" style="padding-left: 8px;">{{$ex->expense?->head_name}}</th>
-                                            <td class="tbl_expense" style="text-align: end; padding-right: 8px;">{{$ex->cost_amount}}</td>
+                                            <td class="tbl_expense" style="text-align: end; padding-right: 8px;">{{$formattedAmount = number_format((round($ex->cost_amount)), 0, '.', ',');}}</td>
                                         </tr>
                                     @endif
                                 @empty
@@ -110,7 +110,7 @@
                                 @endforelse
                                     <tr class="tbl_expense">
                                         <th class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL RECEIVABLE AMOUNT</h5></th>
-                                        <td class="tbl_expense" style="text-align: end; padding-right: 8px;"><h6>{{$show_data->grand_total}}</h6></td>
+                                        <td class="tbl_expense" style="text-align: end; padding-right: 8px;"><h6>{{$formattedAmount = number_format((round($show_data->grand_total)), 0, '.', ',');}}</h6></td>
                                     </tr>
                             </tbody>
                         </table>
