@@ -155,6 +155,8 @@
                     $totalAmount = 0;
                     $totalBag = 0;
                     $totalQty = 0;
+                    $totalPayment = 0;
+                    $dueTotal = 0;
                 @endphp
                 <tbody style="height: 400px;">
                     @forelse ($salesDetail as $key => $s)
@@ -170,6 +172,13 @@
                                 {{$formattedAmount = number_format((round($s->amount)), 0, '.', ',');}}
                             </th>
                         </tr>
+                        @if($s->sales?->payment)
+                            @foreach ($s->sales?->payment as $pm)
+                                @php
+                                    $totalPayment += $pm->amount;
+                                @endphp
+                            @endforeach
+                        @endif
                     @empty
                         <tr>
                             <td colspan="3">No data found</td>
@@ -183,8 +192,41 @@
                             {{$formattedAmount = number_format((round($totalBag)), 0, '.', ',');}} ব্যাগ, 
                             {{$formattedAmount = number_format((round($totalQty)), 0, '.', ',');}} কেজি
                         </th>
-                        <th class="tbl_table tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1;">মোট</th>
-                        <th class="tbl_table" style="color: #4F709C; background-color: #cdddf1; text-align: right; padding-right: 5px;">{{$formattedAmount = number_format((round($totalAmount)), 0, '.', ',');}}</th>
+                        <th class="tbl_table tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1;">
+                            <table style="width: 100%;">
+                                <tbody>
+                                    <tr>
+                                        <th>মোট</th>
+                                    </tr>
+                                    <tr>
+                                        <th>নগদ পেমেন্ট</th>
+                                    </tr>
+                                    <tr>
+                                        <th>বাকী</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </th>
+                        <th class="tbl_table tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1;">
+                            <table style="width: 100%;">
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align: right;">{{$formattedAmount = number_format((round($totalAmount)), 0, '.', ',');}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right;">{{$formattedAmount = number_format((round($totalPayment)), 0, '.', ',');}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right;">
+                                            @php
+                                                $dueTotal = $totalAmount - $totalPayment;
+                                            @endphp
+                                            <span style="border-top: double;">{{$formattedAmount = number_format((round($dueTotal)), 0, '.', ',');}}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </th>
                     </tr>
                 </tfoot>
             </table>

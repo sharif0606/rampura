@@ -30,4 +30,7 @@ class Beparian_purchase extends Model
     public function stock(){
         return $this->hasMany(Stock::class,'beparian_purchase_id','id');
     }
+    public function payment(){
+        return $this->hasMany(SupplierPaymentDetails::class,'beparian_purchase_id','id');
+    }
 }

@@ -31,16 +31,36 @@
                                     <h6 style="padding-bottom: 3.5rem;">REGULAR PURCHASES INVOICE</h6>
                                 </th>
                             </tr>
-                            <tr>
-                                <td style="text-align: left;">
-                                    <p><b>PARTY NAME :</b>&nbsp; &nbsp; {{$show_data->supplier?->supplier_name}}</p>
-                                    <p><b>ADDRESS :</b>&nbsp; &nbsp; {{$show_data->supplier?->address}}</p>
-                                </td>
-                                <td style="text-align: end;">
-                                    <p style="padding-right: 100px;"><b>INVOICE:</b>&nbsp; &nbsp; {{$show_data->voucher_no}}</p>
-                                    <p style="padding-right: 120px;"><b>DATE:</b>&nbsp; &nbsp; {{ date('d-M-Y', strtotime($show_data->purchase_date)) }}</p>
-                                </td>
-                            </tr>
+                        </table>
+                        <table style="width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: left; width: 70%;">
+                                        <table style="width: 100%">
+                                            <tr>
+                                                <th style="text-align: left; width: 25%;">PARTY NAME:</th>
+                                                <td style="text-align: left;">{{$show_data->supplier?->supplier_name}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; width: 25%;">ADDRESS:</th>
+                                                <td style="text-align: left;">{{$show_data->supplier?->address}}</p></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style="text-align: end;">
+                                        <table style="width: 100%">
+                                            <tr>
+                                                <th style="text-align: left; width: 30%;">INVOICE:</th>
+                                                <td style="text-align: left;">{{$show_data->voucher_no}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; width: 30%;">DATE:</th>
+                                                <td style="text-align: left;">{{ date('d-M-Y', strtotime($show_data->purchase_date)) }}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                         <table class="tbl_expense" style="width:100%">
                             <tbody>

@@ -27,14 +27,4 @@ class Purchase_details extends Model
     public function regular_purchase(){
         return $this->belongsTo(Regular_purchase::class,'regular_purchase_id','id');
     }
-    
-    public function regular_purchase_payment(){
-        return $this->belongsTo(SupplierPayment::class,'regular_purchase_id','id');
-    }
-    public function beparian_purchase_payment(){
-        return $this->belongsTo(SupplierPayment::class,'beparian_purchase_id','id');
-    }
-    public function purchase_payment(){
-        return $this->belongsTo(SupplierPayment::class,'purchase_id','id');
-    }
 }

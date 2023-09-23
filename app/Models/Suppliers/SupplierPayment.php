@@ -9,7 +9,5 @@ use Illuminate\Database\Eloquent\Model;
 class SupplierPayment extends Model
 {
     use HasFactory;
-    public function payment(){
-        return $this->hasMany(SupplierPaymentDetails::class,'supplier_payment_id','id');
-    }
+    
 }

@@ -30,6 +30,9 @@ class Purchase extends Model
     public function stock(){
         return $this->hasMany(Stock::class,'purchase_id','id');
     }
+    public function payment(){
+        return $this->hasMany(SupplierPaymentDetails::class,'purchase_id','id');
+    }
 
     
 }

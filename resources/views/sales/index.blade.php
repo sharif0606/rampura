@@ -50,7 +50,7 @@
                                         <i class="bi bi-eye-fill"></i>
                                     </a>&nbsp;
                                     <a href="{{route(currentUser().'.sales.memo',encryptor('encrypt',$s->id))}}">
-                                        <i class="bi bi-eye"></i>
+                                        <i class="bi bi-receipt"></i>
                                     </a>&nbsp;
                                     <a href="{{route(currentUser().'.sales.edit',encryptor('encrypt',$s->id))}}">
                                         <i class="bi bi-pencil-square"></i>

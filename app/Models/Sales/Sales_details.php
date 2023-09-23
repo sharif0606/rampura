@@ -19,4 +19,7 @@ class Sales_details extends Model
     public function customer(){
         return $this->belongsTo(Customer::class);
     }
+    // public function purchase(){
+    //     return $this->belongsTo(Purchase::class,'purchase_id','id');
+    // }
 }
