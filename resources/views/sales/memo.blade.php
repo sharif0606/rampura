@@ -159,6 +159,7 @@
                     $totalIncome = 0;
                     $nitTotal = 0;
                     $dueTotal = 0;
+                    setlocale(LC_MONETARY, 'en_IN');
                 @endphp
                 <tbody style="height: 400px;">
                     @forelse ($salesDetail as $key => $s)
@@ -171,7 +172,7 @@
                                     $totalBag += $s->quantity_bag;
                                     $totalQty += $s->actual_quantity;
                                 @endphp
-                                {{$formattedAmount = number_format((round($show_data->grand_total)), 0, '.', ',');}}
+                                {{ money_format(round($show_data->grand_total))}}
                             </th>
                         </tr>
                         @if($s->sales?->expense)
@@ -180,12 +181,16 @@
                                 <tr style="vertical-align: top; height: 0;">
                                     <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;">{{$ex->expense?->head_name}}</th>
                                     <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;"></th>
-                                    <th style="color: #4F709C; background-color: #cdddf1; text-align: right; padding-right: 5px;">{{ number_format(round($ex->cost_amount),'0', '.', ',')}}</th>
+                                    <th style="color: #4F709C; background-color: #cdddf1; text-align: right; padding-right: 5px;">(-) {{ money_format(round($ex->cost_amount))}}</th>
                                 </tr>
                                 @php 
                                     $totalIncome += $ex->cost_amount;
                                     $nitTotal = $totalAmount - $totalIncome;
                                 @endphp
+                                @else
+                                    @php 
+                                        $nitTotal = $totalAmount + $totalIncome;
+                                    @endphp
                                 @endif
                             @endforeach
                         @endif
@@ -214,8 +219,8 @@
                     <tr class="">
                         <th class="tbl_table_border_right" style="color: #4F709C; padding-left: 5px;">
                             মোট:
-                            {{$formattedAmount = number_format((round($totalBag)), 0, '.', ',');}} ব্যাগ, 
-                            {{$formattedAmount = number_format((round($totalQty)), 0, '.', ',');}} কেজি
+                            {{ money_format(round($totalBag))}} ব্যাগ, 
+                            {{ money_format(round($totalQty))}} কেজি
                         </th>
                         <th class="tbl_table tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1;">
                             <table style="width: 100%;">
@@ -236,17 +241,18 @@
                             <table style="width: 100%;">
                                 <tbody>
                                     <tr>
-                                        <td style="text-align: right;">{{$formattedAmount = number_format((round($nitTotal)), 0, '.', ',');}}</td>
+                                        <td style="text-align: right;">{{ money_format(round($nitTotal))}}</td>
                                     </tr>
                                     <tr>
-                                        <td style="text-align: right;">{{$formattedAmount = number_format((round($totalPayment)), 0, '.', ',');}}</td>
+                                        <td style="text-align: right;">{{ money_format(round($totalPayment))}}</td>
                                     </tr>
                                     <tr>
                                         <td style="text-align: right;">
                                             @php
                                                 $dueTotal = $nitTotal - $totalPayment;
+
                                             @endphp
-                                            <span style="border-top: double;">{{$formattedAmount = number_format((round($dueTotal)), 0, '.', ',');}}</span>
+                                            <span style="border-top: double;">{{$dueTotal>0?money_format(round($dueTotal)):0;}}</span>
                                         </td>
                                     </tr>
                                 </tbody>
