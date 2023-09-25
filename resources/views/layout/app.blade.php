@@ -121,6 +121,29 @@
         $("#datepicker").datepicker();
     });
 </script>
+{{-- //nav active code --}}
+<script>
+    $(document).ready(function() {
+        // Get the current page URL
+        var currentPageUrl = window.location.href;
+
+        // Loop through each anchor in submenu items
+        $('.submenu-item a').each(function() {
+            var anchorUrl = $(this).attr('href');
+
+            // Check if the current page URL matches the anchor's URL
+            if (currentPageUrl === anchorUrl) {
+                // Add "active" class and style to the closest ul with class "submenu"
+                $(this).closest('.submenu-item').addClass('active');
+                $(this).closest('ul.submenu').addClass('active').css('display', 'block');
+                
+                // Add "active" class and style to the parent ul with class "submenu"
+                $(this).closest('ul.submenu').parents('ul.submenu').addClass('active').css('display', 'block');
+            }
+        });
+    });
+</script>
+{{-- //nav active code --}}
 <script>
     function printDiv(divName) {
         var prtContent = document.getElementById(divName);

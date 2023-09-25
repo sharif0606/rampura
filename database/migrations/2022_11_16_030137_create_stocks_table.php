@@ -27,11 +27,11 @@ return new class extends Migration
             $table->string('batch_id')->nullable();
             $table->string('lot_no')->nullable();
             $table->string('brand')->nullable();
-            $table->decimal('quantity',10,2)->default(0);
-            $table->decimal('quantity_bag',10,2)->default(0);
+            $table->decimal('quantity',10,2)->nullable()->default(0);
+            $table->decimal('quantity_bag',10,2)->nullable()->default(0);
             $table->decimal('discount',10,2)->default(0)->nullable();
-            $table->decimal('unit_price',10,2)->default(0);
-            $table->decimal('total_amount',10,2)->default(0);
+            $table->decimal('unit_price',10,2)->nullable()->default(0);
+            $table->decimal('total_amount',10,2)->nullable()->default(0);
             $table->timestamps();
         });
     }

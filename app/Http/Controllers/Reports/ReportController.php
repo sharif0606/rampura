@@ -22,15 +22,26 @@ class ReportController extends Controller
 {
     public function stockreport(Request $request)
     {
-        $where=false;
-        if($request->fdate){
-            $tdate=$request->tdate?$request->tdate:$request->fdate;
-            $where=" where (date(stocks.`created_at`) BETWEEN '".$request->fdate."' and '".$tdate."') ";
+        $company = company()['company_id'];
+        $where = '';
+    
+        if ($request->fdate) {
+            $tdate = $request->tdate ? $request->tdate : $request->fdate;
+            $where = " AND date(stocks.`created_at`) BETWEEN '" . $request->fdate . "' AND '" . $tdate . "'";
         }
-
-        $stock= DB::select("SELECT products.product_name,stocks.*,sum(stocks.quantity) as qty,sum(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice FROM `stocks` join products on products.id=stocks.product_id $where GROUP BY stocks.lot_no,stocks.brand");
-        return view('reports.stockReport',compact('stock'));
+        // $stock= DB::select("SELECT products.product_name,stocks.*,sum(stocks.quantity) as qty,sum(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice FROM `stocks` join products on products.id=stocks.product_id $where GROUP BY stocks.lot_no,stocks.brand");
+    
+        $sql = "SELECT products.product_name, stocks.*, SUM(stocks.quantity) as qty, SUM(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice 
+                FROM stocks 
+                JOIN products ON products.id = stocks.product_id 
+                WHERE stocks.company_id = ? $where 
+                GROUP BY stocks.lot_no, stocks.brand";
+    
+        $stock = DB::select($sql, [$company]);
+    
+        return view('reports.stockReport', compact('stock'));
     }
+    
 
    
 
@@ -67,8 +78,9 @@ class ReportController extends Controller
         $customers = Customer::where(company())->get();
 
         $query = Sales_details::join('sales', 'sales.id', '=', 'sales_details.sales_id')
-            ->groupBy('sales_details.sales_id')
-            ->select('sales.*', 'sales_details.*')->where(company());
+            ->groupBy('sales_details.batch_id')
+            ->select('sales.*', 'sales_details.*')
+            ->where('sales.company_id', company()['company_id']);
 
         if ($request->customer) {
             $query->where('sales.customer_id', $request->customer);
@@ -97,12 +109,25 @@ class ReportController extends Controller
         // dd($request->all());
         
         $lotNumber = $request->input('lot');
-        $purchase = Purchase_details::where('lot_no',$lotNumber)->get();
-        $sales = Sales_details::where('lot_no',$lotNumber)->get();
-        $purExpense = ExpenseOfPurchase::where('lot_no',$lotNumber)->where('status',0)->get();
-        $salExpense = ExpenseOfSales::where('lot_no',$lotNumber)->where('status',0)->get();
+        $purchase = Purchase_details::where('lot_no',$lotNumber)->where(company())->get();
+        $sales = Sales_details::where('lot_no',$lotNumber)->where(company())->get();
+        $purExpense = ExpenseOfPurchase::where('lot_no',$lotNumber)->where(company())->where('status',0)->get();
+        $salExpense = ExpenseOfSales::where('lot_no',$lotNumber)->where(company())->where('status',0)->get();
         
         return view('reports.srotaView', compact('purchase', 'sales','purExpense','salExpense'));
     }
+    // public function srotaView(Request $request)
+    // {
+    //     // dd($request->all());
+        
+    //     $lotNumber = $request->input('lot');
+    //     $purchase = Purchase_details::where('lot_no',$lotNumber)->get();
+    //     $purExpense = ExpenseOfPurchase::where('lot_no',$lotNumber)->where('status',0)->get();
+    //     $sales = Sales_details::where('lot_no',$lotNumber)->get();
+    //     $firstSalesId = $sales->first()->sales_id;
+    //     $salExpense = ExpenseOfSales::where('sales_id',$firstSalesId)->where('status',0)->get();
+        
+    //     return view('reports.srotaView', compact('purchase', 'sales','purExpense','salExpense'));
+    // }
 
 }

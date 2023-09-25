@@ -9,7 +9,7 @@
     <div class="row" id="table-bordered">
         <div class="col-12">
             <div class="card">
-                
+
                 @if(Session::has('response'))
                     {!!Session::get('response')['message']!!}
                 @endif
@@ -49,9 +49,9 @@
                                     <a href="{{route(currentUser().'.sales.show',encryptor('encrypt',$s->id))}}">
                                         <i class="bi bi-eye-fill"></i>
                                     </a>&nbsp;
-                                    {{-- <a href="{{route(currentUser().'.sales.view',encryptor('encrypt',$s->id))}}">
-                                        <i class="bi bi-eye-fill"></i>
-                                    </a>&nbsp; --}}
+                                    <a href="{{route(currentUser().'.sales.memo',encryptor('encrypt',$s->id))}}">
+                                        <i class="bi bi-receipt"></i>
+                                    </a>&nbsp;
                                     <a href="{{route(currentUser().'.sales.edit',encryptor('encrypt',$s->id))}}">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
@@ -71,12 +71,12 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="my-3">
+                        {!! $sales->links()!!}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- Bordered table end -->
-
-
 @endsection

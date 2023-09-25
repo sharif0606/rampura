@@ -29,16 +29,36 @@
                                     <h6 style="padding-bottom: 3.5rem;">SALES INVOICE</h6>
                                 </th>
                             </tr>
-                            <tr>
-                                <td style="text-align: left;">
-                                    <p><b>PARTY NAME :</b>&nbsp; &nbsp; {{$show_data->customer?->customer_name}}</p>
-                                    <p><b>ADDRESS :</b>&nbsp; &nbsp; {{$show_data->customer?->address}}</p>
-                                </td>
-                                <td style="text-align: end;">
-                                    <p style="padding-right: 100px;"><b>INVOICE:</b>&nbsp; &nbsp; {{$show_data->voucher_no}}</p>
-                                    <p style="padding-right: 120px;"><b>DATE:</b>&nbsp; &nbsp; {{ date('d-M-Y', strtotime($show_data->sales_date)) }}</p>
-                                </td>
-                            </tr>
+                        </table>
+                        <table style="width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: left; width: 70%;">
+                                        <table style="width: 100%">
+                                            <tr>
+                                                <th style="text-align: left; width: 25%;">PARTY NAME:</th>
+                                                <td style="text-align: left;">{{$show_data->customer?->customer_name}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; width: 25%;">ADDRESS:</th>
+                                                <td style="text-align: left;">{{$show_data->customer?->address}}</p></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style="text-align: end;">
+                                        <table style="width: 100%">
+                                            <tr>
+                                                <th style="text-align: left; width: 30%;">INVOICE:</th>
+                                                <td style="text-align: left;">{{$show_data->voucher_no}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; width: 30%;">DATE:</th>
+                                                <td style="text-align: left;">{{ date('d-M-Y', strtotime($show_data->sales_date)) }}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                         <table class="tbl_expense" style="width:100%">
                             <tbody>
@@ -60,12 +80,12 @@
                                     <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->product?->product_name}}</td>
                                     <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->lot_no}}</td>
                                     <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->brand}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity_bag}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity_kg}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->less_quantity_kg}}</td>
-                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->actual_quantity}}</td>
-                                    <td class="tbl_expense td_hide" style="text-align: center; padding: 5px;">{{$s->rate_kg}}</td>
-                                    <td class="tbl_expense td_hide" style="text-align: center; padding: 5px;">{{$s->amount}}</td>
+                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{money_format(round($s->quantity_bag))}}</td>
+                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{money_format(round($s->quantity_kg))}}</td>
+                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{money_format(round($s->less_quantity_kg))}}</td>
+                                    <td class="tbl_expense" style="text-align: center; padding: 5px;">{{money_format(round($s->actual_quantity))}}</td>
+                                    <td class="tbl_expense td_hide" style="text-align: center; padding: 5px;">{{money_format(round($s->rate_kg))}}</td>
+                                    <td class="tbl_expense td_hide" style="text-align: center; padding: 5px;">{{money_format(round($s->amount))}}</td>
                                 </tr>
                                 @empty
                                 <tr>
@@ -82,7 +102,7 @@
                                     @if($ex->cost_amount != null)
                                         <tr class="tbl_expense">
                                             <th class="tbl_expense" style="padding-left: 8px;">{{$ex->expense?->head_name}}</th>
-                                            <td class="tbl_expense" style="text-align: end; padding-right: 8px;">{{$ex->cost_amount}}</td>
+                                            <td class="tbl_expense" style="text-align: end; padding-right: 8px;">{{money_format(round($ex->cost_amount))}}</td>
                                         </tr>
                                     @endif
                                 @empty
@@ -90,7 +110,7 @@
                                 @endforelse
                                     <tr class="tbl_expense">
                                         <th class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL RECEIVABLE AMOUNT</h5></th>
-                                        <td class="tbl_expense" style="text-align: end; padding-right: 8px;"><h6>{{$show_data->grand_total}}</h6></td>
+                                        <td class="tbl_expense" style="text-align: end; padding-right: 8px;"><h6>{{money_format(round($show_data->grand_total))}}</h6></td>
                                     </tr>
                             </tbody>
                         </table>
