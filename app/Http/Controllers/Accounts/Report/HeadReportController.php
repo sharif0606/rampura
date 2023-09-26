@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Account\Report;
+namespace App\Http\Controllers\Accounts\Report;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\Chieldheadtwo;
-use App\Models\Chieldheadone;
-use App\Models\Subhead;
-use App\Models\Masterhead;
+use App\Models\Accounts\Chieldheadtwo;
+use App\Models\Accounts\Chieldheadone;
+use App\Models\Accounts\Subhead;
+use App\Models\Accounts\Masterhead;
 
-use App\Models\Generalledger;
+use App\Models\Vouchers\GeneralLedger;
 
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ use DB;
 
 class HeadReportController extends Controller{
     public function index(Request $r){
-        $headlists=Generalledger::groupBy(['masterhead_id','subhead_id','chieldheadone_id','chieldheadtwo_id'])->get();
+        $headlists=Generalledger::groupBy(['master_account_id','sub_head_id','child_one_id','child_two_id'])->get();
         
         $startDate=$endDate=date("Y-m-d");
         
@@ -35,8 +35,8 @@ class HeadReportController extends Controller{
             $head_id=$head_id[0];
         }
         if($head_id){
-            $accOldData=Generalledger::where('v_date', '<',$startDate)->where($table_id_name,$head_id)->orderBy('v_date')->get();
-            $accData=Generalledger::whereBetween('v_date', [$startDate, $endDate])->where($table_id_name,$head_id)->orderBy('v_date')->get();
+            $accOldData=Generalledger::where('rec_date', '<',$startDate)->where($table_id_name,$head_id)->orderBy('rec_date')->get();
+            $accData=Generalledger::whereBetween('rec_date', [$startDate, $endDate])->where($table_id_name,$head_id)->orderBy('rec_date')->get();
         }
         
         $head_id=$head_id.$table_id_name;

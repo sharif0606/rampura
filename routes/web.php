@@ -37,6 +37,9 @@ use App\Http\Controllers\Accounts\ChildOneController as child_one;
 use App\Http\Controllers\Accounts\ChildTwoController as child_two;
 use App\Http\Controllers\Accounts\NavigationHeadViewController as navigate;
 use App\Http\Controllers\Accounts\IncomeStatementController as statement;
+use App\Http\Controllers\Accounts\Report\HeadReportController as headreport;
+use App\Http\Controllers\Accounts\Report\BalanceSheetController as balancesheet;
+use App\Http\Controllers\Accounts\Report\ProfitLossController as profitloss;
 
 use App\Http\Controllers\Vouchers\CustomerVoucherController as cusVoucher;
 use App\Http\Controllers\Vouchers\SupplierVoucherController as supVoucher;
@@ -125,8 +128,6 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/srota',[report::class,'srota'])->name('owner.srota');
         Route::get('/srota-view',[report::class,'srotaView'])->name('owner.srota_view');
 
-
-
         //Product
         Route::resource('category',category::class,['as'=>'owner']);
         Route::resource('subcategory',subcat::class,['as'=>'owner']);
@@ -137,7 +138,6 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/barcodepreview',[product::class,'barcodepreview'])->name('owner.barcodepreview');
         Route::get('/labelprint',[product::class,'labelprint'])->name('owner.labelprint');
 
-
         //Accounts
         Route::resource('master',master::class,['as'=>'owner']);
         Route::resource('sub_head',sub_head::class,['as'=>'owner']);
@@ -147,6 +147,9 @@ Route::group(['middleware'=>isOwner::class],function(){
 
         Route::get('incomeStatement',[statement::class,'index'])->name('owner.incomeStatement');
         Route::get('incomeStatement_details',[statement::class,'details'])->name('owner.incomeStatement.details');
+        Route::get('/profitloss', [profitloss::class, 'index'])->name('owner.profitloss');
+        Route::get('/balancesheet', [balancesheet::class, 'index'])->name('owner.balancesheet');
+        Route::get('/headreport', [headreport::class, 'index'])->name('owner.headreport');
 
         //Voucher
         Route::resource('cusVoucher',cusVoucher::class,['as'=>'owner']);

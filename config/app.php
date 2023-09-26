@@ -55,7 +55,7 @@ return [
 
     'url' => env('APP_URL', "http://localhost"),
 
-    'asset_url' => env('ASSET_URL', "http://localhost/laravel_pos/").'/public',
+    'asset_url' => env('ASSET_URL', "http://localhost/rampura/").'/public',
 
     /*
     |--------------------------------------------------------------------------
