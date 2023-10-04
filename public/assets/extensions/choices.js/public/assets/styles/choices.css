@@ -34,7 +34,7 @@
   cursor: pointer;
 }
 .choices[data-type*=select-one] .choices__inner {
-  padding-bottom: 7.5px;
+  /* padding-bottom: 7.5px; */
 }
 .choices[data-type*=select-one] .choices__input {
   display: block;
@@ -126,12 +126,12 @@
   display: inline-block;
   vertical-align: top;
   width: 100%;
-  background-color: #f9f9f9;
-  padding: 7.5px 7.5px 3.75px;
+  /* background-color: #f9f9f9; */
+  /* padding: 7.5px 7.5px 3.75px; */
   border: 1px solid #ddd;
   border-radius: 2.5px;
   font-size: 14px;
-  min-height: 44px;
+  min-height: 30px;
   overflow: hidden;
 }
 .is-focused .choices__inner, .is-open .choices__inner {
@@ -152,7 +152,7 @@
 
 .choices__list--single {
   display: inline-block;
-  padding: 4px 16px 4px 4px;
+  padding: 7px 16px 7px 4px;
   width: 100%;
 }
 [dir=rtl] .choices__list--single {

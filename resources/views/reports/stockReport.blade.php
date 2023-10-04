@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <form class="form" method="get" action="">
                             <div class="row">
-                                <div class="col-md-2 mt-2">
+                                {{-- <div class="col-md-2 mt-2">
                                     <label for="fdate" class="float-end"><h6>{{__('From Date')}}</h6></label>
                                 </div>
                                 <div class="col-md-4">
@@ -31,6 +31,40 @@
                                 </div>
                                 <div class="col-md-4">
                                     <input type="date" id="tdate" class="form-control" value="{{ old('tdate')}}" name="tdate">
+                                </div> --}}
+                                <div class="col-4 py-1">
+                                    <label for="fdate">{{__('From Date')}}</label>
+                                    <input type="date" id="fdate" class="form-control" value="{{ old('fdate')}}" name="fdate">
+                                </div>
+                                <div class="col-4 py-1">
+                                    <label for="fdate">{{__('To Date')}}</label>
+                                    <input type="date" id="tdate" class="form-control" value="{{ old('tdate')}}" name="tdate">
+                                </div>
+                                <div class="col-4 py-1">
+                                    <label for="fdate">{{__('Category')}}</label>
+                                    <select name="category" class="choices form-select">
+                                        <option value="">Select</option>
+                                        @forelse ($category as $cat)
+                                            <option value="{{$cat->id}}" {{ old('category')==$cat->id?"selected":""}}>{{$cat->category}}</option>
+                                        @empty
+                                            <option value="">No Data Found</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+                                <div class="col-4 py-1">
+                                    <label for="product">{{__('Product Name')}}</label>
+                                    <select name="product" class="choices form-select">
+                                        <option value="">Select</option>
+                                        @forelse ($product as $p)
+                                            <option value="{{$p->id}}" {{ old('product')==$p->id?"selected":""}}>{{$p->product_name}}</option>
+                                        @empty
+                                            <option value="">No Data Found</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+                                <div class="col-4 py-1">
+                                    <label for="lcNo">{{__('LC Number')}}</label>
+                                    <input type="text" class="form-control" value="{{ old('lot_no')}}" name="lot_no" placeholder="lc number">
                                 </div>
                             </div>
                             <div class="row m-4">
@@ -39,7 +73,7 @@
                                     
                                 </div>
                                 <div class="col-6 d-flex justify-content-Start">
-                                    <button type="#" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Close')}}</button>
+                                    <button type="#" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Reset')}}</button>
                                     
                                 </div>
                             </div>

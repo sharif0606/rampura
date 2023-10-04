@@ -13,6 +13,8 @@ use App\Models\Suppliers\Supplier;
 use App\Models\Customers\Customer;
 use App\Models\Expenses\ExpenseOfPurchase;
 use App\Models\Expenses\ExpenseOfSales;
+use App\Models\Products\Category;
+use App\Models\Products\Product;
 use App\Models\Purchases\Purchase_details;
 use Illuminate\Http\Request;
 use DB;
@@ -20,18 +22,53 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
+    // public function stockreport(Request $request)
+    // {
+    //     $company = company()['company_id'];
+    //     $where = '';
+    
+    //     if ($request->fdate) {
+    //         $tdate = $request->tdate ? $request->tdate : $request->fdate;
+    //         $where = " AND date(stocks.`created_at`) BETWEEN '" . $request->fdate . "' AND '" . $tdate . "'";
+    //     }
+    //     // $stock= DB::select("SELECT products.product_name,stocks.*,sum(stocks.quantity) as qty,sum(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice FROM `stocks` join products on products.id=stocks.product_id $where GROUP BY stocks.lot_no,stocks.brand");
+    
+    //     $sql = "SELECT products.product_name, stocks.*, SUM(stocks.quantity) as qty, SUM(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice 
+    //             FROM stocks 
+    //             JOIN products ON products.id = stocks.product_id 
+    //             WHERE stocks.company_id = ? $where 
+    //             GROUP BY stocks.lot_no, stocks.brand";
+    
+    //     $stock = DB::select($sql, [$company]);
+    
+    //     return view('reports.stockReport', compact('stock'));
+    // }
+
     public function stockreport(Request $request)
     {
         $company = company()['company_id'];
+        $category = Category::where(company())->get();
+        $product = Product::where(company())->get();
         $where = '';
     
         if ($request->fdate) {
             $tdate = $request->tdate ? $request->tdate : $request->fdate;
             $where = " AND date(stocks.`created_at`) BETWEEN '" . $request->fdate . "' AND '" . $tdate . "'";
         }
-        // $stock= DB::select("SELECT products.product_name,stocks.*,sum(stocks.quantity) as qty,sum(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice FROM `stocks` join products on products.id=stocks.product_id $where GROUP BY stocks.lot_no,stocks.brand");
+
+        if ($request->category) {
+            $where .= " AND products.category_id = '" . $request->category . "'";
+        }
+
+        if ($request->product) {
+            $where .= " AND products.id = '" . $request->product . "'";
+        }
+        
+        if ($request->lot_no) {
+            $where .= " AND stocks.lot_no = '" . $request->lot_no . "'";
+        }
     
-        $sql = "SELECT products.product_name, stocks.*, SUM(stocks.quantity) as qty, SUM(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice 
+        $sql = "SELECT products.*, stocks.*, SUM(stocks.quantity) as qty, SUM(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice 
                 FROM stocks 
                 JOIN products ON products.id = stocks.product_id 
                 WHERE stocks.company_id = ? $where 
@@ -39,7 +76,7 @@ class ReportController extends Controller
     
         $stock = DB::select($sql, [$company]);
     
-        return view('reports.stockReport', compact('stock'));
+        return view('reports.stockReport', compact('stock','product','category'));
     }
     
 

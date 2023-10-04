@@ -116,6 +116,8 @@
 <script src="{{ asset('/assets/js/app.js') }}"></script>
 <!-- Include jQuery UI library -->
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+<script src="{{ asset('/assets/extensions/choices.js/public/assets/scripts/choices.js')}}"></script>
+<script src="{{ asset('/assets/js/pages/form-element-select.js')}}"></script>
 <script>
     $(function() {
         $("#datepicker").datepicker();
