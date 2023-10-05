@@ -23,6 +23,7 @@ use App\Http\Controllers\Customers\CustomerController as customer;
 use App\Http\Controllers\Purchases\PurchaseController as purchase;
 use App\Http\Controllers\Purchases\BeparianPurchaseController as bpurchase;
 use App\Http\Controllers\Purchases\RegularPurchaseController as rpurchase;
+use App\Http\Controllers\Purchases\PurchasePendingsController as purPending;
 use App\Http\Controllers\Sales\SalesController as sales;
 use App\Http\Controllers\Settings\BranchController as branch;
 use App\Http\Controllers\Settings\WarehouseController as warehouse;
@@ -127,6 +128,9 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/purchase-report',[report::class,'purchaseReport'])->name('owner.purchase_report');
         Route::get('/srota',[report::class,'srota'])->name('owner.srota');
         Route::get('/srota-view',[report::class,'srotaView'])->name('owner.srota_view');
+        
+        Route::get('/purchase-pending-expense',[purPending::class,'purchase_pending_expense'])->name('owner.pur_pending_exp');
+        Route::get('/purchase-payment',[purPending::class,'purchase_supplier_payment'])->name('owner.pur_pending_pay');
 
         //Product
         Route::resource('category',category::class,['as'=>'owner']);

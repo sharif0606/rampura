@@ -82,6 +82,7 @@
                                     <thead>
                                         <tr class="bg-primary text-white text-center">
                                             <th class="p-2">{{__('#SL')}}</th>
+                                            <th class="p-2" >{{__('Category')}}</th>
                                             <th class="p-2" data-title="Description of Goods">{{__('Des.of Goods')}}</th>
                                             <th class="p-2" data-title="LC / LOT NO">{{__('Lc/Lot no')}}</th>
                                             <th class="p-2" data-title="TRADEMARKE/BRAND NAME">{{__('Trade/Brand')}}</th>
@@ -102,6 +103,11 @@
                                         @forelse($stock as $s)
                                         <tr class="text-center">
                                             <th scope="row">{{ ++$loop->index }}</th>
+                                            <td>
+                                                @foreach (App\Models\Products\Category::where('id',$s->category_id)->where('company_id', $s->company_id)->get() as $cat)
+                                                {{$cat->category}}
+                                                @endforeach
+                                            </td>
                                             <td>{{$s->product_name}}</td>
                                             <td>{{$s->lot_no}}</td>
                                             <td>{{$s->brand}}</td>
@@ -123,13 +129,13 @@
                                         @endphp
                                         @empty
                                         <tr>
-                                            <th colspan="9" class="text-center">No data Found</th>
+                                            <th colspan="10" class="text-center">No data Found</th>
                                         </tr>
                                         @endforelse
                                     </tbody>
                                     <tfoot>
                                         <tr class="text-center">
-                                            <th colspan="4" class="p-2">Total</th>
+                                            <th colspan="5" class="p-2">Total</th>
                                             <th class="p-2">{{$totalBagQty}}</th>
                                             <th class="p-2">{{$totalQty}}</th>
                                             <th class="p-2" colspan="2"></th>

@@ -109,6 +109,8 @@
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.purchase.index')}}">{{__('Purchase')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.bpurchase.index')}}">{{__('Beparian Purchase')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.rpurchase.index')}}">{{__('Regular Purchase')}}</a></li>
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.pur_pending_exp')}}">{{__('Pending Expense')}}</a></li>
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.pur_pending_pay')}}">{{__('Payment')}}</a></li>
 		</ul>   
     </li>
 
