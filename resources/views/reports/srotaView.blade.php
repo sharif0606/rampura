@@ -419,7 +419,6 @@
                                 
                             </table>
                         </th>
-                        
                     </tr>
                     <tr>
                         <th class="tbl_table_border_right " style="padding-top: 1rem;">
