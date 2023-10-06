@@ -350,7 +350,6 @@
                             @empty
                             @endforelse
                         </th>
-                        
                     </tr>
                     
                 </tbody>
@@ -376,7 +375,6 @@
                                         <span style="color: green;">বর্তমান স্টক {{$bagLeft}} ব্যাগ, {{$qtyLeft}} কেজি</span>
                                     </th>
                                 </tr>
-                                
                             </table>
                         </th>
                         <th class="tbl_table_border_right">
