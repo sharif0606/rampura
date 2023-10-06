@@ -173,7 +173,10 @@
     <li class="sidebar-item has-sub">
         <a href="#" class='sidebar-link'><i class="bi bi-card-checklist"></i><span>{{__('Report')}}</span></a>
         <ul class="submenu">
-            {{-- <li class="py-1 submenu-item"><a href="{{route(currentUser().'.purchase_report')}}" >{{__('Purchase Report')}}</a></li> --}}
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.purchase_report')}}" >{{__('Purchase Report')}}</a></li>
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.beparian_report')}}" >{{__('Beparian Report')}}</a></li>
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.regular_report')}}" >{{__('Regular Report')}}</a></li>
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.all_pur_report')}}" >{{__('Purchase All')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.salreport')}}" >{{__('Sales Report')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sreport')}}" >{{__('Stock Report')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.srota')}}" >{{__('Srota')}}</a></li>

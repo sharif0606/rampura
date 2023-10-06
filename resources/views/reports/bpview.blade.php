@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Purchase Reports'))
+@section('pageTitle',trans('Beparian Reports'))
 @section('pageSubTitle',trans('Reports'))
 
 @section('content')
@@ -16,7 +16,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-content">
-                        <div class="text-center"><h4>DAY/ YERALY PURCHASES STATEMENT  (report)</h4></div>
+                        <div class="text-center"><h4>DAY/ YERALY BEPARIAN STATEMENT  (report)</h4></div>
                         <div class="card-body">
                             <form class="form" method="get" action="">
                                 @csrf
@@ -41,7 +41,7 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-3 col-md-6 col-sm-6 my-1">
-                                        <label for="lc"><h6>{{__('LC NO')}}</h6></label>
+                                        <label for="lc"><h6 >{{__('LC NO')}}</h6></label>
                                         <input type="text"class="form-control" value="{{isset($_GET['lc_no'])?$_GET['lc_no']:''}}" name="lc_no" placeholder="Lc number">
                                     </div>
                                 </div>
@@ -51,7 +51,7 @@
                                         <button type="submit" class="btn btn-sm btn-success me-1 mb-1 ps-5 pe-5">{{__('Show')}}</button>
                                     </div>
                                     <div class="col-6 d-flex justify-content-Start">
-                                        <a href="{{route(currentUser().'.purchase_report')}}" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Reset')}}</a>
+                                        <a href="{{route(currentUser().'.beparian_report')}}" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Reset')}}</a>
                                     </div>
                                 </div>
                                 <div class="tbl_scroll">

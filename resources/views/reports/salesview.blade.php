@@ -38,7 +38,7 @@
 
 
                                     <div class="col-md-2 mt-4">
-                                        <label for="supplierName" class="float-end"><h6>{{__('Party Name')}}</h6></label>
+                                        <label for="supplierName" class="float-end mt-2"><h6>{{__('Party Name')}}</h6></label>
                                     </div>
                                     <div class="col-md-4 mt-4">
                                         <select class="form-control form-select" name="customer" id="customer">
@@ -49,6 +49,13 @@
                                                 <option value="">No data found</option>
                                             @endforelse
                                         </select>
+                                    </div>
+                                    
+                                    <div class="col-md-2 mt-4">
+                                        <label for="lc" class="float-end mt-2"><h6 class="m-0">{{__('LC NO')}}</h6></label>
+                                    </div>
+                                    <div class="col-md-4 mt-4">
+                                        <input type="text"class="form-control" value="{{isset($_GET['lc_no'])?$_GET['lc_no']:''}}" name="lc_no" placeholder="Lc number">
                                     </div>
                                 </div>
                                 <div class="row m-4">

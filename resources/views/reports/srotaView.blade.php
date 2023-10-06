@@ -118,7 +118,7 @@
     <div class="bg1"  style="width:800px; margin:0 auto;">
         <div style="position: absolute; padding-left: 38rem;">
             <p>
-                <label for="" style="color: green;">মোবাইল:</label> <span style="color: green;">০১৭০৭-৩৭৭৩৭২</span><br>
+                <label for="" style="color: green;">মোবাইল:০১৭০৭-৩৭৭৩৭২</label><br>
                 <span style="color: green; padding-left: 68px;">০১৬৭২-৯৮১৬১৪</span>
             </p>
         </div>

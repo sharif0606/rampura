@@ -78,6 +78,41 @@ class ReportController extends Controller
     
         return view('reports.stockReport', compact('stock','product','category'));
     }
+
+    public function allPurchaseReport(Request $request)
+    {
+        $company = company()['company_id'];
+        $category = Category::where(company())->get();
+        $product = Product::where(company())->get();
+        $where = '';
+    
+        if ($request->fdate) {
+            $tdate = $request->tdate ? $request->tdate : $request->fdate;
+            $where = " AND date(purchase_details.`created_at`) BETWEEN '" . $request->fdate . "' AND '" . $tdate . "'";
+        }
+
+        if ($request->category) {
+            $where .= " AND products.category_id = '" . $request->category . "'";
+        }
+
+        if ($request->product) {
+            $where .= " AND products.id = '" . $request->product . "'";
+        }
+        
+        if ($request->lot_no) {
+            $where .= " AND purchase_details.lot_no = '" . $request->lot_no . "'";
+        }
+    
+        $sql = "SELECT products.*, purchase_details.* 
+                FROM purchase_details 
+                JOIN products ON products.id = purchase_details.product_id 
+                WHERE purchase_details.company_id = ? $where 
+                GROUP BY purchase_details.lot_no, purchase_details.brand";
+    
+        $data = DB::select($sql, [$company]);
+    
+        return view('reports.allPview', compact('data','product','category'));
+    }
     
 
    
@@ -89,10 +124,15 @@ class ReportController extends Controller
 
         $query = Purchase_details::join('purchases', 'purchases.id', '=', 'purchase_details.purchase_id')
             ->groupBy('purchase_details.purchase_id')
-            ->select('purchases.*', 'purchase_details.*')->where(company());
+            ->select('purchases.*', 'purchase_details.*')
+            ->where('purchases.company_id', company()['company_id']);
 
         if ($request->supplier) {
             $query->where('purchases.supplier_id', $request->supplier);
+            // dd($query->toSql());
+        }
+        if ($request->lc_no) {
+            $query->where('purchase_details.lot_no', $request->lc_no);
             // dd($query->toSql());
         }
 
@@ -109,6 +149,70 @@ class ReportController extends Controller
         return view('reports.pview', compact('data', 'suppliers'));
     }
 
+    public function beparianPurchaseReport(Request $request)
+    {
+        // dd($request->all());
+        $suppliers = Supplier::where(company())->get();
+
+        $query = Purchase_details::join('beparian_purchases', 'beparian_purchases.id', '=', 'purchase_details.beparian_purchase_id')
+            ->groupBy('purchase_details.beparian_purchase_id')
+            ->select('beparian_purchases.*', 'purchase_details.*')
+            ->where('beparian_purchases.company_id', company()['company_id']);
+
+        if ($request->supplier) {
+            $query->where('beparian_purchases.supplier_id', $request->supplier);
+            // dd($query->toSql());
+        }
+        if ($request->lc_no) {
+            $query->where('purchase_details.lot_no', $request->lc_no);
+            // dd($query->toSql());
+        }
+
+        if ($request->fdate && $request->tdate) {
+            $fdate = Carbon::parse($request->fdate)->toDateString();
+            $tdate = Carbon::parse($request->tdate)->toDateString();
+    
+            $query->whereBetween(DB::raw('DATE(beparian_purchases.purchase_date)'), [$fdate, $tdate]);
+            //  dd($query->toSql());
+        }
+
+        $data = $query->get();
+        
+        return view('reports.bpview', compact('data', 'suppliers'));
+    }
+
+    public function regularPurchaseReport(Request $request)
+    {
+        // dd($request->all());
+        $suppliers = Supplier::where(company())->get();
+
+        $query = Purchase_details::join('regular_purchases', 'regular_purchases.id', '=', 'purchase_details.regular_purchase_id')
+            ->groupBy('purchase_details.regular_purchase_id')
+            ->select('regular_purchases.*', 'purchase_details.*')
+            ->where('regular_purchases.company_id', company()['company_id']);
+
+        if ($request->supplier) {
+            $query->where('regular_purchases.supplier_id', $request->supplier);
+            // dd($query->toSql());
+        }
+        if ($request->lc_no) {
+            $query->where('purchase_details.lot_no', $request->lc_no);
+            // dd($query->toSql());
+        }
+
+        if ($request->fdate && $request->tdate) {
+            $fdate = Carbon::parse($request->fdate)->toDateString();
+            $tdate = Carbon::parse($request->tdate)->toDateString();
+    
+            $query->whereBetween(DB::raw('DATE(regular_purchases.purchase_date)'), [$fdate, $tdate]);
+            //  dd($query->toSql());
+        }
+
+        $data = $query->get();
+        
+        return view('reports.rpview', compact('data', 'suppliers'));
+    }
+
     public function salesReport(Request $request)
     {
         // dd($request->all());
@@ -121,6 +225,10 @@ class ReportController extends Controller
 
         if ($request->customer) {
             $query->where('sales.customer_id', $request->customer);
+            // dd($query->toSql());
+        }
+        if ($request->lc_no) {
+            $query->where('sales_details.lot_no', $request->lc_no);
             // dd($query->toSql());
         }
 
