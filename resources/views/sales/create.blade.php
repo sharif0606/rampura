@@ -407,7 +407,7 @@ function addRow(){
 
 var row=`<tr class="tbl_expense">
             <td class="tbl_expense">
-                <select name="child_two_id[]" class="form-select">
+                <select required name="child_two_id[]" class="form-select">
                     <option value="">select</option>
                     @forelse ($childTow as $ex)
                         <option value="{{$ex->id}}">{{$ex->head_name}}</option>
@@ -416,7 +416,7 @@ var row=`<tr class="tbl_expense">
                     @endforelse
                 </select>
             </td>
-            <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number"><span class="error-message" style="color: red; display: none;"></span></td>
+            <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number" required><span class="error-message" style="color: red; display: none;"></span></td>
             <td class="tbl_expense">
                 <select name="sign_for_calculate[]" class="form-select">
                     <option value="+" {{old('sign_for_calculate')== '+'?'selected':''}}>(+)</option>
@@ -433,7 +433,7 @@ function addPaymentRow(){
 
 var row=`<tr class="tbl_expense">
             <td class="tbl_expense">
-                <select  class="form-control form-select" name="payment_head[]">
+                <select required  class="form-control form-select" name="payment_head[]">
                     @if($paymethod)
                         @foreach($paymethod as $d)
                             <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
@@ -441,7 +441,7 @@ var row=`<tr class="tbl_expense">
                     @endif
                 </select>
             </td>
-            <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no_payment[]" placeholder="Lc Number"><span class="error-message" style="color: red; display: none;"></span></td>
+            <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no_payment[]" placeholder="Lc Number" required><span class="error-message" style="color: red; display: none;"></span></td>
             <td class="tbl_expense"><input type="number" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]"></td>
             <td class="tbl_expense text-danger text-center " onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
         </tr>`;

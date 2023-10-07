@@ -146,9 +146,11 @@
             <table class="tbl_table" style="width: 100%;">
                 <thead>
                     <tr class="tbl_table" style="background-color: #cdddf1; text-align: center;">
-                        <th class="tbl_table" style="color: #4F709C; width: 60%;">বিবরণ</th>
+                        <th class="tbl_table" style="color: #4F709C; width: 45%;">বিবরণ</th>
+                        <th class="tbl_table" style="color: #4F709C; width: 9%;">ব্যাগ</th>
+                        <th class="tbl_table" style="color: #4F709C; width: 10%;">কেজি</th>
                         <th class="tbl_table" style="color: #4F709C; width: 13%;">দর</th>
-                        <th class="tbl_table" style="color: #4F709C; width: 27%;">টাকা</th>
+                        <th class="tbl_table" style="color: #4F709C; width: 23%;">টাকা</th>
                     </tr>
                 </thead>
                 @php
@@ -164,64 +166,57 @@
                 <tbody style="height: 400px;">
                     @forelse ($salesDetail as $key => $s)
                         <tr style="vertical-align: top; height: 0;">
-                            <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;">{{$s->product?->product_name}}, {{$s->quantity_bag}} ব্যাগ, {{$s->actual_quantity}} কেজি</th>
+                            <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;">{{$s->product?->product_name}}</th>
+                            <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;">{{ money_format(round($s->quantity_bag))}}</th>
+                            <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;">{{ money_format(round($s->actual_quantity))}}</th>
                             <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;">{{$s->rate_kg}}</th>
                             <th style="color: #4F709C; background-color: #cdddf1; text-align: right; padding-right: 5px;">
                                 @php 
-                                    $totalAmount += $show_data->grand_total;
+                                    $totalAmount += $s->amount;
                                     $totalBag += $s->quantity_bag;
                                     $totalQty += $s->actual_quantity;
                                 @endphp
-                                {{ money_format(round($show_data->grand_total))}}
+                                {{ money_format(round($s->amount))}}
                             </th>
                         </tr>
-                        @if($s->sales?->expense)
-                            @foreach ($s->sales?->expense as $ex)
-                                @if($ex->sign_for_calculate != '+' && $ex->sales_id == $show_data->id)
-                                <tr style="vertical-align: top; height: 0;">
-                                    <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;">{{$ex->expense?->head_name}}</th>
-                                    <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;"></th>
-                                    <th style="color: #4F709C; background-color: #cdddf1; text-align: right; padding-right: 5px;">(-) {{ money_format(round($ex->cost_amount))}}</th>
-                                </tr>
-                                @php 
-                                    $totalIncome += $ex->cost_amount;
-                                    $nitTotal = $totalAmount - $totalIncome;
-                                @endphp
-                                @else
-                                    @php 
-                                        $nitTotal = $totalAmount + $totalIncome;
-                                    @endphp
-                                @endif
-                            @endforeach
-                        @endif
                         
-                        @if($s->sales?->payment)
-                            @foreach ($s->sales?->payment as $pm)
-                                @php
-                                    $totalPayment += $pm->amount;
-                                @endphp
-                            @endforeach
-                        @endif
-                        {{-- this tr needed for vertical alignment --}}
-                        <tr>
-                            <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;"></th>
-                            <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;"></th>
-                            <th style="color: #4F709C; background-color: #cdddf1; text-align: right; padding-right: 5px;"></th>
-                        </tr>
-                        {{-- this tr needed for vertical alignment --}}
                     @empty
                         <tr>
                             <td colspan="3">No data found</td>
                         </tr>
                     @endforelse
+                    @foreach ($expense as $ex)
+                        <tr style="vertical-align: top; height: 0;">
+                            <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;">{{$ex->expense?->head_name}}</th>
+                            <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;"></th>
+                            <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;"></th>
+                            <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;"></th>
+                            <th style="color: #4F709C; background-color: #cdddf1; text-align: right; padding-right: 5px;">(+) {{ money_format(round($ex->cost_amount))}}</th>
+                        </tr>
+                        @php 
+                            $totalIncome += $ex->cost_amount;
+                        @endphp
+                    @endforeach
+                    @foreach ($payment as $pm)
+                        @php
+                            $totalPayment += $pm->total_payment;
+                        @endphp
+                    @endforeach
+                    {{-- this tr needed for vertical alignment --}}
+                    <tr>
+                        <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;"></th>
+                        <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;"></th>
+                        <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;"></th>
+                        <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;"></th>
+                        <th style="color: #4F709C; background-color: #cdddf1; text-align: right; padding-right: 5px;"></th>
+                    </tr>
+                    {{-- this tr needed for vertical alignment --}}
                 </tbody>
                 <tfoot >
                     <tr class="">
-                        <th class="tbl_table_border_right" style="color: #4F709C; padding-left: 5px;">
-                            মোট:
-                            {{ money_format(round($totalBag))}} ব্যাগ, 
-                            {{ money_format(round($totalQty))}} কেজি
-                        </th>
+                        <th class="tbl_table_border_right" style="color: #4F709C; padding-left: 5px;"></th>
+                        <th class="tbl_table tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1;">{{ money_format(round($totalBag))}}</th>
+                        <th class="tbl_table tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1;">{{ money_format(round($totalQty))}}</th>
                         <th class="tbl_table tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1;">
                             <table style="width: 100%;">
                                 <tbody>
@@ -241,7 +236,12 @@
                             <table style="width: 100%;">
                                 <tbody>
                                     <tr>
-                                        <td style="text-align: right;">{{ money_format(round($nitTotal))}}</td>
+                                        <td style="text-align: right;">
+                                            @php
+                                                $nitTotal = $totalAmount + $totalIncome;
+                                            @endphp
+                                            {{ money_format(round($nitTotal))}}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td style="text-align: right;">{{ money_format(round($totalPayment))}}</td>
@@ -263,6 +263,18 @@
             </table>
             <div style="transform: rotate(-35deg); position: absolute; margin-top: -250px; font-size: 35px; opacity: 0.19; padding-left: 111px;">
                 কমিশন ভিত্তিক
+            </div>
+            <div style="text-align: center; font-size: 20px; color: #4F709C; margin-bottom: 1.5rem;">
+                @php
+                    $dueTotal = $nitTotal - $totalPayment;
+
+                    if ($dueTotal > 0) {
+                        $textValue = getBangladeshCurrency($dueTotal);
+                        echo "$textValue";
+                    } else {
+                        echo "Zero";
+                    }
+                @endphp
             </div>
             <div style="text-align: center; font-size: 20px; color: #4F709C; margin-bottom: 1.5rem;"><b> ধন্যবাদ আবার আসবেন।</b></div>
             <div style="text-align: right; padding-right: 100px; color: #4F709C;">স্বাক্ষর</div>

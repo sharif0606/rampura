@@ -278,7 +278,8 @@ class SalesController extends Controller
         $show_data= Sales::findOrFail(encryptor('decrypt',$id));
         $salesDetail= Sales_details::where('sales_id',$show_data->id)->get();
         $expense = ExpenseOfSales::where('sales_id',$show_data->id)->get();
-        return view('sales.memo',compact('show_data','salesDetail','expense'));
+        $payment = CustomerPayment::where('sales_id',$show_data->id)->get();
+        return view('sales.memo',compact('show_data','salesDetail','expense','payment'));
     }
 
     /**
