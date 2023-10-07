@@ -134,6 +134,7 @@ function invoice(){
 }
 
 
+
 function getBangladeshCurrency( $number)
 {
     $decimal = round($number - ($no = floor($number)), 2) * 100;
