@@ -6,7 +6,7 @@ for (let i = 0; i < choices.length; i++) {
       delimiter: ",",
       editItems: true,
       maxItemCount: -1,
-      removeItemButton: true,
+      removeItemButton: true,itemSelectText: '',
     })
   } else {
     initChoice = new Choices(choices[i])

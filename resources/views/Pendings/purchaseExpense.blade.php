@@ -19,12 +19,50 @@
                         <div class="text-center"><h4>Purchase Pending Expense</h4></div>
                         <div class="card-body">
                             <form class="form" method="get" action="">
-                                @csrf
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <label for="fdate"><h6>{{__('From Date')}}</h6></label>
+                                        <input type="date" class="form-control" value="{{isset($_GET['fdate'])?$_GET['fdate']:''}}" name="fdate">
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <label for="tdate"><h6>{{__('To Date')}}</h6></label>
+                                        <input type="date" class="form-control" value="{{isset($_GET['tdate'])?$_GET['tdate']:''}}" name="tdate">
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <label for="head_name"><h6>{{__('EXPENSES')}}</h6></label>
+                                        <select name="head_name[]" class="choices form-select multiple-remove" multiple>
+                                            <option value="">Select</option>
+                                            @forelse ($childTow as $ex)
+                                                @if(isset($_GET['head_name']))
+                                                    <option value="{{$ex->id}}" {{ in_array($ex->id,$_GET['head_name']) ? 'selected' : '' }}>{{$ex->head_name}}</option>
+                                                @else
+                                                    <option value="{{$ex->id}}" {{ old('head_name')==$ex->id?"selected":""}}>{{$ex->head_name}}</option>
+                                                @endif
+                                            @empty
+                                                <option value="">No Data Found</option>
+                                            @endforelse
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <label for="lcNo"><h6>{{__('LC Number')}}</h6></label>
+                                        <input type="text" class="form-control" value="{{isset($_GET['lot_no'])?$_GET['lot_no']:''}}" name="lot_no" placeholder="lc number">
+                                    </div>
+                                </div>
+                                
+                                <div class="row m-1">
+                                    <div class="col-6 d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-sm btn-success me-1 mb-1 ps-5 pe-5">{{__('Show')}}</button>
+                                    </div>
+                                    <div class="col-6 d-flex justify-content-Start">
+                                        <a href="{{route(currentUser().'.pur_pending_exp')}}" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Reset')}}</a>
+                                    </div>
+                                </div>
+                                
                                 <div class="tbl_scroll">
                                     <table class="table mb-5">
                                         <thead>
                                             <tr class="bg-primary text-white text-center">
-                                                <th class="p-2">{{__('#SL')}}</th>
+                                                <th class="p-2">{{__('LC/Lot No')}}</th>
                                                 <th class="p-2">{{__('Date')}}</th>
                                                 <th class="p-2">{{__('Type of Expense')}}</th>
                                                 <th class="p-2">{{__('Amount')}}</th>
@@ -33,7 +71,7 @@
                                         <tbody>
                                             @forelse ($expense as $ex)
                                                 <tr class="text-center">
-                                                    <th scope="row">{{ ++$loop->index }}</th>
+                                                    <td>{{$ex->lot_no}}</td>
                                                     <td>{{ date('d-M-Y', strtotime($ex->created_at)) }}</td>
                                                     <td>{{$ex->expense?->head_name}}</td>
                                                     <td>{{$ex->cost_amount}}</td>
@@ -45,6 +83,9 @@
                                             @endforelse
                                         </tbody>
                                     </table>
+                                    <div class="my-3">
+                                        {!! $expense->links()!!}
+                                    </div>
                                 </div>
                             </form>
                         </div>

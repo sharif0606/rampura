@@ -57,12 +57,12 @@ class PurchaseController extends Controller
         if( currentUser()=='owner'){
             $suppliers = Supplier::where(company())->get();
             $Warehouses = Warehouse::where(company())->get();
-            $childone = Child_one::where(company())->where('head_code',5310)->first();
-            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
         }else{
             $suppliers = Supplier::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
+            $childone = Child_one::where(company())->where('head_code',5310)->first();
+            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
 
         $paymethod=array();
         $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();

@@ -55,12 +55,12 @@ class RegularPurchaseController extends Controller
         if( currentUser()=='owner'){
             $suppliers = Supplier::where(company())->get();
             $Warehouses = Warehouse::where(company())->get();
-            $childone = Child_one::where(company())->where('head_code',5310)->first();
-            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
         }else{
             $suppliers = Supplier::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
+            $childone = Child_one::where(company())->where('head_code',5310)->first();
+            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
 
         $paymethod=array();
         $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
@@ -229,18 +229,17 @@ class RegularPurchaseController extends Controller
         if( currentUser()=='owner'){
             $suppliers = Supplier::where(company())->get();
             $Warehouses = Warehouse::where(company())->get();
-            $purchase = Regular_purchase::findOrFail(encryptor('decrypt',$id));
-            $purchaseDetails = Purchase_details::where('regular_purchase_id',$purchase->id)->get();
-            $childone = Child_one::where(company())->where('head_code',5310)->first();
-            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
-            // $expense = ExpenseOfPurchase::where('regular_purchase_id',$purchase->id)->pluck('cost_amount','child_two_id');
-            $expense = ExpenseOfPurchase::where('regular_purchase_id',$purchase->id)->get();
-            $supplerPayment = SupplierPayment::where(company())->where('regular_purchase_id',$purchase->id)->first();
-            $supplierPaymentDetails = SupplierPaymentDetails::where(company())->where('supplier_payment_id',$supplerPayment->id)->get();
         }else{
             $suppliers = Supplier::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
+            $purchase = Regular_purchase::findOrFail(encryptor('decrypt',$id));
+            $purchaseDetails = Purchase_details::where('regular_purchase_id',$purchase->id)->get();
+            $childone = Child_one::where(company())->where('head_code',5310)->first();
+            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
+            $expense = ExpenseOfPurchase::where('regular_purchase_id',$purchase->id)->get();
+            $supplerPayment = SupplierPayment::where(company())->where('regular_purchase_id',$purchase->id)->first();
+            $supplierPaymentDetails = SupplierPaymentDetails::where(company())->where('supplier_payment_id',$supplerPayment->id)->get();
 
         $paymethod=array();
         $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();

@@ -18,6 +18,11 @@
 <link rel="stylesheet" href="{{ asset('assets/extensions/choices.js/public/assets/styles/choices.css') }}">
 <!-- Include jQuery UI CSS file -->
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
+<style>
+    .choices__list--dropdown .choices__item--selectable {
+        padding-right: 0;
+    }
+</style>
 @stack('styles')
 <script
   src="https://code.jquery.com/jquery-3.6.1.min.js"
@@ -116,7 +121,7 @@
 <script src="{{ asset('/assets/js/app.js') }}"></script>
 <!-- Include jQuery UI library -->
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
-<script src="{{ asset('/assets/extensions/choices.js/public/assets/scripts/choices.js')}}"></script>
+<script src="{{ asset('/assets/extensions/choices.js/public/assets/scripts/choices.min.js')}}"></script>
 <script src="{{ asset('/assets/js/pages/form-element-select.js')}}"></script>
 <script>
     $(function() {

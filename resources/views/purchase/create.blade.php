@@ -368,7 +368,7 @@ function get_cal(e){
   $(e).closest('tr').find('.amount').val(amount);
 
 
-//   console.log('expense:', purExpense);
+    //   console.log('expense:', purExpense);
   console.log('actual_quantity:', actual_quantity);
   console.log('amount:', amount);
 
@@ -379,46 +379,46 @@ function get_cal(e){
 //row reapeter
 function addRow(){
 
-var row=`<tr class="tbl_expense">
-            <td class="tbl_expense">
-                <select name="child_two_id[]" class="form-select">
-                    <option value="">select</option>
-                    @forelse ($childTow as $ex)
-                        <option value="{{$ex->id}}">{{$ex->head_name}}</option>
-                    @empty
-                        <option value="">No Data Found</option>
-                    @endforelse
-                </select>
-            </td>
-            <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number" required><span class="error-message" style="color: red; display: none;"></span></td>
-            <td class="tbl_expense">
-                <select name="sign_for_calculate[]" class="form-select">
-                    <option value="+" {{old('sign_for_calculate')== '+'?'selected':''}}>(+)</option>
-                    <option value="-" {{old('sign_for_calculate')== '-'?'selected':''}}>(-)</option>
-                </select>
-            </td>
-            <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
-            <td class="tbl_expense text-danger text-center" onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
-        </tr>`;
+    var row=`<tr class="tbl_expense">
+        <td class="tbl_expense">
+            <select name="child_two_id[]" class="form-select">
+                <option value="">select</option>
+                @forelse ($childTow as $ex)
+                    <option value="{{$ex->id}}">{{$ex->head_name}}</option>
+                @empty
+                    <option value="">No Data Found</option>
+                @endforelse
+            </select>
+        </td>
+        <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number" required><span class="error-message" style="color: red; display: none;"></span></td>
+        <td class="tbl_expense">
+            <select name="sign_for_calculate[]" class="form-select">
+                <option value="+" {{old('sign_for_calculate')== '+'?'selected':''}}>(+)</option>
+                <option value="-" {{old('sign_for_calculate')== '-'?'selected':''}}>(-)</option>
+            </select>
+        </td>
+        <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
+        <td class="tbl_expense text-danger text-center" onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
+    </tr>`;
     $('#expense').append(row);
 }
 
 function addPaymentRow(){
 
-var row=`<tr class="tbl_expense">
-            <td class="tbl_expense">
-                <select  class="form-control form-select" name="payment_head[]">
-                    @if($paymethod)
-                        @foreach($paymethod as $d)
-                            <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
-                        @endforeach
-                    @endif
-                </select>
-            </td>
-            <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no_payment[]" placeholder="Lc Number" required><span class="error-message" style="color: red; display: none;"></span></td>
-            <td class="tbl_expense"><input type="number" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]" required></td>
-            <td class="tbl_expense text-danger text-center" onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
-        </tr>`;
+    var row=`<tr class="tbl_expense">
+        <td class="tbl_expense">
+            <select  class="form-control form-select" name="payment_head[]">
+                @if($paymethod)
+                    @foreach($paymethod as $d)
+                        <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
+                    @endforeach
+                @endif
+            </select>
+        </td>
+        <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no_payment[]" placeholder="Lc Number" required><span class="error-message" style="color: red; display: none;"></span></td>
+        <td class="tbl_expense"><input type="number" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]" required></td>
+        <td class="tbl_expense text-danger text-center" onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
+    </tr>`;
     $('#payment').append(row);
 }
 
