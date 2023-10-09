@@ -270,7 +270,7 @@ $(function() {
           })
           //alert(batch_id);
             $.ajax({
-            autoFocus:true,
+                autoFocus:true,
                 url: "{{route(currentUser().'.sales.product_sc')}}",
                 method: 'GET',
                 dataType: 'json',
