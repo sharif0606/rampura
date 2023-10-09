@@ -251,34 +251,34 @@
                         </th>
                         <th style="color: green; vertical-align: top;">
                             @forelse ($purchase as $pur)
-                                    @if($pur->purchase?->expense)
-                                        @foreach ($pur->purchase?->expense as $ex)
-                                            @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
-                                            @php
-                                                $conditional_pur_total_cost += $ex->cost_amount;
-                                            @endphp
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                    @if($pur->beparian_purchase?->expense)
-                                        @foreach ($pur->beparian_purchase?->expense as $ex)
-                                            @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
-                                            @php
-                                                $conditional_pur_total_cost += $ex->cost_amount;
-                                            @endphp
-                                            @endif
-                                        @endforeach
-                                    @endif
+                                @if($pur->purchase?->expense)
+                                    @foreach ($pur->purchase?->expense as $ex)
+                                        @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
+                                        @php
+                                            $conditional_pur_total_cost += $ex->cost_amount;
+                                        @endphp
+                                        @endif
+                                    @endforeach
+                                @endif
+                                @if($pur->beparian_purchase?->expense)
+                                    @foreach ($pur->beparian_purchase?->expense as $ex)
+                                        @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
+                                        @php
+                                            $conditional_pur_total_cost += $ex->cost_amount;
+                                        @endphp
+                                        @endif
+                                    @endforeach
+                                @endif
 
-                                    @if($pur->regular_purchase?->expense)
-                                        @foreach ($pur->regular_purchase?->expense as $ex)
-                                            @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
-                                            @php
-                                                $conditional_pur_total_cost += $ex->cost_amount;
-                                            @endphp
-                                            @endif
-                                        @endforeach
-                                    @endif
+                                @if($pur->regular_purchase?->expense)
+                                    @foreach ($pur->regular_purchase?->expense as $ex)
+                                        @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
+                                        @php
+                                            $conditional_pur_total_cost += $ex->cost_amount;
+                                        @endphp
+                                        @endif
+                                    @endforeach
+                                @endif
                                 <table style="width: 100%; padding-bottom: 1.5rem;">
                                     <tr>
                                         <th colspan="2" style="text-align: left;"><span style="border-bottom: solid 1px;">{{$pur->product?->product_name}}, Lot No: {{$pur->lot_no}}, Trade: {{$pur->brand}}</span></th>
