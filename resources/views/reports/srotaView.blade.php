@@ -181,6 +181,7 @@
             <table class="tbl_table" style="width: 100%;">
                 <tbody>
                     @php
+                        $conditional_pur_total_cost =0;
                         $subSalesAmount = 0;
                         $subSalesActualQty = 0;
                         $subSalesBag = 0;
@@ -190,16 +191,19 @@
                         $qtyLeft = 0;
 
                         $subPurchaseAmount = 0;
+                        $show_pur_amount = 0;
                         $subPurchaseExpense = 0;
                         $subPurActualQty = 0;
                         $subPurBag = 0;
                         $rate_per_kg = 0;
                         $totalPurchaseAmount = 0;
                         $totalDue = 0;
+                        $show_due = 0;
                         $salesFromPurchase = 0;
                         $totalSalesAmount = 0;
                         $formattedAmount = 0;
                         $profit = 0;
+                        $show_profit = 0;
                     @endphp
                     <tr class="tbl_table">
                         <th class="tbl_table" style="color: green; text-align: center;">জমা</th>
@@ -217,8 +221,8 @@
                                             <th colspan="2" style="text-align: left;"><span style="border-bottom: solid 1px;">{{$s->product?->product_name}}, Lot No: {{$s->lot_no}}, Trade: {{$s->brand}}</span></th>
                                         </tr>
                                         <tr>
-                                            <th style="text-align: left; padding-bottom: 1rem;">{{$s->quantity_bag}} ব্যাগ, {{$s->actual_quantity}} কেজি *{{$s->rate_kg}}/- </th>
-                                            <th style="text-align: right; padding-bottom: 1rem;">{{ number_format($s->amount,'0', '.', ',')}}</th>
+                                            <th style="text-align: left; padding-bottom: 1rem;">{{ money_format(round($s->quantity_bag))}} ব্যাগ, {{ money_format(round($s->actual_quantity))}} কেজি *{{$s->rate_kg}}/- </th>
+                                            <th style="text-align: right; padding-bottom: 1rem;">{{ money_format(round($s->amount))}}</th>
                                         </tr>
                                         @php
                                             $subSalesAmount += $s->amount;
@@ -247,13 +251,50 @@
                         </th>
                         <th style="color: green; vertical-align: top;">
                             @forelse ($purchase as $pur)
+                                @if($pur->purchase?->expense)
+                                    @foreach ($pur->purchase?->expense as $ex)
+                                        @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
+                                        @php
+                                            $conditional_pur_total_cost += $ex->cost_amount;
+                                        @endphp
+                                        @endif
+                                    @endforeach
+                                @endif
+                                @if($pur->beparian_purchase?->expense)
+                                    @foreach ($pur->beparian_purchase?->expense as $ex)
+                                        @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
+                                        @php
+                                            $conditional_pur_total_cost += $ex->cost_amount;
+                                        @endphp
+                                        @endif
+                                    @endforeach
+                                @endif
+
+                                @if($pur->regular_purchase?->expense)
+                                    @foreach ($pur->regular_purchase?->expense as $ex)
+                                        @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
+                                        @php
+                                            $conditional_pur_total_cost += $ex->cost_amount;
+                                        @endphp
+                                        @endif
+                                    @endforeach
+                                @endif
                                 <table style="width: 100%; padding-bottom: 1.5rem;">
                                     <tr>
                                         <th colspan="2" style="text-align: left;"><span style="border-bottom: solid 1px;">{{$pur->product?->product_name}}, Lot No: {{$pur->lot_no}}, Trade: {{$pur->brand}}</span></th>
                                     </tr>
                                     <tr>
-                                        <th style="text-align: left;">{{$pur->quantity_bag}} ব্যাগ , {{$pur->actual_quantity}} কেজি *{{$pur->rate_kg}}/- </th>
-                                        <th style="text-align: right;">{{ number_format($pur->amount,'0', '.', ',')}}</th>
+                                        <th style="text-align: left;">{{ money_format(round($pur->quantity_bag))}} ব্যাগ , {{ money_format(round($pur->actual_quantity))}} কেজি *{{$pur->rate_kg}}/- </th>
+                                        <th style="text-align: right;">
+                                            @if($pur->amount != 0)
+                                                {{ money_format(round($pur->amount))}}
+                                            @else
+                                                @php 
+                                                    $show_pur_amount = $subSalesAmount - $conditional_pur_total_cost;
+                                                @endphp
+                                                {{ money_format(round($show_pur_amount))}}
+                                            @endif
+                                        </th>
                                     </tr>
                                     
                                     @php
@@ -267,7 +308,7 @@
                                             @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
                                             <tr>
                                                 <th style="text-align: left;">{{$ex->expense?->head_name}}</th>
-                                                <th style="text-align: right;">{{ number_format($ex->cost_amount,'0', '.', ',')}}</th>
+                                                <th style="text-align: right;">{{ money_format(round($ex->cost_amount))}}</th>
                                             </tr>
                                             @php
                                                 $subPurchaseExpense += $ex->cost_amount;
@@ -281,7 +322,7 @@
                                             @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
                                             <tr>
                                                 <th style="text-align: left;">{{$ex->expense?->head_name}}</th>
-                                                <th style="text-align: right;">{{ number_format($ex->cost_amount,'0', '.', ',')}}</th>
+                                                <th style="text-align: right;">{{ money_format(round($ex->cost_amount))}}</th>
                                             </tr>
                                             @php
                                                 $subPurchaseExpense += $ex->cost_amount;
@@ -295,7 +336,7 @@
                                             @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
                                             <tr>
                                                 <th style="text-align: left;">{{$ex->expense?->head_name}}</th>
-                                                <th style="text-align: right;">{{ number_format($ex->cost_amount,'0', '.', ',')}}</th>
+                                                <th style="text-align: right;">{{ money_format(round($ex->cost_amount))}}</th>
                                             </tr>
                                             @php
                                                 $subPurchaseExpense += $ex->cost_amount;
@@ -358,12 +399,12 @@
                         <th class="tbl_table_border_right">
                             <table style="width: 100%;">
                                 <tr>
-                                    <th style="text-align: left;"><span style="color: green;">মোট {{$subSalesBag}} ব্যাগ, {{$subSalesActualQty}} কেজি</span></th>
+                                    <th style="text-align: left;"><span style="color: green;">মোট {{ money_format(round($subSalesBag))}} ব্যাগ, {{ money_format(round($subSalesActualQty))}} কেজি</span></th>
                                     <td style="text-align: right;">
                                         @php
                                             $totalSalesAmount= $subSalesAmount;
                                         @endphp
-                                        <span style="color: green;">{{$formattedAmount = number_format($totalSalesAmount, 0, '.', ',');}}</span>
+                                        <span style="color: green;">{{$formattedAmount = money_format(round($totalSalesAmount));}}</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -372,7 +413,7 @@
                                             $bagLeft = $subPurBag - $subSalesBag;
                                             $qtyLeft = $subPurActualQty - $subSalesActualQty;
                                         @endphp
-                                        <span style="color: green;">বর্তমান স্টক {{$bagLeft}} ব্যাগ, {{$qtyLeft}} কেজি</span>
+                                        <span style="color: green;">বর্তমান স্টক {{ money_format(round($bagLeft))}} ব্যাগ, {{ money_format(round($qtyLeft))}} কেজি</span>
                                     </th>
                                 </tr>
                             </table>
@@ -381,18 +422,24 @@
                             <table style="width: 100%;">
                                 <tr>
                                     
-                                    <th style="text-align: left;"><span style="color: green;">মোট {{$subPurBag}} ব্যাগ, {{$subPurActualQty}} কেজি</span></th>
+                                    <th style="text-align: left;"><span style="color: green;">মোট {{ money_format(round($subPurBag))}} ব্যাগ, {{money_format(round($subPurActualQty))}} কেজি</span></th>
                                     <td style="text-align: right;">
                                         @php
                                             $totalPurchaseAmount= $subPurchaseAmount + $subPurchaseExpense;
                                         @endphp
-                                        <span style="color: green;">{{number_format($totalPurchaseAmount, 0, '.', ','); }}</span>
+                                        <span style="color: green;">
+                                            @if($subPurchaseAmount != 0)
+                                                {{money_format(round($totalPurchaseAmount)); }}
+                                            @else
+                                                {{money_format(round($subSalesAmount)); }}
+                                            @endif
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th style="text-align: left;"><span style="color: green;">নগদ পরিশোধ</span></th>
                                     <td style="text-align: right;">
-                                        <span style="color: green;">{{number_format(round($totalPayment), 0, '.', ','); }}</span>
+                                        <span style="color: green;">{{money_format(round($totalPayment)); }}</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -401,7 +448,16 @@
                                         @php
                                             $totalDue= $totalPurchaseAmount - $totalPayment;
                                         @endphp
-                                        <span style="color: green; border-top: double;">{{number_format(round($totalDue), 0, '.', ','); }}</span>
+                                        <span style="color: green; border-top: double;">
+                                            @if($subPurchaseAmount != 0)
+                                                {{money_format(round($totalDue)); }}
+                                            @else
+                                                @php 
+                                                    $show_due = $subSalesAmount - $totalPayment;
+                                                @endphp
+                                                {{money_format(round($show_due)); }}
+                                            @endif
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -411,7 +467,17 @@
                                         @php
                                             $profit = $totalSalesAmount - $totalDue
                                         @endphp
-                                        <span style="color: green;">{{number_format($profit, 0, '.', ','); }}</span>
+                                        <span style="color: green;">
+                                            @if($subPurchaseAmount != 0)
+                                                {{money_format(round($profit));}}
+                                            @else
+                                                @php 
+                                                    $show_profit = $subSalesAmount - $show_due;
+                                                @endphp
+                                                {{money_format(round($show_profit)); }}
+                                            @endif
+                                            
+                                        </span>
                                     </td>
                                 </tr>
                                 

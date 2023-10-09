@@ -136,7 +136,7 @@
                                                     <select name="child_two_id[]" class="form-select">
                                                         <option value="">select</option>
                                                         @forelse ($childTow as $ex)
-                                                            <option value="{{$ex->id}}">{{$ex->head_name}}</option>
+                                                            <option value="{{$ex->id}} {{old('child_two_id[]')==$ex->id?'selected':''}}">{{$ex->head_name}}</option>
                                                         @empty
                                                             <option value="">No Data Found</option>
                                                         @endforelse
@@ -145,8 +145,8 @@
                                                 <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number"><span class="error-message" style="color: red; display: none;"></span></td>
                                                 <td class="tbl_expense">
                                                     <select name="sign_for_calculate[]" class="form-select">
-                                                        <option value="+" {{old('sign_for_calculate')== '+'?'selected':''}}>(+)</option>
-                                                        <option value="-" {{old('sign_for_calculate')== '-'?'selected':''}}>(-)</option>
+                                                        <option value="+" {{old('sign_for_calculate[]')== '+'?'selected':''}}>(+)</option>
+                                                        <option value="-" {{old('sign_for_calculate[]')== '-'?'selected':''}}>(-)</option>
                                                     </select>
                                                 </td>
                                                 <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]"></td>
@@ -384,10 +384,10 @@ function addRow(){
 
 var row=`<tr class="tbl_expense">
             <td class="tbl_expense">
-                <select name="child_two_id[]" class="form-select">
+                <select required name="child_two_id[]" class="form-select">
                     <option value="">select</option>
                     @forelse ($childTow as $ex)
-                        <option value="{{$ex->id}}">{{$ex->head_name}}</option>
+                        <option value="{{$ex->id}} {{old('child_two_id[]')==$ex->id?'selected':''}}">{{$ex->head_name}}</option>
                     @empty
                         <option value="">No Data Found</option>
                     @endforelse
@@ -396,8 +396,8 @@ var row=`<tr class="tbl_expense">
             <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number" required><span class="error-message" style="color: red; display: none;"></span></td>
             <td class="tbl_expense">
                 <select name="sign_for_calculate[]" class="form-select">
-                    <option value="+" {{old('sign_for_calculate')== '+'?'selected':''}}>(+)</option>
-                    <option value="-" {{old('sign_for_calculate')== '-'?'selected':''}}>(-)</option>
+                    <option value="+" {{old('sign_for_calculate[]')== '+'?'selected':''}}>(+)</option>
+                    <option value="-" {{old('sign_for_calculate[]')== '-'?'selected':''}}>(-)</option>
                 </select>
             </td>
             <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
