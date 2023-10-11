@@ -13,8 +13,7 @@ use DB;
 
 class PurchasePendingsController extends Controller
 {
-    public function purchase_pending_expense(Request $request)
-    {
+    public function purchase_pending_expense(Request $request){
         $expense = ExpenseOfPurchase::where(company());
         if ($request->fdate) {
             $tdate = $request->tdate ? $request->tdate : $request->fdate;
@@ -23,28 +22,20 @@ class PurchasePendingsController extends Controller
             $expense = $expense->whereBetween('created_at', [$startDate, $endDate]);
         }
         
-        if ($request->head_name) {
+        if ($request->head_name) 
             $expense = $expense->whereIn('child_two_id',  $request->head_name);
-        }
-        if ($request->lot_no) {
+        if ($request->lot_no) 
             $expense = $expense->whereIn('lot_no',  explode(",",$request->lot_no));
-        }
 
-        
         $expense = $expense->paginate(15);
         
         $childone = Child_one::where(company())->where('head_code',5310)->first();
         $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
 
-
-
-
-
         return view('Pendings.purchaseExpense',compact('expense','childTow'));
     }
 
-    public function purchase_supplier_payment()
-    {
+    public function purchase_supplier_payment(){
         $payment = SupplierPaymentDetails::where(company())->get();
         return view('Pendings.purchasePayment',compact('payment'));
     }

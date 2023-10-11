@@ -42,6 +42,7 @@ use App\Http\Controllers\Accounts\Report\HeadReportController as headreport;
 use App\Http\Controllers\Accounts\Report\BalanceSheetController as balancesheet;
 use App\Http\Controllers\Accounts\Report\ProfitLossController as profitloss;
 
+use App\Http\Controllers\Vouchers\PurchaseVoucherController as PurchaseVoucher;
 use App\Http\Controllers\Vouchers\CustomerVoucherController as cusVoucher;
 use App\Http\Controllers\Vouchers\SupplierVoucherController as supVoucher;
 use App\Http\Controllers\Vouchers\CreditVoucherController as credit;
@@ -159,6 +160,7 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/headreport', [headreport::class, 'index'])->name('owner.headreport');
 
         //Voucher
+        Route::resource('purchase_voucher',PurchaseVoucher::class,['as'=>'owner']);
         Route::resource('cusVoucher',cusVoucher::class,['as'=>'owner']);
         Route::resource('supVoucher',supVoucher::class,['as'=>'owner']);
         Route::resource('credit',credit::class,['as'=>'owner']);

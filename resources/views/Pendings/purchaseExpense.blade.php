@@ -57,24 +57,35 @@
                                         <a href="{{route(currentUser().'.pur_pending_exp')}}" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Reset')}}</a>
                                     </div>
                                 </div>
-                                
+                            </form>
+                            <form method="post" action="">
                                 <div class="tbl_scroll">
                                     <table class="table mb-5">
                                         <thead>
                                             <tr class="bg-primary text-white text-center">
+                                                <th class="p-2">
+                                                    <input type="checkbox" class="exp_id_all">
+                                                </th>
                                                 <th class="p-2">{{__('LC/Lot No')}}</th>
                                                 <th class="p-2">{{__('Date')}}</th>
                                                 <th class="p-2">{{__('Type of Expense')}}</th>
                                                 <th class="p-2">{{__('Amount')}}</th>
+                                                <th class="p-2">{{__('Action')}}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse ($expense as $ex)
                                                 <tr class="text-center">
+                                                    <td>
+                                                        <input type="checkbox" name="exp_id[]" class="exp_id" value="{{$ex->id}}">
+                                                    </td>
                                                     <td>{{$ex->lot_no}}</td>
                                                     <td>{{ date('d-M-Y', strtotime($ex->created_at)) }}</td>
                                                     <td>{{$ex->expense?->head_name}}</td>
                                                     <td>{{$ex->cost_amount}}</td>
+                                                    <td>
+                                                        <button type="submit" class="btn btn-primary">Create Voucher</button>
+                                                    </td>
                                                 </tr>
                                             @empty
                                                 <tr  class="text-center">
@@ -95,3 +106,14 @@
         </div>
     </section>
 @endsection
+@push('scripts')
+<script>
+    $('.exp_id_all').click(function(){
+        if($(this).is(":checked"))
+            $('.exp_id').attr('checked',true);
+        else
+            $('.exp_id').removeAttr('checked');
+    });
+    
+</script>
+@endpush
