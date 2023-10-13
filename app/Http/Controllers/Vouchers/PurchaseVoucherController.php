@@ -37,7 +37,7 @@ class PurchaseVoucherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $paymethod=array();
         $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
@@ -69,6 +69,7 @@ class PurchaseVoucherController extends Controller
 
         return view('voucher.customerVoucher.create',compact('paymethod'));
     }
+	
     public function get_head(Request $request){
         
         $row='';
