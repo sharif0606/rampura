@@ -320,8 +320,6 @@ $(function() {
             },   
             //loader end
     });
-
-
 });
 
 function return_row_with_data(item_id){
