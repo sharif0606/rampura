@@ -376,6 +376,20 @@ function get_cal(e){
   payment();
   total_calculate();
 }
+
+function get_amount(e){
+  var amount = (isNaN(parseFloat($(e).closest('tr').find('.amount').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.amount').val().trim()); 
+  var quantity = (isNaN(parseFloat($(e).closest('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_kg').val().trim());
+  
+  var rate = ((amount / quantity));
+
+
+  $(e).closest('tr').find('.rate_in_kg').val(rate);
+
+  total_expense();
+  payment();
+  total_calculate();
+}
 //row reapeter
 function addRow(){
 

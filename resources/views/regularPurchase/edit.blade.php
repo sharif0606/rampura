@@ -133,7 +133,7 @@
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" value="{{$p->less_quantity_kg}}" class="form-control less_qty_kg"></td>
                                                 <td class="py-2 px-1"><input name="actual_qty[]" readonly type="text" class="form-control actual_qty" value="{{$p->actual_quantity}}"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value="{{$p->rate_kg}}"></td>
-                                                <td class="py-2 px-1"><input name="amount[]" readonly type="text" class="form-control amount" value="{{$p->amount}}"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_amount(this)" name="amount[]" type="text" class="form-control amount" value="{{$p->amount}}"></td>
                                                 <td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>
                                             </tr>
                                             @php
@@ -462,6 +462,20 @@ function get_cal(e){
 //   console.log('expense:', purExpense);
   console.log('actual_quantity:', actual_quantity);
   console.log('amount:', amount);
+
+  total_expense();
+  payment();
+  total_calculate();
+}
+
+function get_amount(e){
+  var amount = (isNaN(parseFloat($(e).closest('tr').find('.amount').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.amount').val().trim()); 
+  var quantity = (isNaN(parseFloat($(e).closest('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_kg').val().trim());
+  
+  var rate = ((amount / quantity));
+
+
+  $(e).closest('tr').find('.rate_in_kg').val(rate);
 
   total_expense();
   payment();
