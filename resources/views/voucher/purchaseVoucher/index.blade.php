@@ -1,5 +1,5 @@
 @extends('layout.app')
-@section('pageTitle',trans('Supplier Voucher List'))
+@section('pageTitle',trans('Purchase Voucher List'))
 @section('pageSubTitle',trans('List'))
 
 @section('content')
@@ -12,7 +12,7 @@
                     {!!Session::get('response')['message']!!}
                 @endif
                 <div>
-                    <a class="float-end" href="{{route(currentUser().'.supVoucher.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
+                    <a class="float-end" href="{{route(currentUser().'.purchase_voucher.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
                 </div>
                 <!-- table bordered -->
                 <div class="table-responsive">
@@ -21,7 +21,7 @@
                             <tr>
                                 <th scope="col">{{__('#SL')}}</th>
                                 <th scope="col">{{__('Voucher No')}}</th>
-                                <th scope="col">{{__('Lc Number')}}</th>
+                                <th scope="col">{{__('Lc No')}}</th>
                                 <th scope="col">{{__('Supplier')}}</th>
                                 <th scope="col">{{__('Date')}}</th>
                                 <th scope="col">{{__('Pay Name')}}</th>
@@ -36,13 +36,13 @@
                                 <th scope="row">{{ ++$loop->index }}</th>
                                 <td>{{$cr->voucher_no}}</td>
                                 <td>{{$cr->lc_no}}</td>
-                                <td>{{$cr->supplier?->supplier_name}}</td>
+                                <td>{{$cr->supplier}}</td>
                                 <td>{{date('d/m,Y',strtotime($cr->current_date))}}</td>
                                 <td>{{$cr->pay_name}}</td>
                                 <td>{{$cr->purpose}}</td>
                                 <td>{{$cr->debit_sum}}</td>
                                 <td class="white-space-nowrap">
-                                    <a href="{{route(currentUser().'.supVoucher.edit',encryptor('encrypt',$cr->id))}}">
+                                    <a href="{{route(currentUser().'.purchase_voucher.edit',encryptor('encrypt',$cr->id))}}">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                 </td>

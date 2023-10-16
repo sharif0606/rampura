@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('customer_vouchers', function (Blueprint $table) {
+        Schema::create('purchase_vouchers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
-            $table->unsignedBigInteger('customer_id')->nullable()->index()->foreign()->references('id')->on('customers')->onDelete('cascade');
+            $table->string('supplier',500);
             $table->string('lc_no')->nullable();
             $table->string('voucher_no');
             $table->string('current_date');
@@ -43,6 +43,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('customer_vouchers');
+        Schema::dropIfExists('purchase_vouchers');
     }
 };

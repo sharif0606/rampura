@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Purchases;
+namespace App\Http\Controllers\Sales;
 
 use App\Http\Controllers\Controller;
-use App\Models\Expenses\ExpenseOfPurchase;
-use App\Models\Suppliers\SupplierPaymentDetails;
+use App\Models\Expenses\ExpenseOfSales;
+use App\Models\Suppliers\CustomerPaymentDetails;
 use App\Models\Accounts\Child_one;
 use App\Models\Accounts\Child_two;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DB;
 
-class PurchasePendingsController extends Controller
+class SalesPendingsController extends Controller
 {
-    public function purchase_pending_expense(Request $request){
-        $expense = ExpenseOfPurchase::where(company())->where('status',0);
+    public function sales_pending_expense(Request $request){
+        $expense = ExpenseOfSales::where(company())->where('status',0);
         if ($request->fdate) {
             $tdate = $request->tdate ? $request->tdate : $request->fdate;
             $startDate = Carbon::createFromFormat('Y-m-d', $request->fdate)->startOfDay();
@@ -29,15 +29,15 @@ class PurchasePendingsController extends Controller
 
         $expense = $expense->paginate(15);
         
-        $childone = Child_one::where(company())->where('head_code',5310)->first();
+        $childone = Child_one::where(company())->where('head_code',5320)->first();
         $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
 
-        return view('Pendings.purchaseExpense',compact('expense','childTow'));
+        return view('Pendings.salesExpense',compact('expense','childTow'));
     }
 
-    public function purchase_supplier_payment(){
+    public function sales_customer_payment(){
         $payment = SupplierPaymentDetails::where(company())->get();
-        return view('Pendings.purchasePayment',compact('payment'));
+        return view('Pendings.salesPayment',compact('payment'));
     }
     
 }

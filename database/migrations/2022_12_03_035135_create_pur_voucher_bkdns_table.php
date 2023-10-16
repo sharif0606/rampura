@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sup_voucher_bkdns', function (Blueprint $table) {
+        Schema::create('pur_voucher_bkdns', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
-            $table->string('supplier_voucher_id');
+            $table->unsignedBigInteger('purchase_voucher_id');
             $table->unsignedBigInteger('supplier_id')->nullable()->index()->foreign()->references('id')->on('suppliers')->onDelete('cascade');
             $table->string('lc_no')->nullable();
             $table->string('particulars')->nullable();
@@ -40,6 +40,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sup_voucher_bkdns');
+        Schema::dropIfExists('pur_voucher_bkdns');
     }
 };

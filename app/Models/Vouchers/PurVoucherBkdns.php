@@ -6,7 +6,7 @@ use App\Models\Suppliers\Supplier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SupplierVoucher extends Model
+class PurVoucherBkdns extends Model
 {
     use HasFactory;
     public function supplier(){

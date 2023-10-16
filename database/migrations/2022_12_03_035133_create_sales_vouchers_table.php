@@ -13,18 +13,21 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cus_voucher_bkdns', function (Blueprint $table) {
+        Schema::create('sales_vouchers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
-            $table->string('customer_voucher_id');
-            $table->unsignedBigInteger('customer_id')->nullable()->index()->foreign()->references('id')->on('customers')->onDelete('cascade');
+            $table->string('customer',500);
             $table->string('lc_no')->nullable();
-            $table->string('particulars')->nullable();
-            $table->string('account_code');
-            $table->string('table_name');
-            $table->string('table_id');
-            $table->decimal('debit',10,2)->default(0);
-            $table->decimal('credit',10,2)->default(0);
+            $table->string('voucher_no');
+            $table->string('current_date');
+            $table->string('pay_name')->nullable();
+            $table->string('purpose')->nullable();
+            $table->decimal('debit_sum',10,2)->default(0);
+            $table->decimal('credit_sum',10,2)->default(0);
+            $table->string('cheque_no')->nullable();
+            $table->string('cheque_dt')->nullable();
+            $table->string('bank')->nullable();
+            $table->string('slip')->nullable();
 
              // default
              $table->unsignedBigInteger('created_by')->index()->default(2);
@@ -40,6 +43,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cus_voucher_bkdns');
+        Schema::dropIfExists('sales_vouchers');
     }
 };

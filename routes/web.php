@@ -25,6 +25,7 @@ use App\Http\Controllers\Purchases\BeparianPurchaseController as bpurchase;
 use App\Http\Controllers\Purchases\RegularPurchaseController as rpurchase;
 use App\Http\Controllers\Purchases\PurchasePendingsController as purPending;
 use App\Http\Controllers\Sales\SalesController as sales;
+use App\Http\Controllers\Sales\SalesPendingsController as salPending;
 use App\Http\Controllers\Settings\BranchController as branch;
 use App\Http\Controllers\Settings\WarehouseController as warehouse;
 use App\Http\Controllers\Reports\ReportController as report;
@@ -43,8 +44,7 @@ use App\Http\Controllers\Accounts\Report\BalanceSheetController as balancesheet;
 use App\Http\Controllers\Accounts\Report\ProfitLossController as profitloss;
 
 use App\Http\Controllers\Vouchers\PurchaseVoucherController as PurchaseVoucher;
-use App\Http\Controllers\Vouchers\CustomerVoucherController as cusVoucher;
-use App\Http\Controllers\Vouchers\SupplierVoucherController as supVoucher;
+use App\Http\Controllers\Vouchers\SalesVoucherController as SalesVoucher;
 use App\Http\Controllers\Vouchers\CreditVoucherController as credit;
 use App\Http\Controllers\Vouchers\DebitVoucherController as debit;
 use App\Http\Controllers\Vouchers\JournalVoucherController as journal;
@@ -132,9 +132,6 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/all-purchase-report',[report::class,'allPurchaseReport'])->name('owner.all_pur_report');
         Route::get('/srota',[report::class,'srota'])->name('owner.srota');
         Route::get('/srota-view',[report::class,'srotaView'])->name('owner.srota_view');
-        
-        Route::get('/purchase-pending-expense',[purPending::class,'purchase_pending_expense'])->name('owner.pur_pending_exp');
-        Route::get('/purchase-payment',[purPending::class,'purchase_supplier_payment'])->name('owner.pur_pending_pay');
 
         //Product
         Route::resource('category',category::class,['as'=>'owner']);
@@ -161,8 +158,7 @@ Route::group(['middleware'=>isOwner::class],function(){
 
         //Voucher
         Route::resource('purchase_voucher',PurchaseVoucher::class,['as'=>'owner']);
-        Route::resource('cusVoucher',cusVoucher::class,['as'=>'owner']);
-        Route::resource('supVoucher',supVoucher::class,['as'=>'owner']);
+        Route::resource('sales_voucher',SalesVoucher::class,['as'=>'owner']);
         Route::resource('credit',credit::class,['as'=>'owner']);
         Route::resource('debit',debit::class,['as'=>'owner']);
         Route::get('get_head', [credit::class, 'get_head'])->name('owner.get_head');
@@ -173,6 +169,8 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::resource('purchase',purchase::class,['as'=>'owner']);
         Route::resource('bpurchase',bpurchase::class,['as'=>'owner']);
         Route::resource('rpurchase',rpurchase::class,['as'=>'owner']);
+        Route::get('/purchase-pending-expense',[purPending::class,'purchase_pending_expense'])->name('owner.pur_pending_exp');
+        Route::get('/purchase-payment',[purPending::class,'purchase_supplier_payment'])->name('owner.pur_pending_pay');
         Route::get('/product_search', [purchase::class,'product_search'])->name('owner.pur.product_search');
         Route::get('/product_search_data', [purchase::class,'product_search_data'])->name('owner.pur.product_search_data');
 
@@ -185,6 +183,9 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/sale-memo{id}', [sales::class,'saleMemo'])->name('owner.sales.memo');
         Route::get('/product_sc', [sales::class,'product_sc'])->name('owner.sales.product_sc');
         Route::get('/product_sc_d', [sales::class,'product_sc_d'])->name('owner.sales.product_sc_d');
+
+        Route::get('/sales-pending-expense',[salPending::class,'sales_pending_expense'])->name('owner.sales_pending_exp');
+        Route::get('/sales-payment',[salPending::class,'sales_customer_payment'])->name('owner.sales_pending_pay');
 
         //Transfer
         Route::resource('transfer',transfer::class,['as'=>'owner']);

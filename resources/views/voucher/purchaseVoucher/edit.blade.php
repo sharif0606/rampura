@@ -1,82 +1,63 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Create Supplier Voucher'))
-@section('pageSubTitle',trans('Create'))
+@section('pageTitle',trans('Update Purchase Voucher'))
+@section('pageSubTitle',trans('Update'))
 
 @section('content')
     <section id="multiple-column-form">
         <div class="row match-height">
             <div class="col-12">
                 <div class="card">
-                    <h4 class="card-title text-center">{{__('Debit Voucher Entry')}}</h4>
                     <div class="card-content">
                         <div class="card-body">
-                            <form class="form" enctype="multipart/form-data" method="post" action="{{route(currentUser().'.supVoucher.store')}}">
+                            <form class="form" enctype="multipart/form-data" method="post" action="{{route(currentUser().'.purchase_voucher.update',encryptor('encrypt',$data->id))}}">
                                 @csrf
+                                @method('patch')
+                                <input type="hidden" name="uptoken" value="{{encryptor('encrypt',$data->id)}}">
                                 <div class="row">
                                     
-                                    <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="countryName">{{__('Voucher No')}}</label>
-                                            <input type="text" id="voucher_no" class="form-control" value="" name="voucher_no" readonly>
-                                            @if($errors->has('countryName'))
-                                                <span class="text-danger"> {{ $errors->first('countryName') }}</span>
-                                            @endif
+                                            <input type="text" id="voucher_no" class="form-control" value="{{old('voucher_no',$data->voucher_no)}}" name="voucher_no" readonly>
                                         </div>
                                     </div>
                                 
-                                    <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="date">{{__('Date')}}</label>
-                                            <input type="date" id="current_date" class="form-control" value="{{ old('current_date')}}" name="current_date" required>
+                                            <input type="date" id="current_date" class="form-control" value="{{old('current_date',$data->current_date)}}" name="current_date" required>
                                             @if($errors->has('current_date'))
                                                 <span class="text-danger"> {{ $errors->first('current_date') }}</span>
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="name">{{__('Name')}}</label>
-                                            <input type="text" id="pay_name" class="form-control" value="{{ old('pay_name')}}" name="pay_name">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="Purpose">{{__('Purpose')}}</label>
-                                            <input type="text" id="purpose" class="form-control" value="{{ old('purpose')}}" name="purpose">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="lc">{{__('Lc Number')}}</label>
-                                            <input type="text" class="form-control" value="{{ old('lc_no')}}" name="lc_no" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="customer">{{__('Supplier')}}</label>
-                                            <select name="supplier_id" class="form-control select" required>
-                                                <option value="">Select</option>
-                                                @forelse (App\Models\Suppliers\Supplier::all(); as $d)
-                                                    <option value="{{$d->id}}">{{$d->supplier_name}}</option>
-                                                @empty
-                                                    <option value="">No Data Found</option>
-                                                @endforelse
-                                            </select>
+                                            <input type="text" id="pay_name" class="form-control" value="{{old('pay_name',$data->pay_name)}}" name="pay_name">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <label for="Category">{{__('Received Account')}}</label>
-                                            <select  class="form-control form-select" name="credit">
-                                                @if($paymethod)
-                                                    @foreach($paymethod as $d)
-                                                        <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}-{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
+                                            <label for="Purpose">{{__('Purpose')}}</label>
+                                            <input type="text" id="purpose" class="form-control" value="{{old('purpose',$data->purpose)}}" name="purpose">
                                         </div>
                                     </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="Category">{{__('Payment Account')}}: 
+                                                @if($purvoucherbkdn)
+                                                    @foreach($purvoucherbkdn as $bk)
+                                                        @if($bk->credit > 0)
+                                                            {{$bk->account_code}} ({{$bk->credit}})
+                                                        @endif
+                                                    @endforeach
+                                                @endif
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
 
 
@@ -93,34 +74,24 @@
                                         <tfoot>
                                             <tr>
                                                 <th style="text-align:right;" colspan="2">{{__('Total Amount Tk.')}}</th>
-                                                <th><input type='text' class='form-control' name='debit_sum' id='debit_sum' value='' style='text-align:center; border:none;' readonly autocomplete="off" /></th>
+                                                <th><input type='text' class='form-control' name='debit_sum' id='debit_sum' value='{{$data->debit_sum}}' style='text-align:center; border:none;' readonly autocomplete="off" /></th>
                                                 <th></th>
                                             </tr>
-                                            <tr>
-                                                <th style="text-align:right;" colspan="4">
-                                                    <input type='button' class='btn btn-primary' value='Add' onClick='add_row();'>
-                                                    <input type='button' class='btn btn-danger' value='Remove' onClick='remove_row();'>
-                                                </th>
-                                            </tr>
                                         </tfoot>
-                                        <tbody style="background:#eee;">
-                                            <tr>
-                                                <td style='text-align:center;'>1</td>
-                                                <td style='text-align:left;'>
-                                                    <div style='width:100%;position:relative;'>
-                                                        <input type='text' name='account_code[]' class='cls_account_code form-control' value='' style='border:none;' onkeyup="get_head(this);" maxlength='100' autocomplete="off"/>
-                                                        <div class="sugg" style='display:none;'>
-                                                            <div style='border:1px solid #aaa;'></div>
-                                                        </div>
-                                                    </div>
-                                                        <input type='hidden' class='table_name' name='table_name[]' value=''>
-                                                        <input type='hidden' class='table_id' name='table_id[]' value=''>
-                                                </td>
-                                                <td style='text-align:left;'>
-                                                    <input type='text' name='debit[]' class='cls_debit form-control' value='' style='text-align:center; border:none;' maxlength='15' onkeyup='removeChar(this)' onBlur='return debit_entry(this);' autocomplete="off"/> 
-                                                </td>
-                                                <td style='text-align:left;'><input type='text' class=" form-control" name='remarks[]' value='' maxlength='50' style='text-align:left;border:none;' /></td>
-                                            </tr>
+                                        <tbody>
+                                            @if($purvoucherbkdn)
+                                                @foreach($purvoucherbkdn as $i=>$bk)
+                                                    @if($bk->debit > 0)
+                                                    <tr>
+                                                        <td style='text-align:center;'>{{++$i}}</td>
+                                                        <td style='text-align:left;'>{{$bk->account_code}}</td>
+                                                        <td style='text-align:left;'>{{$bk->debit}}</td>
+                                                        <td style='text-align:left;'>{{$bk->lc_no}}</td>
+                                                        <td style='text-align:left;'>{{$bk->supplier?->supplier_name}} ({{$bk->supplier?->contact}})</td>
+                                                    </tr>
+                                                    @endif
+                                                @endforeach
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -132,7 +103,7 @@
                                             <div class="form-group @if($errors->has('name')) has-error @endif">
                                             <label>{{__('Cheque No')}}</label>
                                             <span class="block input-icon input-icon-right">
-                                                <input type="text" class="form-control" name="cheque_no" value="{{old('cheque_no')}}">
+                                                <input type="text" class="form-control" name="cheque_no" value="{{$data->cheque_no}}">
                                                 @if($errors->has('cheque_no')) 
                                                 <i class="ace-icon fa fa-times-circle"></i>
                                                 @endif
@@ -147,13 +118,13 @@
                                         <div class="col-12 col-sm-4">
                                             <div class="form-group">
                                             <label>{{__('Bank Name')}}</label>
-                                            <input type="text" class="form-control" name="bank" value="{{old('bank')}}">
+                                            <input type="text" class="form-control" name="bank" value="{{$data->bank}}">
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-4">
                                             <div class="form-group">
                                             <label>{{__('Cheque Date')}}</label>
-                                            <input type="date" class="form-control" name="cheque_dt" >
+                                            <input type="date" class="form-control" name="cheque_dt" value="{{$data->cheque_dt}}" >
                                                 
                                             @if($errors->has('cheque_dt')) 
                                                 <div class="help-block col-sm-reset">
@@ -184,8 +155,6 @@
             </div>
         </div>
     </section>
-    <!-- // Basic multiple Column Form section end -->
-</div>
 @endsection
 
 @push('scripts')

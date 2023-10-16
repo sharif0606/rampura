@@ -16,7 +16,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-content">
-                        <div class="text-center"><h4>Purchase Pending Expense</h4></div>
+                        <div class="text-center"><h4>Sales Pending Expense</h4></div>
                         <div class="card-body">
                             <form class="form" method="get" action="">
                                 <div class="row">
@@ -54,11 +54,11 @@
                                         <button type="submit" class="btn btn-sm btn-success me-1 mb-1 ps-5 pe-5">{{__('Show')}}</button>
                                     </div>
                                     <div class="col-6 d-flex justify-content-Start">
-                                        <a href="{{route(currentUser().'.pur_pending_exp')}}" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Reset')}}</a>
+                                        <a href="{{route(currentUser().'.sales_pending_exp')}}" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Reset')}}</a>
                                     </div>
                                 </div>
                             </form>
-                            <form method="get" action="{{route(currentUser().'.purchase_voucher.create')}}">
+                            <form method="get" action="{{route(currentUser().'.sales_voucher.create')}}">
                                 <button type="submit" class="btn btn-primary mb-1 float-end">Create Voucher</button>
                                 <div class="tbl_scroll">
                                     <table class="table mb-5">

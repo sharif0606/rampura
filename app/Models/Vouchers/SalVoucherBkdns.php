@@ -6,7 +6,7 @@ use App\Models\Customers\Customer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CustomerVoucher extends Model
+class SalVoucherBkdns extends Model
 {
     use HasFactory;
     public function customer(){
