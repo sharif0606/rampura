@@ -1,5 +1,5 @@
 @extends('layout.app')
-@section('pageTitle',trans('Customer Voucher List'))
+@section('pageTitle',trans('Sales Voucher List'))
 @section('pageSubTitle',trans('List'))
 
 @section('content')
@@ -12,7 +12,7 @@
                     {!!Session::get('response')['message']!!}
                 @endif
                 <div>
-                    <a class="float-end" href="{{route(currentUser().'.cusVoucher.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
+                    <a class="float-end" href="{{route(currentUser().'.sales_voucher.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
                 </div>
                 <!-- table bordered -->
                 <div class="table-responsive">
@@ -36,13 +36,13 @@
                                 <th scope="row">{{ ++$loop->index }}</th>
                                 <td>{{$cr->voucher_no}}</td>
                                 <td>{{$cr->lc_no}}</td>
-                                <td>{{$cr->customer?->customer_name}}</td>
+                                <td>{{$cr->customer}}</td>
                                 <td>{{date('d/m,Y',strtotime($cr->current_date))}}</td>
                                 <td>{{$cr->pay_name}}</td>
                                 <td>{{$cr->purpose}}</td>
                                 <td>{{$cr->debit_sum}}</td>
                                 <td class="white-space-nowrap">
-                                    <a href="{{route(currentUser().'.cusVoucher.edit',encryptor('encrypt',$cr->id))}}">
+                                    <a href="{{route(currentUser().'.sales_voucher.edit',encryptor('encrypt',$cr->id))}}">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                 </td>

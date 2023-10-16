@@ -116,11 +116,11 @@ class SalesVoucherController extends Controller
             DB::beginTransaction();
             $voucher_no = $this->create_voucher_no();
             if(!empty($voucher_no)){
-                $jv=new CustomerVoucher;
+                $jv=new SalesVoucher;
                 $jv->voucher_no=$voucher_no;
                 $jv->company_id =company()['company_id'];
-                $jv->customer_id=$request->customer_id;
-                $jv->lc_no=$request->lc_no;
+                $jv->customer=$request->customer_name?implode(', ',array_unique($request->customer_name)):"";
+                $jv->lc_no=$request->lc_no?implode(', ',array_unique($request->lc_no)):"";
                 $jv->current_date=$request->current_date;
                 $jv->pay_name=$request->pay_name;
                 $jv->purpose=$request->purpose;
@@ -143,10 +143,12 @@ class SalesVoucherController extends Controller
                     
                     if($credit){
                         $credit=explode('~',$credit);
-                        $jvb=new CusVoucherBkdns;
-                        $jvb->customer_voucher_id=$jv->id;
-                        $jvb->customer_id=$request->customer_id;
-                        $jvb->lc_no=$request->lc_no;
+                        $jvb=new SalVoucherBkdns;
+                        $jvb->sales_voucher_id=$jv->id;
+                        
+                        $jvb->customer_id=$request->customer_id?implode(',',$request->customer_id):"";
+                        $jvb->lc_no=$request->lc_no?implode(',',$request->lc_no):"";
+
                         $jvb->company_id =company()['company_id'];
                         $jvb->particulars="Received from";
                         $jvb->account_code=$credit[2];
@@ -160,12 +162,12 @@ class SalesVoucherController extends Controller
 							else if($table_name=="child_ones"){$field_name="child_one_id";}
 							else if($table_name=="child_twos"){$field_name="child_two_id";}
 							$gl=new GeneralLedger;
-                            $gl->customer_voucher_id=$jv->id;
+                            $gl->sales_voucher_id=$jv->id;
                             $gl->company_id =company()['company_id'];
                             $gl->journal_title=$credit[2];
                             $gl->rec_date=$request->current_date;
                             $gl->jv_id=$voucher_no;
-                            $gl->customer_voucher_bkdn_id=$jvb->id;
+                            $gl->sales_voucher_bkdn_id=$jvb->id;
                             $gl->created_by=currentUserId();
                             $gl->dr=$request->debit_sum;
                             $gl->{$field_name}=$credit[1];
@@ -174,10 +176,10 @@ class SalesVoucherController extends Controller
                     }
 					if(sizeof($account_codes)>0){
                         foreach($account_codes as $i=>$acccode){
-                            $jvb=new CusVoucherBkdns;
-                            $jvb->customer_voucher_id=$jv->id;
-                            $jvb->customer_id=$request->customer_id;
-                            $jvb->lc_no=$request->lc_no;
+                            $jvb=new SalVoucherBkdns;
+                            $jvb->sales_voucher_id=$jv->id;
+                            $jvb->customer_id=!empty($request->customer_id[$i])?$request->customer_id[$i]:0;
+                            $jvb->lc_no=!empty($request->lc_no[$i])?$request->lc_no[$i]:0;
                             $jvb->company_id =company()['company_id'];
                             $jvb->particulars=!empty($request->remarks[$i])?$request->remarks[$i]:"";
                             $jvb->account_code=!empty($acccode)?$acccode:"";
@@ -191,12 +193,12 @@ class SalesVoucherController extends Controller
     							else if($table_name=="child_ones"){$field_name="child_one_id";}
     							else if($table_name=="child_twos"){$field_name="child_two_id";}
     							$gl=new GeneralLedger;
-                                $gl->customer_voucher_id=$jv->id;
+                                $gl->sales_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
                                 $gl->journal_title=!empty($acccode)?$acccode:"";
                                 $gl->rec_date=$request->current_date;
                                 $gl->jv_id=$voucher_no;
-                                $gl->customer_voucher_bkdn_id=$jvb->id;
+                                $gl->sales_voucher_bkdn_id=$jvb->id;
                                 $gl->created_by=currentUserId();
                                 $gl->cr=!empty($request->debit[$i])?$request->debit[$i]:0;
                                 $gl->{$field_name}=!empty($request->table_id[$i])?$request->table_id[$i]:"";
@@ -206,12 +208,15 @@ class SalesVoucherController extends Controller
                     }
                 }
                 DB::commit();
-				return redirect()->route(currentUser().'.cusVoucher.index')->with($this->resMessageHtml(true,null,'Successfully created'));
+                if($request->expense_id)
+                    ExpenseOfSales::whereIn('id', $request->expense_id)->update(['invoice_id' => $jv->id,'status' => 1]);
+
+				return redirect()->route(currentUser().'.sales_voucher.index')->with($this->resMessageHtml(true,null,'Successfully created'));
 			}else{
 				return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
 			}
 		}catch (Exception $e) {
-			// dd($e);
+			 dd($e);
 			DB::rollBack();
 			return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
 		}
@@ -236,9 +241,9 @@ class SalesVoucherController extends Controller
      */
     public function edit($id)
     {
-        $customerVoucher=CustomerVoucher::findOrFail(encryptor('decrypt',$id));
-		$cusvoucherbkdn=CusVoucherBkdns::where('customer_voucher_id',$id)->get();
-		return view('voucher.customerVoucher.edit',compact('customerVoucher','cusvoucherbkdn'));
+        $data=SalesVoucher::findOrFail(encryptor('decrypt',$id));
+		$bkdn=SalVoucherBkdns::where('sales_voucher_id',encryptor('decrypt',$id))->get();
+		return view('voucher.salesVoucher.edit',compact('data','bkdn'));
     }
 
     /**
@@ -250,7 +255,7 @@ class SalesVoucherController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $cv= CustomerVoucher::findOrFail(encryptor('decrypt',$id));
+        $cv= SalesVoucher::findOrFail(encryptor('decrypt',$id));
 		$cv->current_date = $request->current_date;
 		$cv->pay_name = $request->pay_name;
 		$cv->purpose = $request->purpose;
@@ -263,7 +268,7 @@ class SalesVoucherController extends Controller
 			$cv->slip=$imageName;
 		}
         $cv->save();
-        return redirect()->route(currentUser().'.cusVoucher.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));
+        return redirect()->route(currentUser().'.sales_voucher.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));
     }
 
     /**

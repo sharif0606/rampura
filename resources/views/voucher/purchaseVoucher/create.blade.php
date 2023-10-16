@@ -41,7 +41,7 @@
                                     
                                     <div class="col-md-4 col-12">
                                         <div class="form-group">
-                                            <label for="Category">{{__('Received Account')}}</label>
+                                            <label for="Category">{{__('Payment Account')}}</label>
                                             <select  class="form-control form-select" name="credit">
                                                 @if($paymethod)
                                                     @foreach($paymethod as $d)
@@ -182,7 +182,6 @@
 <script>
     function addTextSupplier(e){
         $(e).parent('td').find('.supplier_name').val($(e).find(':selected').text());
-        
     }
 	function add_row(){
 

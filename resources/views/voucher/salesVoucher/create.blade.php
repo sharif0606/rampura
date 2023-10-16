@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Create Customer Voucher'))
+@section('pageTitle',trans('Create Sales Voucher'))
 @section('pageSubTitle',trans('Create'))
 
 @section('content')
@@ -8,22 +8,14 @@
     <div class="row match-height">
         <div class="col-12">
             <div class="card">
-                <h4 class="card-title text-center">{{__('Customer Voucher Entry')}}</h4>
+                <h4 class="card-title text-center">{{__('Sales Voucher Entry')}}</h4>
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form" enctype="multipart/form-data" method="post" action="{{route(currentUser().'.cusVoucher.store')}}">
+                        <form class="form" enctype="multipart/form-data" method="post" action="{{route(currentUser().'.sales_voucher.store')}}">
                             @csrf
                             <div class="row">
                                 
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="form-group">
-                                        <label for="countryName">{{__('Voucher No')}}</label>
-                                        <input type="text" id="voucher_no" class="form-control" value="" name="voucher_no" readonly>
-                                        @if($errors->has('countryName'))
-                                            <span class="text-danger"> {{ $errors->first('countryName') }}</span>
-                                        @endif
-                                    </div>
-                                </div>
+                                <input type="hidden" id="voucher_no" class="form-control" value="" name="voucher_no" readonly>
                             
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="form-group">
@@ -36,36 +28,18 @@
                                 </div>
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="form-group">
-                                        <label for="name">{{__('Name')}}</label>
+                                        <label for="name">{{__('Pay by name')}}</label>
                                         <input type="text" id="pay_name" class="form-control" value="{{ old('pay_name')}}" name="pay_name">
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="form-group">
-                                        <label for="Purpose">{{__('Purpose')}}</label>
+                                        <label for="Purpose">{{__('Purpose Note')}}</label>
                                         <input type="text" id="purpose" class="form-control" value="{{ old('purpose')}}" name="purpose">
                                     </div>
                                 </div>
+                    
                                 <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="form-group">
-                                        <label for="lc">{{__('Lc Number')}}</label>
-                                        <input type="text" class="form-control" value="{{ old('lc_no')}}" name="lc_no" required>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="form-group">
-                                        <label for="customer">{{__('Customer')}}</label>
-                                        <select name="customer_id" class="form-control select" required>
-                                            <option value="">Select</option>
-                                            @forelse (App\Models\Customers\Customer::all(); as $d)
-                                                <option value="{{$d->id}}">{{$d->customer_name}}</option>
-                                            @empty
-                                                <option value="">No Data Found</option>
-                                            @endforelse
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <label for="Category">{{__('Received Account')}}</label>
                                         <select  class="form-control form-select" name="credit">
@@ -87,7 +61,8 @@
                                             <th>{{__('SN#')}}</th>
                                             <th>{{__('A/C Head')}}</th>
                                             <th>{{__('Amount')}}</th>
-                                            <th>{{__('Remarks')}}</th>
+                                            <th>{{__('LC No')}}</th>
+                                            <th>{{__('Customer')}}</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -119,7 +94,22 @@
                                             <td style='text-align:left;'>
                                                 <input type='text' name='debit[]' class='cls_debit form-control' value='' style='text-align:center; border:none;' maxlength='15' onkeyup='removeChar(this)' onBlur='return debit_entry(this);' autocomplete="off"/> 
                                             </td>
-                                            <td style='text-align:left;'><input type='text' class=" form-control" name='remarks[]' value='' maxlength='50' style='text-align:left;border:none;' /></td>
+                                            <td style='text-align:left;'>
+                                                <input type='text' class=" form-control" name='lc_no[]' value='' maxlength='50' style='text-align:left;border:none;' />
+                                            </td>
+                                            <td style='text-align:left;'>
+                                                <input type='hidden' name='expense_id[]' value=''>
+                                                <select name="customer_id[]" class="form-control select" required onchange="addTextCustomer(this)">
+                                                    <option value="">Select</option>
+                                                    @forelse (App\Models\Customers\Customer::all(); as $d)
+                                                        <option value="{{$d->id}}">{{$d->customer_name}} ({{$d->contact}})</option>
+                                                    @empty
+                                                        <option value="">No Data Found</option>
+                                                    @endforelse
+                                                </select>
+                                                    <input type='hidden' class="customer_name" style='text-align:center; border:none;' name='customer_name[]' value=''/>
+                                                    
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -188,6 +178,9 @@
 
 @push('scripts')
 <script>
+    function addTextCustomer(e){
+        $(e).parent('td').find('.customer_name').val($(e).find(':selected').text());
+    }
 	function add_row(){
 
 		var row="<tr>\
@@ -205,7 +198,19 @@
 					<td style='text-align:left;'>\
 						<input type='text' name='debit[]' class='cls_debit form-control' value='' style='text-align:center; border:none;' maxlength='15' onkeyup='removeChar(this)' onBlur='return debit_entry(this);' autocomplete='off'/> \
 					</td>\
-					<td style='text-align:left;'><input type='text' name='remarks[]' value='' class=' form-control' maxlength='50' style='text-align:left;border:none;' /></td>\
+					<td style='text-align:left;'><input type='text' name='lc_no[]' value='' class=' form-control' maxlength='50' style='text-align:left;border:none;' /></td>\
+                    <td style='text-align:left;'>\
+                        <input type='hidden' name='expense_id[]' value=''>\
+                        <select name='customer_id[]' class='form-control select' required onchange='addTextSupplier(this)'>\
+                            <option value=''>Select</option>\
+                            @forelse (App\Models\Customers\Customer::all(); as $d) \
+                                <option value='{{$d->id}}'>{{$d->customer_name}} ({{$d->contact}})</option>\
+                            @empty \
+                                <option value=''>No Data Found</option>\
+                            @endforelse \
+                        </select>\
+                            <input type='hidden' class='customer_name' style='text-align:center; border:none;' name='customer_name[]' value=''/>\
+                    </td>\
 				</tr>";
 		$('#account tbody').append(row);
 	}

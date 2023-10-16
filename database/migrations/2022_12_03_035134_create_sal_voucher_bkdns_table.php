@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('sal_voucher_bkdns', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
-            $table->unsignedBigInteger('sales_vouchers_id');
+            $table->unsignedBigInteger('sales_voucher_id');
             $table->unsignedBigInteger('customer_id')->nullable()->index()->foreign()->references('id')->on('customers')->onDelete('cascade');
             $table->string('lc_no')->nullable();
             $table->string('particulars')->nullable();

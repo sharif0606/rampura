@@ -68,7 +68,8 @@
                                                 <th>{{__('SN#')}}</th>
                                                 <th>{{__('A/C Head')}}</th>
                                                 <th>{{__('Amount')}}</th>
-                                                <th>{{__('Remarks')}}</th>
+                                                <th>{{__('Lc no')}}</th>
+                                                <th>{{__('Supplier')}}</th>
                                             </tr>
                                         </thead>
                                         <tfoot>

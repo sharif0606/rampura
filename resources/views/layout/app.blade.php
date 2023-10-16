@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD | @yield('siteTitle', 'POS')</title>
+    <title>Mukto Holesaler | @yield('siteTitle', 'POS')</title>
     
 <link rel="stylesheet" href="{{ asset('assets/css/main/app.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/main/style.css') }}">
@@ -24,8 +24,7 @@
     }
 </style>
 @stack('styles')
-<script
-  src="https://code.jquery.com/jquery-3.6.1.min.js"
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
   integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
   crossorigin="anonymous"></script>
 </head>
