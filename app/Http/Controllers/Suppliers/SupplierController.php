@@ -14,7 +14,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Supplier\AddNewRequest;
 use App\Http\Requests\Supplier\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
+use App\Models\Accounts\Child_two;
 use Exception;
+use Carbon\Carbon;
 
 class SupplierController extends Controller
 {
@@ -75,11 +77,17 @@ class SupplierController extends Controller
             $sup->address= $request->address;
             $sup->branch_id= $request->branch_id;
             $sup->company_id=company()['company_id'];
-            //$sup->branch_id?branch()['branch_id']:null;
-           
-            if($sup->save())
+            if($sup->save()){
+                $ach = new Child_two;
+                $ach->child_one_id=3;
+                $ach->company_id=company()['company_id'];
+                $ach->head_name=$request->supplierName;
+                $ach->head_code = 2;
+                $ach->opening_balance =0;
+                $ach->save();
+            
                 return redirect()->route(currentUser().'.supplier.index')->with($this->resMessageHtml(true,null,'Successfully created'));
-            else
+            }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
             // dd($e);
