@@ -82,7 +82,7 @@ class SupplierController extends Controller
                 $ach->child_one_id=3;
                 $ach->company_id=company()['company_id'];
                 $ach->head_name=$request->supplierName;
-                $ach->head_code = 2;
+                $ach->head_code = 2130;
                 $ach->opening_balance =0;
                 $ach->save();
             
