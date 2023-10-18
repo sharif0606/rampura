@@ -59,8 +59,8 @@
                                 </div>
                             </form>
                             <form method="get" action="{{route(currentUser().'.purchase_voucher.create')}}">
-                                <button type="submit" class="btn btn-primary mb-1 float-end">Create Voucher</button>
                                 <div class="tbl_scroll">
+                                    <button type="submit" class="btn btn-primary mb-1 float-end">Create Voucher</button>
                                     <table class="table mb-5">
                                         <thead>
                                             <tr class="bg-primary text-white text-center">
