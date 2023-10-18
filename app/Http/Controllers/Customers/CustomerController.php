@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Customer\AddNewRequest;
 use App\Http\Requests\Customer\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
+use App\Models\Accounts\Child_two;
 use Exception;
 
 class CustomerController extends Controller
@@ -75,10 +76,16 @@ class CustomerController extends Controller
             $cus->address= $request->address;
             $cus->company_id=company()['company_id'];
             $cus->branch_id?branch()['branch_id']:null;
-           
-            if($cus->save())
+            if($cus->save()){
+                $ach = new Child_two;
+                $ach->child_one_id=3;
+                $ach->company_id=company()['company_id'];
+                $ach->head_name= $request->customerName;
+                $ach->head_code = '1130'.$cus->id;
+                $ach->opening_balance =0;
+                $ach->save();
                 return redirect()->route(currentUser().'.customer.index')->with($this->resMessageHtml(true,null,'Successfully created'));
-            else
+            }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
             // dd($e);
@@ -139,10 +146,26 @@ class CustomerController extends Controller
             $sup->post_code= $request->postCode;
             $sup->post_code= $request->postCode;
             $sup->address= $request->address;
-           
-            if($sup->save())
-                return redirect()->route(currentUser().'.customer.index')->with($this->resMessageHtml(true,null,'Successfully created'));
-            else
+            if($sup->save()){
+                $ach = Child_two::where('head_code', '1130' . $sup->id)->first();
+                if($ach){
+                    $ach->child_one_id=3;
+                    $ach->company_id=company()['company_id'];
+                    $ach->head_name= $request->customerName;
+                    $ach->head_code = '1130'.$sup->id;
+                    $ach->opening_balance =0;
+                    $ach->save();
+                }else{
+                    $ach = new Child_two;
+                    $ach->child_one_id=3;
+                    $ach->company_id=company()['company_id'];
+                    $ach->head_name= $request->customerName;
+                    $ach->head_code = '1130'.$sup->id;
+                    $ach->opening_balance =0;
+                    $ach->save();
+                }
+                return redirect()->route(currentUser().'.customer.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));
+            }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
             //dd($e);

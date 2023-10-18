@@ -67,6 +67,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="my-3">
+                        {!! $suppliers->links()!!}
+                    </div>
                 </div>
             </div>
         </div>

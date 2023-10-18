@@ -79,7 +79,7 @@ class SupplierController extends Controller
             $sup->company_id=company()['company_id'];
             if($sup->save()){
                 $ach = new Child_two;
-                $ach->child_one_id=3;
+                $ach->child_one_id=4;
                 $ach->company_id=company()['company_id'];
                 $ach->head_name=$request->supplierName;
                 $ach->head_code = '2130'.$sup->id;
@@ -148,14 +148,29 @@ class SupplierController extends Controller
             $sup->post_code= $request->postCode;
             $sup->post_code= $request->postCode;
             $sup->address= $request->address;
-            $sup->branch_id= $request->branch_id;
-           
-            if($sup->save())
+            if($sup->save()){
+                $ach = Child_two::where('head_code', '2130' . $sup->id)->first();
+                if($ach){
+                    $ach->child_one_id=4;
+                    $ach->company_id=company()['company_id'];
+                    $ach->head_name=$request->supplierName;
+                    $ach->head_code = '2130'.$sup->id;
+                    $ach->opening_balance =0;
+                    $ach->save();
+                }else{
+                    $ach = new Child_two;
+                    $ach->child_one_id=4;
+                    $ach->company_id=company()['company_id'];
+                    $ach->head_name=$request->supplierName;
+                    $ach->head_code = '2130'.$sup->id;
+                    $ach->opening_balance =0;
+                    $ach->save();
+                }
                 return redirect()->route(currentUser().'.supplier.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));
-            else
+            }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
-            //dd($e);
+            // dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }
