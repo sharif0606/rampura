@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     
-                                    <select required class="form-control form-select" name="customerName" id="customerName">
+                                    <select required class="form-control form-select" name="customerName" id="customerName" onchange="get_customer()">
                                         <option value="">Select Customer</option>
                                         @forelse($customers as $d)
                                             <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('customerName',$sales->customer_id)==$d->id?"selected":""}}> {{ $d->customer_name}}</option>
@@ -63,6 +63,7 @@
                                             <option value="">No Data found</option>
                                         @endforelse
                                     </select>
+                                    <input type="text" name="customer_r_name" id="customer_r_name" value="">
                                 </div>
                                 
                                 @if($errors->has('customerName'))
@@ -157,7 +158,7 @@
                                                 <th class="tbl_expense">Expense Head</th>
                                                 <th class="tbl_expense">Lc Number</th>
                                                 <th class="tbl_expense">Sign</th>
-                                                <th colspan="2" class="tbl_expense">Cost Amount</th>
+                                                <th colspan="2" class="tbl_expense">Amount</th>
                                             </tr>
                                             @forelse ($expense as $item)
                                                 <tr class="tbl_expense">
@@ -332,7 +333,10 @@
 </script>
 
 <script>
-
+function get_customer(){
+    $('#customer_r_name').val($("#customerName").find('option:selected').text())
+}
+get_customer()
 $(function() {
     total_expense(); // call this to get subtotal
     $("#item_search").bind("paste", function(e){

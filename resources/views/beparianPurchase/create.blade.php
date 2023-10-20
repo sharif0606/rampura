@@ -175,7 +175,7 @@
                                     <label for="" class="form-group"><h5 class="perKgCost">0.00</h5></label>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row d-none">
                                 <div class="col-lg-12 col-sm-12 col-md-12">
                                     <div><h5>Payment:</h5></div>
                                     <table class="tbl_expense" style="width:100%;">

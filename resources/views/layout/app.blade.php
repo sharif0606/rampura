@@ -124,7 +124,7 @@
 <script src="{{ asset('/assets/js/pages/form-element-select.js')}}"></script>
 <script>
     $(function() {
-        $("#datepicker").datepicker();
+        $("#datepicker").datepicker({ dateFormat: "dd-mm-yy" }).val()
     });
 </script>
 {{-- //nav active code --}}
