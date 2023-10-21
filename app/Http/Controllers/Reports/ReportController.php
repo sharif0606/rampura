@@ -259,7 +259,9 @@ class ReportController extends Controller
         $purExpense = ExpenseOfPurchase::where('lot_no',$lotNumber)->where(company())->where('status',0)->get();
         $salExpense = ExpenseOfSales::where('lot_no',$lotNumber)->where(company())->where('status',0)->get();
         
-        return view('reports.srotaView', compact('purchase', 'sales','purExpense','salExpense'));
+       
+        
+        return view('reports.srotaView', compact('purchase', 'sales','purExpense','salExpense','lotNumber'));
     }
     // public function srotaView(Request $request)
     // {

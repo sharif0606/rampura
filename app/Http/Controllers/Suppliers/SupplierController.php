@@ -83,9 +83,11 @@ class SupplierController extends Controller
                 $ach->company_id=company()['company_id'];
                 $ach->head_name=$request->supplierName;
                 $ach->head_code = '2130'.$sup->id;
-                $ach->opening_balance =0;
+                $ach->opening_balance =$request->openingAmount;
                 $ach->save();
-            
+
+                $sup->account_id= $ach->id;
+                $sup->save();
                 return redirect()->route(currentUser().'.supplier.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
@@ -155,7 +157,7 @@ class SupplierController extends Controller
                     $ach->company_id=company()['company_id'];
                     $ach->head_name=$request->supplierName;
                     $ach->head_code = '2130'.$sup->id;
-                    $ach->opening_balance =0;
+                    $ach->opening_balance =$request->openingAmount;
                     $ach->save();
                 }else{
                     $ach = new Child_two;
@@ -163,9 +165,11 @@ class SupplierController extends Controller
                     $ach->company_id=company()['company_id'];
                     $ach->head_name=$request->supplierName;
                     $ach->head_code = '2130'.$sup->id;
-                    $ach->opening_balance =0;
+                    $ach->opening_balance =$request->openingAmount;
                     $ach->save();
                 }
+                $sup->account_id= $ach->id;
+                $sup->save();
                 return redirect()->route(currentUser().'.supplier.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));

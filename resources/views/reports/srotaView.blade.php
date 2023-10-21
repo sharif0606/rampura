@@ -54,53 +54,53 @@
         }
        
         .btn {
-    --bs-btn-padding-x: 0.75rem;
-    --bs-btn-padding-y: 0.375rem;
-    --bs-btn-font-family: ;
-    --bs-btn-font-size: 1rem;
-    --bs-btn-font-weight: 400;
-    --bs-btn-line-height: 1.5;
-    --bs-btn-color: #607080;
-    --bs-btn-bg: transparent;
-    --bs-btn-border-width: 1px;
-    --bs-btn-border-color: transparent;
-    --bs-btn-border-radius: 0.25rem;
-    --bs-btn-box-shadow: inset 0 1px 0 hsla(0,0%,100%,.15),0 1px 1px rgba(0,0,0,.075);
-    --bs-btn-disabled-opacity: 0.65;
-    --bs-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb),.5);
-    background-color: var(--bs-btn-bg);
-    border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
-    border-radius: var(--bs-btn-border-radius);
-    color: var(--bs-btn-color);
-    cursor: pointer;
-    display: inline-block;
-    font-family: var(--bs-btn-font-family);
-    font-size: var(--bs-btn-font-size);
-    font-weight: var(--bs-btn-font-weight);
-    line-height: var(--bs-btn-line-height);
-    padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
-    text-align: center;
-    text-decoration: none;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-    vertical-align: middle;
-    --bs-btn-color: #fff;
-    --bs-btn-bg: #435ebe;
-    --bs-btn-border-color: #435ebe;
-    --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #3950a2;
-    --bs-btn-hover-border-color: #364b98;
-    --bs-btn-focus-shadow-rgb: 95,118,200;
-    --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #364b98;
-    --bs-btn-active-border-color: #32478f;
-    --bs-btn-active-shadow: inset 0 3px 5px rgba(0,0,0,.125);
-    --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: #435ebe;
-    --bs-btn-disabled-border-color: #435ebe;
-}
+            --bs-btn-padding-x: 0.75rem;
+            --bs-btn-padding-y: 0.375rem;
+            --bs-btn-font-family: ;
+            --bs-btn-font-size: 1rem;
+            --bs-btn-font-weight: 400;
+            --bs-btn-line-height: 1.5;
+            --bs-btn-color: #607080;
+            --bs-btn-bg: transparent;
+            --bs-btn-border-width: 1px;
+            --bs-btn-border-color: transparent;
+            --bs-btn-border-radius: 0.25rem;
+            --bs-btn-box-shadow: inset 0 1px 0 hsla(0,0%,100%,.15),0 1px 1px rgba(0,0,0,.075);
+            --bs-btn-disabled-opacity: 0.65;
+            --bs-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb),.5);
+            background-color: var(--bs-btn-bg);
+            border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
+            border-radius: var(--bs-btn-border-radius);
+            color: var(--bs-btn-color);
+            cursor: pointer;
+            display: inline-block;
+            font-family: var(--bs-btn-font-family);
+            font-size: var(--bs-btn-font-size);
+            font-weight: var(--bs-btn-font-weight);
+            line-height: var(--bs-btn-line-height);
+            padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
+            text-align: center;
+            text-decoration: none;
+            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            vertical-align: middle;
+            --bs-btn-color: #fff;
+            --bs-btn-bg: #435ebe;
+            --bs-btn-border-color: #435ebe;
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: #3950a2;
+            --bs-btn-hover-border-color: #364b98;
+            --bs-btn-focus-shadow-rgb: 95,118,200;
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: #364b98;
+            --bs-btn-active-border-color: #32478f;
+            --bs-btn-active-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+            --bs-btn-disabled-color: #fff;
+            --bs-btn-disabled-bg: #435ebe;
+            --bs-btn-disabled-border-color: #435ebe;
+        }
     </style>
 </head>
 <body>
@@ -144,6 +144,7 @@
                     @php
                         $id = optional($purchase->first()->purchase)->id;
                         $supplier = optional($purchase->first()->purchase->supplier)->supplier_name;
+                        $account_id = optional($purchase->first()->purchase->supplier)->account_id;
                         $address = optional($purchase->first()->purchase->supplier)->address;
                     @endphp
                 @endif
@@ -151,6 +152,7 @@
                     @php
                         $id = optional($purchase->first()->beparian_purchase)->id;
                         $supplier = optional($purchase->first()->beparian_purchase->supplier)->supplier_name;
+                        $account_id = optional($purchase->first()->beparian_purchase->supplier)->account_id;
                         $address = optional($purchase->first()->beparian_purchase->supplier)->address;
                     @endphp
                 @endif
@@ -158,7 +160,14 @@
                     @php
                         $id = optional($purchase->first()->regular_purchase)->id;
                         $supplier = optional($purchase->first()->regular_purchase->supplier)->supplier_name;
+                        $account_id =optional($purchase->first()->regular_purchase->supplier)->account_id;
                         $address = optional($purchase->first()->regular_purchase->supplier)->address;
+                    @endphp
+                @endif
+                {{$account_id}}
+                @if($account_id)
+                    @php
+                        $purchasePayment=\App\Models\Vouchers\PurVoucherBkdns::where('lc_no',$lotNumber)->where('table_id',$account_id)->where('table_name','child_twos')->where(company())->get();
                     @endphp
                 @endif
                 <tr>
@@ -263,9 +272,9 @@
                                 @if($pur->beparian_purchase?->expense)
                                     @foreach ($pur->beparian_purchase?->expense as $ex)
                                         @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
-                                        @php
-                                            $conditional_pur_total_cost += $ex->cost_amount;
-                                        @endphp
+                                            @php
+                                                $conditional_pur_total_cost += $ex->cost_amount;
+                                            @endphp
                                         @endif
                                     @endforeach
                                 @endif
@@ -273,9 +282,9 @@
                                 @if($pur->regular_purchase?->expense)
                                     @foreach ($pur->regular_purchase?->expense as $ex)
                                         @if($ex->cost_amount != null && $ex->lot_no == $pur->lot_no)
-                                        @php
-                                            $conditional_pur_total_cost += $ex->cost_amount;
-                                        @endphp
+                                            @php
+                                                $conditional_pur_total_cost += $ex->cost_amount;
+                                            @endphp
                                         @endif
                                     @endforeach
                                 @endif
@@ -345,33 +354,7 @@
                                         @endforeach
                                     @endif
 
-                                    @if($pur->purchase?->payment)
-                                        @foreach ($pur->purchase?->payment as $pm)
-                                            @if($pm->lc_no != null && $pm->lc_no == $pur->lot_no)
-                                            @php
-                                                $totalPayment += $pm->amount;
-                                            @endphp
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                    @if($pur->beparian_purchase?->payment)
-                                        @foreach ($pur->beparian_purchase?->payment as $pm)
-                                            @if($pm->lc_no != null && $pm->lc_no == $pur->lot_no)
-                                            @php
-                                                $totalPayment += $pm->amount;
-                                            @endphp
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                    @if($pur->regular_purchase?->payment)
-                                        @foreach ($pur->regular_purchase?->payment as $pm)
-                                            @if($pm->lc_no != null && $pm->lc_no == $pur->lot_no)
-                                            @php
-                                                $totalPayment += $pm->amount;
-                                            @endphp
-                                            @endif
-                                        @endforeach
-                                    @endif
+                                    
                                     {{-- @if($pur->purchase?->grand_total)
                                     <tr>
                                         <th colspan="2" style="text-align: right;"><span style="border-top: double;">{{$pur->purchase?->grand_total}}</span></th>
@@ -394,6 +377,13 @@
                     </tr>
                     
                 </tbody>
+                @if($purchasePayment)
+                    @foreach ($purchasePayment as $pm)
+                        @php
+                            $totalPayment += $pm->debit;
+                        @endphp
+                    @endforeach
+                @endif          
                 <tfoot class="tbl_table">
                     <tr style="vertical-align: top;">
                         <th class="tbl_table_border_right">
@@ -465,7 +455,7 @@
                                     <th style="text-align: left;"><span style="color: green;">প্রাপ্য</span></th>
                                     <td style="text-align: right;">
                                         @php
-                                            $profit = $totalSalesAmount - $totalDue
+                                            $profit = $totalSalesAmount - $totalDue;
                                         @endphp
                                         <span style="color: green;">
                                             @if($subPurchaseAmount != 0)

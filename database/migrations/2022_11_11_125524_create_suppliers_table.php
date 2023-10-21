@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('tax_number')->nullable();
             $table->string('gst_number')->nullable();
-            $table->string('opening_balance')->nullable();
+            $table->decimal('opening_balance',10,2)->nullable();
+            $table->unsignedBigInteger('account_id')->nullable();
             $table->unsignedBigInteger('country_id')->nullable()->index();
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
             $table->unsignedBigInteger('division_id')->nullable()->index();
