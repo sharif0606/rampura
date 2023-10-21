@@ -110,7 +110,7 @@
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.bpurchase.index')}}">{{__('Beparian Purchase')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.rpurchase.index')}}">{{__('Regular Purchase')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.pur_pending_exp')}}">{{__('Pending Expense')}}</a></li>
-            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.pur_pending_pay')}}">{{__('Pending Payment')}}</a></li>
+            {{-- <li class="py-1 submenu-item"><a href="{{route(currentUser().'.pur_pending_pay')}}">{{__('Pending Payment')}}</a></li> --}}
 		</ul>   
     </li>
 
@@ -120,7 +120,7 @@
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sales.index')}}">{{__('List')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sales.create')}}">{{__('Add New')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sales_pending_exp')}}">{{__('Pending Expense')}}</a></li>
-            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sales_pending_pay')}}">{{__('Pending Payment')}}</a></li>
+            {{-- <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sales_pending_pay')}}">{{__('Pending Payment')}}</a></li> --}}
 		</ul>   
     </li>
 
