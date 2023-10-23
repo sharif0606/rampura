@@ -164,7 +164,7 @@
                         $address = optional($purchase->first()->regular_purchase->supplier)->address;
                     @endphp
                 @endif
-                {{$account_id}}
+                @php $purchasePayment=array(); @endphp
                 @if($account_id)
                     @php
                         $purchasePayment=\App\Models\Vouchers\PurVoucherBkdns::where('lc_no',$lotNumber)->where('table_id',$account_id)->where('table_name','child_twos')->where(company())->get();
