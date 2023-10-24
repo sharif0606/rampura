@@ -96,11 +96,9 @@
 											</td>
 											<td></td>
 										</tr>
-										<?php
-											foreach($accData as $acc){
-												if($acc->dr>0){ $balance+=$acc->dr;}
-												if($acc->cr>0){ $balance-=$acc->cr;}
-										?>
+										@foreach($accData as $acc)
+											@if($acc->dr>0)@php $balance+=$acc->dr; @endphp @endif
+											@if($acc->cr>0)@php $balance-=$acc->cr; @endphp @endif
 											<tr>
 												<td>{{date("d M, Y",strtotime($acc->rec_date))}}</td>
 												<td>{{date("d M, Y",strtotime($acc->created_at))}}</td>
@@ -111,7 +109,7 @@
 												<td>{{$balance>0?abs($balance)." DR":abs($balance)." CR"}}</td>
 												<td><a href="#"></a></td>
 											</tr>
-										<?php } ?>
+										@endforeach
 									@endif
 								</tbody>
 								<tfoot>

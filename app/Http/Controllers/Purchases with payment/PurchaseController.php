@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Purchases;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\Purchases\Regular_purchase;
+use App\Models\Purchases\Purchase;
 use App\Models\Accounts\Child_one;
 use App\Models\Accounts\Child_two;
+use App\Models\Vouchers\GeneralLedger;
 use App\Models\Expenses\ExpenseOfPurchase;
 use App\Models\Purchases\Purchase_details;
 use App\Models\Stock\Stock;
@@ -25,7 +26,7 @@ use Exception;
 use DB;
 use Carbon\Carbon;
 
-class RegularPurchaseController extends Controller
+class PurchaseController extends Controller
 {
     use ResponseTrait;
     /**
@@ -33,15 +34,16 @@ class RegularPurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function index()
     {
         if( currentUser()=='owner')
-            $purchases = Regular_purchase::where(company())->paginate(10);
+            $purchases = Purchase::where(company())->paginate(10);
         else
-            $purchases = Regular_purchase::where(company())->where(branch())->paginate(10);
+            $purchases = Purchase::where(company())->where(branch())->paginate(10);
             
         
-        return view('regularPurchase.index',compact('purchases'));
+        return view('purchase.index',compact('purchases'));
     }
 
     /**
@@ -90,52 +92,73 @@ class RegularPurchaseController extends Controller
             }
         }
         
-        return view('regularPurchase.create',compact('branches','suppliers','Warehouses','childTow','paymethod'));
+        return view('purchase.create',compact('branches','suppliers','Warehouses','childTow','paymethod'));
+        
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-
-     public function create_voucher_no(){
-		$voucher_no="";
-		$query = GeneralVoucher::latest()->first();
-		if(!empty($query)){
-		    $voucher_no = $query->voucher_no;
-			$voucher_no+=1;
-			$gv=new GeneralVoucher;
-			$gv->voucher_no=$voucher_no;
-			if($gv->save())
-				return $voucher_no;
-			else
-				return $voucher_no="";
-		}else {
-			$voucher_no=10000001;
-			$gv=new GeneralVoucher;
-			$gv->voucher_no=$voucher_no;
-			if($gv->save())
-				return $voucher_no;
-			else
-				return $voucher_no="";
-		}
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function checkLcNo(Request $request)
     {
+        $lc = $request->input('lc_no');
+        $lcInterest = GeneralLedger::where('lc_no',$lc)->first();
+        return response()->json(['data' => $lcInterest]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function product_search(Request $request)
+    {
+        if($request->name){
+            $product=Product::select('id','product_name as value','bar_code as label')->where(company())->where(function($query) use ($request) {
+                        $query->where('product_name','like', '%' . $request->name . '%')->orWhere('bar_code','like', '%' . $request->name . '%');
+                        })->get();
+                      print_r(json_encode($product));  
+        }
+        
+    }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function product_search_data(Request $request)
+    {
+        if($request->item_id){
+            $product=Product::where(company())->where('id',$request->item_id)->first();
+            $data='<tr class="text-center">';
+            $data.='<td class="py-2 px-1">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'"></td>';
+            $data.='<td class="py-2 px-1"><input onBlur="Availability(this)" name="lot_no[]" type="text" class="form-control lot_no"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="brand[]" type="text" class="form-control brand"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" class="form-control qty_bag"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" class="form-control qty_kg"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" class="form-control less_qty_kg"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="actual_qty[]" readonly type="text" class="form-control actual_qty" value="0"></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value=""></td>';
+            
+            $data.='<td class="py-2 px-1"><input onkeyup="get_amount(this)" name="amount[]" type="text" class="form-control amount" value="0"></td>';
+            $data.='<td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>';
+            $data.='</tr>';
+            
+            print_r(json_encode($data));  
+        }
+        
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(AddNewRequest $request)
+    {
+       
         DB::beginTransaction();
         try{
-            $pur= new Regular_purchase;
+            $pur= new Purchase;
             $pur->supplier_id=$request->supplierName;
-            $pur->voucher_no='VR-'.Carbon::now()->format('m-y').'-'. str_pad((Regular_purchase::whereYear('created_at', Carbon::now()->year)->count() + 1),4,"0",STR_PAD_LEFT);
+            $pur->voucher_no='VR-'.Carbon::now()->format('m-y').'-'. str_pad((Purchase::whereYear('created_at', Carbon::now()->year)->count() + 1),4,"0",STR_PAD_LEFT);
             $pur->purchase_date = date('Y-m-d', strtotime($request->purchase_date));
             $pur->grand_total=$request->tgrandtotal;
             $pur->company_id=company()['company_id'];
@@ -148,7 +171,7 @@ class RegularPurchaseController extends Controller
                 if($request->child_two_id){
                     foreach($request->child_two_id as $j=>$child_two_id){
                         $ex = new ExpenseOfPurchase;
-                        $ex->regular_purchase_id=$pur->id;
+                        $ex->purchase_id=$pur->id;
                         $ex->company_id=company()['company_id'];
                         $ex->child_two_id=$child_two_id;
                         $ex->sign_for_calculate=$request->sign_for_calculate[$j];
@@ -161,9 +184,9 @@ class RegularPurchaseController extends Controller
                 if($request->product_id){
                     foreach($request->product_id as $i=>$product_id){
                         $pd=new Purchase_details;
-                        $pd->regular_purchase_id=$pur->id;
-                        $pd->product_id=$product_id;
                         $pd->company_id=company()['company_id'];
+                        $pd->purchase_id=$pur->id;
+                        $pd->product_id=$product_id;
                         $pd->lot_no=$request->lot_no[$i];
                         $pd->brand=$request->brand[$i];
                         $pd->quantity_bag=$request->qty_bag[$i];
@@ -174,7 +197,7 @@ class RegularPurchaseController extends Controller
                         $pd->amount=$request->amount[$i];
                         if($pd->save()){
                             $stock=new Stock;
-                            $stock->regular_purchase_id=$pur->id;
+                            $stock->purchase_id=$pur->id;
                             $stock->product_id=$product_id;
                             $stock->company_id=company()['company_id'];
                             $stock->branch_id=$request->branch_id;
@@ -192,11 +215,11 @@ class RegularPurchaseController extends Controller
                 }
                 if($request->total_pay_amount){
                     $payment=new SupplierPayment;
-                    $payment->regular_purchase_id = $pur->id;
+                    $payment->purchase_id = $pur->id;
                     $payment->company_id = company()['company_id'];
                     $payment->supplier_id = $request->supplierName;
                     $payment->purchase_date = date('Y-m-d', strtotime($request->purchase_date));
-                    $payment->regular_purchase_invoice = $pur->voucher_no;
+                    $payment->purchase_invoice = $pur->voucher_no;
                     $payment->total_amount = $request->total_pay_amount;
                     $payment->total_payment = $request->total_payment;
                     $payment->total_due = $request->total_due;
@@ -205,7 +228,7 @@ class RegularPurchaseController extends Controller
                         if($request->payment_head){
                             foreach($request->payment_head as $i=>$ph){
                                 $pay=new SupplierPaymentDetails;
-                                $pay->regular_purchase_id = $pur->id;
+                                $pay->purchase_id = $pur->id;
                                 $pay->company_id=company()['company_id'];
                                 $pay->supplier_payment_id=$payment->id;
                                 $pay->supplier_id=$request->supplierName;
@@ -223,7 +246,7 @@ class RegularPurchaseController extends Controller
                 }
                 DB::commit();
                 
-                return redirect()->route(currentUser().'.rpurchase.index')->with($this->resMessageHtml(true,null,'Successfully created'));
+                return redirect()->route(currentUser().'.purchase.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
@@ -236,21 +259,21 @@ class RegularPurchaseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Purchases\regular_purchase  $regular_purchase
+     * @param  \App\Models\Purchases\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $show_data= Regular_purchase::findOrFail(encryptor('decrypt',$id));
-        $purDetail= Purchase_details::where('regular_purchase_id',$show_data->id)->get();
-        $expense = ExpenseOfPurchase::where('beparian_purchase_id',$show_data->id)->get();
-        return view('regularPurchase.show',compact('show_data','purDetail','expense'));
+        $show_data= Purchase::findOrFail(encryptor('decrypt',$id));
+        $purDetail= Purchase_details::where('purchase_id',$show_data->id)->get();
+        $expense = ExpenseOfPurchase::where('purchase_id',$show_data->id)->get();
+        return view('purchase.show',compact('show_data','purDetail','expense'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Purchases\regular_purchase  $regular_purchase
+     * @param  \App\Models\Purchases\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -259,17 +282,19 @@ class RegularPurchaseController extends Controller
         if( currentUser()=='owner'){
             $suppliers = Supplier::where(company())->get();
             $Warehouses = Warehouse::where(company())->get();
+            $purchase = Purchase::findOrFail(encryptor('decrypt',$id));
+
+            $purchaseDetails = Purchase_details::where('purchase_id',$purchase->id)->get();
+            $childone = Child_one::where(company())->where('head_code',5310)->first();
+            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
+            // $expense = ExpenseOfPurchase::where('purchase_id',$purchase->id)->pluck('cost_amount','child_two_id');
+            $expense = ExpenseOfPurchase::where(company())->where('purchase_id',$purchase->id)->get();
+            $supplerPayment = SupplierPayment::where(company())->where('purchase_id',$purchase->id)->first();
+            $supplierPaymentDetails = SupplierPaymentDetails::where(company())->where('supplier_payment_id',$supplerPayment->id)->get();
         }else{
             $suppliers = Supplier::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
-            $purchase = Regular_purchase::findOrFail(encryptor('decrypt',$id));
-            $purchaseDetails = Purchase_details::where('regular_purchase_id',$purchase->id)->get();
-            $childone = Child_one::where(company())->where('head_code',5310)->first();
-            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
-            $expense = ExpenseOfPurchase::where('regular_purchase_id',$purchase->id)->get();
-            $supplerPayment = SupplierPayment::where(company())->where('regular_purchase_id',$purchase->id)->first();
-            $supplierPaymentDetails = SupplierPaymentDetails::where(company())->where('supplier_payment_id',$supplerPayment->id)->get();
 
         $paymethod=array();
         $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
@@ -299,21 +324,21 @@ class RegularPurchaseController extends Controller
             }
         }
         
-        return view('regularPurchase.edit',compact('branches','suppliers','Warehouses','purchase','purchaseDetails','childTow','expense','paymethod','supplerPayment','supplierPaymentDetails'));
+        return view('purchase.edit',compact('branches','suppliers','Warehouses','purchase','purchaseDetails','childTow','expense','paymethod','supplerPayment','supplierPaymentDetails'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Purchases\regular_purchase  $regular_purchase
+     * @param  \App\Models\Purchases\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         DB::beginTransaction();
         try{
-            $pur= Regular_purchase::findOrFail(encryptor('decrypt',$id));
+            $pur= Purchase::findOrFail(encryptor('decrypt',$id));
             $pur->supplier_id=$request->supplierName;
             $pur->purchase_date = date('Y-m-d', strtotime($request->purchase_date));
             $pur->grand_total=$request->tgrandtotal;
@@ -324,10 +349,10 @@ class RegularPurchaseController extends Controller
 
             if($pur->save()){
                 if($request->child_two_id){
-                    ExpenseOfPurchase::where('regular_purchase_id',$pur->id)->delete();
+                    ExpenseOfPurchase::where('purchase_id',$pur->id)->delete();
                     foreach($request->child_two_id as $j=>$child_two_id){
                         $ex = new ExpenseOfPurchase;
-                        $ex->regular_purchase_id=$pur->id;
+                        $ex->purchase_id=$pur->id;
                         $ex->company_id=company()['company_id'];
                         $ex->child_two_id=$child_two_id;
                         $ex->sign_for_calculate=$request->sign_for_calculate[$j];
@@ -338,12 +363,12 @@ class RegularPurchaseController extends Controller
                     }
                 }
                 if($request->product_id){
-                    Purchase_details::where('regular_purchase_id',$pur->id)->delete();
-                    Stock::where('regular_purchase_id',$pur->id)->delete();
+                    Purchase_details::where('purchase_id',$pur->id)->delete();
+                    Stock::where('purchase_id',$pur->id)->delete();
                     foreach($request->product_id as $i=>$product_id){
                         if($request->lot_no[$i]>0){
                             $pd=new Purchase_details;
-                            $pd->regular_purchase_id=$pur->id;
+                            $pd->purchase_id=$pur->id;
                             $pd->product_id=$product_id;
                             $pd->company_id=company()['company_id'];
                             $pd->lot_no=$request->lot_no[$i];
@@ -356,7 +381,7 @@ class RegularPurchaseController extends Controller
                             $pd->amount=$request->amount[$i];
                             if($pd->save()){
                                 $stock=new Stock;
-                                $stock->regular_purchase_id=$pur->id;
+                                $stock->purchase_id=$pur->id;
                                 $stock->product_id=$product_id;
                                 $stock->company_id=company()['company_id'];
                                 $stock->branch_id=$request->branch_id;
@@ -374,14 +399,14 @@ class RegularPurchaseController extends Controller
                     }
                 }
                 if($request->total_pay_amount){
-                    SupplierPayment::where('regular_purchase_id',$pur->id)->delete();
-                    SupplierPaymentDetails::where('regular_purchase_id',$pur->id)->delete();
+                    SupplierPayment::where('purchase_id',$pur->id)->delete();
+                    SupplierPaymentDetails::where('purchase_id',$pur->id)->delete();
                     $payment=new SupplierPayment;
-                    $payment->regular_purchase_id = $pur->id;
+                    $payment->purchase_id = $pur->id;
                     $payment->company_id = company()['company_id'];
                     $payment->supplier_id = $request->supplierName;
                     $payment->purchase_date = date('Y-m-d', strtotime($request->purchase_date));
-                    $payment->regular_purchase_invoice = $pur->voucher_no;
+                    $payment->purchase_invoice = $pur->voucher_no;
                     $payment->total_amount = $request->total_pay_amount;
                     $payment->total_payment = $request->total_payment;
                     $payment->total_due = $request->total_due;
@@ -390,7 +415,7 @@ class RegularPurchaseController extends Controller
                         if($request->payment_head){
                             foreach($request->payment_head as $i=>$ph){
                                 $pay=new SupplierPaymentDetails;
-                                $pay->regular_purchase_id = $pur->id;
+                                $pay->purchase_id = $pur->id;
                                 $pay->company_id=company()['company_id'];
                                 $pay->supplier_payment_id=$payment->id;
                                 $pay->supplier_id=$request->supplierName;
@@ -408,7 +433,7 @@ class RegularPurchaseController extends Controller
                 }
                 DB::commit();
                 
-                return redirect()->route(currentUser().'.rpurchase.index')->with($this->resMessageHtml(true,null,'Successfully Update'));
+                return redirect()->route(currentUser().'.purchase.index')->with($this->resMessageHtml(true,null,'Successfully Update'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
@@ -421,10 +446,10 @@ class RegularPurchaseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Purchases\regular_purchase  $regular_purchase
+     * @param  \App\Models\Purchases\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
-    public function destroy(regular_purchase $regular_purchase)
+    public function destroy(Purchase $purchase)
     {
         //
     }

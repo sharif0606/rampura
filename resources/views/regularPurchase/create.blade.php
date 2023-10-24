@@ -53,7 +53,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     
-                                    <select required class="form-control form-select" name="supplierName" id="supplierName">
+                                    <select required class="form-control form-select" name="supplierName" id="supplierName" onchange="$('#supplier_r_name').val($(this).find('option:selected').text())">
                                         <option value="">Select Supplier</option>
                                         @forelse($suppliers as $d)
                                             <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName')==$d->id?"selected":""}}> {{ $d->supplier_name}}</option>
@@ -61,6 +61,7 @@
                                             <option value="">No Supplier found</option>
                                         @endforelse
                                     </select>
+                                    <input type="hidden" name="supplier_r_name" id="supplier_r_name">
                                 </div>
                                 
                                 @if($errors->has('supplierName'))
@@ -136,7 +137,7 @@
                                                     <select name="child_two_id[]" class="form-select">
                                                         <option value="">select</option>
                                                         @forelse ($childTow as $ex)
-                                                            <option value="{{$ex->id}} {{old('child_two_id[]')==$ex->id?'selected':''}}">{{$ex->head_name}}</option>
+                                                            <option value="child_twos~{{$ex->id}}~{{$ex['head_name']}}~{{$ex['head_code']}}">{{$ex->head_name}}</option>
                                                         @empty
                                                             <option value="">No Data Found</option>
                                                         @endforelse
@@ -402,7 +403,7 @@ var row=`<tr class="tbl_expense">
                 <select required name="child_two_id[]" class="form-select">
                     <option value="">select</option>
                     @forelse ($childTow as $ex)
-                        <option value="{{$ex->id}} {{old('child_two_id[]')==$ex->id?'selected':''}}">{{$ex->head_name}}</option>
+                        <option value="child_twos~{{$ex->id}}~{{$ex['head_name']}}~{{$ex['head_code']}}">{{$ex->head_name}}</option>
                     @empty
                         <option value="">No Data Found</option>
                     @endforelse

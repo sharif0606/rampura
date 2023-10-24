@@ -119,7 +119,7 @@
         <ul class="submenu">
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sales.index')}}">{{__('List')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sales.create')}}">{{__('Add New')}}</a></li>
-            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sales_pending_exp')}}">{{__('Pending Expense')}}</a></li>
+            {{-- <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sales_pending_exp')}}">{{__('Pending Expense')}}</a></li> controller and view can be deleted --}} 
             {{-- <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sales_pending_pay')}}">{{__('Pending Payment')}}</a></li> --}}
 		</ul>   
     </li>

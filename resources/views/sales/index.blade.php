@@ -30,7 +30,7 @@
                                 <th scope="col">{{__('Branch')}}</th>
                                 <th scope="col">{{__('Warehouse')}}</th>
                                 <th scope="col">{{__('Status')}}</th>
-                                <th scope="col">{{__('Payment Status')}}</th>
+                                {{-- <th scope="col">{{__('Payment Status')}}</th> --}}
                                 <th class="white-space-nowrap">{{__('Action') }}</th>
                             </tr>
                         </thead>
@@ -44,7 +44,7 @@
                                 <td>{{$s->branch?->name}}</td>
                                 <td>{{$s->warehouse?->name}}</td>
                                 <td>{{$st[$s->status]}}</td>
-                                <td>{{$pst[$s->payment_status]}}</td>
+                                {{-- <td>{{$pst[$s->payment_status]}}</td> --}}
                                 <td class="white-space-nowrap">
                                     <a href="{{route(currentUser().'.sales.show',encryptor('encrypt',$s->id))}}">
                                         <i class="bi bi-eye-fill"></i>

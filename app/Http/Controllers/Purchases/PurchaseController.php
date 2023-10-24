@@ -22,6 +22,9 @@ use App\Http\Requests\Purchases\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
 use App\Models\Suppliers\SupplierPayment;
 use App\Models\Suppliers\SupplierPaymentDetails;
+use App\Models\Vouchers\PurchaseVoucher;
+use App\Models\Vouchers\PurVoucherBkdns;
+use App\Models\Vouchers\GeneralVoucher;
 use Exception;
 use DB;
 use Carbon\Carbon;
@@ -151,11 +154,43 @@ class PurchaseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+     public function create_voucher_no(){
+		$voucher_no="";
+		$query = GeneralVoucher::latest()->first();
+		if(!empty($query)){
+		    $voucher_no = $query->voucher_no;
+			$voucher_no+=1;
+			$gv=new GeneralVoucher;
+			$gv->voucher_no=$voucher_no;
+			if($gv->save())
+				return $voucher_no;
+			else
+				return $voucher_no="";
+		}else {
+			$voucher_no=10000001;
+			$gv=new GeneralVoucher;
+			$gv->voucher_no=$voucher_no;
+			if($gv->save())
+				return $voucher_no;
+			else
+				return $voucher_no="";
+		}
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(AddNewRequest $request)
     {
        
         DB::beginTransaction();
         try{
+            $lot_noa=array();// lot/ lc no wise all cost
+
             $pur= new Purchase;
             $pur->supplier_id=$request->supplierName;
             $pur->voucher_no='VR-'.Carbon::now()->format('m-y').'-'. str_pad((Purchase::whereYear('created_at', Carbon::now()->year)->count() + 1),4,"0",STR_PAD_LEFT);
@@ -168,19 +203,7 @@ class PurchaseController extends Controller
             $pur->payment_status=0;
             $pur->status=1;
             if($pur->save()){
-                if($request->child_two_id){
-                    foreach($request->child_two_id as $j=>$child_two_id){
-                        $ex = new ExpenseOfPurchase;
-                        $ex->purchase_id=$pur->id;
-                        $ex->company_id=company()['company_id'];
-                        $ex->child_two_id=$child_two_id;
-                        $ex->sign_for_calculate=$request->sign_for_calculate[$j];
-                        $ex->cost_amount=$request->cost_amount[$j];
-                        $ex->lot_no=$request->lc_no[$j];
-                        $ex->status= 0;
-                        $ex->save();
-                    }
-                }
+                
                 if($request->product_id){
                     foreach($request->product_id as $i=>$product_id){
                         $pd=new Purchase_details;
@@ -210,6 +233,34 @@ class PurchaseController extends Controller
                             $stock->quantity_bag=$pd->quantity_bag;
                             $stock->total_amount=$pd->amount;
                             $stock->save();
+                            
+                            //calculate lot/lc payment
+                            if(isset($lot_noa[$pd->lot_no])){
+                                $lot_noa[$pd->lot_no]= $lot_noa[$pd->lot_no] + $pd->amount;
+                            }else{
+                                $lot_noa[$pd->lot_no]=$pd->amount;
+                            }
+                        }
+                    }
+                }
+                if($request->child_two_id){
+                    foreach($request->child_two_id as $j=>$child_two_id){
+                        if($request->cost_amount[$j] > 0){
+                            $ex = new ExpenseOfPurchase;
+                            $ex->purchase_id=$pur->id;
+                            $ex->company_id=company()['company_id'];
+                            $ex->child_two_id=$child_two_id;
+                            $ex->sign_for_calculate=$request->sign_for_calculate[$j];
+                            $ex->cost_amount=$request->cost_amount[$j];
+                            $ex->lot_no=$request->lc_no[$j];
+                            $ex->status= 0;
+                            $ex->save();
+                            //calculate lot/lc payment
+                            if(isset($lot_noa[$request->lc_no[$j]])){
+                                $lot_noa[$request->lc_no[$j]]= $lot_noa[$request->lc_no[$j]] + $request->cost_amount[$j];
+                            }else{
+                                $lot_noa[$request->lc_no[$j]]=$request->cost_amount[$j];
+                            }
                         }
                     }
                 }
@@ -244,6 +295,138 @@ class PurchaseController extends Controller
                         }
                     }
                 }
+
+                /* hit to account voucher */
+                $vouchersIds=array();
+                /* create due voucher */
+                $voucher_no = $this->create_voucher_no();
+                if(!empty($voucher_no)){
+                    $jv=new PurchaseVoucher;
+                    $jv->voucher_no=$voucher_no;
+                    $jv->company_id =company()['company_id'];
+                    $jv->supplier=$request->supplier_r_name;
+                    $jv->lc_no=$request->lot_no?implode(', ',array_unique($request->lot_no)):"";
+                    $jv->current_date=date('Y-m-d', strtotime($request->purchase_date));
+                    $jv->pay_name=$request->supplier_r_name;
+                    $jv->purpose="Purchase Due";
+                    $jv->credit_sum=$request->tgrandtotal;
+                    $jv->debit_sum=$request->tgrandtotal;
+                    $jv->cheque_no="";
+                    $jv->bank="";
+                    $jv->cheque_dt="";
+                    $jv->created_by=currentUserId();
+                    if($request->has('slip')){
+                        $imageName= rand(111,999).time().'.'.$request->slip->extension();
+                        $request->slip->move(public_path('uploads/slip'), $imageName);
+                        $jv->slip=$imageName;
+                    }
+                    if($jv->save()){
+                        $vouchersIds[]=$jv->id;
+                        // debit side purchase
+                        foreach($request->product_id as $i=>$product_id){
+                            $jvb=new PurVoucherBkdns;
+                            $jvb->purchase_voucher_id=$jv->id;
+                            $jvb->supplier_id=$request->supplierName;
+                            $jvb->lc_no=$request->lot_no[$i]?$request->lot_no[$i]:"";
+
+                            $jvb->company_id =company()['company_id'];
+                            $jvb->particulars="Purchase";
+                            $jvb->account_code="Purchase-5330";
+                            $jvb->table_name="child_ones";
+                            $jvb->table_id="8";
+                            $jvb->debit=$request->amount[$i];
+                            if($jvb->save()){
+                                $table_name=$jvb->table_name;
+                                if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                $gl=new GeneralLedger;
+                                $gl->purchase_voucher_id=$jv->id;
+                                $gl->company_id =company()['company_id'];
+                                $gl->journal_title=$jvb->particulars;
+                                $gl->rec_date=$jv->current_date;
+                                $gl->jv_id=$voucher_no;
+                                $gl->purchase_voucher_bkdn_id=$jvb->id;
+                                $gl->created_by=currentUserId();
+                                $gl->dr=$jvb->debit;
+                                $gl->{$field_name}=$jvb->table_id;
+                                $gl->save();
+                            }
+                        }
+                        // debit side purchase expense
+                        if($request->child_two_id){
+                            foreach($request->child_two_id as $j=>$child_two_id){
+                                $jvb=new PurVoucherBkdns;
+                                $jvb->purchase_voucher_id=$jv->id;
+                                $jvb->supplier_id=$request->supplierName;
+                                $jvb->lc_no=$request->lc_no[$j]?$request->lc_no[$j]:"";
+
+                                $jvb->company_id =company()['company_id'];
+                                $jvb->particulars="Purchase Expense";
+                                $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
+                                $jvb->table_name=explode('~',$child_two_id)[0];
+                                $jvb->table_id=explode('~',$child_two_id)[1];
+                                $jvb->debit=$request->cost_amount[$j];
+                                if($jvb->save()){
+                                    $table_name=$jvb->table_name;
+                                    if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                    else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                    else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                    else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                    $gl=new GeneralLedger;
+                                    $gl->purchase_voucher_id=$jv->id;
+                                    $gl->company_id =company()['company_id'];
+                                    $gl->journal_title=$jvb->particulars;
+                                    $gl->rec_date=$jv->current_date;
+                                    $gl->jv_id=$voucher_no;
+                                    $gl->purchase_voucher_bkdn_id=$jvb->id;
+                                    $gl->created_by=currentUserId();
+                                    $gl->dr=$jvb->debit;
+                                    $gl->{$field_name}=$jvb->table_id;
+                                    $gl->save();
+                                }
+                            }
+                        }
+                        // credit side purchase
+                        $sup_head=Child_two::select('id')->where('head_code',"2130".$request->supplierName)->first()->toArray()['id'];
+                        foreach($lot_noa as $lc=>$amount){
+                            if($amount > 0){
+                                $jvb=new PurVoucherBkdns;
+                                $jvb->purchase_voucher_id=$jv->id;
+                                $jvb->supplier_id=$request->supplierName;
+                                $jvb->lc_no=$lc;
+                                $jvb->company_id =company()['company_id'];
+                                $jvb->particulars="Purchase due";
+                                $jvb->account_code=$request->supplier_r_name."-2130".$request->supplierName; //2=>head name 3=> head code
+                                $jvb->table_name="child_twos";
+                                $jvb->table_id=$sup_head;
+                                $jvb->credit=$amount;
+                                if($jvb->save()){
+                                    $table_name=$jvb->table_name;
+                                    if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                    else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                    else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                    else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                    $gl=new GeneralLedger;
+                                    $gl->purchase_voucher_id=$jv->id;
+                                    $gl->company_id =company()['company_id'];
+                                    $gl->journal_title=$jvb->particulars;
+                                    $gl->rec_date=$jv->current_date;
+                                    $gl->jv_id=$voucher_no;
+                                    $gl->purchase_voucher_bkdn_id=$jvb->id;
+                                    $gl->created_by=currentUserId();
+                                    $gl->cr=$jvb->credit;
+                                    $gl->{$field_name}=$jvb->table_id;
+                                    $gl->save();
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                Purchase::where('id', $pur->id)->update(['reference_no' =>implode(',',$vouchersIds)]);
+
                 DB::commit();
                 
                 return redirect()->route(currentUser().'.purchase.index')->with($this->resMessageHtml(true,null,'Successfully created'));
@@ -282,19 +465,20 @@ class PurchaseController extends Controller
         if( currentUser()=='owner'){
             $suppliers = Supplier::where(company())->get();
             $Warehouses = Warehouse::where(company())->get();
-            $purchase = Purchase::findOrFail(encryptor('decrypt',$id));
-
-            $purchaseDetails = Purchase_details::where('purchase_id',$purchase->id)->get();
-            $childone = Child_one::where(company())->where('head_code',5310)->first();
-            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
-            // $expense = ExpenseOfPurchase::where('purchase_id',$purchase->id)->pluck('cost_amount','child_two_id');
-            $expense = ExpenseOfPurchase::where(company())->where('purchase_id',$purchase->id)->get();
-            $supplerPayment = SupplierPayment::where(company())->where('purchase_id',$purchase->id)->first();
-            $supplierPaymentDetails = SupplierPaymentDetails::where(company())->where('supplier_payment_id',$supplerPayment->id)->get();
         }else{
             $suppliers = Supplier::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
+
+        $purchase = Purchase::findOrFail(encryptor('decrypt',$id));
+
+        $purchaseDetails = Purchase_details::where('purchase_id',$purchase->id)->get();
+        $childone = Child_one::where(company())->where('head_code',5310)->first();
+        $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
+        // $expense = ExpenseOfPurchase::where('purchase_id',$purchase->id)->pluck('cost_amount','child_two_id');
+        $expense = ExpenseOfPurchase::where(company())->where('purchase_id',$purchase->id)->get();
+        $supplerPayment = SupplierPayment::where(company())->where('purchase_id',$purchase->id)->first();
+        $supplierPaymentDetails = SupplierPaymentDetails::where(company())->where('supplier_payment_id',$supplerPayment->id)->get();
 
         $paymethod=array();
         $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();

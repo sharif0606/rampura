@@ -99,36 +99,6 @@ class RegularPurchaseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-     public function create_voucher_no(){
-		$voucher_no="";
-		$query = GeneralVoucher::latest()->first();
-		if(!empty($query)){
-		    $voucher_no = $query->voucher_no;
-			$voucher_no+=1;
-			$gv=new GeneralVoucher;
-			$gv->voucher_no=$voucher_no;
-			if($gv->save())
-				return $voucher_no;
-			else
-				return $voucher_no="";
-		}else {
-			$voucher_no=10000001;
-			$gv=new GeneralVoucher;
-			$gv->voucher_no=$voucher_no;
-			if($gv->save())
-				return $voucher_no;
-			else
-				return $voucher_no="";
-		}
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         DB::beginTransaction();

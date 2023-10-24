@@ -139,7 +139,7 @@
                                                     <select name="child_two_id[]" class="form-select">
                                                         <option value="">select</option>
                                                         @forelse ($childTow as $ex)
-                                                            <option value="{{$ex->id}} {{old('child_two_id[]')==$ex->id?'selected':''}}">{{$ex->head_name}}</option>
+                                                            <option value="child_twos~{{$ex->id}}~{{$ex['head_name']}}~{{$ex['head_code']}}">{{$ex->head_name}}</option>
                                                         @empty
                                                             <option value="">No Data Found</option>
                                                         @endforelse
@@ -336,7 +336,7 @@ function return_row_with_data(item_id){
     $("#item_search").addClass('ui-autocomplete-loader-center');
     let branch_id=$('#branch_id').val();
     let warehouse_id=$('#warehouse_id').val();
-console.log(item_id)
+
     $.ajax({
         autoFocus:true,
         url: "{{route(currentUser().'.sales.product_sc_d')}}",
@@ -405,12 +405,12 @@ function get_cal(e){
 //row reapeter
 function addRow(){
 
-var row=`<tr class="tbl_expense">
+    var row=`<tr class="tbl_expense">
             <td class="tbl_expense">
                 <select required name="child_two_id[]" class="form-select">
                     <option value="">select</option>
                     @forelse ($childTow as $ex)
-                        <option value="{{$ex->id}} {{old('child_two_id[]')==$ex->id?'selected':''}}">{{$ex->head_name}}</option>
+                        <option value="child_twos~{{$ex->id}}~{{$ex['head_name']}}~{{$ex['head_code']}}">{{$ex->head_name}}</option>
                     @empty
                         <option value="">No Data Found</option>
                     @endforelse

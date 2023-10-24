@@ -60,12 +60,13 @@ class SalesController extends Controller
         if( currentUser()=='owner'){
             $customers = Customer::where(company())->get();
             $Warehouses = Warehouse::where(company())->get();
-            $childone = Child_one::where(company())->where('head_code',5320)->first();
-            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
         }else{
             $customers = Customer::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
+
+        $childone = Child_one::where(company())->where('head_code',5320)->first();
+        $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
 
         $paymethod=array();
         $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
@@ -186,7 +187,10 @@ class SalesController extends Controller
 
         DB::beginTransaction();
         try{
-            $lot_noa=array();
+
+            $lot_noa=array();// lot/ lc no wise all cost
+            $customeranypayment=0;
+
             $pur= new Sales;
             $pur->customer_id=$request->customerName;
             $pur->voucher_no='VR-'.Carbon::now()->format('m-y').'-'. str_pad((Sales::whereYear('created_at', Carbon::now()->year)->count() + 1),4,"0",STR_PAD_LEFT);
@@ -200,26 +204,6 @@ class SalesController extends Controller
             $pur->payment_status=0;
             $pur->status=1;
             if($pur->save()){
-                if($request->child_two_id){
-                    foreach($request->child_two_id as $j=>$child_two_id){
-                        $ex = new ExpenseOfSales;
-                        $ex->company_id=company()['company_id'];
-                        $ex->sales_id=$pur->id;
-                        $ex->child_two_id=$child_two_id;
-                        $ex->sign_for_calculate=$request->sign_for_calculate[$j];
-                        $ex->cost_amount=$request->cost_amount[$j];
-                        $ex->lot_no=$request->lc_no[$j];
-                        $ex->status= 0;
-                        $ex->save();
-                         //calculate lot/lc payment
-                        if(isset($lot_noa[$request->lc_no[$j]])){
-                            $lot_noa[$request->lc_no[$j]]= $lot_noa[$request->lc_no[$j]] + $request->cost_amount[$j];
-                        }else{
-                            $lot_noa[$request->lc_no[$j]]=$request->cost_amount[$j];
-                        }
-                    }
-                }
-                
                 if($request->product_id){
                     foreach($request->product_id as $i=>$product_id){
                         $pd=new Sales_details;
@@ -259,7 +243,26 @@ class SalesController extends Controller
                         }
                     }
                 }
-               
+                if($request->child_two_id){
+                    foreach($request->child_two_id as $j=>$child_two_id){
+                        $ex = new ExpenseOfSales;
+                        $ex->company_id=company()['company_id'];
+                        $ex->sales_id=$pur->id;
+                        $ex->child_two_id=explode('~',$child_two_id)[1];
+                        $ex->sign_for_calculate=$request->sign_for_calculate[$j];
+                        $ex->cost_amount=$request->cost_amount[$j];
+                        $ex->lot_no=$request->lc_no[$j];
+                        $ex->status= 0;
+                        $ex->save();
+                         //calculate lot/lc payment
+                        if(isset($lot_noa[$request->lc_no[$j]])){
+                            $lot_noa[$request->lc_no[$j]]= $lot_noa[$request->lc_no[$j]] + $request->cost_amount[$j];
+                        }else{
+                            $lot_noa[$request->lc_no[$j]]=$request->cost_amount[$j];
+                        }
+                    }
+                }
+              
                 if($request->total_pay_amount){
                     $payment=new CustomerPayment;
                     $payment->sales_id = $pur->id;
@@ -274,28 +277,158 @@ class SalesController extends Controller
                     if($payment->save()){
                         if($request->payment_head){
                             foreach($request->payment_head as $i=>$ph){
-                                $pay=new CustomerPaymentDetails;
-                                $pay->sales_id = $pur->id;
-                                $pay->company_id=company()['company_id'];
-                                $pay->customer_payment_id=$payment->id;
-                                $pay->customer_id=$request->customerName;
-                                $pay->p_table_name=explode('~',$ph)[0];
-                                $pay->p_table_id=explode('~',$ph)[1];
-                                $pay->p_head_name=explode('~',$ph)[2];
-                                $pay->p_head_code=explode('~',$ph)[3];
-                                $pay->lc_no=$request->lc_no_payment[$i];
-                                $pay->amount=$request->pay_amount[$i];
-                                $pay->status=0;
-                                $pay->save();
-                                //calculate lot/lc payment
-                                if(isset($lot_noa[$pay->lc_no])){
-                                    $lot_noa[$pay->lc_no]= $lot_noa[$pay->lc_no] - $pay->amount;
+                                if($request->pay_amount[$i] > 0){
+                                    $customeranypayment=1;// check if full due or partial due 1= partial due or paid, 0 = full due
+                                    $pay=new CustomerPaymentDetails;
+                                    $pay->sales_id = $pur->id;
+                                    $pay->company_id=company()['company_id'];
+                                    $pay->customer_payment_id=$payment->id;
+                                    $pay->customer_id=$request->customerName;
+                                    $pay->p_table_name=explode('~',$ph)[0];
+                                    $pay->p_table_id=explode('~',$ph)[1];
+                                    $pay->p_head_name=explode('~',$ph)[2];
+                                    $pay->p_head_code=explode('~',$ph)[3];
+                                    $pay->lc_no=$request->lc_no_payment[$i];
+                                    $pay->amount=$request->pay_amount[$i];
+                                    $pay->status=0;
+                                    $pay->save();
                                 }
                             }
                         }
                     }
-                    
-                   /* hit to account voucher */
+                }
+                   
+                /* hit to account voucher */
+                $vouchersIds=array();
+                /* create due voucher */
+                $voucher_no = $this->create_voucher_no();
+                if(!empty($voucher_no)){
+                    $jv=new SalesVoucher;
+                    $jv->voucher_no=$voucher_no;
+                    $jv->company_id =company()['company_id'];
+                    $jv->customer=$request->customer_r_name;
+                    $jv->lc_no=$request->lot_no?implode(', ',array_unique($request->lot_no)):"";
+                    $jv->current_date=date('Y-m-d', strtotime($request->sales_date));
+                    $jv->pay_name=$request->customer_r_name;
+                    $jv->purpose="Sales Due";
+                    $jv->credit_sum=$request->total_pay_amount;
+                    $jv->debit_sum=$request->total_pay_amount;
+                    $jv->cheque_no="";
+                    $jv->bank="";
+                    $jv->cheque_dt="";
+                    $jv->created_by=currentUserId();
+                    if($request->has('slip')){
+                        $imageName= rand(111,999).time().'.'.$request->slip->extension();
+                        $request->slip->move(public_path('uploads/slip'), $imageName);
+                        $jv->slip=$imageName;
+                    }
+                    if($jv->save()){
+                        $vouchersIds[]=$jv->id;
+                        $customer_head=Child_two::select('id')->where('head_code',"1130".$request->customerName)->first()->toArray()['id'];
+                        foreach($lot_noa as $lc=>$amount){
+                            if($amount > 0){
+                                $jvb=new SalVoucherBkdns;
+                                $jvb->sales_voucher_id=$jv->id;
+                                $jvb->customer_id=$request->customerName;
+                                $jvb->lc_no=$lc;
+                                $jvb->company_id =company()['company_id'];
+                                $jvb->particulars="Sales due";
+                                $jvb->account_code=$request->customer_r_name."-1130".$request->customerName; //2=>head name 3=> head code
+                                $jvb->table_name="child_twos";
+                                $jvb->table_id=$customer_head;
+                                $jvb->debit=$amount;
+                                if($jvb->save()){
+                                    $table_name=$jvb->table_name;
+                                    if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                    else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                    else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                    else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                    $gl=new GeneralLedger;
+                                    $gl->sales_voucher_id=$jv->id;
+                                    $gl->company_id =company()['company_id'];
+                                    $gl->journal_title=$jvb->particulars;
+                                    $gl->rec_date=$jv->current_date;
+                                    $gl->jv_id=$voucher_no;
+                                    $gl->sales_voucher_bkdn_id=$jvb->id;
+                                    $gl->created_by=currentUserId();
+                                    $gl->dr=$jvb->debit;
+                                    $gl->{$field_name}=$jvb->table_id;
+                                    $gl->save();
+                                }
+                            }
+                        }
+                        // credit side sales
+                        foreach($request->product_id as $i=>$product_id){
+                            $jvb=new SalVoucherBkdns;
+                            $jvb->sales_voucher_id=$jv->id;
+                            
+                            $jvb->customer_id=$request->customerName;
+                            $jvb->lc_no=$request->lot_no[$i]?$request->lot_no[$i]:"";
+
+                            $jvb->company_id =company()['company_id'];
+                            $jvb->particulars="Sales";
+                            $jvb->account_code="Sales-4110";
+                            $jvb->table_name="child_ones";
+                            $jvb->table_id="7";
+                            $jvb->credit=$request->amount[$i];
+                            if($jvb->save()){
+                                $table_name=$jvb->table_name;
+                                if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                $gl=new GeneralLedger;
+                                $gl->sales_voucher_id=$jv->id;
+                                $gl->company_id =company()['company_id'];
+                                $gl->journal_title=$jvb->particulars;
+                                $gl->rec_date=$jv->current_date;
+                                $gl->jv_id=$voucher_no;
+                                $gl->sales_voucher_bkdn_id=$jvb->id;
+                                $gl->created_by=currentUserId();
+                                $gl->cr=$jvb->credit;
+                                $gl->{$field_name}=$jvb->table_id;
+                                $gl->save();
+                            }
+                        }
+                        // credit side sales expense
+                        if($request->child_two_id){
+                            foreach($request->child_two_id as $j=>$child_two_id){
+                                $jvb=new SalVoucherBkdns;
+                                $jvb->sales_voucher_id=$jv->id;
+                                
+                                $jvb->customer_id=$request->customerName;
+                                $jvb->lc_no=$request->lc_no[$j]?$request->lc_no[$j]:"";
+
+                                $jvb->company_id =company()['company_id'];
+                                $jvb->particulars="Sales Expense";
+                                $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
+                                $jvb->table_name=explode('~',$child_two_id)[0];
+                                $jvb->table_id=explode('~',$child_two_id)[1];
+                                $jvb->credit=$request->cost_amount[$j];
+                                if($jvb->save()){
+                                    $table_name=$jvb->table_name;
+                                    if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                    else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                    else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                    else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                    $gl=new GeneralLedger;
+                                    $gl->sales_voucher_id=$jv->id;
+                                    $gl->company_id =company()['company_id'];
+                                    $gl->journal_title=$jvb->particulars;
+                                    $gl->rec_date=$jv->current_date;
+                                    $gl->jv_id=$voucher_no;
+                                    $gl->sales_voucher_bkdn_id=$jvb->id;
+                                    $gl->created_by=currentUserId();
+                                    $gl->cr=$jvb->credit;
+                                    $gl->{$field_name}=$jvb->table_id;
+                                    $gl->save();
+                                }
+                            }
+                        }
+                    }
+                }
+                if($customeranypayment==1){
+                    /* create payment voucher */
                     $voucher_no = $this->create_voucher_no();
                     if(!empty($voucher_no)){
                         $jv=new SalesVoucher;
@@ -306,8 +439,8 @@ class SalesController extends Controller
                         $jv->current_date=date('Y-m-d', strtotime($request->sales_date));
                         $jv->pay_name=$request->customer_r_name;
                         $jv->purpose="Sales Payment";
-                        $jv->credit_sum=$request->total_pay_amount;
-                        $jv->debit_sum=$request->total_pay_amount;
+                        $jv->credit_sum=$request->total_payment;
+                        $jv->debit_sum=$request->total_payment;
                         $jv->cheque_no="";
                         $jv->bank="";
                         $jv->cheque_dt="";
@@ -318,10 +451,13 @@ class SalesController extends Controller
                             $jv->slip=$imageName;
                         }
                         if($jv->save()){
+                            $vouchersIds[]=$jv->id;
                             $payment_head=$request->payment_head;
+                            $customer_head=Child_two::select('id')->where('head_code',"1130".$request->customerName)->first()->toArray()['id'];
 
-                            if(sizeof($payment_head)>0){
-                                foreach($payment_head as $i=>$acccode){
+                            foreach($payment_head as $i=>$acccode){
+                                if($request->pay_amount[$i] > 0){
+                                    /* debit side */
                                     $jvb=new SalVoucherBkdns;
                                     $jvb->sales_voucher_id=$jv->id;
                                     $jvb->customer_id=$request->customerName;
@@ -350,84 +486,44 @@ class SalesController extends Controller
                                         $gl->{$field_name}=$jvb->table_id;
                                         $gl->save();
                                     }
-                                }
-                            }
-
-                            if($request->total_due > 0){
-                                $customer_head=Child_two::select('id')->where('head_code',"1130".$request->customerName)->first()->toArray()['id'];
-                                foreach($lot_noa as $lc=>$amount){
-                                    if($amount > 0){
-                                        $jvb=new SalVoucherBkdns;
-                                        $jvb->sales_voucher_id=$jv->id;
-                                        $jvb->customer_id=$request->customerName;
-                                        $jvb->lc_no=$lc;
-                                        $jvb->company_id =company()['company_id'];
-                                        $jvb->particulars="Sales Payment";
-                                        $jvb->account_code=$request->customer_r_name."-1130".$request->customerName; //2=>head name 3=> head code
-                                        $jvb->table_name="child_twos";
-                                        $jvb->table_id=$customer_head;
-                                        $jvb->debit=$amount;
-                                        if($jvb->save()){
-                                            $table_name=$jvb->table_name;
-                                            if($table_name=="master_accounts"){$field_name="master_account_id";}
-                                            else if($table_name=="sub_heads"){$field_name="sub_head_id";}
-                                            else if($table_name=="child_ones"){$field_name="child_one_id";}
-                                            else if($table_name=="child_twos"){$field_name="child_two_id";}
-                                            $gl=new GeneralLedger;
-                                            $gl->sales_voucher_id=$jv->id;
-                                            $gl->company_id =company()['company_id'];
-                                            $gl->journal_title=$jvb->particulars;
-                                            $gl->rec_date=$jv->current_date;
-                                            $gl->jv_id=$voucher_no;
-                                            $gl->sales_voucher_bkdn_id=$jvb->id;
-                                            $gl->created_by=currentUserId();
-                                            $gl->dr=$jvb->debit;
-                                            $gl->{$field_name}=$jvb->table_id;
-                                            $gl->save();
-                                        }
+                                    /* credit side */
+                                    $jvc=new SalVoucherBkdns;
+                                    $jvc->sales_voucher_id=$jv->id;
+                                    $jvc->customer_id=$request->customerName;
+                                    $jvc->lc_no=!empty($request->lc_no_payment[$i])?$request->lc_no_payment[$i]:0;
+                                    $jvc->company_id =company()['company_id'];
+                                    $jvc->particulars="Sales Payment";
+                                    $jvc->account_code=$request->customer_r_name."-1130".$request->customerName; //2=>head name 3=> head code
+                                    $jvc->table_name="child_twos";
+                                    $jvc->table_id=$customer_head;
+                                    $jvc->credit=$request->pay_amount[$i];
+                                    if($jvc->save()){
+                                        $table_name=$jvc->table_name;
+                                        if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                        else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                        else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                        else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                        $gl=new GeneralLedger;
+                                        $gl->sales_voucher_id=$jv->id;
+                                        $gl->company_id =company()['company_id'];
+                                        $gl->journal_title=$jvc->particulars;
+                                        $gl->rec_date=$jv->current_date;
+                                        $gl->jv_id=$voucher_no;
+                                        $gl->sales_voucher_bkdn_id=$jvc->id;
+                                        $gl->created_by=currentUserId();
+                                        $gl->cr=$jvc->credit;
+                                        $gl->{$field_name}=$jvc->table_id;
+                                        $gl->save();
                                     }
                                 }
                             }
-
-                           //credit side amount
-                                $jvb=new SalVoucherBkdns;
-                                $jvb->sales_voucher_id=$jv->id;
-                                
-                                $jvb->customer_id=$request->customerName;
-                                $jvb->lc_no=$request->lot_no?implode(',',$request->lot_no):"";
-        
-                                $jvb->company_id =company()['company_id'];
-                                $jvb->particulars="Sales";
-                                $jvb->account_code="Sales-4110";
-                                $jvb->table_name="child_ones";
-                                $jvb->table_id="7";
-                                $jvb->credit=$request->total_pay_amount;
-                                if($jvb->save()){
-                                    $table_name=$jvb->table_name;
-                                    if($table_name=="master_accounts"){$field_name="master_account_id";}
-                                    else if($table_name=="sub_heads"){$field_name="sub_head_id";}
-                                    else if($table_name=="child_ones"){$field_name="child_one_id";}
-                                    else if($table_name=="child_twos"){$field_name="child_two_id";}
-                                    $gl=new GeneralLedger;
-                                    $gl->sales_voucher_id=$jv->id;
-                                    $gl->company_id =company()['company_id'];
-                                    $gl->journal_title=$jvb->particulars;
-                                    $gl->rec_date=$jv->current_date;
-                                    $gl->jv_id=$voucher_no;
-                                    $gl->sales_voucher_bkdn_id=$jvb->id;
-                                    $gl->created_by=currentUserId();
-                                    $gl->cr=$jvb->credit;
-                                    $gl->{$field_name}=$jvb->table_id;
-                                    $gl->save();
-                                }
-                            
                             
                         }
-                        
-                        Sales::where('id', $pur->id)->update(['reference_no' => $jv->id]);
                     }
-
                 }
+                Sales::where('id', $pur->id)->update(['reference_no' =>implode(',',$vouchersIds)]);
+
+                
                 DB::commit();
                 return redirect()->route(currentUser().'.sales.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             }else
@@ -538,7 +634,9 @@ class SalesController extends Controller
     {
         DB::beginTransaction();
         try{
-            $lot_noa=array();
+            $lot_noa=array();// lot/ lc no wise all cost
+            $customeranypayment=0;
+
             $pur=  Sales::findOrFail(encryptor('decrypt',$id));
             $pur->customer_id=$request->customerName;
             $pur->sales_date=date('Y-m-d', strtotime($request->sales_date));
@@ -550,26 +648,7 @@ class SalesController extends Controller
             $pur->payment_status=0;
             $pur->status=1;
             if($pur->save()){
-                if($request->child_two_id){
-                    ExpenseOfSales::where('sales_id',$pur->id)->delete();
-                    foreach($request->child_two_id as $j=>$child_two_id){
-                        $ex = new ExpenseOfSales;
-                        $ex->company_id=company()['company_id'];
-                        $ex->sales_id=$pur->id;
-                        $ex->child_two_id=$child_two_id;
-                        $ex->sign_for_calculate=$request->sign_for_calculate[$j];
-                        $ex->cost_amount=$request->cost_amount[$j];
-                        $ex->lot_no=$request->lc_no[$j];
-                        $ex->status= 0;
-                        $ex->save();
-                        //calculate lot/lc payment
-                       if(isset($lot_noa[$request->lc_no[$j]])){
-                           $lot_noa[$request->lc_no[$j]]= $lot_noa[$request->lc_no[$j]] + $request->cost_amount[$j];
-                       }else{
-                           $lot_noa[$request->lc_no[$j]]=$request->cost_amount[$j];
-                       }
-                    }
-                }
+                
                 if($request->product_id){
                     Sales_details::where('sales_id',$pur->id)->delete();
                     Stock::where('sales_id',$pur->id)->delete();
@@ -613,6 +692,26 @@ class SalesController extends Controller
                         }
                     }
                 }
+                if($request->child_two_id){
+                    ExpenseOfSales::where('sales_id',$pur->id)->delete();
+                    foreach($request->child_two_id as $j=>$child_two_id){
+                        $ex = new ExpenseOfSales;
+                        $ex->company_id=company()['company_id'];
+                        $ex->sales_id=$pur->id;
+                        $ex->child_two_id=explode('~',$child_two_id)[1];
+                        $ex->sign_for_calculate=$request->sign_for_calculate[$j];
+                        $ex->cost_amount=$request->cost_amount[$j];
+                        $ex->lot_no=$request->lc_no[$j];
+                        $ex->status= 0;
+                        $ex->save();
+                        //calculate lot/lc payment
+                       if(isset($lot_noa[$request->lc_no[$j]])){
+                           $lot_noa[$request->lc_no[$j]]= $lot_noa[$request->lc_no[$j]] + $request->cost_amount[$j];
+                       }else{
+                           $lot_noa[$request->lc_no[$j]]=$request->cost_amount[$j];
+                       }
+                    }
+                }
                 if($request->total_pay_amount){
                     CustomerPayment::where('sales_id',$pur->id)->delete();
                     CustomerPaymentDetails::where('sales_id',$pur->id)->delete();
@@ -629,164 +728,254 @@ class SalesController extends Controller
                     if($payment->save()){
                         if($request->payment_head){
                             foreach($request->payment_head as $i=>$ph){
-                                $pay=new CustomerPaymentDetails;
-                                $pay->sales_id = $pur->id;
-                                $pay->company_id=company()['company_id'];
-                                $pay->customer_payment_id=$payment->id;
-                                $pay->customer_id=$request->customerName;
-                                $pay->p_table_name=explode('~',$ph)[0];
-                                $pay->p_table_id=explode('~',$ph)[1];
-                                $pay->p_head_name=explode('~',$ph)[2];
-                                $pay->p_head_code=explode('~',$ph)[3];
-                                $pay->lc_no=$request->lc_no_payment[$i];
-                                $pay->amount=$request->pay_amount[$i];
-                                $pay->status=0;
-                                $pay->save();
-
-                                
-                                //calculate lot/lc payment
-                                if(isset($lot_noa[$pay->lc_no])){
-                                    $lot_noa[$pay->lc_no]= $lot_noa[$pay->lc_no] - $pay->amount;
+                                if($request->pay_amount[$i] > 0){
+                                    $customeranypayment=1;// check if full due or partial due 1= partial due or paid, 0 = full due
+                                    $pay=new CustomerPaymentDetails;
+                                    $pay->sales_id = $pur->id;
+                                    $pay->company_id=company()['company_id'];
+                                    $pay->customer_payment_id=$payment->id;
+                                    $pay->customer_id=$request->customerName;
+                                    $pay->p_table_name=explode('~',$ph)[0];
+                                    $pay->p_table_id=explode('~',$ph)[1];
+                                    $pay->p_head_name=explode('~',$ph)[2];
+                                    $pay->p_head_code=explode('~',$ph)[3];
+                                    $pay->lc_no=$request->lc_no_payment[$i];
+                                    $pay->amount=$request->pay_amount[$i];
+                                    $pay->status=0;
+                                    $pay->save();
                                 }
                             }
                         }
                     }
                 }
+                $purrefArr=explode(',',$pur->reference_no);
+                SalesVoucher::whereIn('id',$purrefArr)->delete();
+                SalVoucherBkdns::whereIn('sales_voucher_id',$purrefArr)->delete();
+                GeneralLedger::whereIn('sales_voucher_id',$purrefArr)->delete();
+                /* hit to account voucher */
+                $vouchersIds=array();
+                /* create due voucher */
+                $voucher_no = $this->create_voucher_no();
+                if(!empty($voucher_no)){
+                    $jv=new SalesVoucher;
+                    $jv->voucher_no=$voucher_no;
+                    $jv->company_id =company()['company_id'];
+                    $jv->customer=$request->customer_r_name;
+                    $jv->lc_no=$request->lot_no?implode(', ',array_unique($request->lot_no)):"";
+                    $jv->current_date=date('Y-m-d', strtotime($request->sales_date));
+                    $jv->pay_name=$request->customer_r_name;
+                    $jv->purpose="Sales Due";
+                    $jv->credit_sum=$request->total_pay_amount;
+                    $jv->debit_sum=$request->total_pay_amount;
+                    $jv->cheque_no="";
+                    $jv->bank="";
+                    $jv->cheque_dt="";
+                    $jv->created_by=currentUserId();
+                    if($request->has('slip')){
+                        $imageName= rand(111,999).time().'.'.$request->slip->extension();
+                        $request->slip->move(public_path('uploads/slip'), $imageName);
+                        $jv->slip=$imageName;
+                    }
+                    if($jv->save()){
+                        $vouchersIds[]=$jv->id;
+                        $customer_head=Child_two::select('id')->where('head_code',"1130".$request->customerName)->first()->toArray()['id'];
+                        foreach($lot_noa as $lc=>$amount){
+                            if($amount > 0){
+                                $jvb=new SalVoucherBkdns;
+                                $jvb->sales_voucher_id=$jv->id;
+                                $jvb->customer_id=$request->customerName;
+                                $jvb->lc_no=$lc;
+                                $jvb->company_id =company()['company_id'];
+                                $jvb->particulars="Sales due";
+                                $jvb->account_code=$request->customer_r_name."-1130".$request->customerName; //2=>head name 3=> head code
+                                $jvb->table_name="child_twos";
+                                $jvb->table_id=$customer_head;
+                                $jvb->debit=$amount;
+                                if($jvb->save()){
+                                    $table_name=$jvb->table_name;
+                                    if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                    else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                    else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                    else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                    $gl=new GeneralLedger;
+                                    $gl->sales_voucher_id=$jv->id;
+                                    $gl->company_id =company()['company_id'];
+                                    $gl->journal_title=$jvb->particulars;
+                                    $gl->rec_date=$jv->current_date;
+                                    $gl->jv_id=$voucher_no;
+                                    $gl->sales_voucher_bkdn_id=$jvb->id;
+                                    $gl->created_by=currentUserId();
+                                    $gl->dr=$jvb->debit;
+                                    $gl->{$field_name}=$jvb->table_id;
+                                    $gl->save();
+                                }
+                            }
+                        }
+                        // credit side sales
+                        foreach($request->product_id as $i=>$product_id){
+                            $jvb=new SalVoucherBkdns;
+                            $jvb->sales_voucher_id=$jv->id;
+                            
+                            $jvb->customer_id=$request->customerName;
+                            $jvb->lc_no=$request->lot_no[$i]?$request->lot_no[$i]:"";
 
-                SalesVoucher::where('id',$pur->reference_no)->delete();
-                SalVoucherBkdns::where('sales_voucher_id',$pur->reference_no)->delete();
-                GeneralLedger::where('sales_voucher_id',$pur->reference_no)->delete();
-                 /* hit to account voucher */
-                 $voucher_no = $this->create_voucher_no();
-                 if(!empty($voucher_no)){
-                     $jv=new SalesVoucher;
-                     $jv->voucher_no=$voucher_no;
-                     $jv->company_id =company()['company_id'];
-                     $jv->customer=$request->customer_r_name;
-                     $jv->lc_no=$request->lc_no_payment?implode(', ',array_unique($request->lc_no_payment)):"";
-                     $jv->current_date=date('Y-m-d', strtotime($request->sales_date));
-                     $jv->pay_name=$request->customer_r_name;
-                     $jv->purpose="Sales Payment";
-                     $jv->credit_sum=$request->total_pay_amount;
-                     $jv->debit_sum=$request->total_pay_amount;
-                     $jv->cheque_no="";
-                     $jv->bank="";
-                     $jv->cheque_dt="";
-                     $jv->created_by=currentUserId();
-                     if($request->has('slip')){
-                         $imageName= rand(111,999).time().'.'.$request->slip->extension();
-                         $request->slip->move(public_path('uploads/slip'), $imageName);
-                         $jv->slip=$imageName;
-                     }
-                     if($jv->save()){
-                         $payment_head=$request->payment_head;
+                            $jvb->company_id =company()['company_id'];
+                            $jvb->particulars="Sales";
+                            $jvb->account_code="Sales-4110";
+                            $jvb->table_name="child_ones";
+                            $jvb->table_id="7";
+                            $jvb->credit=$request->amount[$i];
+                            if($jvb->save()){
+                                $table_name=$jvb->table_name;
+                                if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                $gl=new GeneralLedger;
+                                $gl->sales_voucher_id=$jv->id;
+                                $gl->company_id =company()['company_id'];
+                                $gl->journal_title=$jvb->particulars;
+                                $gl->rec_date=$jv->current_date;
+                                $gl->jv_id=$voucher_no;
+                                $gl->sales_voucher_bkdn_id=$jvb->id;
+                                $gl->created_by=currentUserId();
+                                $gl->cr=$jvb->credit;
+                                $gl->{$field_name}=$jvb->table_id;
+                                $gl->save();
+                            }
+                        }
+                        // credit side sales expense
+                        if($request->child_two_id){
+                            foreach($request->child_two_id as $j=>$child_two_id){
+                                $jvb=new SalVoucherBkdns;
+                                $jvb->sales_voucher_id=$jv->id;
+                                
+                                $jvb->customer_id=$request->customerName;
+                                $jvb->lc_no=$request->lc_no[$j]?$request->lc_no[$j]:"";
 
-                         if(sizeof($payment_head)>0){
-                             foreach($payment_head as $i=>$acccode){
-                                 $jvb=new SalVoucherBkdns;
-                                 $jvb->sales_voucher_id=$jv->id;
-                                 $jvb->customer_id=$request->customerName;
-                                 $jvb->lc_no=!empty($request->lc_no_payment[$i])?$request->lc_no_payment[$i]:0;
-                                 $jvb->company_id =company()['company_id'];
-                                 $jvb->particulars="Sales Payment";
-                                 $jvb->account_code=explode('~',$acccode)[2]."-".explode('~',$acccode)[3]; //2=>head name 3=> head code
-                                 $jvb->table_name=explode('~',$acccode)[0];
-                                 $jvb->table_id=explode('~',$acccode)[1];
-                                 $jvb->debit=$request->pay_amount[$i];
-                                 if($jvb->save()){
-                                     $table_name=$jvb->table_name;
-                                     if($table_name=="master_accounts"){$field_name="master_account_id";}
-                                     else if($table_name=="sub_heads"){$field_name="sub_head_id";}
-                                     else if($table_name=="child_ones"){$field_name="child_one_id";}
-                                     else if($table_name=="child_twos"){$field_name="child_two_id";}
-                                     $gl=new GeneralLedger;
-                                     $gl->sales_voucher_id=$jv->id;
-                                     $gl->company_id =company()['company_id'];
-                                     $gl->journal_title=$jvb->particulars;
-                                     $gl->rec_date=$jv->current_date;
-                                     $gl->jv_id=$voucher_no;
-                                     $gl->sales_voucher_bkdn_id=$jvb->id;
-                                     $gl->created_by=currentUserId();
-                                     $gl->dr=$jvb->debit;
-                                     $gl->{$field_name}=$jvb->table_id;
-                                     $gl->save();
-                                 }
-                             }
-                         }
+                                $jvb->company_id =company()['company_id'];
+                                $jvb->particulars="Sales Expense";
+                                $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
+                                $jvb->table_name=explode('~',$child_two_id)[0];
+                                $jvb->table_id=explode('~',$child_two_id)[1];
+                                $jvb->credit=$request->cost_amount[$j];
+                                if($jvb->save()){
+                                    $table_name=$jvb->table_name;
+                                    if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                    else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                    else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                    else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                    $gl=new GeneralLedger;
+                                    $gl->sales_voucher_id=$jv->id;
+                                    $gl->company_id =company()['company_id'];
+                                    $gl->journal_title=$jvb->particulars;
+                                    $gl->rec_date=$jv->current_date;
+                                    $gl->jv_id=$voucher_no;
+                                    $gl->sales_voucher_bkdn_id=$jvb->id;
+                                    $gl->created_by=currentUserId();
+                                    $gl->cr=$jvb->credit;
+                                    $gl->{$field_name}=$jvb->table_id;
+                                    $gl->save();
+                                }
+                            }
+                        }
+                    }
+                }
+                /* create payment voucher */
+                if($customeranypayment==1){
+                    $voucher_no = $this->create_voucher_no();
+                    if(!empty($voucher_no)){
+                        $jv=new SalesVoucher;
+                        $jv->voucher_no=$voucher_no;
+                        $jv->company_id =company()['company_id'];
+                        $jv->customer=$request->customer_r_name;
+                        $jv->lc_no=$request->lc_no_payment?implode(', ',array_unique($request->lc_no_payment)):"";
+                        $jv->current_date=date('Y-m-d', strtotime($request->sales_date));
+                        $jv->pay_name=$request->customer_r_name;
+                        $jv->purpose="Sales Payment";
+                        $jv->credit_sum=$request->total_payment;
+                        $jv->debit_sum=$request->total_payment;
+                        $jv->cheque_no="";
+                        $jv->bank="";
+                        $jv->cheque_dt="";
+                        $jv->created_by=currentUserId();
+                        if($request->has('slip')){
+                            $imageName= rand(111,999).time().'.'.$request->slip->extension();
+                            $request->slip->move(public_path('uploads/slip'), $imageName);
+                            $jv->slip=$imageName;
+                        }
+                        if($jv->save()){
+                            $vouchersIds[]=$jv->id;
+                            $payment_head=$request->payment_head;
+                            $customer_head=Child_two::select('id')->where('head_code',"1130".$request->customerName)->first()->toArray()['id'];
 
-                         if($request->total_due > 0){
-                             $customer_head=Child_two::select('id')->where('head_code',"1130".$request->customerName)->first()->toArray()['id'];
-                             foreach($lot_noa as $lc=>$amount){
-                                 if($amount > 0){
-                                     $jvb=new SalVoucherBkdns;
-                                     $jvb->sales_voucher_id=$jv->id;
-                                     $jvb->customer_id=$request->customerName;
-                                     $jvb->lc_no=$lc;
-                                     $jvb->company_id =company()['company_id'];
-                                     $jvb->particulars="Sales Payment";
-                                     $jvb->account_code=$request->customer_r_name."-1130".$request->customerName; //2=>head name 3=> head code
-                                     $jvb->table_name="child_twos";
-                                     $jvb->table_id=$customer_head;
-                                     $jvb->debit=$amount;
-                                     if($jvb->save()){
-                                         $table_name=$jvb->table_name;
-                                         if($table_name=="master_accounts"){$field_name="master_account_id";}
-                                         else if($table_name=="sub_heads"){$field_name="sub_head_id";}
-                                         else if($table_name=="child_ones"){$field_name="child_one_id";}
-                                         else if($table_name=="child_twos"){$field_name="child_two_id";}
-                                         $gl=new GeneralLedger;
-                                         $gl->sales_voucher_id=$jv->id;
-                                         $gl->company_id =company()['company_id'];
-                                         $gl->journal_title=$jvb->particulars;
-                                         $gl->rec_date=$jv->current_date;
-                                         $gl->jv_id=$voucher_no;
-                                         $gl->sales_voucher_bkdn_id=$jvb->id;
-                                         $gl->created_by=currentUserId();
-                                         $gl->dr=$jvb->debit;
-                                         $gl->{$field_name}=$jvb->table_id;
-                                         $gl->save();
-                                     }
-                                 }
-                             }
-                         }
-
-                        //credit side amount
-                             $jvb=new SalVoucherBkdns;
-                             $jvb->sales_voucher_id=$jv->id;
-                             
-                             $jvb->customer_id=$request->customerName;
-                             $jvb->lc_no=$request->lot_no?implode(',',$request->lot_no):"";
-     
-                             $jvb->company_id =company()['company_id'];
-                             $jvb->particulars="Sales";
-                             $jvb->account_code="Sales-4110";
-                             $jvb->table_name="child_ones";
-                             $jvb->table_id="7";
-                             $jvb->credit=$request->total_pay_amount;
-                             if($jvb->save()){
-                                 $table_name=$jvb->table_name;
-                                 if($table_name=="master_accounts"){$field_name="master_account_id";}
-                                 else if($table_name=="sub_heads"){$field_name="sub_head_id";}
-                                 else if($table_name=="child_ones"){$field_name="child_one_id";}
-                                 else if($table_name=="child_twos"){$field_name="child_two_id";}
-                                 $gl=new GeneralLedger;
-                                 $gl->sales_voucher_id=$jv->id;
-                                 $gl->company_id =company()['company_id'];
-                                 $gl->journal_title=$jvb->particulars;
-                                 $gl->rec_date=$jv->current_date;
-                                 $gl->jv_id=$voucher_no;
-                                 $gl->sales_voucher_bkdn_id=$jvb->id;
-                                 $gl->created_by=currentUserId();
-                                 $gl->cr=$jvb->credit;
-                                 $gl->{$field_name}=$jvb->table_id;
-                                 $gl->save();
-                             }
-                         
-                         
-                     }
-                     
-                     Sales::where('id', $pur->id)->update(['reference_no' => $jv->id]);
-                 }
+                            foreach($payment_head as $i=>$acccode){
+                                if($request->pay_amount[$i] > 0){
+                                    /* debit side */
+                                    $jvb=new SalVoucherBkdns;
+                                    $jvb->sales_voucher_id=$jv->id;
+                                    $jvb->customer_id=$request->customerName;
+                                    $jvb->lc_no=!empty($request->lc_no_payment[$i])?$request->lc_no_payment[$i]:0;
+                                    $jvb->company_id =company()['company_id'];
+                                    $jvb->particulars="Sales Payment";
+                                    $jvb->account_code=explode('~',$acccode)[2]."-".explode('~',$acccode)[3]; //2=>head name 3=> head code
+                                    $jvb->table_name=explode('~',$acccode)[0];
+                                    $jvb->table_id=explode('~',$acccode)[1];
+                                    $jvb->debit=$request->pay_amount[$i];
+                                    if($jvb->save()){
+                                        $table_name=$jvb->table_name;
+                                        if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                        else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                        else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                        else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                        $gl=new GeneralLedger;
+                                        $gl->sales_voucher_id=$jv->id;
+                                        $gl->company_id =company()['company_id'];
+                                        $gl->journal_title=$jvb->particulars;
+                                        $gl->rec_date=$jv->current_date;
+                                        $gl->jv_id=$voucher_no;
+                                        $gl->sales_voucher_bkdn_id=$jvb->id;
+                                        $gl->created_by=currentUserId();
+                                        $gl->dr=$jvb->debit;
+                                        $gl->{$field_name}=$jvb->table_id;
+                                        $gl->save();
+                                    }
+                                    /* credit side */
+                                    $jvc=new SalVoucherBkdns;
+                                    $jvc->sales_voucher_id=$jv->id;
+                                    $jvc->customer_id=$request->customerName;
+                                    $jvc->lc_no=!empty($request->lc_no_payment[$i])?$request->lc_no_payment[$i]:0;
+                                    $jvc->company_id =company()['company_id'];
+                                    $jvc->particulars="Sales Payment";
+                                    $jvc->account_code=$request->customer_r_name."-1130".$request->customerName; //2=>head name 3=> head code
+                                    $jvc->table_name="child_twos";
+                                    $jvc->table_id=$customer_head;
+                                    $jvc->credit=$request->pay_amount[$i];
+                                    if($jvc->save()){
+                                        $table_name=$jvc->table_name;
+                                        if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                        else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                        else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                        else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                        $gl=new GeneralLedger;
+                                        $gl->sales_voucher_id=$jv->id;
+                                        $gl->company_id =company()['company_id'];
+                                        $gl->journal_title=$jvc->particulars;
+                                        $gl->rec_date=$jv->current_date;
+                                        $gl->jv_id=$voucher_no;
+                                        $gl->sales_voucher_bkdn_id=$jvc->id;
+                                        $gl->created_by=currentUserId();
+                                        $gl->cr=$jvc->credit;
+                                        $gl->{$field_name}=$jvc->table_id;
+                                        $gl->save();
+                                    }
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+                Sales::where('id', $pur->id)->update(['reference_no' =>implode(',',$vouchersIds)]);
 
 
                 DB::commit();
@@ -795,7 +984,7 @@ class SalesController extends Controller
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
             DB::rollback();
-             dd($e);
+             //dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }
