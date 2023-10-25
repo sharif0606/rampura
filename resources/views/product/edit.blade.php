@@ -16,7 +16,7 @@
                                 @method('patch')
                                 <input type="hidden" name="uptoken" value="{{encryptor('encrypt',$product->id)}}">
                                 <div class="row">
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="form-group">
                                             <label for="Category">{{__('Category')}}<span class="text-danger">*</span></label>
                                             <select onchange="show_subcat(this.value)" class="form-control form-select" name="category" id="category">
@@ -31,7 +31,7 @@
                                            
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="subcategory">{{__('Sub Category')}}</label>
                                             <select onchange="show_childcat(this.value)" class="form-control form-select" name="subcategory" id="subcategory">
@@ -44,7 +44,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="childcategory">{{__('Child Category')}}</label>
                                             <select class="form-control form-select" name="childcategory" id="childcategory">
@@ -57,7 +57,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="unit_id">{{__('Unit')}}</label>
                                             <select class="form-control form-select" name="unit_id" id="unit_id">
@@ -71,7 +71,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="brand_id">{{__('Brand')}}</label>
                                             <select class="form-control form-select" name="brand_id" id="brand_id">
@@ -84,7 +84,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="form-group">
                                             <label for="Product Name">{{__('Name')}}<span class="text-danger">*</span></label>
                                             <input type="text" id="productName" class="form-control"
@@ -93,14 +93,14 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="price">{{__('Sell Price')}}<span class="text-danger">*</span></label>
                                             <input type="text" id="price" class="form-control" placeholder="Price" value="{{ old('price',$product->price)}}" name="price">
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="purchase_price">{{__('Purchase Price')}}</label>
                                             <input type="text" id="purchase_price" class="form-control"
@@ -111,14 +111,14 @@
                                                 
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="image">{{__('Image')}}</label>
                                             <input type="file" id="image" class="form-control"
                                                 placeholder="Image" name="image">
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="form-group">
                                             <label for="description">{{__('Description')}}</label>
                                             <textarea  class="form-control" id="description"
@@ -129,7 +129,6 @@
                                     <div class="col-12 d-flex justify-content-end">
                                     {{-- <img width="80px" height="40px" class="float-first" src="{{asset('images/product/'.company()['company_id'].'/'.$product->image)}}" alt=""> --}}
                                         <button type="submit" class="btn btn-primary me-1 mb-1">{{__('Save')}}</button>
-                                        
                                     </div>
                                 </div>
                             </form>

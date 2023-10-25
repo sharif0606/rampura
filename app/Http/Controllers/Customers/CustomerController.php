@@ -25,12 +25,17 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if( currentUser()=='owner')
-            $customers = Customer::where(company())->paginate(10);
+            $customers = Customer::where(company());
         else
-            $customers = Customer::where(company())->where(branch())->paginate(10);
+            $customers = Customer::where(company())->where(branch());
+
+        if($request->name)
+            $customers=$customers->where('customer_name','like','%'.$request->name.'%');
+
+        $customers=$customers->paginate(15);
 
         return view('customer.index',compact('customers'));
     }

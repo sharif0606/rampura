@@ -28,9 +28,13 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::where(company())->paginate(10);
+        $products = Product::where(company());
+        if($request->name)
+            $products=$products->where('product_name','like','%'.$request->name.'%');
+
+        $products=$products->paginate(15);
         return view('product.index',compact('products'));
     }
 

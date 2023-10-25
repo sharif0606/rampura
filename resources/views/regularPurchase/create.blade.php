@@ -53,7 +53,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     
-                                    <select required class="form-control form-select" name="supplierName" id="supplierName" onchange="$('#supplier_r_name').val($(this).find('option:selected').text())">
+                                    <select required class="form-control choices form-select" name="supplierName" id="supplierName" onchange="$('#supplier_r_name').val($(this).find('option:selected').text())">
                                         <option value="">Select Supplier</option>
                                         @forelse($suppliers as $d)
                                             <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName')==$d->id?"selected":""}}> {{ $d->supplier_name}}</option>

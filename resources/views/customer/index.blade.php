@@ -9,14 +9,35 @@
     <div class="row" id="table-bordered">
         <div class="col-12">
             <div class="card">
-                
                 @if(Session::has('response'))
                     {!!Session::get('response')['message']!!}
                 @endif
-                <div class="p-0 m-0">
-                    <a class=" float-end" href="{{route(currentUser().'.customer.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
-                </div>
                 <!-- table bordered -->
+                <div class="row pb-1">
+                    <div class="col-10">
+                        <form action="" method="get">
+                            <div class="row">
+                                <div class="input-group input-group-sm d-flex justify-content-between" >
+                                    <div class="d-flex" style="width: 150px;">
+                                        <input type="text" name="name" value="{{isset($_GET['name'])?$_GET['name']:''}}" class="form-control float-start" placeholder="Search by name" style="width: 200px;">
+                                    
+                                        <div class="input-group-append" style="margin-left: 6px;">
+                                            <button type="submit" class="btn btn-info">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                        </div>
+                                        <div class="input-group-append" style="margin-left: -2px;">
+                                            <a class="btn btn-warning ms-2" href="{{route(currentUser().'.customer.index')}}" title="Clear"><i class="bi bi-arrow-clockwise"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-2">
+                        <a class=" float-end" href="{{route(currentUser().'.customer.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered mb-0">
                         <thead>
@@ -52,7 +73,7 @@
                                     <a class="text-danger" href="javascript:void()" onclick="$('#form{{$sup->id}}').submit()">
                                         <i class="bi bi-trash"></i>
                                     </a>
-                                    <form id="form{{$sup->id}}" action="{{route(currentUser().'.customer.destroy',encryptor('encrypt',$sup->id))}}" method="post">
+                                    <form id="form{{$sup->id}}" onsubmit="return confirm('Are You Sure?')" action="{{route(currentUser().'.customer.destroy',encryptor('encrypt',$sup->id))}}" method="post">
                                         @csrf
                                         @method('delete')
                                     </form>

@@ -79,6 +79,23 @@ class ReportController extends Controller
         return view('reports.stockReport', compact('stock','product','category'));
     }
 
+    public function stockindividual($id)
+    {
+        $company = company()['company_id'];
+        $where = '';
+
+        $sql = "SELECT products.product_name,products.id, stocks.*, SUM(stocks.quantity) as qty, SUM(stocks.quantity_bag) as bagQty, SUM(stocks.total_amount) as amount, AVG(stocks.unit_price) as avunitprice 
+                FROM stocks 
+                JOIN products ON products.id = stocks.product_id 
+                WHERE stocks.company_id = ? AND stocks.product_id = $id AND stocks.sales_id IS NULL $where";
+                
+        $salesItem = Sales_details::where('product_id', $id)->where('company_id', $company)->get();
+        $stock = DB::select($sql, [$company]);
+
+        return view('reports.stockReportIndividual', compact('stock', 'salesItem'));
+    }
+
+
     public function allPurchaseReport(Request $request)
     {
         $company = company()['company_id'];
@@ -107,7 +124,7 @@ class ReportController extends Controller
                 FROM purchase_details 
                 JOIN products ON products.id = purchase_details.product_id 
                 WHERE purchase_details.company_id = ? $where 
-                GROUP BY purchase_details.lot_no, purchase_details.brand";
+                GROUP BY purchase_details.id";
     
         $data = DB::select($sql, [$company]);
     
@@ -219,7 +236,7 @@ class ReportController extends Controller
         $customers = Customer::where(company())->get();
 
         $query = Sales_details::join('sales', 'sales.id', '=', 'sales_details.sales_id')
-            ->groupBy('sales_details.batch_id')
+            ->groupBy('sales_details.id')
             ->select('sales.*', 'sales_details.*')
             ->where('sales.company_id', company()['company_id']);
 

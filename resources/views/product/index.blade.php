@@ -7,17 +7,41 @@
     <div class="row" id="table-bordered">
         <div class="col-12">
             <div class="card">
+                <div class="row pb-1">
+                    <div class="col-10">
+                        <form action="" method="get">
+                            <div class="row">
+                                <div class="input-group input-group-sm d-flex justify-content-between" >
+                                    <div class="d-flex" style="width: 150px;">
+                                        <input type="text" name="name" value="{{isset($_GET['name'])?$_GET['name']:''}}" class="form-control float-start" placeholder="Search by product" style="width: 200px;">
+                                    
+                                        <div class="input-group-append" style="margin-left: 6px;">
+                                            <button type="submit" class="btn btn-info">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                        </div>
+                                        <div class="input-group-append" style="margin-left: -2px;">
+                                            <a class="btn btn-warning ms-2" href="{{route(currentUser().'.product.index')}}" title="Clear"><i class="bi bi-arrow-clockwise"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-2">
+                        <a class="float-end" href="{{route(currentUser().'.product.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered mb-0">
-                        <a class="float-end" href="{{route(currentUser().'.product.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
                         <thead>
                             <tr>
                                 <th scope="col">{{__('#SL')}}</th>
                                 {{-- <th scope="col">{{__('Bar Code')}}</th> --}}
                                 {{-- <th scope="col">{{__('Brand')}}</th> --}}
                                 <th scope="col">{{__('Category')}}</th>
-                                <th scope="col">{{__('Sub Category')}}</th>
-                                <th scope="col">{{__('Child Category')}}</th>
+                                {{-- <th scope="col">{{__('Sub Category')}}</th> --}}
+                                {{-- <th scope="col">{{__('Child Category')}}</th> --}}
                                 <th scope="col">{{__('Name')}}</th>
                                 {{-- <th scope="col">{{__('Units')}}</th> --}}
                                 {{-- <th scope="col">{{__('Sales Price')}}</th> --}}
@@ -33,8 +57,8 @@
                                 {{-- <td>{{$p->bar_code}}</td> --}}
                                 {{-- <td>{{$p->brand?->name}}</td> --}}
                                 <td>{{$p->category?->category}}</td>
-                                <td>{{$p->subcategory?->name}}</td>
-                                <td>{{$p->childcategory?->name}}</td>
+                                {{-- <td>{{$p->subcategory?->name}}</td> --}}
+                                {{-- <td>{{$p->childcategory?->name}}</td> --}}
                                 <td>{{$p->product_name}}</td>
                                 {{-- <td>{{$p->unit?->name}}</td> --}}
                                 {{-- <td>{{$p->price}}</td> --}}

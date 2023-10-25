@@ -108,7 +108,7 @@
                                                 {{$cat->category}}
                                                 @endforeach
                                             </td>
-                                            <td>{{$s->product_name}}</td>
+                                            <td><a href="{{route(currentUser().'.stock.individual',$s->product_id)}}">{{$s->product_name}}</a></td>
                                             <td>{{$s->lot_no}}</td>
                                             <td>{{$s->brand}}</td>
                                             <td>{{$s->bagQty}}</td>

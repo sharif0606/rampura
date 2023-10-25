@@ -4,7 +4,7 @@
 .choices {
   position: relative;
   overflow: hidden;
-  margin-bottom: 24px;
+  /* margin-bottom: 24px; */
   font-size: 16px;
 }
 .choices:focus {

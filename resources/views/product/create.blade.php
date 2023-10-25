@@ -4,7 +4,6 @@
 @section('pageSubTitle',trans('Create'))
 
 @section('content')
-  <!-- // Basic multiple Column Form section start -->
     <section id="multiple-column-form">
         <div class="row match-height">
             <div class="col-12">
@@ -14,7 +13,7 @@
                             <form class="form" method="post" enctype="multipart/form-data" action="{{route(currentUser().'.product.store')}}">
                                 @csrf
                                 <div class="row">
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="form-group">
                                             <label for="Category">{{__('Category')}}<span class="text-danger">*</span></label>
                                             <select onchange="show_subcat(this.value)" class="form-control form-select" name="category" id="category">
@@ -31,7 +30,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="subcategory">{{__('Sub Category')}}</label>
                                             <select onchange="show_childcat(this.value)" class="form-control form-select" name="subcategory" id="subcategory">
@@ -45,7 +44,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="childcategory Name">{{__('Child Category')}}</label>
                                             <select class="form-control form-select" name="childcategory" id="childcategory">
@@ -58,7 +57,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="unit_id">{{__('Unit')}}</label>
                                             <select class="form-control form-select" name="unit_id" id="unit_id">
@@ -74,7 +73,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="brand_id">{{__('Brand')}}</label>
                                             <select class="form-control" name="brand_id" id="brand_id">
@@ -87,7 +86,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="form-group">
                                             <label for="Product Name">{{__('Product Name')}}<span class="text-danger">*</span></label>
                                             <input type="text" id="productName" class="form-control"
@@ -98,7 +97,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="price">{{__('Sell Price')}}<span class="text-danger">*</span></label>
                                             <input type="text" id="price" class="form-control"
@@ -110,7 +109,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="purchase_price">{{__('Purchase Price')}}</label>
                                             <input type="text" id="purchase_price" class="form-control" 
@@ -121,7 +120,7 @@
                                                 
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="image">{{__('Image')}}</label>
                                             <input type="file" id="image" class="form-control"
@@ -131,7 +130,7 @@
                                                 @endif
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="form-group">
                                             <label for="description">{{__('Description')}}</label>
                                             <textarea  class="form-control" id="description"

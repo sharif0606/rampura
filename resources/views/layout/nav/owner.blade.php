@@ -75,7 +75,7 @@
                     <li class="py-1 submenu-item"><a href="{{route(currentUser().'.category.create')}}">{{__('Add New')}}</a></li>
                 </ul>
             </li>
-            <li class="submenu-item sidebar-item has-sub"><a href="#" class='sidebar-link'>{{__('Sub Category')}}</a>
+            {{-- <li class="submenu-item sidebar-item has-sub"><a href="#" class='sidebar-link'>{{__('Sub Category')}}</a>
                 <ul class="submenu">
                     <li class="py-1 submenu-item"><a href="{{route(currentUser().'.subcategory.index')}}">{{__('List')}}</a></li>
                     <li class="py-1 submenu-item"><a href="{{route(currentUser().'.subcategory.create')}}">{{__('Add New')}}</a></li>
@@ -86,7 +86,7 @@
                     <li class="py-1 submenu-item"><a href="{{route(currentUser().'.childcategory.index')}}">{{__('List')}}</a></li>
                     <li class="py-1 submenu-item"><a href="{{route(currentUser().'.childcategory.create')}}">{{__('Add New')}}</a></li>
                 </ul>
-            </li>
+            </li> --}}
             {{-- <li class="submenu-item sidebar-item has-sub"><a href="#" class='sidebar-link'>{{__('Brand')}}</a>
                 <ul class="submenu">
                     <li class="py-1 submenu-item"><a href="{{route(currentUser().'.brand.index')}}">{{__('List')}}</a></li>
