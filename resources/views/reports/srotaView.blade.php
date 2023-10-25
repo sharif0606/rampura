@@ -301,7 +301,7 @@
                                                 @php 
                                                     $show_pur_amount = $subSalesAmount - $conditional_pur_total_cost;
                                                 @endphp
-                                                {{ money_format(round($show_pur_amount))}}
+                                                {{ money_format(round($subSalesAmount))}}
                                             @endif
                                         </th>
                                     </tr>
@@ -415,13 +415,13 @@
                                     <th style="text-align: left;"><span style="color: green;">মোট {{ money_format(round($subPurBag))}} ব্যাগ, {{money_format(round($subPurActualQty))}} কেজি</span></th>
                                     <td style="text-align: right;">
                                         @php
-                                            $totalPurchaseAmount= $subPurchaseAmount + $subPurchaseExpense;
+                                            $totalPurchaseAmount= $subPurchaseAmount - $subPurchaseExpense;
                                         @endphp
                                         <span style="color: green;">
                                             @if($subPurchaseAmount != 0)
                                                 {{money_format(round($totalPurchaseAmount)); }}
                                             @else
-                                                {{money_format(round($subSalesAmount)); }}
+                                                {{money_format(round($show_pur_amount)); }}
                                             @endif
                                         </span>
                                     </td>
@@ -443,7 +443,7 @@
                                                 {{money_format(round($totalDue)); }}
                                             @else
                                                 @php 
-                                                    $show_due = $subSalesAmount - $totalPayment;
+                                                    $show_due = $show_pur_amount - $totalPayment;
                                                 @endphp
                                                 {{money_format(round($show_due)); }}
                                             @endif
@@ -462,7 +462,7 @@
                                                 {{money_format(round($profit));}}
                                             @else
                                                 @php 
-                                                    $show_profit = $subSalesAmount - $show_due;
+                                                    $show_profit = $totalPayment + $conditional_pur_total_cost;
                                                 @endphp
                                                 {{money_format(round($show_profit)); }}
                                             @endif
