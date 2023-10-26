@@ -3,19 +3,19 @@
 @section('pageTitle',trans('Update Purchase'))
 @section('pageSubTitle',trans('update'))
 @push("styles")
-<link rel="stylesheet" href="{{ asset('assets/css/main/full-screen.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/main/full-screen.css') }}">
 @endpush
 @section('content')
 <style>
-@media screen and (max-width: 800px) {
-    .tbl-scroll {
-        overflow: scroll;
+    @media screen and (max-width: 800px) {
+        .tbl-scroll {
+            overflow: scroll;
+        }
     }
-}
-.tbl_expense{
-    border: 1px solid;
-    border-collapse: collapse;
-}
+    .tbl_expense{
+        border: 1px solid;
+        border-collapse: collapse;
+    }
 </style>
     <section id="multiple-column-form">
         <div class="match-height">
@@ -33,7 +33,7 @@
                                     <div class="col-md-4 form-group">
                                         <select required onchange="change_data(this.value)" class="form-control form-select" name="branch_id" id="branch_id">
                                             {{-- <option value="">Select Branches</option>     --}}
-                                        @forelse($branches as $b)
+                                            @forelse($branches as $b)
                                                 <option value="{{ $b->id }}" {{old('branch_id',$purchase->branch_id)==$b->id?'selected':''}}>{{ $b->name }}</option>
                                             @empty
                                                 <option value="">No branch found</option>
@@ -53,11 +53,10 @@
                                     <label for="supplierName" class="float-end"><h6>Supplier<span class="text-danger">*</span></h6></label>
                                 </div>
                                 <div class="col-md-4">
-                                    
-                                    <select required class="form-control choices form-select" name="supplierName" id="supplierName" onchange="$('#supplier_r_name').val($(this).find('option:selected').text())">
+                                    <select required class="form-control choices form-select" name="supplierName" id="supplierName" onchange="get_purchase()">
                                         <option value="">Select Supplier</option>
                                         @forelse($suppliers as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName',$purchase->supplier_id)==$d->id?"selected":""}}> {{ $d->supplier_name}}</option>
+                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName',$purchase->supplier_id)==$d->id?"selected":""}}>{{ $d->supplier_name}}</option>
                                         @empty
                                             <option value="">No Supplier found</option>
                                         @endforelse
@@ -342,7 +341,10 @@
         $('.brnch').hide();
         $('.brnch'+e).show();
     }
-
+    function get_purchase(){
+        $('#supplier_r_name').val($('#supplierName').find('option:selected').text())
+    }
+    get_purchase()
 </script>
 
 <script>

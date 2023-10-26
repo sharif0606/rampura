@@ -54,10 +54,10 @@
                                 </div>
                                 <div class="col-md-4">
                                     
-                                    <select required class="form-control choices form-select" name="supplierName" id="supplierName" onchange="$('#supplier_r_name').val($(this).find('option:selected').text())">
+                                    <select required class="form-control choices form-select" name="supplierName" id="supplierName" onchange="get_purchase()">
                                         <option value="">Select Supplier</option>
                                         @forelse($suppliers as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName',$purchase->supplier_id)==$d->id?"selected":""}}> {{ $d->supplier_name}}</option>
+                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName',$purchase->supplier_id)==$d->id?"selected":""}}>{{ $d->supplier_name}}</option>
                                         @empty
                                             <option value="">No Supplier found</option>
                                         @endforelse
@@ -341,7 +341,10 @@
         $('.brnch').hide();
         $('.brnch'+e).show();
     }
-
+    function get_purchase(){
+        $('#supplier_r_name').val($('#supplierName').find('option:selected').text())
+    }
+    get_purchase()
 </script>
 
 <script>

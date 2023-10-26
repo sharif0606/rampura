@@ -91,6 +91,7 @@ class ReportController extends Controller
                 
         $salesItem = Sales_details::where('product_id', $id)->where('company_id', $company)->get();
         $stock = DB::select($sql, [$company]);
+        $stock = Stock::where('product_id',$id)->where(company())->get();
 
         return view('reports.stockReportIndividual', compact('stock', 'salesItem'));
     }

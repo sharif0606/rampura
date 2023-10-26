@@ -65,57 +65,57 @@
                                         <th class="tbl_expense" style="text-align: center; padding: 5px;">Quantity Kg</th>
                                     </tr>
                                     @php
-                                        $actualQtyTotal = 0;
+                                        $actualQtyTotalkg = 0;
+                                        $actualQtyTotalbag = 0;
                                     @endphp
                                     @forelse($stock as $s)
                                     <tr class="tbl_expense">
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">party Name</td>
                                         <td class="tbl_expense" style="text-align: center; padding: 5px;">
-                                           
-                                            purchase
+                                            {{$s->purchase?->supplier?->supplier_name}}
+                                            {{$s->beparian_purchase?->supplier?->supplier_name}}
+                                            {{$s->regular_purchase?->supplier?->supplier_name}}
+                                            {{$s->sales?->customer?->customer_name}}
                                         </td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">Voucher No</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->bagQty}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->qty}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->avunitprice}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->amount}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->bagQty}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->qty}}</td>
-                                    </tr>
-                                    
-                                    @empty
-                                    <tr>
-                                        <th colspan="10">No data Found</th>
-                                    </tr>
-                                    @endforelse
-
-                                    @forelse($salesItem as $s)
-                                    <tr class="tbl_expense">
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">party Name</td>
                                         <td class="tbl_expense" style="text-align: center; padding: 5px;">
-                                           
-                                            Sales
+                                           @if($s->sales_id) Sales @else Purchase  @endif
                                         </td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">Voucher No</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">
+                                            {{$s->purchase?->voucher_no}}
+                                            {{$s->beparian_purchase?->voucher_no}}
+                                            {{$s->regular_purchase?->voucher_no}}
+                                            {{$s->sales?->voucher_no}}
+                                        </td>
+                                        @if($s->sales_id)
                                         <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
                                         <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
                                         <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
                                         <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
                                         <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity_bag}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->actual_quantity}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->rate_kg}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->amount}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->unit_price}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->total_amount}}</td>
+                                        @else
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity_bag}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->unit_price}}</td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->total_amount}}</td>
                                         <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
                                         <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
+                                        @endif
+                                        
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">
+                                             @php echo $actualQtyTotalbag += $s->quantity_bag; @endphp
+                                            
+                                        </td>
+                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">
+                                           @php echo $actualQtyTotalkg += $s->quantity; @endphp
+                                        </td>
                                     </tr>
-                                    
                                     @empty
                                     <tr>
-                                        <th colspan="13" style="text-align: center; padding: 5px;">This Product didn't sold yet</th>
+                                        <th colspan="10">No data Found</th>
                                     </tr>
                                     @endforelse
                                 </tbody>
