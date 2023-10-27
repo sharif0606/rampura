@@ -357,34 +357,36 @@ class PurchaseController extends Controller
                         // debit side purchase expense
                         if($request->child_two_id){
                             foreach($request->child_two_id as $j=>$child_two_id){
-                                $jvb=new PurVoucherBkdns;
-                                $jvb->purchase_voucher_id=$jv->id;
-                                $jvb->supplier_id=$request->supplierName;
-                                $jvb->lc_no=$request->lc_no[$j]?$request->lc_no[$j]:"";
+                                if($request->cost_amount[$j] > 0){
+                                    $jvb=new PurVoucherBkdns;
+                                    $jvb->purchase_voucher_id=$jv->id;
+                                    $jvb->supplier_id=$request->supplierName;
+                                    $jvb->lc_no=$request->lc_no[$j]?$request->lc_no[$j]:"";
 
-                                $jvb->company_id =company()['company_id'];
-                                $jvb->particulars="Purchase Expense";
-                                $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
-                                $jvb->table_name=explode('~',$child_two_id)[0];
-                                $jvb->table_id=explode('~',$child_two_id)[1];
-                                $jvb->debit=$request->cost_amount[$j];
-                                if($jvb->save()){
-                                    $table_name=$jvb->table_name;
-                                    if($table_name=="master_accounts"){$field_name="master_account_id";}
-                                    else if($table_name=="sub_heads"){$field_name="sub_head_id";}
-                                    else if($table_name=="child_ones"){$field_name="child_one_id";}
-                                    else if($table_name=="child_twos"){$field_name="child_two_id";}
-                                    $gl=new GeneralLedger;
-                                    $gl->purchase_voucher_id=$jv->id;
-                                    $gl->company_id =company()['company_id'];
-                                    $gl->journal_title=$jvb->particulars;
-                                    $gl->rec_date=$jv->current_date;
-                                    $gl->jv_id=$voucher_no;
-                                    $gl->purchase_voucher_bkdn_id=$jvb->id;
-                                    $gl->created_by=currentUserId();
-                                    $gl->dr=$jvb->debit;
-                                    $gl->{$field_name}=$jvb->table_id;
-                                    $gl->save();
+                                    $jvb->company_id =company()['company_id'];
+                                    $jvb->particulars="Purchase Expense";
+                                    $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
+                                    $jvb->table_name=explode('~',$child_two_id)[0];
+                                    $jvb->table_id=explode('~',$child_two_id)[1];
+                                    $jvb->debit=$request->cost_amount[$j];
+                                    if($jvb->save()){
+                                        $table_name=$jvb->table_name;
+                                        if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                        else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                        else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                        else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                        $gl=new GeneralLedger;
+                                        $gl->purchase_voucher_id=$jv->id;
+                                        $gl->company_id =company()['company_id'];
+                                        $gl->journal_title=$jvb->particulars;
+                                        $gl->rec_date=$jv->current_date;
+                                        $gl->jv_id=$voucher_no;
+                                        $gl->purchase_voucher_bkdn_id=$jvb->id;
+                                        $gl->created_by=currentUserId();
+                                        $gl->dr=$jvb->debit;
+                                        $gl->{$field_name}=$jvb->table_id;
+                                        $gl->save();
+                                    }
                                 }
                             }
                         }
@@ -697,34 +699,36 @@ class PurchaseController extends Controller
                         // debit side purchase expense
                         if($request->child_two_id){
                             foreach($request->child_two_id as $j=>$child_two_id){
-                                $jvb=new PurVoucherBkdns;
-                                $jvb->purchase_voucher_id=$jv->id;
-                                $jvb->supplier_id=$request->supplierName;
-                                $jvb->lc_no=$request->lc_no[$j]?$request->lc_no[$j]:"";
+                                if($request->cost_amount[$j] > 0){
+                                    $jvb=new PurVoucherBkdns;
+                                    $jvb->purchase_voucher_id=$jv->id;
+                                    $jvb->supplier_id=$request->supplierName;
+                                    $jvb->lc_no=$request->lc_no[$j]?$request->lc_no[$j]:"";
 
-                                $jvb->company_id =company()['company_id'];
-                                $jvb->particulars="Purchase Expense";
-                                $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
-                                $jvb->table_name=explode('~',$child_two_id)[0];
-                                $jvb->table_id=explode('~',$child_two_id)[1];
-                                $jvb->debit=$request->cost_amount[$j];
-                                if($jvb->save()){
-                                    $table_name=$jvb->table_name;
-                                    if($table_name=="master_accounts"){$field_name="master_account_id";}
-                                    else if($table_name=="sub_heads"){$field_name="sub_head_id";}
-                                    else if($table_name=="child_ones"){$field_name="child_one_id";}
-                                    else if($table_name=="child_twos"){$field_name="child_two_id";}
-                                    $gl=new GeneralLedger;
-                                    $gl->purchase_voucher_id=$jv->id;
-                                    $gl->company_id =company()['company_id'];
-                                    $gl->journal_title=$jvb->particulars;
-                                    $gl->rec_date=$jv->current_date;
-                                    $gl->jv_id=$voucher_no;
-                                    $gl->purchase_voucher_bkdn_id=$jvb->id;
-                                    $gl->created_by=currentUserId();
-                                    $gl->dr=$jvb->debit;
-                                    $gl->{$field_name}=$jvb->table_id;
-                                    $gl->save();
+                                    $jvb->company_id =company()['company_id'];
+                                    $jvb->particulars="Purchase Expense";
+                                    $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
+                                    $jvb->table_name=explode('~',$child_two_id)[0];
+                                    $jvb->table_id=explode('~',$child_two_id)[1];
+                                    $jvb->debit=$request->cost_amount[$j];
+                                    if($jvb->save()){
+                                        $table_name=$jvb->table_name;
+                                        if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                        else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                        else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                        else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                        $gl=new GeneralLedger;
+                                        $gl->purchase_voucher_id=$jv->id;
+                                        $gl->company_id =company()['company_id'];
+                                        $gl->journal_title=$jvb->particulars;
+                                        $gl->rec_date=$jv->current_date;
+                                        $gl->jv_id=$voucher_no;
+                                        $gl->purchase_voucher_bkdn_id=$jvb->id;
+                                        $gl->created_by=currentUserId();
+                                        $gl->dr=$jvb->debit;
+                                        $gl->{$field_name}=$jvb->table_id;
+                                        $gl->save();
+                                    }
                                 }
                             }
                         }
