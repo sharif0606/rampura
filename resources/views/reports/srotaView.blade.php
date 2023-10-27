@@ -412,7 +412,7 @@
                             <table style="width: 100%;">
                                 <tr>
                                     
-                                    <th style="text-align: left;"><span style="color: green;">মোট {{ money_format(round($subPurBag))}} ব্যাগ, {{money_format(round($subPurActualQty))}} কেজি</span></th>
+                                    <th style="text-align: left;"><span style="color: green;">পরিশোধযোগ্য</span></th>
                                     <td style="text-align: right;">
                                         @php
                                             $totalPurchaseAmount= $subPurchaseAmount - $subPurchaseExpense;
@@ -433,7 +433,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th style="text-align: left;"><span style="color: green;">পরিশোধযোগ্য</span></th>
+                                    <th style="text-align: left;"><span style="color: green;">বাকী</span></th>
                                     <td style="text-align: right;">
                                         @php
                                             $totalDue= $totalPurchaseAmount - $totalPayment;
@@ -450,12 +450,12 @@
                                         </span>
                                     </td>
                                 </tr>
-                                <tr>
+                                {{-- <tr>
                                     
-                                    <th style="text-align: left;"><span style="color: green;">প্রাপ্য</span></th>
+                                    <th style="text-align: left;"><span style="color: green;">আয়</span></th>
                                     <td style="text-align: right;">
                                         @php
-                                            $profit = $totalSalesAmount - $totalDue;
+                                            $profit = $totalSalesAmount - $totalPurchaseAmount;
                                         @endphp
                                         <span style="color: green;">
                                             @if($subPurchaseAmount != 0)
@@ -469,7 +469,7 @@
                                             
                                         </span>
                                     </td>
-                                </tr>
+                                </tr> --}}
                                 
                             </table>
                         </th>

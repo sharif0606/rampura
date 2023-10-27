@@ -64,8 +64,9 @@ class PurchaseController extends Controller
             $suppliers = Supplier::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
-            $childone = Child_one::where(company())->where('head_code',5310)->first();
-            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
+            $childone = Child_one::where(company())->whereIn('head_code',[5310,4120])->pluck('id');
+            
+            $childTow = Child_two::where(company())->whereIn('child_one_id',$childone)->get();
 
         $paymethod=array();
         $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
@@ -475,8 +476,8 @@ class PurchaseController extends Controller
         $purchase = Purchase::findOrFail(encryptor('decrypt',$id));
 
         $purchaseDetails = Purchase_details::where('purchase_id',$purchase->id)->get();
-        $childone = Child_one::where(company())->where('head_code',5310)->first();
-        $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
+        $childone = Child_one::where(company())->whereIn('head_code',[5310,4120])->pluck('id');
+        $childTow = Child_two::where(company())->whereIn('child_one_id',$childone)->get();
         // $expense = ExpenseOfPurchase::where('purchase_id',$purchase->id)->pluck('cost_amount','child_two_id');
         $expense = ExpenseOfPurchase::where(company())->where('purchase_id',$purchase->id)->get();
         $supplerPayment = SupplierPayment::where(company())->where('purchase_id',$purchase->id)->first();

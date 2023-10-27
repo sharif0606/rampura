@@ -59,8 +59,8 @@ class BeparianPurchaseController extends Controller
             $suppliers = Supplier::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
-            $childone = Child_one::where(company())->where('head_code',5310)->first();
-            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
+        $childone = Child_one::where(company())->whereIn('head_code',[5310,4120])->pluck('id');
+        $childTow = Child_two::where(company())->whereIn('child_one_id',$childone)->get();
 
         $paymethod=array();
         $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
@@ -417,8 +417,8 @@ class BeparianPurchaseController extends Controller
         }
             $purchase = Beparian_purchase::findOrFail(encryptor('decrypt',$id));
             $purchaseDetails = Purchase_details::where('beparian_purchase_id',$purchase->id)->get();
-            $childone = Child_one::where(company())->where('head_code',5310)->first();
-            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
+            $childone = Child_one::where(company())->whereIn('head_code',[5310,4120])->pluck('id');
+            $childTow = Child_two::where(company())->whereIn('child_one_id',$childone)->get();
             // $expense = ExpenseOfPurchase::where('beparian_purchase_id',$purchase->id)->pluck('cost_amount','child_two_id');
             $expense = ExpenseOfPurchase::where(company())->where('beparian_purchase_id',$purchase->id)->get();
             $supplerPayment = SupplierPayment::where(company())->where('beparian_purchase_id',$purchase->id)->first();
