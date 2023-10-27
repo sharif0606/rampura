@@ -28,7 +28,7 @@ class UpdateRequest extends FormRequest
         return [
             'child_one'=> 'required',
             'head_name'=> 'required',
-            'head_code'=> 'required|unique:Child_twos,head_code,'.$id
+            'head_code'=> 'required|unique:child_twos,head_code,'.$id
         ];
     }
     public function messages(){
