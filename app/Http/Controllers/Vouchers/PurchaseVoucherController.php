@@ -29,7 +29,7 @@ class PurchaseVoucherController extends Controller
      */
     public function index()
     {
-        $data= PurchaseVoucher::where(company())->paginate(10);
+        $data= PurchaseVoucher::where(company())->paginate(15);
         return view('voucher.purchaseVoucher.index',compact('data'));
     }
 

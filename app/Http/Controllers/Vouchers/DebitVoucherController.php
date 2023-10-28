@@ -27,7 +27,7 @@ class DebitVoucherController extends Controller
      */
     public function index()
     {
-        $debitVoucher= DebitVoucher::where(company())->paginate(10);
+        $debitVoucher= DebitVoucher::where(company())->paginate(15);
         return view('voucher.debitVoucher.index',compact('debitVoucher'));
     }
 
