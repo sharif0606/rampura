@@ -412,7 +412,7 @@ class CreditVoucherController extends Controller
      * @param  \App\Models\CreditVoucher  $creditVoucher
      * @return \Illuminate\Http\Response
      */
-    public function show(CreditVoucher $creditVoucher)
+    public function show($id)
     {
         $creditVoucher=CreditVoucher::findOrFail(encryptor('decrypt',$id));
 		$crevoucherbkdn=CreVoucherBkdn::where('credit_voucher_id',encryptor('decrypt',$id))->get();
