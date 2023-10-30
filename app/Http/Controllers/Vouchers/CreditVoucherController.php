@@ -414,7 +414,9 @@ class CreditVoucherController extends Controller
      */
     public function show(CreditVoucher $creditVoucher)
     {
-        //
+        $creditVoucher=CreditVoucher::findOrFail(encryptor('decrypt',$id));
+		$crevoucherbkdn=CreVoucherBkdn::where('credit_voucher_id',encryptor('decrypt',$id))->get();
+		return view('voucher.creditVoucher.show',compact('creditVoucher','crevoucherbkdn'));
     }
 
     /**
@@ -426,7 +428,7 @@ class CreditVoucherController extends Controller
     public function edit($id)
     {
         $creditVoucher=CreditVoucher::findOrFail(encryptor('decrypt',$id));
-		$crevoucherbkdn=CreVoucherBkdn::where('credit_voucher_id',$id)->get();
+		$crevoucherbkdn=CreVoucherBkdn::where('credit_voucher_id',encryptor('decrypt',$id))->get();
 		return view('voucher.creditVoucher.edit',compact('creditVoucher','crevoucherbkdn'));
     }
 
