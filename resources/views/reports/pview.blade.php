@@ -9,7 +9,7 @@
   .tbl_scroll {
     overflow: scroll;
   }
-}
+} 
 </style>
     <section id="multiple-column-form">
         <div class="row match-height">

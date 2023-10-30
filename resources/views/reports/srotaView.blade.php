@@ -1,3 +1,35 @@
+@php $id = $supplier = $address =  $account_id=''; @endphp
+@if($purchase->first()?->purchase)
+    @php
+        $id = optional($purchase->first()->purchase)->id;
+        $supplier = optional($purchase->first()->purchase->supplier)->supplier_name;
+        $account_id = optional($purchase->first()->purchase->supplier)->account_id;
+        $address = optional($purchase->first()->purchase->supplier)->address;
+    @endphp
+@endif
+@if($purchase->first()?->beparian_purchase)
+    @php
+        $id = optional($purchase->first()->beparian_purchase)->id;
+        $supplier = optional($purchase->first()->beparian_purchase->supplier)->supplier_name;
+        $account_id = optional($purchase->first()->beparian_purchase->supplier)->account_id;
+        $address = optional($purchase->first()->beparian_purchase->supplier)->address;
+    @endphp
+@endif
+@if($purchase->first()?->regular_purchase)
+    @php
+        $id = optional($purchase->first()->regular_purchase)->id;
+        $supplier = optional($purchase->first()->regular_purchase->supplier)->supplier_name;
+        $account_id =optional($purchase->first()->regular_purchase->supplier)->account_id;
+        $address = optional($purchase->first()->regular_purchase->supplier)->address;
+    @endphp
+@endif
+@php $purchasePayment=array(); @endphp
+@if($account_id)
+    @php
+        $purchasePayment=\App\Models\Vouchers\PurVoucherBkdns::where('lc_no',$lotNumber)->where('particulars','!=','Purchase Income due')->where('table_id',$account_id)->where('table_name','child_twos')->where(company())->get();
+    @endphp
+@endif
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -133,43 +165,6 @@
                         <p style="margin: 2px; color: green;">১৯৩, খাতুনগঞ্জ, চট্টগ্রাম।</p>
                     </th>
                 </tr>
-                @php
-                    $id = '';
-                    $supplier = '';
-                    $address = '';
-                    $account_id='';
-                @endphp
-                
-                @if($purchase->first()?->purchase)
-                    @php
-                        $id = optional($purchase->first()->purchase)->id;
-                        $supplier = optional($purchase->first()->purchase->supplier)->supplier_name;
-                        $account_id = optional($purchase->first()->purchase->supplier)->account_id;
-                        $address = optional($purchase->first()->purchase->supplier)->address;
-                    @endphp
-                @endif
-                @if($purchase->first()?->beparian_purchase)
-                    @php
-                        $id = optional($purchase->first()->beparian_purchase)->id;
-                        $supplier = optional($purchase->first()->beparian_purchase->supplier)->supplier_name;
-                        $account_id = optional($purchase->first()->beparian_purchase->supplier)->account_id;
-                        $address = optional($purchase->first()->beparian_purchase->supplier)->address;
-                    @endphp
-                @endif
-                @if($purchase->first()?->regular_purchase)
-                    @php
-                        $id = optional($purchase->first()->regular_purchase)->id;
-                        $supplier = optional($purchase->first()->regular_purchase->supplier)->supplier_name;
-                        $account_id =optional($purchase->first()->regular_purchase->supplier)->account_id;
-                        $address = optional($purchase->first()->regular_purchase->supplier)->address;
-                    @endphp
-                @endif
-                @php $purchasePayment=array(); @endphp
-                @if($account_id)
-                    @php
-                        $purchasePayment=\App\Models\Vouchers\PurVoucherBkdns::where('lc_no',$lotNumber)->where('particulars','!=','Purchase Income due')->where('table_id',$account_id)->where('table_name','child_twos')->where(company())->get();
-                    @endphp
-                @endif
                 <tr>
                     <th style="text-align: left; color: green; padding: 7px 0 7px 0;">নং</th>
                     <td><span>{{$id}}</span></td>
