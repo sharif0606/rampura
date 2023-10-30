@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{$supplier}} Srota</title>
     <link href="https://fonts.maateen.me/adorsho-lipi/font.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -104,7 +104,6 @@
     </style>
 </head>
 <body>
-    
     <div>
         <a href="{{route(currentUser().'.dashboard')}}" class="btn no-print"> Go To Dashboard</a>
         <button class="no-print btn" type="button" onclick="window.print()" style="float:right"> 
@@ -138,6 +137,7 @@
                     $id = '';
                     $supplier = '';
                     $address = '';
+                    $account_id='';
                 @endphp
                 
                 @if($purchase->first()?->purchase)
@@ -167,7 +167,7 @@
                 @php $purchasePayment=array(); @endphp
                 @if($account_id)
                     @php
-                        $purchasePayment=\App\Models\Vouchers\PurVoucherBkdns::where('lc_no',$lotNumber)->where('table_id',$account_id)->where('table_name','child_twos')->where(company())->get();
+                        $purchasePayment=\App\Models\Vouchers\PurVoucherBkdns::where('lc_no',$lotNumber)->where('particulars','!=','Purchase Income due')->where('table_id',$account_id)->where('table_name','child_twos')->where(company())->get();
                     @endphp
                 @endif
                 <tr>
