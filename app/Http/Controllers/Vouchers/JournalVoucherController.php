@@ -26,7 +26,7 @@ class JournalVoucherController extends Controller
      */
     public function index()
     {
-        $journalVoucher=JournalVoucher::where(company())->paginate(10);
+        $journalVoucher=JournalVoucher::where(company())->paginate(15);
         return view('voucher.journalVoucher.index',compact('journalVoucher'));
     }
 

@@ -25,7 +25,7 @@
 								<div class="col-sm-4">
 									<div class="form-group">
 										<label for="accDate">Acc Head</label>
-										<select name="head_id" id="head_id" class="form-control">
+										<select name="head_id" id="head_id" class="form-control choices">
 											@if($headlists)
 												@foreach($headlists as $h)
 													@if($h->master_account_id)

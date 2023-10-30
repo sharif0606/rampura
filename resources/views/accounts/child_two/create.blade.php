@@ -20,7 +20,7 @@
                                         <select class="form-control form-select" name="child_one" id="child_one">
                                             <option value="">Select Child One</option>
                                             @forelse($data as $d)
-                                                <option value="{{$d->id}}" {{ old('child_one')==$d->id?"selected":""}}> {{ $d->head_name}}</option>
+                                                <option value="{{$d->id}}" {{ old('child_one')==$d->id?"selected":""}}> {{ $d->head_name}}-{{ $d->head_code}}</option>
                                             @empty
                                                 <option value="">No data found</option>
                                             @endforelse

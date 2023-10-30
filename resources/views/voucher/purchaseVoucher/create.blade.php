@@ -99,7 +99,7 @@
                                                 </td>
                                                 <td style='text-align:left;'>
                                                     <input type='hidden' name='expense_id[]' value=''>
-                                                    <select name="supplier_id[]" class="form-control select" required onchange="addTextSupplier(this)">
+                                                    <select name="supplier_id[]" class="form-control form-select" required onchange="addTextSupplier(this)">
                                                         <option value="">Select</option>
                                                         @forelse (App\Models\Suppliers\Supplier::all(); as $d)
                                                             <option value="{{$d->id}}">{{$d->supplier_name}} ({{$d->contact}})</option>

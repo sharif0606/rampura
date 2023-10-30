@@ -53,7 +53,7 @@
                                     <label for="customrName" class="float-end"><h6>{{__('Customer')}}<span class="text-danger">*</span></h6></label>
                                 </div>
                                 <div class="col-md-4">
-                                    <select required class="form-control form-select" name="customerName" id="customerName" onchange="$('#customer_r_name').val($(this).find('option:selected').text())">
+                                    <select required class="choices form-select" name="customerName" id="customerName" onchange="$('#customer_r_name').val($(this).find('option:selected').text())">
                                         <option value="">Select Customer</option>
                                         @forelse($customers as $d)
                                             <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('customerName')==$d->id?"selected":""}}> {{ $d->customer_name}}</option>

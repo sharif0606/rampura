@@ -61,6 +61,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="my-3">
+                        {!! $journalVoucher->links()!!}
+                    </div>
                 </div>
             </div>
         </div>

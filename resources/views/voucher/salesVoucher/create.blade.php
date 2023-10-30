@@ -99,7 +99,7 @@
                                             </td>
                                             <td style='text-align:left;'>
                                                 <input type='hidden' name='expense_id[]' value=''>
-                                                <select name="customer_id[]" class="form-control select" required onchange="addTextCustomer(this)">
+                                                <select name="customer_id[]" class="form-control form-select" required onchange="addTextCustomer(this)">
                                                     <option value="">Select</option>
                                                     @forelse (App\Models\Customers\Customer::all(); as $d)
                                                         <option value="{{$d->id}}">{{$d->customer_name}} ({{$d->contact}})</option>

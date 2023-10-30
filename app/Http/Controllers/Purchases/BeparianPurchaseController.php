@@ -21,6 +21,10 @@ use App\Http\Requests\Purchases\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
 use App\Models\Suppliers\SupplierPayment;
 use App\Models\Suppliers\SupplierPaymentDetails;
+use App\Models\Vouchers\GeneralLedger;
+use App\Models\Vouchers\GeneralVoucher;
+use App\Models\Vouchers\PurchaseVoucher;
+use App\Models\Vouchers\PurVoucherBkdns;
 use Exception;
 use DB;
 use Carbon\Carbon;
@@ -932,7 +936,7 @@ class BeparianPurchaseController extends Controller
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
             DB::rollback();
-            // dd($e);
+             //dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }

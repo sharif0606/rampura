@@ -188,7 +188,7 @@
                                                         <select name="child_two_id[]" class="form-select">
                                                             <option value="">select</option>
                                                             @forelse ($childTow as $ex)
-                                                                <option value="{{$ex->id}}">{{$ex->head_name}}</option>
+                                                                <option value="child_twos~{{$ex->id}}~{{$ex['head_name']}}~{{$ex['head_code']}}">{{$ex->head_name}}</option>
                                                             @empty
                                                                 <option value="">No Data Found</option>
                                                             @endforelse
