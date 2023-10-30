@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Update Credit Voucher'))
+@section('pageTitle',trans('Update Credit/Receive Voucher'))
 @section('pageSubTitle',trans('Update'))
 
 @section('content')

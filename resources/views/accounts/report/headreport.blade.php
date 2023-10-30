@@ -10,6 +10,9 @@
     <div class="row match-height">
         <div class="col-12">
             <div class="card">
+				<div class="text-end">
+                    <button type="button" class="btn btn-info btn-selected" id="addCompanyDescription" onclick="printReport('result_show')">Print</button>
+                </div>
                 <div class="card-content">
 
 					@if(Session::has('response'))
@@ -18,9 +21,20 @@
 						</div>
 					@endif
 			
-					<div class="text-center"><h4>Head Wise Report Search</h4></div>
-					<div class="card-body">
-						<form method="get" action="">
+					{{-- <div class="text-center"><h4>Head Wise Report Search</h4></div> --}}
+					<div class="card-body" id="result_show">
+						<table style="width: 100%" id="companyDescript">
+                            <tr style="text-align: center;">
+                                <th colspan="2">
+                                    <h4>M/S. RAMPURA SYNDICATE</h4>
+                                    <p>R.S TOWER 193, KHATUNGONJ, CHATTOGRAM</p>
+                                    <p>IMPORT, EXPORTER, WHOLESALER, RETAILSALER & COMMISSION AGENT</p>
+                                    <p>E-MAIL: <a href="#" style="border-bottom: solid 1px; border-color:blue;">rampursyndicate@yahoo.com</a> Contact: +88 01707-377372 & +88 01758-982661</p>
+                                    <h6 style="padding-bottom: 2.5rem;">Head Wise Report</h6>
+                                </th>
+                            </tr>
+                        </table>
+						<form method="get" action="" id="form-hide">
 							<div class="row">
 								<div class="col-sm-4">
 									<div class="form-group">
@@ -47,7 +61,7 @@
 									<div class="form-group">
 										<label for="accDate">Year</label>
 										<div class="input-group">
-											<input class="form-control date-picker" name="current_date" type="text" data-date-format="dd-mm-yyyy" required />
+											<input class="form-control date-picker" name="current_date" id="inputDate" type="text" data-date-format="dd-mm-yyyy" required />
 											<span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 										</div>
 									</div>
@@ -60,6 +74,7 @@
 					
 		
 						<div class="tbl_scroll">
+							<div class="d-flex justify-content-between mb-2" id="print-content"></div>
 							<table class="table table-bordered table-hover" width="100%">
 								<thead>
 									<tr>
@@ -158,6 +173,32 @@
             
     		setTimeout(function() {$('.alert').hide('slowly');},3000);
     	});
+    }
+</script>
+<script>
+    function printReport(divName) {
+        $('.acc-head-report').removeClass('d-none');
+        var selectedValue = $('#head_id option:selected').text();
+        var inputDate = $('#inputDate').val();
+
+		var printContentDiv = document.getElementById('print-content');
+        printContentDiv.innerHTML = '<label>Head Name: ' + selectedValue + '</label><label>Year: ' + inputDate + '</label>';
+        var prtContent = document.getElementById(divName);
+
+        var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+        WinPrint.document.write('<link rel="stylesheet" href="{{ asset('assets/css/main/app.css') }}" type="text/css"/>');
+
+		var style = '<style>#form-hide { display: none; }</style>';
+        WinPrint.document.write(style);
+
+		WinPrint.document.write(printContentDiv.innerHTML);
+        WinPrint.document.write(prtContent.innerHTML); // Include the rest of the content
+        WinPrint.document.close();
+        WinPrint.onload = function () {
+            WinPrint.focus();
+            WinPrint.print();
+            WinPrint.close();
+        }
     }
 </script>
 @endpush

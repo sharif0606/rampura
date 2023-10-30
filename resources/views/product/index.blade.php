@@ -40,7 +40,7 @@
                                 {{-- <th scope="col">{{__('Bar Code')}}</th> --}}
                                 {{-- <th scope="col">{{__('Brand')}}</th> --}}
                                 <th scope="col">{{__('Category')}}</th>
-                                {{-- <th scope="col">{{__('Sub Category')}}</th> --}}
+                                <th scope="col">{{__('Sub Category')}}</th>
                                 {{-- <th scope="col">{{__('Child Category')}}</th> --}}
                                 <th scope="col">{{__('Name')}}</th>
                                 {{-- <th scope="col">{{__('Units')}}</th> --}}
@@ -57,7 +57,7 @@
                                 {{-- <td>{{$p->bar_code}}</td> --}}
                                 {{-- <td>{{$p->brand?->name}}</td> --}}
                                 <td>{{$p->category?->category}}</td>
-                                {{-- <td>{{$p->subcategory?->name}}</td> --}}
+                                <td>{{$p->subcategory?->name}}</td>
                                 {{-- <td>{{$p->childcategory?->name}}</td> --}}
                                 <td>{{$p->product_name}}</td>
                                 {{-- <td>{{$p->unit?->name}}</td> --}}

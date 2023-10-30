@@ -106,7 +106,7 @@ class CreditVoucherController extends Controller
 				$sub2Arr = DB::select("SELECT * FROM child_ones WHERE sub_head_id = {$sub1_row->id} and company_id={$company} ORDER BY id ASC");
 				if ($sub2Arr){
 					foreach ($sub2Arr as $sub2_row){
-					    if($sub1_row->id==1 || $sub1_row->id==2){/*nothing will get*/}else{
+						if($sub2_row->head_code=="1110" || $sub2_row->head_code=="1120"){/*nothing will get*/}else{
 					        $fcoa_bkdnArr["{$sub2_row->id}"]=array(
 															"id"=>$sub2_row->id,
 															"parent"=>$sub1_row->id,

@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Update Debit Voucher'))
+@section('pageTitle',trans('Update Debit/Payment Voucher'))
 @section('pageSubTitle',trans('Update'))
 
 @section('content')

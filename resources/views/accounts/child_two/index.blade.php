@@ -18,7 +18,7 @@
                                     <th scope="col">{{__('Child Two')}}</th>
                                 
                                     <th scope="col">{{__('Opening Balance')}}</th>
-                                    <th class="white-space-nowrap">{{__('ACTION')}}</th>
+                                    {{-- <th class="white-space-nowrap">{{__('ACTION')}}</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -29,7 +29,7 @@
                                     <td>{{$d->head_name}} - {{$d->head_code}}</td>
                                
                                     <td>{{$d->opening_balance}}</td>
-                                    <td class="white-space-nowrap">
+                                    {{-- <td class="white-space-nowrap">
                                         <a href="{{route(currentUser().'.child_two.edit',encryptor('encrypt',$d->id))}}">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
@@ -41,7 +41,7 @@
                                             @method('delete')
                                             
                                         </form>
-                                    </td>
+                                    </td> --}}
                                 </tr>
                                 @empty
                                 <tr>

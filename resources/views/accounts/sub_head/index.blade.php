@@ -20,7 +20,7 @@
                                     <th scope="col">{{__('Sub Head')}}</th>
                                    
                                     <th scope="col">{{__('Opening Balance')}}</th>
-                                    <th class="white-space-nowrap">{{__('ACTION')}}</th>
+                                    {{-- <th class="white-space-nowrap">{{__('ACTION')}}</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -31,19 +31,19 @@
                                     <td>{{$d->head_name}} - {{$d->head_code}}</td>
                            
                                     <td>{{$d->opening_balance}}</td>
-                                    <td class="white-space-nowrap">
+                                    {{-- <td class="white-space-nowrap">
                                         <a href="{{route(currentUser().'.sub_head.edit',encryptor('encrypt',$d->id))}}">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        {{-- <a href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
+                                        <a href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                         <form id="form{{$d->id}}" action="{{route(currentUser().'.sub_head.destroy',encryptor('encrypt',$d->id))}}" method="post">
                                             @csrf
                                             @method('delete')
                                             
-                                        </form> --}}
-                                    </td>
+                                        </form>
+                                    </td> --}}
                                 </tr>
                                 @empty
                                 <tr>

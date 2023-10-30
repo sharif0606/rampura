@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Stock Individual Product Wise Reports'))
+@section('pageTitle',trans('Stock Individual Lot Wise Reports'))
 @section('pageSubTitle',trans('Reports'))
 @push("styles")
 <link rel="stylesheet" href="{{ asset('assets/css/main/full-screen.css') }}">

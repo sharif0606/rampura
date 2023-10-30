@@ -82,19 +82,24 @@ class ReportController extends Controller
     public function stockindividual($id)
     {
         $company = company()['company_id'];
-        $where = '';
-
-        // $sql = "SELECT products.product_name,products.id, stocks.*, SUM(stocks.quantity) as qty, SUM(stocks.quantity_bag) as bagQty, SUM(stocks.total_amount) as amount, AVG(stocks.unit_price) as avunitprice 
-        //         FROM stocks 
-        //         JOIN products ON products.id = stocks.product_id 
-        //         WHERE stocks.company_id = ? AND stocks.product_id = $id AND stocks.sales_id IS NULL $where";
-                
+        $where = '';       
         $salesItem = Sales_details::where('product_id', $id)->where('company_id', $company)->get();
-        // $stock = DB::select($sql, [$company]);
         $stock = Stock::where('product_id',$id)->where(company())->get();
         $product = Product::where('id',$id)->first();
 
         return view('reports.stockReportIndividual', compact('stock', 'salesItem','product'));
+    }
+
+    public function stockindividualByLot($lot_no)
+    {
+        $company = company()['company_id'];
+        $where = '';     
+        $salesItem = Sales_details::where('lot_no', $lot_no)->where('company_id', $company)->get();
+        $stock = Stock::where('lot_no',$lot_no)->where(company())->get();
+        $first = $stock->first()->product_id;
+        $product = Product::where('id',$first)->where(company())->first();
+
+        return view('reports.stockReportIndividualByLot', compact('stock', 'salesItem','product'));
     }
 
 

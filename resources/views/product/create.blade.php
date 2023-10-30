@@ -30,7 +30,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="form-group">
                                             <label for="subcategory">{{__('Sub Category')}}</label>
                                             <select onchange="show_childcat(this.value)" class="form-control form-select" name="subcategory" id="subcategory">

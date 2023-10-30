@@ -109,7 +109,7 @@
                                                 @endforeach
                                             </td>
                                             <td><a href="{{route(currentUser().'.stock.individual',$s->product_id)}}">{{$s->product_name}}</a></td>
-                                            <td>{{$s->lot_no}}</td>
+                                            <td><a href="{{route(currentUser().'.stock.individual_lot',$s->lot_no)}}">{{$s->lot_no}}</a></td>
                                             <td>{{$s->brand}}</td>
                                             <td>{{$s->bagQty}}</td>
                                             <td>{{$s->qty}}</td>
