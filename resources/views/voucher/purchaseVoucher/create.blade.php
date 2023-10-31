@@ -101,7 +101,7 @@
                                                     <input type='hidden' name='expense_id[]' value=''>
                                                     <select name="supplier_id[]" class="form-control form-select" required onchange="addTextSupplier(this)">
                                                         <option value="">Select</option>
-                                                        @forelse (App\Models\Suppliers\Supplier::all(); as $d)
+                                                        @forelse (App\Models\Suppliers\Supplier::where(company())->get(); as $d)
                                                             <option value="{{$d->id}}">{{$d->supplier_name}} ({{$d->contact}})</option>
                                                         @empty
                                                             <option value="">No Data Found</option>

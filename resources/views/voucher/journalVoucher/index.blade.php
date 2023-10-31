@@ -49,6 +49,9 @@
                                 <td>{{$cr->purpose}}</td>
                                 <td>{{$cr->debit_sum}}</td>
                                 <td class="white-space-nowrap">
+                                    <a href="{{route(currentUser().'.journal.show',encryptor('encrypt',$cr->id))}}">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
                                     <a href="{{route(currentUser().'.journal.edit',encryptor('encrypt',$cr->id))}}">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>

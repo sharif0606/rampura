@@ -14,7 +14,7 @@ use DB;
 class PurchasePendingsController extends Controller
 {
     public function purchase_pending_expense(Request $request){
-        $expense = ExpenseOfPurchase::where(company())->where('status',0);
+        $expense = ExpenseOfPurchase::where(company())->where('sign_for_calculate', '+')->where('status',0);
         if ($request->fdate) {
             $tdate = $request->tdate ? $request->tdate : $request->fdate;
             $startDate = Carbon::createFromFormat('Y-m-d', $request->fdate)->startOfDay();

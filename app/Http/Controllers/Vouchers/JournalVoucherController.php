@@ -382,9 +382,11 @@ class JournalVoucherController extends Controller
      * @param  \App\Models\Voucher\JournalVoucher  $journalVoucher
      * @return \Illuminate\Http\Response
      */
-    public function show(JournalVoucher $journalVoucher)
+    public function show($id)
     {
-        //
+        $journalVoucher=JournalVoucher::findOrFail(encryptor('decrypt',$id));
+		$jvbkdn=JournalVoucherBkdn::where('journal_voucher_id',encryptor('decrypt',$id))->get();
+		return view('voucher.journalVoucher.show',compact('journalVoucher','jvbkdn'));
     }
 
     /**

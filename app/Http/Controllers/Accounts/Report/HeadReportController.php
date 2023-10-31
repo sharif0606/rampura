@@ -17,7 +17,7 @@ use DB;
 
 class HeadReportController extends Controller{
     public function index(Request $r){
-        $headlists=Generalledger::groupBy(['master_account_id','sub_head_id','child_one_id','child_two_id'])->get();
+        $headlists=Generalledger::groupBy(['master_account_id','sub_head_id','child_one_id','child_two_id'])->where(company())->get();
         
         $startDate=$endDate=date("Y-m-d");
         
@@ -35,8 +35,8 @@ class HeadReportController extends Controller{
             $head_id=$head_id[0];
         }
         if($head_id){
-            $accOldData=Generalledger::where('rec_date', '<',$startDate)->where($table_id_name,$head_id)->orderBy('rec_date')->get();
-            $accData=Generalledger::whereBetween('rec_date', [$startDate, $endDate])->where($table_id_name,$head_id)->orderBy('rec_date')->get();
+            $accOldData=Generalledger::where('rec_date', '<',$startDate)->where($table_id_name,$head_id)->orderBy('rec_date')->where(company())->get();
+            $accData=Generalledger::whereBetween('rec_date', [$startDate, $endDate])->where($table_id_name,$head_id)->orderBy('rec_date')->where(company())->get();
         }
         
         $head_id=$head_id.$table_id_name;
