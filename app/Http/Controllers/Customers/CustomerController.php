@@ -89,6 +89,9 @@ class CustomerController extends Controller
                 $ach->head_code = '1130'.$cus->id;
                 $ach->opening_balance =0;
                 $ach->save();
+
+                $cus->account_id= $ach->id;
+                $cus->save();
                 return redirect()->route(currentUser().'.customer.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
@@ -169,6 +172,8 @@ class CustomerController extends Controller
                     $ach->opening_balance =0;
                     $ach->save();
                 }
+                $sup->account_id= $ach->id;
+                $sup->save();
                 return redirect()->route(currentUser().'.customer.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
