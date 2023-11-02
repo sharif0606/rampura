@@ -75,6 +75,7 @@ class ProductController extends Controller
             $p->purchase_price=$request->purchase_price;
             
             $p->company_id=company()['company_id'];
+            $p->created_by=currentUserId();
             $p->status=1;
             if($request->has('image'))
                 $p->image=$this->resizeImage($request->image,'images/product/'.company()['company_id'],true,200,200,false);
@@ -148,6 +149,7 @@ class ProductController extends Controller
             }
 
             $p->company_id=company()['company_id'];
+            $p->updated_by=currentUserId();
             $p->status=1;
             if($p->save())
                 return redirect()->route(currentUser().'.product.index')->with($this->resMessageHtml(true,null,'Successfully created'));

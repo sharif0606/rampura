@@ -25,7 +25,8 @@ return new class extends Migration
             $table->foreign('warehouse_to')->references('id')->on('warehouses')->onDelete('cascade');
             $table->date('transfer_date');
             $table->decimal('quantity',10,2,)->default(0);
-            $table->string('created_by');
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
         });
     }

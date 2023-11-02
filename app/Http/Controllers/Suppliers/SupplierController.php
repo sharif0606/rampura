@@ -84,6 +84,7 @@ class SupplierController extends Controller
             $sup->address= $request->address;
             $sup->branch_id= $request->branch_id;
             $sup->company_id=company()['company_id'];
+            $sup->created_by=currentUserId();
             if($sup->save()){
                 $ach = new Child_two;
                 $ach->child_one_id=4;
@@ -91,6 +92,7 @@ class SupplierController extends Controller
                 $ach->head_name=$request->supplier_name;
                 $ach->head_code = '2130'.$sup->id;
                 $ach->opening_balance =$request->openingAmount ?? 0;
+                $ach->created_by=currentUserId();
                 if($ach->save()){
                     $sup->account_id= $ach->id;
                     $sup->save();
@@ -160,11 +162,13 @@ class SupplierController extends Controller
             $sup->post_code= $request->postCode;
             $sup->post_code= $request->postCode;
             $sup->address= $request->address;
+            $sup->updated_by=currentUserId();
             if($sup->save()){
                 $ach = Child_two::where('head_code', '2130' . $sup->id)->first();
                 if($ach){
                     $ach->head_name=$request->supplier_name;
                     $ach->opening_balance =$request->openingAmount ?? 0;
+                    $ach->updated_by=currentUserId();
                     $ach->save();
                 }else{
                     $ach = new Child_two;
@@ -173,6 +177,7 @@ class SupplierController extends Controller
                     $ach->head_name=$request->supplier_name;
                     $ach->head_code = '2130'.$sup->id;
                     $ach->opening_balance =$request->openingAmount ?? 0;
+                    $ach->created_by=currentUserId();
                     $ach->save();
                     $sup->account_id= $ach->id;
                     $sup->save();

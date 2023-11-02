@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('name_bn')->nullable();
             $table->unsignedBigInteger('upazila_id')->nullable()->index();
             $table->foreign('upazila_id')->references('id')->on('thanas')->onDelete('cascade');
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

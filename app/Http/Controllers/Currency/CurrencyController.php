@@ -49,6 +49,7 @@ class CurrencyController extends Controller
             $cur->currency_symbol=$request->symbol;
             $cur->currency_port=$request->port;
             $cur->currency_rate=$request->rate;
+            $cur->created_by=currentUserId();
             if($cur->save())
                 return redirect()->route(currentUser().'.currency.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             else
@@ -97,6 +98,7 @@ class CurrencyController extends Controller
             $cur->currency_symbol=$request->symbol;
             $cur->currency_port=$request->port;
             $cur->currency_rate=$request->rate;
+            $cur->updated_by=currentUserId();
             if($cur->save())
                 return redirect()->route(currentUser().'.currency.index')->with($this->resMessageHtml(true,null,'Successfully updated'));
             else

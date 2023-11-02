@@ -52,6 +52,7 @@ class WarehouseController extends Controller
             $war->name=$request->name;
             $war->contact=$request->contact;
             $war->address=$request->address;
+            $war->created_by=currentUserId();
 
             if($war->save())
                 return redirect()->route(currentUser().'.warehouse.index')->with($this->resMessageHtml(true,null,'Successfully created'));
@@ -103,6 +104,7 @@ class WarehouseController extends Controller
             $war->branch_id=$request->branch;
             $war->address=$request->address;
             $war->contact=$request->contact;
+            $war->updated_by=currentUserId();
 
             if($war->save())
                 return redirect()->route(currentUser().'.warehouse.index')->with($this->resMessageHtml(true,null,'Successfully created'));

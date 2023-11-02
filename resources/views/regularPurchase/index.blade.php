@@ -31,6 +31,8 @@
                                 <th scope="col">{{__('Warehouse')}}</th>
                                 <th scope="col">{{__('Status')}}</th>
                                 <th scope="col">{{__('Payment Status')}}</th>
+                                <th scope="col">{{__('Created By')}}</th>
+                                <th scope="col">{{__('Updated By')}}</th>
                                 <th class="white-space-nowrap">{{__('Action') }}</th>
                             </tr>
                         </thead>
@@ -44,6 +46,8 @@
                                 <td>{{$pur->warehouse?->name}}</td>
                                 <td>{{$st[$pur->status]}}</td>
                                 <td>{{$pst[$pur->payment_status]}}</td>
+                                <td>{{$pur->createdBy?->name}}</td>
+                                <td>{{$pur->updatedBy?->name}}</td>
                                 <td class="white-space-nowrap">
                                     <a href="{{route(currentUser().'.rpurchase.show',encryptor('encrypt',$pur->id))}}">
                                         <i class="bi bi-eye-fill"></i>
@@ -62,7 +66,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <th colspan="8" class="text-center">No Data Found</th>
+                                <th colspan="10" class="text-center">No Data Found</th>
                             </tr>
                             @endforelse
                         </tbody>

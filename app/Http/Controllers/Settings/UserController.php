@@ -64,6 +64,7 @@ class UserController extends Controller
             $user->company_id=company()['company_id'];
             $user->branch_id=$request->branch_id;
             $user->role_id=$request->role_id;
+            $user->created_by=currentUserId();
             if($request->has('image'))
                 $user->image=$this->resizeImage($request->image,'images/users/'.company()['company_id'],true,200,200,false);
             if($user->save())
@@ -127,6 +128,7 @@ class UserController extends Controller
 
             $user->branch_id=$request->branch_id;
             $user->role_id=$request->role_id;
+            $user->updated_by=currentUserId();
             $path='images/users/'.company()['company_id'];
             if($request->has('image') && $request->image)
                 if($this->deleteImage($user->image,$path))
@@ -137,6 +139,7 @@ class UserController extends Controller
                     request()->session()->put(
                         [
                             'image'=>$user->image?$user->image:$user->image,
+                            'userName'=>encryptor('encrypt',$user->name),
                         ]);
                     return redirect()->route(currentUser().'.profile.update')->with($this->resMessageHtml(true,null,'Successfully updated'));
                 }else{
@@ -145,7 +148,7 @@ class UserController extends Controller
             else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
-            // dd($e);
+            dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }

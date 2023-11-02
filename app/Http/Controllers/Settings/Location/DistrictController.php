@@ -49,6 +49,7 @@ class DistrictController extends Controller
             $district->division_id=$request->division_id;
             $district->name=$request->districtName;
             $district->name_bn=$request->districtBn;
+            $district->created_by=currentUserId();
             if($district->save())
                 return redirect()->route(currentUser().'.district.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             else
@@ -97,6 +98,7 @@ class DistrictController extends Controller
             $district->division_id=$request->division_id;
             $district->name=$request->districtName;
             $district->name_bn=$request->districtBn;
+            $district->updated_by=currentUserId();
             if($district->save())
                 return redirect()->route(currentUser().'.district.index')->with($this->resMessageHtml(true,null,'Successfully update'));
                 else

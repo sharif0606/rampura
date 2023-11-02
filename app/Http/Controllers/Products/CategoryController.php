@@ -48,6 +48,7 @@ class CategoryController extends Controller
             $cat= new Category;
             $cat->category=$request->category;
             $cat->company_id=company()['company_id'];
+            $cat->created_by=currentUserId();
             if($request->has('image'))
                 $cat->image=$this->resizeImage($request->image,'images/category/'.company()['company_id'],true,200,200,false);
             
@@ -96,6 +97,7 @@ class CategoryController extends Controller
         try{
             $cat= Category::findOrFail(encryptor('decrypt',$id));
             $cat->category=$request->category;
+            $cat->updated_by=currentUserId();
             $path='images/category/'.company()['company_id'];
             if($request->has('image') && $request->image)
                 if($this->deleteImage($cat->image,$path))

@@ -50,6 +50,7 @@ class ChildcategoryController extends Controller
             $childcat->subcategory_id=$request->subcategory;
             $childcat->name=$request->childcat;
             $childcat->company_id=company()['company_id'];
+            $childcat->created_by=currentUserId();
             if($childcat->save())
                 return redirect()->route(currentUser().'.childcategory.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             else
@@ -97,6 +98,7 @@ class ChildcategoryController extends Controller
             $childcat=Childcategory::findOrFail(encryptor('decrypt',$id));
             $childcat->subcategory_id=$request->subcategory;
             $childcat->name=$request->childcat;
+            $childcat->updated_by=currentUserId();
             if($childcat->save())
                 return redirect()->route(currentUser().'.childcategory.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             else

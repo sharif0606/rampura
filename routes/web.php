@@ -199,6 +199,9 @@ Route::group(['middleware'=>isOwner::class],function(){
 Route::group(['middleware'=>isSalesmanager::class],function(){
     Route::prefix('salesmanager')->group(function(){
         Route::get('/dashboard', [dash::class,'salesmanagerDashboard'])->name('salesmanager.dashboard');
+        Route::get('/profile', [profile::class,'ownerProfile'])->name('salesmanager.profile');
+        Route::get('/profile-update', [profile::class,'ownerProfile'])->name('salesmanager.profile.update');
+        Route::resource('users',user::class,['as'=>'salesmanager']);
 
     });
 });
@@ -206,6 +209,9 @@ Route::group(['middleware'=>isSalesmanager::class],function(){
 Route::group(['middleware'=>isSalesman::class],function(){
     Route::prefix('salesman')->group(function(){
         Route::get('/dashboard', [dash::class,'salesmanDashboard'])->name('salesman.dashboard');
+        Route::get('/profile', [profile::class,'ownerProfile'])->name('salesman.profile');
+        Route::get('/profile-update', [profile::class,'ownerProfile'])->name('salesman.profile.update');
+        Route::resource('users',user::class,['as'=>'salesman']);
 
     });
 });

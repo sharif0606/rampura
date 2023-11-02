@@ -38,6 +38,8 @@ return new class extends Migration
             $table->string('address', 5000)->nullable();
             $table->unsignedBigInteger('branch_id')->nullable()->index();
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

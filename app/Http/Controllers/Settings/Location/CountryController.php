@@ -48,6 +48,7 @@ class CountryController extends Controller
             $country->name=$request->countryName;
             $country->code=$request->countryCode;
             $country->name_bn=$request->countryBn;
+            $country->created_by=currentUserId();
             if($country->save())
                 return redirect()->route(currentUser().'.country.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             else
@@ -95,6 +96,7 @@ class CountryController extends Controller
             $country->name=$request->countryName;
             $country->code=$request->countryCode;
             $country->name_bn=$request->countryBn;
+            $country->updated_by=currentUserId();
             if($country->save())
                 return redirect()->route(currentUser().'.country.index')->with($this->resMessageHtml(true,null,'Successfully updated'));
             else

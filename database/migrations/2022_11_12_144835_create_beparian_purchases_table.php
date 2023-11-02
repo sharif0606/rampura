@@ -23,11 +23,11 @@ return new class extends Migration
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
             $table->unsignedBigInteger('branch_id')->index()->foreign()->references('id')->on('branches')->onDelete('cascade');
             $table->unsignedBigInteger('warehouse_id')->index()->foreign()->references('id')->on('warehouses')->onDelete('cascade');
-            $table->string('created_by');
-            $table->string('updated_by')->nullable();
             $table->integer('payment_status')->comment('0 unpaid, 1 paid, 2 partial_paid')->default(0)->nullable();
             $table->integer('status')->comment('1 parches, 2 return, 3 partial_return, 4 cancel')->default(1);
             $table->string('status_note')->nullable();
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

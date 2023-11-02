@@ -29,6 +29,8 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->boolean('status')->default(1)->comment('1=>active 2=>inactive');
             $table->rememberToken();
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

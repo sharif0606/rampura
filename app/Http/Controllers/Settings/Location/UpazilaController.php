@@ -50,6 +50,7 @@ class UpazilaController extends Controller
             $upazila->district_id=$request->district_id;
             $upazila->name=$request->upazilaName;
             $upazila->name_bn=$request->upazilaBn;
+            $upazila->created_by=currentUserId();
             if($upazila->save())
                 return redirect()->route(currentUser().'.upazila.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             else
@@ -98,6 +99,7 @@ class UpazilaController extends Controller
             $upazila->district_id=$request->district_id;
             $upazila->name=$request->upazilaName;
             $upazila->name_bn=$request->upazilaBn;
+            $upazila->updated_by=currentUserId();
             if($upazila->save())
                 return redirect()->route(currentUser().'.upazila.index')->with($this->resMessageHtml(true,null,'Successfully update'));
                 else

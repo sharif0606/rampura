@@ -27,6 +27,8 @@
                                 <th scope="col">{{__('Pay Name')}}</th>
                                 <th scope="col">{{__('Purpose')}}</th>
                                 <th scope="col">{{__('Amount')}}</th>
+                                <th scope="col">{{__('Created By')}}</th>
+                                <th scope="col">{{__('Updated By')}}</th>
                                 <th class="white-space-nowrap">{{__('Action') }}</th>
                             </tr>
                         </thead>
@@ -39,6 +41,8 @@
                                 <td>{{$cr->pay_name}}</td>
                                 <td>{{$cr->purpose}}</td>
                                 <td>{{$cr->debit_sum}}</td>
+                                <td>{{$cr->createdBy?->name}}</td>
+                                <td>{{$cr->updatedBy?->name}}</td>
                                 <td class="white-space-nowrap">
                                     <a href="{{route(currentUser().'.debit.show',encryptor('encrypt',$cr->id))}}">
                                         <i class="bi bi-eye"></i>
@@ -50,7 +54,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <th colspan="7" class="text-center">No Data Found</th>
+                                <th colspan="9" class="text-center">No Data Found</th>
                             </tr>
                             @endforelse
                         </tbody>

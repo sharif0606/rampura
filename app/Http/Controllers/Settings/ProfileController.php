@@ -22,8 +22,7 @@ class ProfileController extends Controller
      */
     public function ownerProfile()
     {
-        
-        $users=User::where(company(currentUserId()))->first();
+        $users=User::where('id',currentUserId())->where(company())->first();
         // dd(currentUserId());
            return view('settings.users.profile',compact('users'));
           
@@ -36,7 +35,7 @@ class ProfileController extends Controller
     public function adminProfile()
     {
         
-        $users=User::where(company(currentUserId()))->first();
+        $users=User::where('id',currentUserId())->where(company())->first();
         // dd(currentUserId());
         return view('settings.adminusers.profiles',compact('users'));
     }
@@ -53,6 +52,7 @@ class ProfileController extends Controller
             $user->contact_no=$request->contactNumber;
             $user->email=$request->userEmail;
             $user->language=$request->language;
+            $user->updated_by=currentUserId();
             if($request->has('password') && $request->password)
                 $user->password=Hash::make($request->password);
                 
@@ -75,7 +75,7 @@ class ProfileController extends Controller
             else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
-            // dd($e);
+            dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }

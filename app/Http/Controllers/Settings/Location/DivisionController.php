@@ -50,6 +50,7 @@ class DivisionController extends Controller
             $division->country_id=$request->country;
             $division->name=$request->divisionName;
             $division->name_bn=$request->divisionBn;
+            $division->created_by=currentUserId();
             if($division->save())
                 return redirect()->route(currentUser().'.division.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             else
@@ -98,6 +99,7 @@ class DivisionController extends Controller
             $division->country_id=$request->country;
             $division->name=$request->divisionName;
             $division->name_bn=$request->divisionBn;
+            $division->updated_by=currentUserId();
             if($division->save())
                 return redirect()->route(currentUser().'.division.index')->with($this->resMessageHtml(true,null,'Successfully updated'));
             else

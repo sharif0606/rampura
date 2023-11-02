@@ -52,6 +52,7 @@ class SubHeadController extends Controller
             $mac->head_name= $request->head_name;
             $mac->head_code= $request->head_code;
             $mac->opening_balance= $request->opening_balance;
+            $mac->created_by=currentUserId();
 
         if($mac->save())
                 return redirect()->route(currentUser().'.sub_head.index')->with($this->resMessageHtml(true,null,'Successfully created'));
@@ -102,6 +103,7 @@ class SubHeadController extends Controller
             $mac->head_name= $request->head_name;
             $mac->head_code= $request->head_code;
             $mac->opening_balance= $request->opening_balance;
+            $mac->updated_by=currentUserId();
 
         if($mac->save())
                 return redirect()->route(currentUser().'.sub_head.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));

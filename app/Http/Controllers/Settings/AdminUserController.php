@@ -56,6 +56,7 @@ class AdminUserController extends Controller
             $user->email=$request->userEmail;
             $user->password=Hash::make($request->password);
             $user->role_id=1;
+            $user->created_by=currentUserId();
             if($user->save())
                 return redirect()->route(currentUser().'.admin.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             else
@@ -106,6 +107,7 @@ class AdminUserController extends Controller
             $user->contact_no=$request->contactNumber;
             $user->email=$request->userEmail;
             $user->language=$request->language;
+            $user->updated_by=currentUserId();
             if($request->has('password') && $request->password)
                 $user->password=Hash::make($request->password);
 

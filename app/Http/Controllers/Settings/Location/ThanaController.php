@@ -50,6 +50,7 @@ class ThanaController extends Controller
             $thana->upazila_id=$request->upazila_id;
             $thana->name=$request->thanaName;
             $thana->name_bn=$request->thanaBn;
+            $thana->created_by=currentUserId();
             if($thana->save())
                 return redirect()->route(currentUser().'.thana.index')->with($this->resMessageHtml(true,null,'Successfully created'));
             else
@@ -98,6 +99,7 @@ class ThanaController extends Controller
             $thana->upazila_id=$request->upazila_id;
             $thana->name=$request->thanaName;
             $thana->name_bn=$request->thanaBn;
+            $thana->updated_by=currentUserId();
             if($thana->save())
                 return redirect()->route(currentUser().'.thana.index')->with($this->resMessageHtml(true,null,'Successfully update'));
                 else

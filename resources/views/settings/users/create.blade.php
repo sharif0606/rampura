@@ -43,7 +43,7 @@
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="userEmail">{{__('Email')}}</label>
-                                            <input type="text" id="userEmail" class="form-control" value="{{ old('userEmail')}}" name="userEmail">
+                                            <input type="email" id="userEmail" class="form-control" value="{{ old('userEmail')}}" name="userEmail" placeholder="example@gmail.com">
                                             @if($errors->has('userEmail'))
                                                 <span class="text-danger"> {{ $errors->first('userEmail') }}</span>
                                             @endif

@@ -81,6 +81,7 @@ class CustomerController extends Controller
             $cus->post_code= $request->postCode;
             $cus->post_code= $request->postCode;
             $cus->address= $request->address;
+            $cus->created_by=currentUserId();
             $cus->company_id=company()['company_id'];
             //$cus->branch_id=branch()['branch_id'] ?? null;
             if($cus->save()){
@@ -89,6 +90,7 @@ class CustomerController extends Controller
                 $ach->company_id=company()['company_id'];
                 $ach->head_name= $request->customer_name;
                 $ach->head_code = '1130'.$cus->id;
+                $ach->created_by=currentUserId();
                 $ach->opening_balance =$request->openingAmount ?? 0;
                 if($ach->save()){
                     $cus->account_id= $ach->id;
@@ -159,11 +161,13 @@ class CustomerController extends Controller
             $sup->post_code= $request->postCode;
             $sup->post_code= $request->postCode;
             $sup->address= $request->address;
+            $sup->updated_by=currentUserId();
             if($sup->save()){
                 $ach = Child_two::where('head_code', '1130' . $sup->id)->first();
                 if($ach){
                     $ach->head_name= $request->customer_name;
                     $ach->opening_balance =$request->openingAmount ?? 0;
+                    $ach->updated_by=currentUserId();
                     $ach->save();
                 }else{
                     $ach = new Child_two;
@@ -172,6 +176,7 @@ class CustomerController extends Controller
                     $ach->head_name= $request->customer_name;
                     $ach->head_code = '1130'.$sup->id;
                     $ach->opening_balance =$request->openingAmount ?? 0;
+                    $ach->created_by=currentUserId();
                     $ach->save();
                     $sup->account_id= $ach->id;
                     $sup->save();

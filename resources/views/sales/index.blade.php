@@ -31,6 +31,8 @@
                                 <th scope="col">{{__('Warehouse')}}</th>
                                 <th scope="col">{{__('Status')}}</th>
                                 {{-- <th scope="col">{{__('Payment Status')}}</th> --}}
+                                <th scope="col">{{__('Created By')}}</th>
+                                <th scope="col">{{__('Updated By')}}</th>
                                 <th class="white-space-nowrap">{{__('Action') }}</th>
                             </tr>
                         </thead>
@@ -45,6 +47,8 @@
                                 <td>{{$s->warehouse?->name}}</td>
                                 <td>{{$st[$s->status]}}</td>
                                 {{-- <td>{{$pst[$s->payment_status]}}</td> --}}
+                                <td>{{$s->createdBy?->name}}</td>
+                                <td>{{$s->updatedBy?->name}}</td>
                                 <td class="white-space-nowrap">
                                     <a href="{{route(currentUser().'.sales.show',encryptor('encrypt',$s->id))}}">
                                         <i class="bi bi-eye-fill"></i>
@@ -66,7 +70,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <th colspan="9" class="text-center">No Data Found</th>
+                                <th colspan="10" class="text-center">No Data Found</th>
                             </tr>
                             @endforelse
                         </tbody>
