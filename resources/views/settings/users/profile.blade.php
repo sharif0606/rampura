@@ -50,14 +50,14 @@
                         
                         </div>
                     </div>
-                    {{-- <div class="row mb-3">
+                    <div class="row mb-3">
                         <label for="photo" class="col-sm-2 col-form-label">Photo</label>
                         <div class="col-sm-10">
                             
                             <input type="file" id="photo" name="image" class="form-control" onchange="pview(this)">
                             <img src="{{asset('images/users/'.company()['company_id'].'/'.$users->image)}}" id="photo_p" class="my-1" width="100px" alt="">
                         </div>
-                    </div> --}}
+                    </div>
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
