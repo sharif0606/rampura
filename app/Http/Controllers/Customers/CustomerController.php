@@ -173,9 +173,9 @@ class CustomerController extends Controller
                     $ach->head_code = '1130'.$sup->id;
                     $ach->opening_balance =$request->openingAmount ?? 0;
                     $ach->save();
+                    $sup->account_id= $ach->id;
+                    $sup->save();
                 }
-                $sup->account_id= $ach->id;
-                $sup->save();
                 return redirect()->route(currentUser().'.customer.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
