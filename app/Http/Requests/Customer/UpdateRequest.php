@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Customer;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -21,10 +23,32 @@ class UpdateRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(Request $request)
     {
+        $id=encryptor('decrypt',$request->uptoken);
         return [
-            //
+            'customer_name' => [
+                'required',
+                Rule::unique('customers')->where(function ($query) use ($request) {
+                    return $query->where('customer_name', $request->customer_name)
+                       ->where('contact', $request->contact)
+                       ->where(company());
+                 })->ignore($id),
+            ],
+            'contact' => [
+                'required',
+                Rule::unique('customers')->where(function ($query) use ($request) {
+                    return $query->where('customer_name', $request->customer_name)
+                       ->where('contact', $request->contact)
+                       ->where(company());
+                 })->ignore($id),
+            ]
+        ];
+    }
+    public function messages(){
+        return [
+            'required' => "The :attribute field is required",
+            'unique' => 'already exists',
         ];
     }
 }

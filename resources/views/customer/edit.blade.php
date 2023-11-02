@@ -36,10 +36,10 @@
 
                                     <div class="col-md-4 col-12">
                                         <div class="form-group">
-                                            <label for="customerName">{{__('Customer Name')}}<span class="text-danger">*</span></label>
-                                            <input type="text" id="customerName" class="form-control" value="{{ old('customerName',$customer->customer_name)}}" name="customerName" required>
-                                            @if($errors->has('customerName'))
-                                            <span class="text-danger"> {{ $errors->first('customerName') }}</span>
+                                            <label for="customer_name">{{__('Customer Name')}}<span class="text-danger">*</span></label>
+                                            <input type="text" id="customer_name" class="form-control" value="{{ old('customer_name',$customer->customer_name)}}" name="customer_name" required>
+                                            @if($errors->has('customer_name'))
+                                            <span class="text-danger"> {{ $errors->first('customer_name') }}</span>
                                             @endif
                                         </div>
                                         

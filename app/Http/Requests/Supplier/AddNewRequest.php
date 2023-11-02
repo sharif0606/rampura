@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Supplier;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class AddNewRequest extends FormRequest
@@ -22,23 +23,25 @@ class AddNewRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(Request $request)
     {
         return [
-            'supplierName'=> 'required',
-            'supplierName' => [
+            'supplier_name' => [
                 'required',
-                Rule::unique('suppliers', 'supplier_name')->where('supplier_name', $this->input('supplierName')),
+                Rule::unique('suppliers')->where(function ($query) use ($request) {
+                    return $query->where('supplier_name', $request->supplier_name)
+                       ->where('contact', $request->contact)
+                       ->where(company());
+                 }),
             ],
-            'contact'=> 'required',
             'contact' => [
                 'required',
-                Rule::unique('suppliers', 'contact')->where('supplier_name', $this->input('supplierName')),
-            ],
-            'company_id' => [
-                'required',
-                Rule::unique('suppliers', 'company_id')->where('supplier_name', company()),
-            ],
+                Rule::unique('suppliers')->where(function ($query) use ($request) {
+                    return $query->where('supplier_name', $request->supplier_name)
+                       ->where('contact', $request->contact)
+                       ->where(company());
+                 }),
+            ]
         ];
     }
     public function messages(){

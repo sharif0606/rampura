@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\Purchases\Purchase;
+use App\Models\Purchases\Beparian_purchase;
+use App\Models\Purchases\Regular_purchase;
+
 class Supplier extends Model
 {
     use HasFactory,softDeletes;
@@ -22,5 +26,14 @@ class Supplier extends Model
     }
     public function country(){
         return $this->belongsTo(Country::class);
+    }
+    public function purchase(){
+        return $this->hasMany(Purchase::class);
+    }
+    public function beparian_purchase(){
+        return $this->hasMany(Beparian_purchase::class);
+    }
+    public function regular_purchase(){
+        return $this->hasMany(Regular_purchase::class);
     }
 }

@@ -39,10 +39,10 @@
 
                                     <div class="col-md-4 col-12">
                                         <div class="form-group">
-                                            <label for="supplierName">{{__('Supplier Name')}}<span class="text-danger">*</span></label>
-                                            <input type="text" id="supplierName" class="form-control" value="{{ old('supplierName',$supplier->supplier_name)}}" name="supplierName" required>
-                                            @if($errors->has('supplierName'))
-                                            <span class="text-danger"> {{ $errors->first('supplierName') }}</span>
+                                            <label for="supplier_name">{{__('Supplier Name')}}<span class="text-danger">*</span></label>
+                                            <input type="text" id="supplier_name" class="form-control" value="{{ old('supplier_name',$supplier->supplier_name)}}" name="supplier_name" required>
+                                            @if($errors->has('supplier_name'))
+                                            <span class="text-danger"> {{ $errors->first('supplier_name') }}</span>
                                             @endif
                                         </div>
                                         

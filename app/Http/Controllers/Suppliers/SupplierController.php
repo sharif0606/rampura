@@ -17,6 +17,7 @@ use App\Http\Traits\ResponseTrait;
 use App\Models\Accounts\Child_two;
 use Exception;
 use Carbon\Carbon;
+use DB;
 
 class SupplierController extends Controller
 {
@@ -65,14 +66,15 @@ class SupplierController extends Controller
     public function store(AddNewRequest $request)
     {
         try{
+            DB::beginTransaction();
             $sup= new Supplier;
-            $sup->supplier_name= $request->supplierName;
+            $sup->supplier_name= $request->supplier_name;
             $sup->contact= $request->contact;
             $sup->email= $request->email;
             $sup->phone= $request->phone;
             $sup->tax_number= $request->taxNumber;
             $sup->gst_number= $request->gstNumber;
-            $sup->opening_balance= $request->openingAmount;
+            $sup->opening_balance= $request->openingAmount ?? 0;
             $sup->country_id= $request->countryName;
             $sup->division_id= $request->divisionName;
             $sup->district_id= $request->districtName;
@@ -86,18 +88,21 @@ class SupplierController extends Controller
                 $ach = new Child_two;
                 $ach->child_one_id=4;
                 $ach->company_id=company()['company_id'];
-                $ach->head_name=$request->supplierName;
+                $ach->head_name=$request->supplier_name;
                 $ach->head_code = '2130'.$sup->id;
-                $ach->opening_balance =$request->openingAmount;
-                $ach->save();
-
-                $sup->account_id= $ach->id;
-                $sup->save();
-                return redirect()->route(currentUser().'.supplier.index')->with($this->resMessageHtml(true,null,'Successfully created'));
+                $ach->opening_balance =$request->openingAmount ?? 0;
+                if($ach->save()){
+                    $sup->account_id= $ach->id;
+                    $sup->save();
+                    DB::commit();
+                    return redirect()->route(currentUser().'.supplier.index')->with($this->resMessageHtml(true,null,'Successfully created'));
+                }else
+                    return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
-            // dd($e);
+            DB::rollback();
+            //dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }
@@ -141,13 +146,13 @@ class SupplierController extends Controller
     {
         try{
             $sup= Supplier::findOrFail(encryptor('decrypt',$id));
-            $sup->supplier_name= $request->supplierName;
+            $sup->supplier_name= $request->supplier_name;
             $sup->contact= $request->contact;
             $sup->email= $request->email;
             $sup->phone= $request->phone;
             $sup->tax_number= $request->taxNumber;
             $sup->gst_number= $request->gstNumber;
-            $sup->opening_balance= $request->openingAmount;
+            $sup->opening_balance= $request->openingAmount ?? 0;
             $sup->country_id= $request->countryName;
             $sup->division_id= $request->divisionName;
             $sup->district_id= $request->districtName;
@@ -158,28 +163,25 @@ class SupplierController extends Controller
             if($sup->save()){
                 $ach = Child_two::where('head_code', '2130' . $sup->id)->first();
                 if($ach){
-                    $ach->child_one_id=4;
-                    $ach->company_id=company()['company_id'];
-                    $ach->head_name=$request->supplierName;
-                    $ach->head_code = '2130'.$sup->id;
-                    $ach->opening_balance =$request->openingAmount;
+                    $ach->head_name=$request->supplier_name;
+                    $ach->opening_balance =$request->openingAmount ?? 0;
                     $ach->save();
                 }else{
                     $ach = new Child_two;
                     $ach->child_one_id=4;
                     $ach->company_id=company()['company_id'];
-                    $ach->head_name=$request->supplierName;
+                    $ach->head_name=$request->supplier_name;
                     $ach->head_code = '2130'.$sup->id;
-                    $ach->opening_balance =$request->openingAmount;
+                    $ach->opening_balance =$request->openingAmount ?? 0;
                     $ach->save();
+                    $sup->account_id= $ach->id;
+                    $sup->save();
                 }
-                $sup->account_id= $ach->id;
-                $sup->save();
                 return redirect()->route(currentUser().'.supplier.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
-            // dd($e);
+            //dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }
@@ -192,8 +194,15 @@ class SupplierController extends Controller
      */
     public function destroy($id)
     {
-        $cat= Supplier::findOrFail(encryptor('decrypt',$id));
-        $cat->delete();
-        return redirect()->back();
+        $sup= Supplier::findOrFail(encryptor('decrypt',$id));
+        if($sup->beparian_purchase->count() > 0 || $sup->purchase->count() > 0 || $sup->regular_purchase->count() > 0 ){
+            return redirect()->back()->with($this->resMessageHtml(false,'error','You cannot delete this supplier because you have already purchased under this supplier'));
+        }else{
+            $account_id=$sup->account_id;
+            if($sup->delete()){
+                Child_two::destroy($account_id);
+            }
+            return redirect()->back()->with($this->resMessageHtml(true,null,'Successfully Deleted'));
+        }
     }
 }

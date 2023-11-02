@@ -20,12 +20,12 @@
                 </ul>
             </li>
 
-            <li class="submenu-item sidebar-item has-sub"><a href="#" class='sidebar-link'>{{__('Branch')}}</a>
+            <!-- <li class="submenu-item sidebar-item has-sub"><a href="#" class='sidebar-link'>{{__('Branch')}}</a>
                 <ul class="submenu">
                     <li class="py-1 submenu-item"><a href="{{route(currentUser().'.branch.index')}}">{{__('List')}}</a></li>
                     <li class="py-1 submenu-item"><a href="{{route(currentUser().'.branch.create')}}">{{__('Add New')}}</a></li>
                 </ul>
-            </li>
+            </li> -->
             <li class="submenu-item sidebar-item has-sub"><a href="#" class='sidebar-link'>{{__('Warehouse')}}</a>
                 <ul class="submenu">
                     <li class="py-1 submenu-item"><a href="{{route(currentUser().'.warehouse.index')}}">{{__('List')}}</a></li>

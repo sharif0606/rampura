@@ -16,6 +16,7 @@ use App\Http\Requests\Customer\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
 use App\Models\Accounts\Child_two;
 use Exception;
+use DB;
 
 class CustomerController extends Controller
 {
@@ -61,17 +62,18 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AddNewRequest $request)
     {
         try{
+            DB::beginTransaction();
             $cus= new Customer;
-            $cus->customer_name= $request->customerName;
+            $cus->customer_name= $request->customer_name;
             $cus->contact= $request->contact;
             $cus->email= $request->email;
             $cus->phone= $request->phone;
             $cus->tax_number= $request->taxNumber;
             $cus->gst_number= $request->gstNumber;
-            $cus->opening_balance= $request->openingAmount;
+            $cus->opening_balance= $request->openingAmount ?? 0;
             $cus->country_id= $request->countryName;
             $cus->division_id= $request->divisionName;
             $cus->district_id= $request->districtName;
@@ -80,23 +82,26 @@ class CustomerController extends Controller
             $cus->post_code= $request->postCode;
             $cus->address= $request->address;
             $cus->company_id=company()['company_id'];
-            $cus->branch_id?branch()['branch_id']:null;
+            //$cus->branch_id=branch()['branch_id'] ?? null;
             if($cus->save()){
                 $ach = new Child_two;
                 $ach->child_one_id=3;
                 $ach->company_id=company()['company_id'];
-                $ach->head_name= $request->customerName;
+                $ach->head_name= $request->customer_name;
                 $ach->head_code = '1130'.$cus->id;
-                $ach->opening_balance =0;
-                $ach->save();
-
-                $cus->account_id= $ach->id;
-                $cus->save();
-                return redirect()->route(currentUser().'.customer.index')->with($this->resMessageHtml(true,null,'Successfully created'));
+                $ach->opening_balance =$request->openingAmount ?? 0;
+                if($ach->save()){
+                    $cus->account_id= $ach->id;
+                    $cus->save();
+                    DB::commit();
+                    return redirect()->route(currentUser().'.customer.index')->with($this->resMessageHtml(true,null,'Successfully created'));
+                }else
+                    return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
-            // dd($e);
+            DB::rollback();
+            dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }
@@ -136,17 +141,17 @@ class CustomerController extends Controller
      * @param  \App\Models\Customers\customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(UpdateRequest $request,$id)
     {
         try{
             $sup= Customer::findOrFail(encryptor('decrypt',$id));
-            $sup->customer_name= $request->customerName;
+            $sup->customer_name= $request->customer_name;
             $sup->contact= $request->contact;
             $sup->email= $request->email;
             $sup->phone= $request->phone;
             $sup->tax_number= $request->taxNumber;
             $sup->gst_number= $request->gstNumber;
-            $sup->opening_balance= $request->openingAmount;
+            $sup->opening_balance= $request->openingAmount ?? 0;
             $sup->country_id= $request->countryName;
             $sup->division_id= $request->divisionName;
             $sup->district_id= $request->districtName;
@@ -157,19 +162,16 @@ class CustomerController extends Controller
             if($sup->save()){
                 $ach = Child_two::where('head_code', '1130' . $sup->id)->first();
                 if($ach){
-                    $ach->child_one_id=3;
-                    $ach->company_id=company()['company_id'];
-                    $ach->head_name= $request->customerName;
-                    $ach->head_code = '1130'.$sup->id;
-                    $ach->opening_balance =0;
+                    $ach->head_name= $request->customer_name;
+                    $ach->opening_balance =$request->openingAmount ?? 0;
                     $ach->save();
                 }else{
                     $ach = new Child_two;
                     $ach->child_one_id=3;
                     $ach->company_id=company()['company_id'];
-                    $ach->head_name= $request->customerName;
+                    $ach->head_name= $request->customer_name;
                     $ach->head_code = '1130'.$sup->id;
-                    $ach->opening_balance =0;
+                    $ach->opening_balance =$request->openingAmount ?? 0;
                     $ach->save();
                 }
                 $sup->account_id= $ach->id;
@@ -191,8 +193,16 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        $cat= Customer::findOrFail(encryptor('decrypt',$id));
-        $cat->delete();
-        return redirect()->back();
+        $sup= Customer::findOrFail(encryptor('decrypt',$id));
+        if($sup->sales->count() > 0){
+            return redirect()->back()->with($this->resMessageHtml(false,'error','You cannot delete this customer because you have already sales under this customer'));
+        }else{
+            $account_id=$sup->account_id;
+            if($sup->delete()){
+                Child_two::destroy($account_id);
+            }
+            return redirect()->back()->with($this->resMessageHtml(true,null,'Successfully Deleted'));
+        }
+        
     }
 }

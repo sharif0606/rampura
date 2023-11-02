@@ -23,24 +23,26 @@ class UpdateRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules(Request $r)
+    public function rules(Request $request)
     {
-        $id=encryptor('decrypt',$r->uptoken);
+        $id=encryptor('decrypt',$request->uptoken);
         return [
-            'supplierName'=> 'required',
-            'supplierName' => [
+            'supplier_name' => [
                 'required',
-                Rule::unique('suppliers', 'supplier_name,'.$id)->where('supplier_name', $this->input('supplierName')),
+                Rule::unique('suppliers')->where(function ($query) use ($request) {
+                    return $query->where('supplier_name', $request->supplier_name)
+                       ->where('contact', $request->contact)
+                       ->where(company());
+                 })->ignore($id),
             ],
-            'contact'=> 'required',
             'contact' => [
                 'required',
-                Rule::unique('suppliers', 'contact,'.$id)->where('supplier_name', $this->input('supplierName')),
-            ],
-            'company_id' => [
-                'required',
-                Rule::unique('suppliers', 'company_id,'.$id)->where('supplier_name', company()),
-            ],
+                Rule::unique('suppliers')->where(function ($query) use ($request) {
+                    return $query->where('supplier_name', $request->supplier_name)
+                       ->where('contact', $request->contact)
+                       ->where(company());
+                 })->ignore($id),
+            ]
         ];
     }
     public function messages(){
