@@ -415,7 +415,7 @@ class DebitVoucherController extends Controller
     {
         $dvoucher=DebitVoucher::findOrFail(encryptor('decrypt',$id));
 		$dvoucherbkdn=DevoucherBkdn::where('debit_voucher_id',encryptor('decrypt',$id))->get();
-		return view('voucher.debitvoucher.show',compact('dvoucher','dvoucherbkdn'));
+		return view('voucher.debitVoucher.show',compact('dvoucher','dvoucherbkdn'));
     }
 
     /**
