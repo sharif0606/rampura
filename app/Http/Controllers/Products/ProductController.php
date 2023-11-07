@@ -34,7 +34,7 @@ class ProductController extends Controller
         if($request->name)
             $products=$products->where('product_name','like','%'.$request->name.'%');
 
-        $products=$products->paginate(15);
+        $products=$products->orderBy('id', 'DESC')->paginate(15);
         return view('product.index',compact('products'));
     }
 

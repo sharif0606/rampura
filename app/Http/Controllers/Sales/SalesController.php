@@ -23,6 +23,7 @@ use App\Models\Settings\Company;
 use App\Models\Customers\Customer;
 use App\Models\Products\Product;
 use App\Http\Requests\Sales\AddNewRequest;
+use App\Http\Requests\Sales\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
 use App\Models\Customers\CustomerPayment;
 use App\Models\Customers\CustomerPaymentDetails;
@@ -41,9 +42,9 @@ class SalesController extends Controller
     public function index()
     {
         if( currentUser()=='owner')
-            $sales = Sales::where(company())->paginate(10);
+            $sales = Sales::where(company())->orderBy('id', 'DESC')->paginate(10);
         else
-            $sales = Sales::where(company())->where(branch())->paginate(10);
+            $sales = Sales::where(company())->where(branch())->orderBy('id', 'DESC')->paginate(10);
 
 
         return view('sales.index',compact('sales'));
@@ -634,7 +635,7 @@ class SalesController extends Controller
      * @param  \App\Models\Sales\Sales  $sales
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         DB::beginTransaction();
         try{

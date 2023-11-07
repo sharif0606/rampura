@@ -39,10 +39,10 @@
                                                 <option value="">No branch found</option>
                                             @endforelse          
                                         </select>      
+                                        @if($errors->has('branch_id'))
+                                            <span class="text-danger"> {{ $errors->first('branch_id') }}</span>
+                                        @endif
                                     </div>
-                                    @if($errors->has('branch_id'))
-                                        <span class="text-danger"> {{ $errors->first('branch_id') }}</span>
-                                    @endif
                                     
                                 @else
                                     <input type="hidden" value="{{ branch()['branch_id']}}" name="branch_id" id="branch_id">
@@ -56,17 +56,17 @@
                                     <select required class="choices form-select" name="customerName" id="customerName" onchange="$('#customer_r_name').val($(this).find('option:selected').text())">
                                         <option value="">Select Customer</option>
                                         @forelse($customers as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('customerName')==$d->id?"selected":""}}> {{ $d->customer_name}}</option>
+                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('customerName')==$d->id?"selected":""}}> {{ $d->customer_name}}-[{{ $d->contact}}]</option>
                                         @empty
                                             <option value="">No Data found</option>
                                         @endforelse
                                     </select>
+                                    @if($errors->has('customerName'))
+                                        <span class="text-danger"> {{ $errors->first('customerName') }}</span>
+                                    @endif
                                     <input type="hidden" name="customer_r_name" id="customer_r_name">
                                 </div>
                                 
-                                @if($errors->has('customerName'))
-                                <span class="text-danger"> {{ $errors->first('customerName') }}</span>
-                                @endif
 
 
                                 <div class="col-md-2 mt-2">
@@ -81,11 +81,11 @@
                                             <option value="">No Data found</option>
                                         @endforelse
                                     </select>
+                                    @if($errors->has('warehouse_id'))
+                                        <span class="text-danger"> {{ $errors->first('warehouse_id') }}</span>
+                                    @endif 
                                 </div>
                                 
-                                @if($errors->has('warehouse_id'))
-                                    <span class="text-danger"> {{ $errors->first('warehouse_id') }}</span>
-                                @endif 
                                 
 
                                 <div class="col-md-2 mt-2">
@@ -93,6 +93,9 @@
                                 </div>
                                 <div class="col-md-4">
                                     <input type="text" id="datepicker" class="form-control" value="{{ old('sales_date')}}" name="sales_date" placeholder="dd/mm/yyyy" required>
+                                    @if($errors->has('sales_date'))
+                                        <span class="text-danger"> {{ $errors->first('sales_date') }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="row m-3">

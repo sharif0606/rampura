@@ -130,7 +130,7 @@
                     <th style="text-align: left; color: #4F709C; padding: 7px 0 7px 0;">নং</th>
                     <td></td>
                     <th style="text-align: right; color: #4F709C; padding: 7px 2px 7px 0;">তারিখঃ</th>
-                    <td style="width: 20%; padding: 7px 0 7px 0;"><input type="text" value="{{ date('d-M-Y', strtotime($show_data->sales_date)) }}" class="tinput"></td>
+                    <td style="width: 20%; padding: 7px 0 7px 0;"><input type="text" value="{{ \Carbon\Carbon::now()->format('d-m-Y') }}" class="tinput"></td>
                 </tr>
                 <tr>
                     <th style="text-align: left; color: #4F709C; padding: 7px 0 7px 0;">নাম</th>

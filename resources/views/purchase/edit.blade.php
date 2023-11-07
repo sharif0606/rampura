@@ -56,17 +56,16 @@
                                     <select required class="form-control choices form-select" name="supplierName" id="supplierName" onchange="get_purchase()">
                                         <option value="">Select Supplier</option>
                                         @forelse($suppliers as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName',$purchase->supplier_id)==$d->id?"selected":""}}>{{ $d->supplier_name}}</option>
+                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName',$purchase->supplier_id)==$d->id?"selected":""}}>{{ $d->supplier_name}}-[{{ $d->contact}}]</option>
                                         @empty
                                             <option value="">No Supplier found</option>
                                         @endforelse
                                     </select>
+                                    @if($errors->has('supplierName'))
+                                        <span class="text-danger"> {{ $errors->first('supplierName') }}</span>
+                                    @endif
                                     <input type="hidden" name="supplier_r_name" id="supplier_r_name">
                                 </div>
-                                
-                                @if($errors->has('supplierName'))
-                                <span class="text-danger"> {{ $errors->first('supplierName') }}</span>
-                                @endif
 
 
                                 <div class="col-md-2 mt-2">
@@ -81,11 +80,10 @@
                                             <option value="">No Warehouse found</option>
                                         @endforelse
                                     </select>
+                                    @if($errors->has('warehouse_id'))
+                                        <span class="text-danger"> {{ $errors->first('warehouse_id') }}</span>
+                                    @endif
                                 </div>
-                                
-                                @if($errors->has('warehouse_id'))
-                                    <span class="text-danger"> {{ $errors->first('warehouse_id') }}</span>
-                                @endif 
                                 
 
                                 <div class="col-md-2 mt-2">
@@ -93,6 +91,9 @@
                                 </div>
                                 <div class="col-md-4">
                                     <input type="text" id="datepicker" class="form-control" value="{{ old('purchase_date',$purchase->purchase_date)}}" name="purchase_date" placeholder="dd/mm/yyyy" required>
+                                    @if($errors->has('purchase_date'))
+                                        <span class="text-danger"> {{ $errors->first('purchase_date') }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="row m-3">

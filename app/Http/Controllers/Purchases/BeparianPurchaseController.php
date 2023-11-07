@@ -40,9 +40,9 @@ class BeparianPurchaseController extends Controller
     public function index()
     {
         if( currentUser()=='owner')
-            $purchases = Beparian_purchase::where(company())->paginate(10);
+            $purchases = Beparian_purchase::where(company())->orderBy('id', 'DESC')->paginate(10);
         else
-            $purchases = Beparian_purchase::where(company())->where(branch())->paginate(10);
+            $purchases = Beparian_purchase::where(company())->where(branch())->orderBy('id', 'DESC')->paginate(10);
             
         return view('beparianPurchase.index',compact('purchases'));
     }
@@ -132,7 +132,7 @@ class BeparianPurchaseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AddNewRequest $request)
     {
         DB::beginTransaction();
         try{
@@ -572,7 +572,7 @@ class BeparianPurchaseController extends Controller
      * @param  \App\Models\beparian_purchase  $beparian_purchase
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         DB::beginTransaction();
         try{

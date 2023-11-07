@@ -37,7 +37,7 @@ class SupplierController extends Controller
         if($request->name)
         $suppliers=$suppliers->where('supplier_name','like','%'.$request->name.'%');
 
-        $suppliers=$suppliers->paginate(15);
+        $suppliers=$suppliers->orderBy('id', 'DESC')->paginate(15);
 
         return view('supplier.index',compact('suppliers'));
     }

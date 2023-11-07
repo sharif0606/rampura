@@ -41,9 +41,9 @@ class PurchaseController extends Controller
     public function index()
     {
         if( currentUser()=='owner')
-            $purchases = Purchase::where(company())->paginate(10);
+            $purchases = Purchase::where(company())->orderBy('id', 'DESC')->paginate(10);
         else
-            $purchases = Purchase::where(company())->where(branch())->paginate(10);
+            $purchases = Purchase::where(company())->where(branch())->orderBy('id', 'DESC')->paginate(10);
             
         
         return view('purchase.index',compact('purchases'));
@@ -629,7 +629,7 @@ class PurchaseController extends Controller
      * @param  \App\Models\Purchases\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         DB::beginTransaction();
         try{

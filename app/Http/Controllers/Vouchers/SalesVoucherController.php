@@ -29,7 +29,7 @@ class SalesVoucherController extends Controller
      */
     public function index()
     {
-        $data= SalesVoucher::where(company())->paginate(15);
+        $data= SalesVoucher::where(company())->orderBy('id', 'DESC')->paginate(15);
         return view('voucher.salesVoucher.index',compact('data'));
     }
 

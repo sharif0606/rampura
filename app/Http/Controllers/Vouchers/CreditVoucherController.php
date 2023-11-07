@@ -28,7 +28,7 @@ class CreditVoucherController extends Controller
      */
     public function index()
     {
-        $creditVoucher= CreditVoucher::where(company())->paginate(15);
+        $creditVoucher= CreditVoucher::where(company())->orderBy('id', 'DESC')->paginate(15);
         return view('voucher.creditVoucher.index',compact('creditVoucher'));
     }
 

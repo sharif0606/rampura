@@ -22,7 +22,7 @@ class ChildcategoryController extends Controller
      */
     public function index()
     {
-        $childcategories = Childcategory::where(company())->paginate(10);
+        $childcategories = Childcategory::where(company())->orderBy('id', 'DESC')->paginate(10);
         return view('childcategory.index',compact('childcategories'));
     }
 
