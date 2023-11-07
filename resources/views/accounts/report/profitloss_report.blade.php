@@ -56,13 +56,11 @@
 		</div>
 	</div>
     <div class="col-xs-12">
-
         <!-- PAGE CONTENT BEGINS -->
         <table class="table table-bordered table-hover" width="100%">
 			<tbody>
 				<tr>
 					<td style="vertical-align:top;padding: 0px;border:0px">
-					
 						<table class="table table-bordered table-hover" width="100%" style="margin-bottom:0;border:0px">
 							<thead>
 								<tr>
@@ -96,7 +94,6 @@
 								<?php } ?>
 							</tbody>
 						</table>
-						
 					</td>
 					<td style="vertical-align:top;padding: 0px;border:0;border-right:1px solid; width:50%">
 					
@@ -135,7 +132,6 @@
 					</td>
 				</tr>
 			</tbody>
-			
 			<tfoot>
 				<tr>
 					<td style="vertical-align:top;padding: 0px;border:0px">
@@ -170,9 +166,7 @@
 				</tr>
 			</tfoot>
 		</table>
-        
     </div>
-
 </div>
 
 @endsection

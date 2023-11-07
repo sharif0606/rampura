@@ -90,6 +90,7 @@
 								</thead>
 								<tbody>
 									@php $balance=$deb=$cre=0; @endphp
+									@php if($opening_bal>0) $deb=$opening_bal; else $cre=$opening_bal; @endphp
 									@if($accData)
 										<tr>
 											<td>{{date("d M, Y",strtotime($startDate))}}</td>

@@ -17,10 +17,10 @@
                             <input type="hidden" name="uptoken" value="{{encryptor('encrypt',$mac->id)}}">
                             <div class="row">
                                 
-                            <div class="col-md-6 col-12">
+                                <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <label for="head_name">{{__('Head Name')}}</label>
-                                        <input type="text" id="head_name" class="form-control"
+                                        <input onkeyup="removeCharacter(this)" type="text" id="head_name" class="form-control"
                                             placeholder="Head Name" value="{{ old('head_name',$mac->head_name)}}" name="head_name">
                                     </div>
                                     @if($errors->has('head_name'))
@@ -30,7 +30,7 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <label for="head_code">{{__('Head Code')}}</label>
-                                        <input type="text" id="head_code" class="form-control"
+                                        <input type="text" onkeyup="removeCharacter(this)" id="head_code" class="form-control"
                                             placeholder="Head Code" value="{{ old('head_code',$mac->head_code)}}" name="head_code">
                                     </div>
                                     @if($errors->has('head_code'))
@@ -58,3 +58,12 @@
     </div>
 </section>
 @endsection
+
+@push('scripts')
+<script>
+    function removeCharacter(e) {
+        newString = e.value.replace("-", " ");
+        e.value= newString;
+    }
+</script>
+@endpush

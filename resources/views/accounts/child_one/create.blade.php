@@ -34,7 +34,7 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <label for="head_name">{{__('Head Name')}}</label>
-                                        <input type="text" id="head_name" class="form-control"
+                                        <input onkeyup="removeCharacter(this)" type="text" id="head_name" class="form-control"
                                             placeholder="Head Name" value="{{ old('head_name')}}" name="head_name" required>
                                     </div>
                                     @if($errors->has('head_name'))
@@ -44,7 +44,7 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <label for="head_code">{{__('Head Code')}}</label>
-                                        <input type="text" id="head_code" class="form-control"
+                                        <input onkeyup="removeCharacter(this)" type="text" id="head_code" class="form-control"
                                             placeholder="Head Code" value="{{ old('head_code')}}" name="head_code" required>
                                     </div>
                                     @if($errors->has('head_code'))
@@ -72,3 +72,12 @@
     </div>
 </section>
 @endsection
+
+@push('scripts')
+<script>
+    function removeCharacter(e) {
+        newString = e.value.replace("-", " ");
+        e.value= newString;
+    }
+</script>
+@endpush
