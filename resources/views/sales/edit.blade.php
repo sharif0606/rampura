@@ -58,7 +58,7 @@
                                     <select required class="choices form-select" name="customerName" id="customerName" onchange="get_customer()">
                                         <option value="">Select Customer</option>
                                         @forelse($customers as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('customerName',$sales->customer_id)==$d->id?"selected":""}}> {{ $d->customer_name}}-[{{ $d->contact}}]</option>
+                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('customerName',$sales->customer_id)==$d->id?"selected":""}}> {{ $d->customer_name}}-[{{ $d->upazila?->name}}]</option>
                                         @empty
                                             <option value="">No Data found</option>
                                         @endforelse

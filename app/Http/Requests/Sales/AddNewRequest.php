@@ -26,7 +26,7 @@ class AddNewRequest extends FormRequest
         return [
             'warehouse_id'=>'required',
             'customerName'=>'required',
-            // 'rate_in_kg'=>'required',
+            'rate_in_kg'=>'required',
             'sales_date'=>'required'
         ];
     }

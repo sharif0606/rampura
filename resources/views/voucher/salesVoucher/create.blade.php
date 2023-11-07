@@ -102,7 +102,7 @@
                                                 <select name="customer_id[]" class="form-control form-select" required onchange="addTextCustomer(this)">
                                                     <option value="">Select</option>
                                                     @forelse (App\Models\Customers\Customer::where(company())->get(); as $d)
-                                                        <option value="{{$d->id}}">{{$d->customer_name}} ({{$d->contact}})</option>
+                                                        <option value="{{$d->id}}">{{$d->customer_name}} ({{$d->upazila?->name}})</option>
                                                     @empty
                                                         <option value="">No Data Found</option>
                                                     @endforelse

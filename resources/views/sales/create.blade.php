@@ -56,7 +56,7 @@
                                     <select required class="choices form-select" name="customerName" id="customerName" onchange="$('#customer_r_name').val($(this).find('option:selected').text())">
                                         <option value="">Select Customer</option>
                                         @forelse($customers as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('customerName')==$d->id?"selected":""}}> {{ $d->customer_name}}-[{{ $d->contact}}]</option>
+                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('customerName')==$d->id?"selected":""}}> {{ $d->customer_name}}-[{{ $d->upazila?->name}}]</option>
                                         @empty
                                             <option value="">No Data found</option>
                                         @endforelse
@@ -211,7 +211,7 @@
                                                 <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL PAYMENT</h5></th>
                                                 <td class="tbl_expense text-end" >
                                                     <h5 class="tpayment" >0.00</h5>
-                                                    <input type="hidden" name="total_payment" class="tpayment_p">
+                                                    <input type="hidden" name="total_payment" class="tpayment_p" value="0">
                                                 </td>
                                             </tr>
                                             <tr class="tbl_expense">

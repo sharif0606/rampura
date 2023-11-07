@@ -56,7 +56,7 @@
                                     <select required class="form-control choices form-select" name="supplierName" id="supplierName" onchange="$('#supplier_r_name').val($(this).find('option:selected').text())">
                                         <option value="">Select Supplier</option>
                                         @forelse($suppliers as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName')==$d->id?"selected":""}}> {{ $d->supplier_name}}-[{{ $d->contact}}]</option>
+                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName')==$d->id?"selected":""}}> {{ $d->supplier_name}}-[{{ $d->upazila?->name}}]</option>
                                         @empty
                                             <option value="">No Supplier found</option>
                                         @endforelse
@@ -163,7 +163,7 @@
                                                 <th colspan="3" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL EXPENSES</h5></th>
                                                 <td class="tbl_expense text-end" >
                                                     <h5 class="tgrandtotal" >0.00</h5>
-                                                    <input type="hidden" name="tgrandtotal" class="tgrandtotal_p">
+                                                    <input type="hidden" name="tgrandtotal" class="tgrandtotal_p" value="0">
                                                     <input type="hidden"  class="sub_total">
                                                 </td>
                                             </tr>

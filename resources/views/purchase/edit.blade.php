@@ -56,7 +56,7 @@
                                     <select required class="form-control choices form-select" name="supplierName" id="supplierName" onchange="get_purchase()">
                                         <option value="">Select Supplier</option>
                                         @forelse($suppliers as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName',$purchase->supplier_id)==$d->id?"selected":""}}>{{ $d->supplier_name}}-[{{ $d->contact}}]</option>
+                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName',$purchase->supplier_id)==$d->id?"selected":""}}>{{ $d->supplier_name}}-[{{ $d->upazila?->name}}]</option>
                                         @empty
                                             <option value="">No Supplier found</option>
                                         @endforelse

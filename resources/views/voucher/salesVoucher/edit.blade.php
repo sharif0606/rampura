@@ -87,7 +87,7 @@
                                                         <td style='text-align:left;'>{{$bk->account_code}}</td>
                                                         <td style='text-align:left;'>{{$bk->credit}}</td>
                                                         <td style='text-align:left;'>{{$bk->lc_no}}</td>
-                                                        <td style='text-align:left;'>{{$bk->customer?->customer_name}} ({{$bk->customer?->contact}})</td>
+                                                        <td style='text-align:left;'>{{$bk->customer?->customer_name}} ({{$bk->customer?->upazila?->name}})</td>
                                                     </tr>
                                                     @endif
                                                 @endforeach
