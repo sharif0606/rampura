@@ -146,3 +146,10 @@ th[data-title]:not([data-title=""]) {
     font-size: 14px;
     white-space: nowrap;
   }
+.card{
+    border: none;
+    margin-bottom: 2.2rem;
+    padding: 10px;
+    background-color: rgb(246, 246, 246) !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}

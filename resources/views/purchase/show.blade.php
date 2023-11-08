@@ -73,7 +73,7 @@
                         <div class="tbl_scroll">
                             <table class="tbl_expense" style="width:100%">
                                 <tbody>
-                                    <tr class="tbl_expense">
+                                    <tr class="tbl_expense bg-secondary text-white">
                                         <th class="tbl_expense" style="text-align: center; padding: 5px;">{{__('SL NO')}}</th>
                                         <th class="tbl_expense" style="text-align: center; padding: 5px;">DESCRIPTION OF GOODS</th>
                                         <th class="tbl_expense" style="text-align: center; padding: 5px;">LOT/ LC NO</th>
