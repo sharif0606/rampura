@@ -147,12 +147,12 @@
         </button>
     </div>
     <div class="bg1"  style="width:800px; margin:0 auto;">
-        <div style="position: absolute; padding-left: 38rem;">
+        {{-- <div style="position: absolute; padding-left: 38rem;">
             <p>
                 <label for="" style="color: green;">মোবাইল:০১৭০৭-৩৭৭৩৭২</label><br>
                 <span style="color: green; padding-left: 68px;">০১৬৭২-৯৮১৬১৪</span>
             </p>
-        </div>
+        </div> --}}
         <table style="width: 100%;">
             <thead>
                 <tr>
@@ -160,9 +160,10 @@
                         <p style="margin-bottom: 5px; color: green;">বিসমিল্লাহির রাহমানির রহিম</p>
                         <span style="background-color: green; color:white; padding: 5px; border: transparent; border-radius: 5px;">বেপারীর চৌথা</span>
                         <p style="margin-top: 6px; margin-bottom: 0px; color: green;">কমিশন এজেন্ট</p>
-                        <h1 style="color: green; margin: 0px;"> মেসার্স রামপুর সিন্ডিকেট</h1>
-                        <span style="color: green; border-bottom: solid 1.5px; border-top: solid 1.5px; margin-top: 4px; margin-bottom: 4px;">সুপারী, মরিচ ও ভূষা মালের আড়ৎ</span>
-                        <p style="margin: 2px; color: green;">১৯৩, খাতুনগঞ্জ, চট্টগ্রাম।</p>
+                        <h1 style="color: green; margin: 0px;">{{encryptor('decrypt', request()->session()->get('companyNameBn'))}}</h1>
+                        {{-- <span style="color: green; border-bottom: solid 1.5px; border-top: solid 1.5px; margin-top: 4px; margin-bottom: 4px;">সুপারী, মরিচ ও ভূষা মালের আড়ৎ</span> --}}
+                        <span style="color: green; border-bottom: solid 1.5px; border-top: solid 1.5px; margin-top: 4px; margin-bottom: 4px;">মোবাইলঃ {{encryptor('decrypt', request()->session()->get('companyContactBn'))}}</span>
+                        <p style="margin: 2px; color: green;"><p style="margin: 2px; color: green;">{{encryptor('decrypt', request()->session()->get('companyAddressBn'))}}</p></p>
                     </th>
                 </tr>
                 <tr>

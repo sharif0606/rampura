@@ -105,7 +105,11 @@ class CompanyController extends Controller
         try{
             $com=Company::findOrFail(encryptor('decrypt',$id));
             $com->name=$request->name;
+            $com->company_bn=$request->company_bn;
             $com->contact=$request->contact;
+            $com->contact_bn=$request->contact_bn;
+            $com->address_bn=$request->address_bn;
+            $com->email=$request->email;
             $com->country_id=$request->country;
             $com->division_id=$request->division;
             $com->district_id=$request->district;

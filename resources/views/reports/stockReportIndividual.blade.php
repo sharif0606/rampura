@@ -32,9 +32,10 @@
                         <table style="width: 100%">
                             <tr style="text-align: center;">
                                 <th colspan="2">
-                                    <h4>M/S. RAMPURA SYNDICATE</h4>
-                                    <p>R.S TOWER 193, KHATUNGONJ, CHATTOGRAM</p>
-                                    <p>Mobile No 01707-377372, 01758-982661 E-mail: <a href="#" style="border-bottom: solid 1px; border-color:blue;">rampursyndicate@yahoo.com</a></p>
+                                    <h4>{{encryptor('decrypt', request()->session()->get('companyName'))}}</h4>
+                                    <p>{{encryptor('decrypt', request()->session()->get('companyAddress'))}}</p>
+                                    <p>IMPORT, EXPORTER, WHOLESALER, RETAILSALER & COMMISSION AGENT</p>
+                                    <p>E-MAIL: <a href="#" style="border-bottom: solid 1px; border-color:blue;">{{encryptor('decrypt', request()->session()->get('companyEmail'))}}</a> Contact: {{encryptor('decrypt', request()->session()->get('companyContact'))}}</p>
                                     <h6><span style="border-bottom: solid 1px;">{{$product->product_name}}</span></h6>
                                     <p>Stock Item Register</p>
                                 </th>

@@ -14,19 +14,25 @@
                               @method('patch')
                               <input type="hidden" name="uptoken" value="{{encryptor('encrypt',$company->id)}}">
                               <div class="row">
-                                  <div class="col-md-6 col-12">
+                                  <div class="col-lg-4 col-md-6 col-sm-12">
                                       <div class="form-group">
                                           <label for="name">{{__('Company Name')}}</label>
                                           <input type="text" class="form-control" value="{{ old('name',$company->name)}}" name="name"  placeholder="Company Name" >
                                       </div>
                                   </div>
-                                  <div class="col-md-6 col-12">
+                                  <div class="col-lg-4 col-md-6 col-sm-12">
                                       <div class="form-group">
                                           <label for="contact">{{__('Contact')}}</label>
                                           <input type="text" class="form-control" value="{{ old('contact',$company->contact)}}" name="contact" >
                                       </div>
                                   </div>
-                                  <div class="col-md-6 col-12 d-none">
+                                  <div class="col-lg-4 col-md-6 col-sm-12">
+                                      <div class="form-group">
+                                          <label for="contact">{{__('Email')}}</label>
+                                          <input type="email" class="form-control" value="{{ old('email',$company->email)}}" name="email" >
+                                      </div>
+                                  </div>
+                                  <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="country">{{__('Country')}}</label>
                                             <select class="form-control form-select" name="country">
@@ -39,7 +45,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="division_id">{{__('Division')}}</label>
                                             <select class="form-control form-select" name="division">
@@ -52,7 +58,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="district">{{__('District')}}</label>
                                             <select class="form-control form-select" name="district">
@@ -65,7 +71,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="upazila">{{__('Upazila')}}</label>
                                             <select class="form-control form-select" name="upazila">
@@ -78,7 +84,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="thana">{{__('Thana')}}</label>
                                             <select class="form-control form-select" name="thana">
@@ -91,7 +97,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 d-none">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                         <div class="form-group">
                                             <label for="thana">{{__('Currency')}}</label>
                                             <select class="form-control form-select" name="currency">
@@ -104,15 +110,37 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="form-group">
                                             <label for="description">{{__('Address')}}</label>
                                             <textarea  class="form-control" name="address">{{ old('address',$company->address)}}</textarea>
                                         </div>
                                     </div>
-                                  <div class="col-12 d-flex justify-content-end">
+                              </div>
+                              <div class="row">
+                                    <hr>
+                                    <div class="text-center"><h4>For Srota & Memu</h4></div>
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label for="name">কোম্পানি নাম</label>
+                                            <input type="text" class="form-control" value="{{ old('company_bn',$company->company_bn)}}" name="company_bn">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label for="name">ঠিকানা</label>
+                                            <input type="text" class="form-control" value="{{ old('address_bn',$company->address_bn)}}" name="address_bn">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label for="name">মোবাইল</label>
+                                            <input type="text" class="form-control" value="{{ old('contact_bn',$company->contact_bn)}}" name="contact_bn">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-end">
                                         <button type="submit" class="btn btn-primary mb-1">{{__('Save')}}</button>
-                                  </div>
+                                    </div>
                               </div>
                           </form>
                       </div>

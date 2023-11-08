@@ -81,6 +81,13 @@ class AuthenticationController extends Controller
                     'roleIdentity'=>encryptor('encrypt',$user->role->identity),
                     'language'=>encryptor('encrypt',$user->language),
                     'companyId'=>encryptor('encrypt',$user->company_id),
+                    'companyName'=>encryptor('encrypt',$user->company?->name),
+                    'companyNameBn'=>encryptor('encrypt',$user->company?->company_bn),
+                    'companyAddress'=>encryptor('encrypt',$user->company?->address),
+                    'companyAddressBn'=>encryptor('encrypt',$user->company?->address_bn),
+                    'companyContact'=>encryptor('encrypt',$user->company?->contact),
+                    'companyContactBn'=>encryptor('encrypt',$user->company?->contact_bn),
+                    'companyEmail'=>encryptor('encrypt',$user->company?->email),
                     'branchId'=>encryptor('encrypt',$user->branch_id),
                     'image'=>$user->image?$user->image:'no-image.png'
                 ]

@@ -14,10 +14,10 @@
                                 <table style="width: 100%" id="companyDescript">
                                     <tr style="text-align: center;">
                                         <th colspan="2">
-                                            <h4>M/S. RAMPURA SYNDICATE</h4>
-                                            <p>R.S TOWER 193, KHATUNGONJ, CHATTOGRAM</p>
+                                            <h4>{{encryptor('decrypt', request()->session()->get('companyName'))}}</h4>
+                                            <p>{{encryptor('decrypt', request()->session()->get('companyAddress'))}}</p>
                                             <p>IMPORT, EXPORTER, WHOLESALER, RETAILSALER & COMMISSION AGENT</p>
-                                            <p>E-MAIL: <a href="#" style="border-bottom: solid 1px; border-color:blue;">rampursyndicate@yahoo.com</a> Contact: +88 01707-377372 & +88 01758-982661</p>
+                                            <p>E-MAIL: <a href="#" style="border-bottom: solid 1px; border-color:blue;">{{encryptor('decrypt', request()->session()->get('companyEmail'))}}</a> Contact: {{encryptor('decrypt', request()->session()->get('companyContact'))}}</p>
                                             <h3 style="padding-bottom: 2rem;">Payment Voucher</h3>
                                         </th>
                                     </tr>
@@ -66,7 +66,7 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered" id='account' cellspacing="0" width="100%">
                                     <thead>
-                                        <tr>
+                                        <tr class="text-center">
                                             <th>{{__('SN#')}}</th>
                                             <th>{{__('A/C Head')}}</th>
                                             <th>{{__('Amount')}}</th>
@@ -76,7 +76,7 @@
                                     <tfoot>
                                         <tr>
                                             <th style="text-align:right;" colspan="2">{{__('Total Amount Tk.')}}</th>
-                                            <th>{{$dvoucher->debit_sum}}</th>
+                                            <th style="text-align:center;">{{$dvoucher->debit_sum}}</th>
                                             <th></th>
                                         </tr>
                                     </tfoot>
@@ -84,11 +84,11 @@
                                         @if($dvoucherbkdn)
                                             @foreach($dvoucherbkdn as $bk)
                                                 @if($bk->particulars!="Payment by")
-                                                <tr>
-                                                    <td style='text-align:center;'>1</td>
-                                                    <td style='text-align:left;'>{{$bk->account_code}}</td>
-                                                    <td style='text-align:left;'>{{$bk->debit}}</td>
-                                                    <td style='text-align:left;'>{{$bk->particulars}}</td>
+                                                <tr class="text-center">
+                                                    <td style="width:5%;">1</td>
+                                                    <td style="width:67%;">{{$bk->account_code}}</td>
+                                                    <td style="width:14%;">{{$bk->debit}}</td>
+                                                    <td style="width:14%;">{{$bk->particulars}}</td>
                                                 </tr>
                                                 @endif
                                             @endforeach
@@ -98,7 +98,7 @@
                             </div>
 
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mt-4">
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group @if($errors->has('name')) has-error @endif">
                                             <label>{{__('Cheque No')}}: </label>{{$dvoucher->cheque_no}}
