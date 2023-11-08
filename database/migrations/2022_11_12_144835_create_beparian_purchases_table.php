@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('voucher_no')->nullable();
             $table->date('purchase_date');
             $table->string('reference_no')->nullable();
-            $table->decimal('grand_total',10,2)->default(0);
+            $table->decimal('grand_total',10,2)->default(0)->nullable();
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
             $table->unsignedBigInteger('branch_id')->index()->foreign()->references('id')->on('branches')->onDelete('cascade');
             $table->unsignedBigInteger('warehouse_id')->index()->foreign()->references('id')->on('warehouses')->onDelete('cascade');

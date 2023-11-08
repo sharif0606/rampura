@@ -17,6 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('contact')->nullable();
+            $table->string('email')->nullable();
+            $table->string('company_bn')->nullable();
+            $table->string('contact_bn')->nullable();
+            $table->string('address_bn')->nullable();
             $table->string('binNumber',1000)->nullable();
             $table->string('tradeNumber',1000)->nullable();
             $table->bigInteger('country_id')->nullable();
