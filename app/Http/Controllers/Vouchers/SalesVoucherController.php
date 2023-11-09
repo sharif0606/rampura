@@ -146,7 +146,7 @@ class SalesVoucherController extends Controller
                         $jvb=new SalVoucherBkdns;
                         $jvb->sales_voucher_id=$jv->id;
                         
-                        $jvb->customer_id=$request->customer_id?implode(',',$request->customer_id):"";
+                        $jvb->customer_id="";
                         $jvb->lc_no=$request->lc_no?implode(',',$request->lc_no):"";
 
                         $jvb->company_id =company()['company_id'];
@@ -186,6 +186,7 @@ class SalesVoucherController extends Controller
                             $jvb->table_name=!empty($request->table_name[$i])?$request->table_name[$i]:"";
                             $jvb->table_id=!empty($request->table_id[$i])?$request->table_id[$i]:"";
                             $jvb->credit=!empty($request->debit[$i])?$request->debit[$i]:0;
+                            $jvb->created_at=$request->current_date." 00:00:00";
                             if($jvb->save()){
                                 $table_name=$request->table_name[$i];
                                 if($table_name=="master_accounts"){$field_name="master_account_id";}

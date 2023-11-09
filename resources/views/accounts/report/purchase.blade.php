@@ -45,13 +45,13 @@
 											@if($headlists)
 												@foreach($headlists as $h)
 													@if($h->master_account_id)
-														<option value="{{$h->master_head->id}}~master_account_id~{{$h->master_head->opening_balance}}~{{$h->master_head->head_code}}" @if($head_id==$h->master_head->id."master_account_id") selected @endif>{{$h->master_head->head_name}}</option>
+														<option value="{{$h->master_head->id}}-master_account_id-{{$h->master_head->opening_balance}}" @if($head_id==$h->master_head->id."master_account_id") selected @endif>{{$h->master_head->head_name}}</option>
 													@elseif($h->sub_head_id && $h->sub_head)
-														<option value="{{$h->sub_head->id}}~sub_head_id~{{$h->sub_head->opening_balance}}~{{$h->sub_head->head_code}}" @if($head_id==$h->sub_head->id."sub_head_id") selected @endif>{{$h->sub_head->head_name}}</option>
+														<option value="{{$h->sub_head->id}}-sub_head_id-{{$h->sub_head->opening_balance}}" @if($head_id==$h->sub_head->id."sub_head_id") selected @endif>{{$h->sub_head->head_name}}</option>
 													@elseif($h->child_one_id && $h->chield_one)
-														<option value="{{$h->chield_one->id}}~child_one_id~{{$h->chield_one->opening_balance}}~{{$h->chield_one->head_code}}" @if($head_id==$h->chield_one->id."child_one_id") selected @endif>{{$h->chield_one->head_name}}</option>
+														<option value="{{$h->chield_one->id}}-child_one_id-{{$h->chield_one->opening_balance}}" @if($head_id==$h->chield_one->id."child_one_id") selected @endif>{{$h->chield_one->head_name}}</option>
 													@elseif($h->child_two_id && $h->chield_two)
-														<option value="{{$h->chield_two->id}}~child_two_id~{{$h->chield_two->opening_balance}}~{{$h->chield_two->head_code}}" @if($head_id==$h->chield_two->id."child_two_id") selected @endif>{{$h->chield_two->head_name}}</option>
+														<option value="{{$h->chield_two->id}}-child_two_id-{{$h->chield_two->opening_balance}}" @if($head_id==$h->chield_two->id."child_two_id") selected @endif>{{$h->chield_two->head_name}}</option>
 												@endif
 												@endforeach
 											@endif
