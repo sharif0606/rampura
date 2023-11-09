@@ -85,7 +85,7 @@
                                     <div class="col-md-4 col-12">
                                         <div class="form-group">
                                             <label for="openingAmount">{{__('Opening Balance')}}</label>
-                                            <input type="text" id="openingAmount" class="form-control" value="{{ old('openingAmount',$supplier->opening_balance)}}" name="openingAmount">
+                                            <input type="number" id="openingAmount" class="form-control" value="{{ old('openingAmount',$supplier->opening_balance)}}" name="openingAmount">
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-12">
