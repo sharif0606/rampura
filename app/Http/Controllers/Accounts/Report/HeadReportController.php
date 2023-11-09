@@ -30,7 +30,7 @@ class HeadReportController extends Controller{
         $accData=$accOldData=array();
         if($r->head_id){
             $head_id=explode('-',$r->head_id);
-            $opening_bal=$head_id[2];
+            $opening_bal=$head_id[2]>0?$head_id[2]:0;
             $table_id_name=$head_id[1];
             $head_id=$head_id[0];
         }
