@@ -369,7 +369,7 @@ function get_cal(e){
   
  
   var actual_quantity = ((quantity_kg - less_quantity_kg));
-  var amount = ((quantity_kg * rate_in_kg));
+  var amount = ((actual_quantity * rate_in_kg));
 
 
   $(e).closest('tr').find('.actual_qty').val(actual_quantity);
@@ -387,9 +387,9 @@ function get_cal(e){
 
 function get_amount(e){
   var amount = (isNaN(parseFloat($(e).closest('tr').find('.amount').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.amount').val().trim()); 
-  var quantity = (isNaN(parseFloat($(e).closest('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_kg').val().trim());
+  var actual_quantity = (isNaN(parseFloat($(e).closest('tr').find('.actual_qty').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.actual_qty').val().trim());
   
-  var rate = ((amount / quantity));
+  var rate = ((amount / actual_quantity));
 
 
   $(e).closest('tr').find('.rate_in_kg').val(rate);
