@@ -40,9 +40,9 @@ class RegularPurchaseController extends Controller
     public function index()
     {
         if( currentUser()=='owner')
-            $purchases = Regular_purchase::where(company())->paginate(10);
+            $purchases = Regular_purchase::where(company())->orderBy('id', 'DESC')->paginate(10);
         else
-            $purchases = Regular_purchase::where(company())->where(branch())->paginate(10);
+            $purchases = Regular_purchase::where(company())->where(branch())->orderBy('id', 'DESC')->paginate(10);
             
         
         return view('regularPurchase.index',compact('purchases'));
@@ -133,7 +133,7 @@ class RegularPurchaseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AddNewRequest $request)
     {
         DB::beginTransaction();
         try{
@@ -572,7 +572,7 @@ class RegularPurchaseController extends Controller
      * @param  \App\Models\Purchases\regular_purchase  $regular_purchase
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         DB::beginTransaction();
         try{

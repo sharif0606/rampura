@@ -54,14 +54,17 @@
                                                     <label for="supplierName"><h6>Supplier<span class="text-danger">*</span></h6></label>
                                                 </th>
                                                 <td style="width: 40%; padding-bottom: .7rem;">
-                                                    <select required class="form-control choices form-select" name="supplierName" id="supplierName" onchange="$('#supplier_r_name').val($(this).find('option:selected').text())">
+                                                    <select class="form-control choices form-select" name="supplierName" id="supplierName" onchange="$('#supplier_r_name').val($(this).find('option:selected').text())">
                                                         <option value="">Select Supplier</option>
                                                         @forelse($suppliers as $d)
-                                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName')==$d->id?"selected":""}}> {{ $d->supplier_name}}</option>
+                                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName')==$d->id?"selected":""}}> {{ $d->supplier_name}}-[{{ $d->upazila?->name}}]</option>
                                                         @empty
                                                             <option value="">No Supplier found</option>
                                                         @endforelse
                                                     </select>
+                                                        @if($errors->has('supplierName'))
+                                                            <span class="text-danger"> {{ $errors->first('supplierName') }}</span>
+                                                        @endif 
                                                     <input type="hidden" name="supplier_r_name" id="supplier_r_name">
                                                 </td>
                                             </tr>
@@ -78,12 +81,18 @@
                                                             <option value="">No Warehouse found</option>
                                                         @endforelse
                                                     </select>
+                                                    @if($errors->has('warehouse_id'))
+                                                        <span class="text-danger"> {{ $errors->first('warehouse_id') }}</span>
+                                                    @endif 
                                                 </td>
                                                 <th style="width: 10%;">
                                                     <label for="date"><h6>Date<span class="text-danger">*</span></h6></label>
                                                 </th>
                                                 <td style="width: 40%;">
                                                     <input type="text" id="datepicker" class="form-control" value="{{ old('purchase_date')}}" name="purchase_date" placeholder="dd/mm/yyyy" required>
+                                                    @if($errors->has('purchase_date'))
+                                                        <span class="text-danger"> {{ $errors->first('purchase_date') }}</span>
+                                                    @endif 
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -155,7 +164,7 @@
                                                 <th colspan="3" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL EXPENSES</h5></th>
                                                 <td class="tbl_expense text-end" >
                                                     <h5 class="tgrandtotal" >0.00</h5>
-                                                    <input type="hidden" name="tgrandtotal" class="tgrandtotal_p">
+                                                    <input type="hidden" name="tgrandtotal" class="tgrandtotal_p" value="0">
                                                     <input type="hidden"  class="sub_total">
                                                 </td>
                                             </tr>

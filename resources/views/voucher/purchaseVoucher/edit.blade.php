@@ -88,7 +88,7 @@
                                                         <td style='text-align:left;'>{{$bk->account_code}}</td>
                                                         <td style='text-align:left;'>{{$bk->debit}}</td>
                                                         <td style='text-align:left;'>{{$bk->lc_no}}</td>
-                                                        <td style='text-align:left;'>{{$bk->supplier?->supplier_name}} ({{$bk->supplier?->contact}})</td>
+                                                        <td style='text-align:left;'>{{$bk->supplier?->supplier_name}} ({{$bk->supplier?->upazila?->name}})</td>
                                                     </tr>
                                                     @endif
                                                 @endforeach

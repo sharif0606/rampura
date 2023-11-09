@@ -22,7 +22,7 @@ class SubcategoryController extends Controller
      */
     public function index()
     {
-        $subcategories=Subcategory::where(company())->paginate(10);
+        $subcategories=Subcategory::where(company())->orderBy('id', 'DESC')->paginate(10);
         return view('subcategory.index',compact('subcategories'));
     }
 

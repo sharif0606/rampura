@@ -36,7 +36,7 @@ class CustomerController extends Controller
         if($request->name)
             $customers=$customers->where('customer_name','like','%'.$request->name.'%');
 
-        $customers=$customers->paginate(15);
+        $customers=$customers->orderBy('id', 'DESC')->paginate(15);
 
         return view('customer.index',compact('customers'));
     }

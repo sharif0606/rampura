@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Purchases\Purchase;
 use App\Models\Purchases\Beparian_purchase;
 use App\Models\Purchases\Regular_purchase;
+use App\Models\Settings\Location\Upazila;
 
 class Supplier extends Model
 {
@@ -26,6 +27,9 @@ class Supplier extends Model
     }
     public function country(){
         return $this->belongsTo(Country::class);
+    }
+    public function upazila(){
+        return $this->belongsTo(Upazila::class);
     }
     public function purchase(){
         return $this->hasMany(Purchase::class);

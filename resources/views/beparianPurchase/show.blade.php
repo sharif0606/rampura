@@ -26,10 +26,10 @@
                         <table style="width: 100%">
                             <tr style="text-align: center;">
                                 <th colspan="2">
-                                    <h4>M/S. RAMPURA SYNDICATE</h4>
-                                    <p>R.S TOWER 193, KHATUNGONJ, CHATTOGRAM</p>
+                                    <h4>{{encryptor('decrypt', request()->session()->get('companyName'))}}</h4>
+                                    <p>{{encryptor('decrypt', request()->session()->get('companyAddress'))}}</p>
                                     <p>IMPORT, EXPORTER, WHOLESALER, RETAILSALER & COMMISSION AGENT</p>
-                                    <p>E-MAIL: <a href="#" style="border-bottom: solid 1px; border-color:blue;">rampursyndicate@yahoo.com</a> Contact: +88 01707-377372 & +88 01758-982661</p>
+                                    <p>E-MAIL: <a href="#" style="border-bottom: solid 1px; border-color:blue;">{{encryptor('decrypt', request()->session()->get('companyEmail'))}}</a> Contact: {{encryptor('decrypt', request()->session()->get('companyContact'))}}</p>
                                     <h6 style="padding-bottom: 3.5rem;">BEPARIAN PURCHASES INVOICE</h6>
                                 </th>
                             </tr>
@@ -66,7 +66,7 @@
                         </table>
                         <table class="tbl_expense" style="width:100%">
                             <tbody>
-                                <tr class="tbl_expense">
+                                <tr class="tbl_expense bg-secondary text-white">
                                     <th class="tbl_expense" style="text-align: center; padding: 5px;">{{__('SL NO')}}</th>
                                     <th class="tbl_expense" style="text-align: center; padding: 5px;">DESCRIPTION OF GOODS</th>
                                     <th class="tbl_expense" style="text-align: center; padding: 5px;">LOT/ LC NO</th>

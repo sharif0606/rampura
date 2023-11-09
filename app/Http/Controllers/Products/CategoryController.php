@@ -22,7 +22,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories=Category::where(company())->paginate(10);
+        $categories=Category::where(company())->orderBy('id', 'DESC')->paginate(10);
         return view('category.index',compact('categories'));
     }
 

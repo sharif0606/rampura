@@ -22,7 +22,7 @@
 <body>
 <div id="auth">
     <div class="row h-100">
-        <div class="col-lg-6 offset-3 col-12">
+        <div class="col-lg-6 offset-lg-3 col-12">
             <div id="auth-left">
                 <div class="auth-logo text-center">
                     <a href="#"><img src="{{ asset('assets/images/logo/logo1.svg')}}" alt="Logo"></a>

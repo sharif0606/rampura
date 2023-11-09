@@ -120,17 +120,17 @@
             <thead>
                 <tr>
                     <th colspan="4">
-                        <h1 style="color: #4F709C; margin: 0px 0px 6px 0px"> মেসার্স রামপুর সিন্ডিকেট</h1>
+                        <h1 style="color: #4F709C; margin: 0px 0px 6px 0px">{{encryptor('decrypt', request()->session()->get('companyNameBn'))}}</h1>
                         <span style="background-color: #4F709C; color:white; padding: 3px 7px 1px 7px; border: transparent; border-radius: 5px;">কমিশন এজেন্ট</span><br>
-                        <span style="color: #4F709C;"><p style="margin: 6px 0px 0px 0px;">১৯৩, খাতুনগঞ্জ, চট্টগ্রাম, বাংলাদেশ।</p></span>
-                        <p style="margin: 2px; color: #4F709C;">মোবাইলঃ ০১৮১৯-৩৭৭৩৭২, ০১৬৭২-৯৮১৬১৪,০১৭৫৮-৯৮২৬৬১</p>
+                        <span style="color: #4F709C;"><p style="margin: 6px 0px 0px 0px;">{{encryptor('decrypt', request()->session()->get('companyAddressBn'))}}</p></span>
+                        <p style="margin: 2px; color: #4F709C;">মোবাইলঃ {{encryptor('decrypt', request()->session()->get('companyContactBn'))}}</p>
                     </th>
                 </tr>
                 <tr>
                     <th style="text-align: left; color: #4F709C; padding: 7px 0 7px 0;">নং</th>
                     <td></td>
                     <th style="text-align: right; color: #4F709C; padding: 7px 2px 7px 0;">তারিখঃ</th>
-                    <td style="width: 20%; padding: 7px 0 7px 0;"><input type="text" value="{{ date('d-M-Y', strtotime($show_data->sales_date)) }}" class="tinput"></td>
+                    <td style="width: 20%; padding: 7px 0 7px 0;"><input type="text" value="{{ \Carbon\Carbon::now()->format('d-m-Y') }}" class="tinput"></td>
                 </tr>
                 <tr>
                     <th style="text-align: left; color: #4F709C; padding: 7px 0 7px 0;">নাম</th>

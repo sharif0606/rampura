@@ -13,7 +13,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,15 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'warehouse_id'=>'required',
+            'supplierName'=>'required',
+            // 'rate_in_kg'=>'required',
+            'purchase_date'=>'required'
+        ];
+    }
+    public function messages(){
+        return [
+            'required' => "This filed is required",
         ];
     }
 }

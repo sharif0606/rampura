@@ -23,17 +23,19 @@
 			
 					{{-- <div class="text-center"><h4>Head Wise Report Search</h4></div> --}}
 					<div class="card-body" id="result_show">
-						<table style="width: 100%" id="companyDescript">
-                            <tr style="text-align: center;">
-                                <th colspan="2">
-                                    <h4>M/S. RAMPURA SYNDICATE</h4>
-                                    <p>R.S TOWER 193, KHATUNGONJ, CHATTOGRAM</p>
+						<div class="d-none only_print">
+							<table style="width: 100%" id="companyDescript">
+								<tr style="text-align: center;">
+									<th colspan="2">
+										<h4>{{encryptor('decrypt', request()->session()->get('companyName'))}}</h4>
+                                    <p>{{encryptor('decrypt', request()->session()->get('companyAddress'))}}</p>
                                     <p>IMPORT, EXPORTER, WHOLESALER, RETAILSALER & COMMISSION AGENT</p>
-                                    <p>E-MAIL: <a href="#" style="border-bottom: solid 1px; border-color:blue;">rampursyndicate@yahoo.com</a> Contact: +88 01707-377372 & +88 01758-982661</p>
-                                    <h6 style="padding-bottom: 2.5rem;">Head Wise Report</h6>
-                                </th>
-                            </tr>
-                        </table>
+                                    <p>E-MAIL: <a href="#" style="border-bottom: solid 1px; border-color:blue;">{{encryptor('decrypt', request()->session()->get('companyEmail'))}}</a> Contact: {{encryptor('decrypt', request()->session()->get('companyContact'))}}</p>
+										<h4 style="padding-bottom: 2.5rem;">Head Wise Report</h4>
+									</th>
+								</tr>
+							</table>
+						</div>
 						<form method="get" action="" id="form_hide" class="no_print">
 							<div class="row">
 								<div class="col-sm-4">
@@ -74,7 +76,7 @@
 					
 		
 						<div class="tbl_scroll">
-							<div class="d-flex justify-content-between mb-2" id="print-content"></div>
+							<div class="d-none mb-2 only_print" id="print-content"></div>
 							<table class="table table-bordered table-hover" width="100%">
 								<thead>
 									<tr>
@@ -139,6 +141,15 @@
 								</tfoot>
 							</table>
 						</div>
+						<div class="d-none only_print text-center">
+							<table style="width: 100%; margin-top: 4rem;">
+								<tr style="padding-top: 5rem;">
+									<th style="text-align: center;"><h6>PREPARED BY</h6></th>
+									<th style="text-align: center;"><h6>CHECKED BY</h6></th>
+									<th style="text-align: center;"><h6>VERIFIED BY</h6></th>
+								</tr>
+							</table>
+						</div>
 					</div>
 				</div>
             </div>
@@ -183,13 +194,20 @@
         var inputDate = $('#inputDate').val();
 
 		var printContentDiv = document.getElementById('print-content');
-        printContentDiv.innerHTML = '<label>Head Name: ' + selectedValue + '</label><label>Year: ' + inputDate + '</label>';
+		printContentDiv.innerHTML = '<table style="width: 100%;">' +
+										'<tr>' +
+										'<th style="width: 15%;"><label>Head Name:</label></th>' +
+										'<td style="width: 48%;">' + selectedValue + '</td>' +
+										'<th style="width: 10%;"><label>Year:</label></th>' +
+										'<td style="width: 27%;">' + inputDate + '</td>' +
+										'</tr>' +
+									'</table>';
         var prtContent = document.getElementById(divName);
 
         var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
         WinPrint.document.write('<link rel="stylesheet" href="{{ asset('assets/css/main/app.css') }}" type="text/css"/>');
 
-		var style = '<style media="print">.no_print{ display:none}body{color:#000 !important;background-color:#FFF; font-size:14px; padding-top:50px}</style>';
+		var style = '<style media="print">.no_print{ display:none}body{color:#000 !important;background-color:#FFF; font-size:14px; padding-top:50px}.only_print{ display:block !important;}</style>';
         WinPrint.document.write(style);
 
 		//WinPrint.document.write(printContentDiv.innerHTML);

@@ -26,9 +26,9 @@ return new class extends Migration
             $table->decimal('quantity_kg',14,2)->default(0);
             $table->decimal('discount',14,2)->default(0)->nullable();
             $table->decimal('less_quantity_kg',14,2)->nullable()->default(0);
-            $table->decimal('actual_quantity',14,2)->default(0);
-            $table->decimal('rate_kg',14,2)->default(0);
-            $table->decimal('amount',14,2)->default(0);
+            $table->decimal('actual_quantity',14,2)->default(0)->nullable();
+            $table->decimal('rate_kg',14,2)->default(0)->nullable();
+            $table->decimal('amount',14,2)->default(0)->nullable();
             $table->decimal('purchase_commission',14,2)->nullable()->default(0);
             $table->decimal('transport_cost',14,2)->nullable()->default(0);
             $table->decimal('unloading_cost',14,2)->nullable()->default(0);
