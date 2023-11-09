@@ -30,7 +30,7 @@
                                 <div class="input-group input-group-sm d-flex justify-content-between">
                                     <div class="d-flex">
                                         <select class="form-control choices" name="nane">
-                                            <option value="">Select Supplier</option>
+                                            <option value="">Select Customer</option>
                                             @forelse($customers as $d)
                                                 <option value="{{$d->id}}" {{ (request('nane') == $d->id ? 'selected' : '') }}> {{ $d->customer_name}}-[{{ $d->upazila?->name}}]</option>
                                             @empty
