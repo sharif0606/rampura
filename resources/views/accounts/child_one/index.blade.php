@@ -30,19 +30,19 @@
                                    
                                     <td>{{$d->opening_balance}}</td>
                                     <td class="white-space-nowrap">
-                                        {{-- @if($d->head_code != 5310 && $d->head_code != 5320 && $d->head_code != 1130 && $d->head_code != 2130 && $d->head_code != 4120)
+                                        @if($d->head_code != 5310 && $d->head_code != 5320 && $d->head_code != 1130 && $d->head_code != 2130 && $d->head_code != 4120)
                                             <a href="{{route(currentUser().'.child_one.edit',encryptor('encrypt',$d->id))}}">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a class="text-danger" href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
+                                            {{-- <a class="text-danger" href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
                                                 <i class="bi bi-trash"></i>
                                             </a>
                                             <form id="form{{$d->id}}" onsubmit="return confirm('Are you sure?')" action="{{route(currentUser().'.child_one.destroy',encryptor('encrypt',$d->id))}}" method="post">
                                                 @csrf
                                                 @method('delete')
                                                 
-                                            </form>
-                                        @endif --}}
+                                            </form> --}}
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty

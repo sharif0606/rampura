@@ -40,7 +40,7 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <label for="opening_balance">{{__('Opening Balance')}}</label>
-                                        <input type="text" id="opening_balance" class="form-control"
+                                        <input type="number" step="any" id="opening_balance" class="form-control"
                                             placeholder="Opening Balance" value="{{ old('opening_balance',$mac->opening_balance)}}" name="opening_balance">
                                     </div>
                                 </div>
