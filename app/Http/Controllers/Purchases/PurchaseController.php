@@ -38,15 +38,21 @@ class PurchaseController extends Controller
      * @return \Illuminate\Http\Response
      */
     
-    public function index()
+    public function index(Request $request)
     {
+        $suppliers= Supplier::where(company())->get();
         if( currentUser()=='owner')
-            $purchases = Purchase::where(company())->orderBy('id', 'DESC')->paginate(10);
+            $purchases = Purchase::where(company());
         else
-            $purchases = Purchase::where(company())->where(branch())->orderBy('id', 'DESC')->paginate(10);
+            $purchases = Purchase::where(company())->where(branch());
+
+        if($request->nane)
+        $purchases=$purchases->where('supplier_id','like','%'.$request->nane.'%');
+
+        $purchases=$purchases->orderBy('id', 'DESC')->paginate(12);
             
         
-        return view('purchase.index',compact('purchases'));
+        return view('purchase.index',compact('purchases','suppliers'));
     }
 
     /**

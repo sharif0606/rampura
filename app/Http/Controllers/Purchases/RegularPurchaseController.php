@@ -37,15 +37,20 @@ class RegularPurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $suppliers= Supplier::where(company())->get();
         if( currentUser()=='owner')
-            $purchases = Regular_purchase::where(company())->orderBy('id', 'DESC')->paginate(10);
+            $purchases = Regular_purchase::where(company());
         else
-            $purchases = Regular_purchase::where(company())->where(branch())->orderBy('id', 'DESC')->paginate(10);
+            $purchases = Regular_purchase::where(company())->where(branch());
             
-        
-        return view('regularPurchase.index',compact('purchases'));
+        if($request->nane)
+        $purchases=$purchases->where('supplier_id','like','%'.$request->nane.'%');
+
+        $purchases=$purchases->orderBy('id', 'DESC')->paginate(12);
+
+        return view('regularPurchase.index',compact('purchases','suppliers'));
     }
 
     /**

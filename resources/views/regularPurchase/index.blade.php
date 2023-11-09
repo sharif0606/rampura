@@ -3,6 +3,13 @@
 @section('pageSubTitle',trans('List'))
 
 @section('content')
+<style>
+    @media (min-width: 1192px){
+        .choices__inner{
+            width: 450px !important;
+        }
+    }
+</style>
 
 <!-- Bordered table start -->
 <section class="section">
@@ -13,8 +20,41 @@
                 @if(Session::has('response'))
                     {!!Session::get('response')['message']!!}
                 @endif
-                <div>
+                {{-- <div>
                     <a class="float-end" href="{{route(currentUser().'.rpurchase.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
+                </div> --}}
+                <div class="row pb-1">
+                    <div class="col-10">
+                        <form action="" method="get">
+                            <div class="row">
+                                <div class="input-group input-group-sm d-flex justify-content-between">
+                                    <div class="d-flex">
+                                        <select class="form-control choices" name="nane">
+                                            <option value="">Select Supplier</option>
+                                            @forelse($suppliers as $d)
+                                                <option value="{{$d->id}}" {{ (request('nane') == $d->id ? 'selected' : '') }}> {{ $d->supplier_name}}-[{{ $d->upazila?->name}}]</option>
+                                            @empty
+                                                <option value="">No Data Found</option>
+                                            @endforelse
+                                        </select>
+                    
+                                        <div class="input-group-append" style="margin-left: 6px;">
+                                            <button type="submit" class="btn btn-info">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                        </div>
+                                        <div class="input-group-append" style="margin-left: -2px;">
+                                            <a class="btn btn-warning ms-2" href="{{route(currentUser().'.rpurchase.index')}}" title="Clear"><i class="bi bi-arrow-clockwise"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="col-2">
+                        <a class=" float-end" href="{{route(currentUser().'.rpurchase.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
+                    </div>
                 </div>
                 <!-- table bordered -->
                 <div class="table-responsive">

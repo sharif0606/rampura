@@ -39,15 +39,20 @@ class SalesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $customers = Customer::where(company())->get();
         if( currentUser()=='owner')
-            $sales = Sales::where(company())->orderBy('id', 'DESC')->paginate(10);
+            $sales = Sales::where(company());
         else
-            $sales = Sales::where(company())->where(branch())->orderBy('id', 'DESC')->paginate(10);
+            $sales = Sales::where(company())->where(branch());
 
+        if($request->nane)
+        $sales=$sales->where('customer_id','like','%'.$request->nane.'%');
 
-        return view('sales.index',compact('sales'));
+        $sales=$sales->orderBy('id', 'DESC')->paginate(12);
+
+        return view('sales.index',compact('sales','customers'));
     }
 
     /**

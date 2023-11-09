@@ -37,14 +37,19 @@ class BeparianPurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $suppliers= Supplier::where(company())->get();
         if( currentUser()=='owner')
-            $purchases = Beparian_purchase::where(company())->orderBy('id', 'DESC')->paginate(10);
+            $purchases = Beparian_purchase::where(company());
         else
-            $purchases = Beparian_purchase::where(company())->where(branch())->orderBy('id', 'DESC')->paginate(10);
-            
-        return view('beparianPurchase.index',compact('purchases'));
+            $purchases = Beparian_purchase::where(company())->where(branch());
+
+        if($request->nane)
+        $purchases=$purchases->where('supplier_id','like','%'.$request->nane.'%');
+
+        $purchases=$purchases->orderBy('id', 'DESC')->paginate(12);    
+        return view('beparianPurchase.index',compact('purchases','suppliers'));
     }
 
     /**
