@@ -124,6 +124,13 @@
                                                 <th class="py-2 px-1">Action</th>
                                             </tr>
                                         </thead>
+                                            @php
+                                                $bagTotal = 0;
+                                                $qtyTotal = 0;
+                                                $lessTotal = 0;
+                                                $actualQtyTotal = 0;
+                                                $amountTotal = 0;
+                                            @endphp
                                         <tbody id="details_data">
 
                                             @forelse ($salesDetails as $p)
@@ -145,12 +152,31 @@
                                                 <td class="py-2 px-1"><input name="amount[]" readonly type="text" class="form-control amount" value="{{$p->amount}}"></td>
                                                 <td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>
                                             </tr>
+                                            @php
+                                                $bagTotal += $p->quantity_bag;
+                                                $qtyTotal += $p->quantity_kg;
+                                                $lessTotal += $p->less_quantity_kg;
+                                                $actualQtyTotal += $p->actual_quantity;
+                                                $amountTotal += $p->amount;
+                                            @endphp
                                             @empty
                                             <tr class="text-center">
                                                 <td colspan="12">No Data Found</td>
                                             </tr>
                                             @endforelse
                                         </tbody>
+                                        <tfoot>
+                                            <tr class="bg-warning">
+                                                <th colspan="5" class="py-2 px-1 text-center">Total</th>
+                                                <th class="py-2 px-1 total_bag"></th>
+                                                <th class="py-2 px-1 total_quantity"></th>
+                                                <th class="py-2 px-1 total_less"></th>
+                                                <th class="py-2 px-1 total_actual_quantity"></th>
+                                                <th class="py-2 px-1"></th>
+                                                <th class="py-2 px-1 total_sale_amount"></th>
+                                                <th class="py-2 px-1"></th>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                                 <div class="col-lg-12 col-sm-12 col-md-12 mt-3">
@@ -598,15 +624,40 @@ function total_calculate() {
 console.log(subTotal)
     // Calculate the sum of total_amount values
     
-    var purChaseTotal = 0;
+    var salesTotal = 0;
     $('.amount').each(function() {
-        purChaseTotal += parseFloat($(this).val());
+        salesTotal += parseFloat($(this).val());
     });
 
-    var grandTotal=((subTotal+purChaseTotal));
+    var bagTotal = 0;
+    $('.qty_bag').each(function() {
+        bagTotal += parseFloat($(this).val());
+    });
+
+    var quantityTotal = 0;
+    $('.qty_kg').each(function() {
+        quantityTotal += parseFloat($(this).val());
+    });
+
+    var lessTotal = 0;
+    $('.less_qty_kg').each(function() {
+        lessTotal += parseFloat($(this).val());
+    });
+
+    var actualTotal = 0;
+    $('.actual_qty').each(function() {
+        actualTotal += parseFloat($(this).val());
+    });
+
+    var grandTotal=((subTotal+salesTotal));
     var totalDue = (grandTotal - totalPayment);
 
     // Display the sum in the specified element
+    $('.total_bag').text(bagTotal.toFixed(2));
+    $('.total_quantity').text(quantityTotal.toFixed(2));
+    $('.total_less').text(lessTotal.toFixed(2));
+    $('.total_actual_quantity').text(actualTotal.toFixed(2));
+    $('.total_sale_amount').text(salesTotal.toFixed(2));
     $('.tgrandtotal').text(grandTotal.toFixed(2));
     $('.tgrandtotal_p').val(grandTotal.toFixed(2));
     $('.tdue').text(totalDue.toFixed(2));

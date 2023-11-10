@@ -119,7 +119,11 @@
                                             </tr>
                                         </thead>
                                             @php
+                                                $bagTotal = 0;
+                                                $qtyTotal = 0;
+                                                $lessTotal = 0;
                                                 $actualQtyTotal = 0;
+                                                $amountTotal = 0;
                                             @endphp
                                             <?php $firstBatchId = optional($purchase->stock)->first()->batch_id; ?>
                                             <input type="hidden" name="batch_id" value="{{$firstBatchId}}">
@@ -138,7 +142,11 @@
                                                 <td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>
                                             </tr>
                                             @php
+                                                $bagTotal += $p->quantity_bag;
+                                                $qtyTotal += $p->quantity_kg;
+                                                $lessTotal += $p->less_quantity_kg;
                                                 $actualQtyTotal += $p->actual_quantity;
+                                                $amountTotal += $p->amount;
                                             @endphp
                                             @empty
                                             <tr class="text-center">
@@ -146,6 +154,18 @@
                                             </tr>
                                             @endforelse
                                         </tbody>
+                                        <tfoot>
+                                            <tr class="bg-warning">
+                                                <th colspan="3" class="py-2 px-1 text-center">Total</th>
+                                                <th class="py-2 px-1 total_bag">{{$bagTotal}}</th>
+                                                <th class="py-2 px-1 total_quantity">{{$qtyTotal}}</th>
+                                                <th class="py-2 px-1 total_less">{{$lessTotal}}</th>
+                                                <th class="py-2 px-1 total_actual_quantity">{{$actualQtyTotal}}</th>
+                                                <th class="py-2 px-1"></th>
+                                                <th class="py-2 px-1 total_pur_amount">{{$amountTotal}}</th>
+                                                <th class="py-2 px-1"></th>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                                 <div class="col-lg-12 col-sm-12 col-md-12 mt-3">
@@ -600,6 +620,21 @@ function total_calculate() {
         purChaseTotal += parseFloat($(this).val());
     });
 
+    var bagTotal = 0;
+    $('.qty_bag').each(function() {
+        bagTotal += parseFloat($(this).val());
+    });
+
+    var quantityTotal = 0;
+    $('.qty_kg').each(function() {
+        quantityTotal += parseFloat($(this).val());
+    });
+
+    var lessTotal = 0;
+    $('.less_qty_kg').each(function() {
+        lessTotal += parseFloat($(this).val());
+    });
+
     var actualTotal = 0;
     $('.actual_qty').each(function() {
         actualTotal += parseFloat($(this).val());
@@ -610,6 +645,11 @@ function total_calculate() {
     var per_kg_costing = (grandTotal/actualTotal);
 
     // Display the sum in the specified element
+    $('.total_bag').text(bagTotal.toFixed(2));
+    $('.total_quantity').text(quantityTotal.toFixed(2));
+    $('.total_less').text(lessTotal.toFixed(2));
+    $('.total_actual_quantity').text(actualTotal.toFixed(2));
+    $('.total_pur_amount').text(purChaseTotal.toFixed(2));
     $('.perKgCost').text(per_kg_costing.toFixed(2));
     $('.tgrandtotal').text(grandTotal.toFixed(2));
     $('.tgrandtotal_p').val(grandTotal.toFixed(2));
