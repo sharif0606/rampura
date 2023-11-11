@@ -338,6 +338,12 @@
                                     </table>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label for="" class="form-label"><b>Note</b></label>
+                                    <textarea class="form-control" name="note" rows="3">{{old('note')}}</textarea>
+                                </div>
+                            </div>
                             
                             <div class="row mt-3">
                                 <div class="col-12 d-flex justify-content-end">
