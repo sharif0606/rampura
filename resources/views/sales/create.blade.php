@@ -237,6 +237,12 @@
                                     </table>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label for="" class="form-label"><b>Note</b></label>
+                                    <textarea class="form-control" name="note" rows="3">{{old('note')}}</textarea>
+                                </div>
+                            </div>
                             
                             <div class="row my-3">
                                 <div class="col-12 d-flex justify-content-end">
@@ -461,6 +467,41 @@ var row=`<tr class="tbl_expense">
             <td class="tbl_expense text-danger text-center " onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
         </tr>`;
     $('#payment').append(row);
+}
+function addBagRow(button) {
+    var modal = $(button).closest('.modal');
+    var lotNoValue = modal.find('input[name="bag_lot_no[]"]').val();
+    var newRow = `<div class="row">
+                    <div class="col-2">
+                        <label for="lot_no" class="form-label">Lot Number</label>
+                        <input type="text" class="form-control" value="${lotNoValue}" name="bag_lot_no[]" readonly>
+                    </div>
+                    <div class="col-2">
+                        <label for="bagno" class="form-label">Bag No</label>
+                        <input type="text" class="form-control" name="bag_no[]" placeholder="bag no">
+                    </div>
+                    <div class="col-3">
+                        <label for="bagno" class="form-label">Quantity Kg</label>
+                        <input type="text" class="form-control" name="quantity_detail[]" placeholder="quantity">
+                    </div>
+                    <div class="col-3">
+                        <label for="bagno" class="form-label">Comment</label>
+                        <input type="text" class="form-control" name="bag_comment[]" placeholder="comment">
+                    </div>
+                    <div class="col-2 text-start" style="margin-top: 1.9rem;">
+                        <span class="text-primary pe-2"><i style="font-size: 1.3rem;" onclick="addBagRow(this)" class="bi bi-plus-square-fill"></i></span>
+                        <span class="text-danger"><i style="font-size: 1.3rem;" onclick="removeBagRow(this)" class="bi bi-dash-square-fill"></i></span>
+                    </div>
+                </div>`;
+
+    // Append the new row to the modal's bagRow container
+    modal.find('#bagRow').append(newRow);
+}
+
+
+function removeBagRow(button) {
+    // Find the row associated with the clicked remove button and remove it
+    $(button).closest('.row').remove();
 }
 
 function RemoveRow(e) {

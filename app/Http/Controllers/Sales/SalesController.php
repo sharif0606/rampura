@@ -27,6 +27,7 @@ use App\Http\Requests\Sales\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
 use App\Models\Customers\CustomerPayment;
 use App\Models\Customers\CustomerPaymentDetails;
+use App\Models\Sales\BagDetail;
 use Exception;
 use DB;
 use Carbon\Carbon;
@@ -151,15 +152,27 @@ class SalesController extends Controller
                                             <i class="bi bi-x-lg" style="font-size: 1.5rem;"></i>
                                         </button>
                                     </div>
-                                    <div class="modal-body">
+                                    <div class="modal-body text-center" id="bagRow">
                                         <div class="row">
-                                            <div class="form-group">
-                                                <div class="col-2">
-                                                    <input type="text" class="form-control" name="bag_no" placeholder="bag no">
-                                                </div>
-                                                <div class="col-2">
-                                                    <input type="text" class="form-control" name="quantity_detail" placeholder="quantity">
-                                                </div>
+                                            <div class="col-2">
+                                                <label for="lot_no" class="form-label">Lot Number</label>
+                                                <input type="text" class="form-control" value="'.$product->lot_no.'" name="bag_lot_no[]" readonly>
+                                            </div>
+                                            <div class="col-2">
+                                                <label for="bagno" class="form-label">Bag No</label>
+                                                <input type="text" class="form-control" name="bag_no[]" placeholder="bag no">
+                                            </div>
+                                            <div class="col-3">
+                                                <label for="bagno" class="form-label">Quantity Kg</label>
+                                                <input type="text" class="form-control" name="quantity_detail[]" placeholder="quantity">
+                                            </div>
+                                            <div class="col-3">
+                                                <label for="bagno" class="form-label">Comment</label>
+                                                <input type="text" class="form-control" name="bag_comment[]" placeholder="quantity">
+                                            </div>
+                                            <div class="col-2 text-start">
+                                                <label for="bagno" class="form-label">Action</label><br>
+                                                <span class="text-primary"><i style="font-size: 1.3rem;" onclick="addBagRow(this)" class="bi bi-plus-square-fill"></i></span>
                                             </div>
                                         </div>
                                     </div>
@@ -217,7 +230,6 @@ class SalesController extends Controller
      */
     public function store(AddNewRequest $request)
     {
-
         DB::beginTransaction();
         try{
 
@@ -274,6 +286,19 @@ class SalesController extends Controller
                                 $lot_noa[$pd->lot_no]=$pd->amount;
                             }
                         }
+                    }
+                }
+                if($request->bag_lot_no){
+                    foreach($request->bag_lot_no as $b=>$bag_lot_no){
+                        $bag = new BagDetail;
+                        $bag->sales_id = $pur->id;
+                        $bag->sales_details_id = $pd->id;
+                        $bag->product_id = $pd->product_id;
+                        $bag->lot_no = $bag_lot_no;
+                        $bag->bag_no = $request->bag_no[$b];
+                        $bag->quantity_kg = $request->quantity_detail[$b];
+                        $bag->comment = $request->bag_comment[$b];
+                        $bag->save();
                     }
                 }
                 if($request->child_two_id){
