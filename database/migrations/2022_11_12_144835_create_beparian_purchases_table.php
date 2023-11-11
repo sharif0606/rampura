@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('payment_status')->comment('0 unpaid, 1 paid, 2 partial_paid')->default(0)->nullable();
             $table->integer('status')->comment('1 parches, 2 return, 3 partial_return, 4 cancel')->default(1);
             $table->string('status_note')->nullable();
+            $table->string('note')->nullable();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->timestamps();

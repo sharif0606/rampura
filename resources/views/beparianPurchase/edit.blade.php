@@ -340,7 +340,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <label for="" class="form-label"><b>Note</b></label>
-                                    <textarea class="form-control" name="note" rows="3">{{old('note')}}</textarea>
+                                    <textarea class="form-control" name="note" rows="3">{{old('note',$purchase->note)}}</textarea>
                                 </div>
                             </div>
                             

@@ -468,28 +468,28 @@ var row=`<tr class="tbl_expense">
         </tr>`;
     $('#payment').append(row);
 }
-function addBagRow(button) {
+function addBagRow(button,pid) {
     var modal = $(button).closest('.modal');
-    var lotNoValue = modal.find('input[name="bag_lot_no[]"]').val();
+    var lotNoValue = modal.find('input[name="bag_lot_no['+pid+'][]"]').val();
     var newRow = `<div class="row">
                     <div class="col-2">
                         <label for="lot_no" class="form-label">Lot Number</label>
-                        <input type="text" class="form-control" value="${lotNoValue}" name="bag_lot_no[]" readonly>
+                        <input type="text" class="form-control" value="${lotNoValue}" name="bag_lot_no[${pid}][]" readonly>
                     </div>
                     <div class="col-2">
                         <label for="bagno" class="form-label">Bag No</label>
-                        <input type="text" class="form-control" name="bag_no[]" placeholder="bag no">
+                        <input type="text" class="form-control" name="bag_no[${pid}][]" placeholder="bag no">
                     </div>
                     <div class="col-3">
                         <label for="bagno" class="form-label">Quantity Kg</label>
-                        <input type="text" class="form-control" name="quantity_detail[]" placeholder="quantity">
+                        <input type="text" class="form-control" name="quantity_detail[${pid}][]" placeholder="quantity">
                     </div>
                     <div class="col-3">
                         <label for="bagno" class="form-label">Comment</label>
-                        <input type="text" class="form-control" name="bag_comment[]" placeholder="comment">
+                        <input type="text" class="form-control" name="bag_comment[${pid}][]" placeholder="comment">
                     </div>
                     <div class="col-2 text-start" style="margin-top: 1.9rem;">
-                        <span class="text-primary pe-2"><i style="font-size: 1.3rem;" onclick="addBagRow(this)" class="bi bi-plus-square-fill"></i></span>
+                        <span class="text-primary pe-2"><i style="font-size: 1.3rem;" onclick="addBagRow(this,${pid})" class="bi bi-plus-square-fill"></i></span>
                         <span class="text-danger"><i style="font-size: 1.3rem;" onclick="removeBagRow(this)" class="bi bi-dash-square-fill"></i></span>
                     </div>
                 </div>`;

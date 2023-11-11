@@ -152,6 +152,7 @@ class BeparianPurchaseController extends Controller
             $pur->company_id=company()['company_id'];
             $pur->branch_id=$request->branch_id;
             $pur->warehouse_id=$request->warehouse_id;
+            $pur->note=$request->note;
             $pur->created_by=currentUserId();
             $pur->payment_status=0;
             $pur->status=1;
@@ -591,6 +592,7 @@ class BeparianPurchaseController extends Controller
             $pur->company_id=company()['company_id'];
             $pur->branch_id=$request->branch_id;
             $pur->warehouse_id=$request->warehouse_id;
+            $pur->note=$request->note;
             $pur->updated_by=currentUserId();
 
             if($pur->save()){

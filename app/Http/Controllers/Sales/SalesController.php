@@ -156,23 +156,23 @@ class SalesController extends Controller
                                         <div class="row">
                                             <div class="col-2">
                                                 <label for="lot_no" class="form-label">Lot Number</label>
-                                                <input type="text" class="form-control" value="'.$product->lot_no.'" name="bag_lot_no[]" readonly>
+                                                <input type="text" class="form-control" value="'.$product->lot_no.'" name="bag_lot_no['.$product->id.'][]" readonly>
                                             </div>
                                             <div class="col-2">
                                                 <label for="bagno" class="form-label">Bag No</label>
-                                                <input type="text" class="form-control" name="bag_no[]" placeholder="bag no">
+                                                <input type="text" class="form-control" name="bag_no['.$product->id.'][]" placeholder="bag no">
                                             </div>
                                             <div class="col-3">
                                                 <label for="bagno" class="form-label">Quantity Kg</label>
-                                                <input type="text" class="form-control" name="quantity_detail[]" placeholder="quantity">
+                                                <input type="text" class="form-control" name="quantity_detail['.$product->id.'][]" placeholder="quantity">
                                             </div>
                                             <div class="col-3">
                                                 <label for="bagno" class="form-label">Comment</label>
-                                                <input type="text" class="form-control" name="bag_comment[]" placeholder="quantity">
+                                                <input type="text" class="form-control" name="bag_comment['.$product->id.'][]" placeholder="quantity">
                                             </div>
                                             <div class="col-2 text-start">
                                                 <label for="bagno" class="form-label">Action</label><br>
-                                                <span class="text-primary"><i style="font-size: 1.3rem;" onclick="addBagRow(this)" class="bi bi-plus-square-fill"></i></span>
+                                                <span class="text-primary"><i style="font-size: 1.3rem;" onclick="addBagRow(this,'.$product->id.')" class="bi bi-plus-square-fill"></i></span>
                                             </div>
                                         </div>
                                     </div>
@@ -244,6 +244,7 @@ class SalesController extends Controller
             $pur->company_id=company()['company_id'];
             $pur->branch_id=$request->branch_id;
             $pur->warehouse_id=$request->warehouse_id;
+            $pur->note=$request->note;
             $pur->created_by=currentUserId();
 
             $pur->payment_status=0;
@@ -285,22 +286,24 @@ class SalesController extends Controller
                             }else{
                                 $lot_noa[$pd->lot_no]=$pd->amount;
                             }
+
+                            if(isset($request->bag_lot_no[$product_id])){
+                                foreach($request->bag_lot_no[$product_id] as $b=>$bag_lot_no){
+                                    $bag = new BagDetail;
+                                    $bag->sales_id = $pur->id;
+                                    $bag->sales_details_id = $pd->id;
+                                    $bag->product_id = $pd->product_id;
+                                    $bag->lot_no = $bag_lot_no;
+                                    $bag->bag_no = $request->bag_no[$product_id][$b];
+                                    $bag->quantity_kg = $request->quantity_detail[$product_id][$b];
+                                    $bag->comment = $request->bag_comment[$product_id][$b];
+                                    $bag->save();
+                                }
+                            }
                         }
                     }
                 }
-                if($request->bag_lot_no){
-                    foreach($request->bag_lot_no as $b=>$bag_lot_no){
-                        $bag = new BagDetail;
-                        $bag->sales_id = $pur->id;
-                        $bag->sales_details_id = $pd->id;
-                        $bag->product_id = $pd->product_id;
-                        $bag->lot_no = $bag_lot_no;
-                        $bag->bag_no = $request->bag_no[$b];
-                        $bag->quantity_kg = $request->quantity_detail[$b];
-                        $bag->comment = $request->bag_comment[$b];
-                        $bag->save();
-                    }
-                }
+                
                 if($request->child_two_id){
                     foreach($request->child_two_id as $j=>$child_two_id){
                         if($request->cost_amount[$j] > 0){
@@ -706,6 +709,7 @@ class SalesController extends Controller
             $pur->company_id=company()['company_id'];
             $pur->branch_id=$request->branch_id;
             $pur->warehouse_id=$request->warehouse_id;
+            $pur->note=$request->note;
             $pur->updated_by=currentUserId();
             $pur->payment_status=0;
             $pur->status=1;
