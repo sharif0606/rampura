@@ -350,6 +350,7 @@
                                             @endif
                                         @endforeach
                                     @endif
+                                    
                                     @php
                                         $totalPurchaseAmount= $subSalesAmount - $subPurchaseExpense;
                                     @endphp
