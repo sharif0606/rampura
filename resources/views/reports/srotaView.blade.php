@@ -350,6 +350,13 @@
                                             @endif
                                         @endforeach
                                     @endif
+                                    @php
+                                        $totalPurchaseAmount= $subSalesAmount - $subPurchaseExpense;
+                                    @endphp
+                                    <tr>
+                                        <th style="text-align: left;">পরিশোধযোগ্য</th>
+                                        <th style="text-align: right;"><span style="color: green; border-top: double;">{{ money_format(round($totalPurchaseAmount))}}</span></th>
+                                    </tr>
 
                                     
                                     {{-- @if($pur->purchase?->grand_total)
