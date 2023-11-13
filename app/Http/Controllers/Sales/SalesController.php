@@ -623,7 +623,10 @@ class SalesController extends Controller
     public function saleMemo($id)
     {
         $show_data= Sales::findOrFail(encryptor('decrypt',$id));
-        $salesDetail= Sales_details::where('sales_id',$show_data->id)->get();
+
+        // here with('bag_detail') is from model relation to get bag details from associated sales details
+        $salesDetail= Sales_details::with('bag_detail')->where('sales_id',$show_data->id)->get();
+
         $expense = ExpenseOfSales::where('sales_id',$show_data->id)->get();
         $payment = CustomerPayment::where('sales_id',$show_data->id)->get();
         return view('sales.memo',compact('show_data','salesDetail','expense','payment'));
@@ -643,6 +646,16 @@ class SalesController extends Controller
             $Warehouses = Warehouse::where(company())->get();
             $sales = Sales::findOrFail(encryptor('decrypt',$id));
             $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
+            
+            $bagDetailsBySalesDetail = [];
+            $bagDetails = [];
+            foreach ($salesDetails as $sd) {
+                $bagDetails = BagDetail::where('sales_id', $sales->id)
+                    ->where('sales_details_id', $sd->id)
+                    ->get();
+
+                $bagDetailsBySalesDetail[$sd->id] = $bagDetails;
+            }
 
             $childone = Child_one::where(company())->where('head_code',5320)->first();
             $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
@@ -685,7 +698,7 @@ class SalesController extends Controller
             }
         }
 
-        return view('sales.edit',compact('branches','customers','Warehouses','sales','salesDetails','childTow','expense','paymethod','customerPayment','customerPaymentDetails'));
+        return view('sales.edit',compact('branches','customers','Warehouses','sales','salesDetails','bagDetails','bagDetailsBySalesDetail','childTow','expense','paymethod','customerPayment','customerPaymentDetails'));
     }
 
     /**
@@ -717,6 +730,7 @@ class SalesController extends Controller
                 
                 if($request->product_id){
                     Sales_details::where('sales_id',$pur->id)->delete();
+                    BagDetail::where('sales_id',$pur->id)->delete();
                     Stock::where('sales_id',$pur->id)->delete();
                     foreach($request->product_id as $i=>$product_id){
                         if($request->lot_no[$i]>0){
@@ -753,6 +767,20 @@ class SalesController extends Controller
                                     $lot_noa[$pd->lot_no]= $lot_noa[$pd->lot_no] + $pd->amount;
                                 }else{
                                     $lot_noa[$pd->lot_no]=$pd->amount;
+                                }
+
+                                if(isset($request->bag_lot_no[$product_id])){
+                                    foreach($request->bag_lot_no[$product_id] as $b=>$bag_lot_no){
+                                        $bag = new BagDetail;
+                                        $bag->sales_id = $pur->id;
+                                        $bag->sales_details_id = $pd->id;
+                                        $bag->product_id = $pd->product_id;
+                                        $bag->lot_no = $bag_lot_no;
+                                        $bag->bag_no = $request->bag_no[$product_id][$b];
+                                        $bag->quantity_kg = $request->quantity_detail[$product_id][$b];
+                                        $bag->comment = $request->bag_comment[$product_id][$b];
+                                        $bag->save();
+                                    }
                                 }
                             }
                         }

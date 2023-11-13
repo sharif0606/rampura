@@ -144,7 +144,53 @@
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="brand[]" type="text" value="{{$p->brand}}" class="form-control brand"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" type="text" value="{{$p->bag_qty+$p->quantity_bag}}" class="form-control stock_bag" disabled></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" type="text" value="{{$p->qty+$p->quantity_kg}}" class="form-control" disabled></td>
-                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" value="{{$p->quantity_bag}}" class="form-control qty_bag"></td>
+                                                <td class="py-2 px-1" style="position:relative;">
+                                                    <input onkeyup="get_cal(this)" name="qty_bag[]" type="text" value="{{$p->quantity_bag}}" class="form-control qty_bag">
+
+                                                    {{-- bag detail model --}}
+                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#bagDetail{{$p->product_id}}" style="position:absolute; right:3px; top:14px; border:none; background-color:transparent; color: #435EBE; font-size:1.2rem;"><i class="bi bi-plus-square-fill"></i></button>
+                                                    <div class="modal fade" id="bagDetail{{$p->product_id}}" tabindex="-1" role="dialog" aria-labelledby="balanceTitle" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header py-1">
+                                                                    <h5 class="modal-title" id="batchTitle">Bag Details</h5>
+                                                                    <button type="button" class="close text-danger" data-bs-dismiss="modal" aria-label="Close">
+                                                                        <i class="bi bi-x-lg" style="font-size: 1.5rem;"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body text-center" id="bagRow">
+                                                                    @foreach ($bagDetailsBySalesDetail[$p->id] ?? [] as $bd)
+                                                                        <div class="row">
+                                                                            <div class="col-2">
+                                                                                <label for="lot_no" class="form-label">Lot Number</label>
+                                                                                <input type="text" class="form-control" value="{{$bd->lot_no ?? ''}}" name="bag_lot_no[{{$bd->product_id ?? ''}}][]" readonly>
+                                                                            </div>
+                                                                            <div class="col-2">
+                                                                                <label for="bagno" class="form-label">Bag No</label>
+                                                                                <input type="text" class="form-control" name="bag_no[{{$bd->product_id ?? ''}}][]" placeholder="bag no" value="{{ $bd->bag_no ?? '' }}">
+                                                                            </div>
+                                                                            <div class="col-3">
+                                                                                <label for="quantity" class="form-label">Quantity Kg</label>
+                                                                                <input type="text" class="form-control" name="quantity_detail[{{$bd->product_id ?? ''}}][]" placeholder="quantity" value="{{ $bd->quantity_kg ?? '' }}">
+                                                                            </div>
+                                                                            <div class="col-3">
+                                                                                <label for="note" class="form-label">Comment</label>
+                                                                                <input type="text" class="form-control" name="bag_comment[{{$bd->product_id ?? ''}}][]" placeholder="quantity" value="{{ $bd->comment ?? '' }}">
+                                                                            </div>
+                                                                            <div class="col-2 text-start">
+                                                                                <label for="ac" class="form-label">Action</label><br>
+                                                                                <span class="text-primary pe-2"><i style="font-size: 1.3rem;" onclick="addBagRow(this,{{$bd->product_id ?? ''}})" class="bi bi-plus-square-fill"></i></span>
+                                                                                <span class="text-danger"><i style="font-size: 1.3rem;" onclick="removeBagRow(this)" class="bi bi-dash-square-fill"></i></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {{-- bag detail model --}}
+                                                
+                                                </td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" value="{{$p->quantity_kg}}" class="form-control qty_kg"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" value="{{$p->less_quantity_kg}}" class="form-control less_qty_kg"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="actual_qty[]" readonly type="text" value="{{$p->actual_quantity}}" class="form-control actual_qty" value="0"></td>
@@ -560,6 +606,42 @@ var row=`<tr class="tbl_expense">
             <td class="tbl_expense text-danger text-center " onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
         </tr>`;
     $('#payment').append(row);
+}
+
+function addBagRow(button,pid) {
+    var modal = $(button).closest('.modal');
+    var lotNoValue = modal.find('input[name="bag_lot_no['+pid+'][]"]').val();
+    var newRow = `<div class="row">
+                    <div class="col-2">
+                        <label for="lot_no" class="form-label">Lot Number</label>
+                        <input type="text" class="form-control" value="${lotNoValue}" name="bag_lot_no[${pid}][]" readonly>
+                    </div>
+                    <div class="col-2">
+                        <label for="bagno" class="form-label">Bag No</label>
+                        <input type="text" class="form-control" name="bag_no[${pid}][]" placeholder="bag no">
+                    </div>
+                    <div class="col-3">
+                        <label for="bagno" class="form-label">Quantity Kg</label>
+                        <input type="text" class="form-control" name="quantity_detail[${pid}][]" placeholder="quantity">
+                    </div>
+                    <div class="col-3">
+                        <label for="bagno" class="form-label">Comment</label>
+                        <input type="text" class="form-control" name="bag_comment[${pid}][]" placeholder="comment">
+                    </div>
+                    <div class="col-2 text-start" style="margin-top: 1.9rem;">
+                        <span class="text-primary pe-2"><i style="font-size: 1.3rem;" onclick="addBagRow(this,${pid})" class="bi bi-plus-square-fill"></i></span>
+                        <span class="text-danger"><i style="font-size: 1.3rem;" onclick="removeBagRow(this)" class="bi bi-dash-square-fill"></i></span>
+                    </div>
+                </div>`;
+
+    // Append the new row to the modal's bagRow container
+    modal.find('#bagRow').append(newRow);
+}
+
+
+function removeBagRow(button) {
+    // Find the row associated with the clicked remove button and remove it
+    $(button).closest('.row').remove();
 }
 
 function RemoveRow(e) {

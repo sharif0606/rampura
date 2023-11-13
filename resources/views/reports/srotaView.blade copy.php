@@ -291,15 +291,14 @@
                                     <tr>
                                         <th style="text-align: left;">{{ money_format(round($pur->quantity_bag))}} ব্যাগ , {{ money_format(round($pur->actual_quantity))}} কেজি *{{$pur->rate_kg}}/- </th>
                                         <th style="text-align: right;">
-                                            {{-- @if($pur->amount != 0)
+                                            @if($pur->amount != 0)
                                                 {{ money_format(round($pur->amount))}}
                                             @else
                                                 @php 
                                                     $show_pur_amount = $subSalesAmount - $conditional_pur_total_cost;
                                                 @endphp
                                                 {{ money_format(round($subSalesAmount))}}
-                                            @endif --}}
-                                            {{ money_format(round($subSalesAmount))}}
+                                            @endif
                                         </th>
                                     </tr>
                                     

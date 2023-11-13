@@ -19,6 +19,11 @@ class Sales_details extends Model
     public function customer(){
         return $this->belongsTo(Customer::class);
     }
+    public function bag_detail(){
+        return $this->hasMany(BagDetail::class,'sales_details_id','id');
+    }
+    
+    
     // public function purchase(){
     //     return $this->belongsTo(Purchase::class,'purchase_id','id');
     // }

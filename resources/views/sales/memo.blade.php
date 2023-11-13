@@ -44,6 +44,12 @@
             border-color: rgb(9, 95, 9);
             border-collapse: collapse;
         }
+        .tbl_mini_table{
+            border: solid 1px;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 9px;
+        }
         .tbl_table_border_right{
             border-right: solid 1px;
             border-color: rgb(9, 95, 9);
@@ -166,7 +172,23 @@
                 <tbody style="height: 400px;">
                     @forelse ($salesDetail as $key => $s)
                         <tr style="vertical-align: top; height: 0;">
-                            <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;">{{$s->product?->product_name}}</th>
+                            <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;">
+                                {{$s->product?->product_name}}
+                                <table class="tbl_mini_table" style="width: 50%;">
+                                    <tr class="tbl_mini_table">
+                                        <th class="tbl_mini_table">B.No</th>
+                                        <th class="tbl_mini_table">Q.kg</th>
+                                    </tr>
+                                    @foreach ($s->bag_detail as $bag_detail)
+                                    <tr class="tbl_mini_table">
+                                        <td class="tbl_mini_table">{{ $bag_detail->bag_no }}</td>
+                                        <td class="tbl_mini_table">{{ $bag_detail->quantity_kg }}</td>
+                                    </tr>
+                                    @endforeach
+                                </table>
+                                    
+                                    
+                            </th>
                             <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;">{{ money_format(round($s->quantity_bag))}}</th>
                             <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;">{{ money_format(round($s->actual_quantity))}}</th>
                             <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;">{{$s->rate_kg}}</th>
