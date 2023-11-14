@@ -159,7 +159,7 @@
                                                                     </button>
                                                                 </div>
                                                                 <div class="modal-body text-center" id="bagRow">
-                                                                    @foreach ($bagDetailsBySalesDetail[$p->id] ?? [] as $bd)
+                                                                    @forelse ($bagDetailsBySalesDetail[$p->id] ?? [] as $bd)
                                                                         <div class="row">
                                                                             <div class="col-2">
                                                                                 <label for="lot_no" class="form-label">Lot Number</label>
@@ -183,7 +183,31 @@
                                                                                 <span class="text-danger"><i style="font-size: 1.3rem;" onclick="removeBagRow(this)" class="bi bi-dash-square-fill"></i></span>
                                                                             </div>
                                                                         </div>
-                                                                    @endforeach
+                                                                    @empty
+                                                                        <div class="row">
+                                                                            <div class="col-2">
+                                                                                <label for="lot_no" class="form-label">Lot Number</label>
+                                                                                <input type="text" class="form-control" value="{{$p->lot_no}}" name="bag_lot_no[{{$p->product_id}}][]" readonly>
+                                                                            </div>
+                                                                            <div class="col-2">
+                                                                                <label for="bagno" class="form-label">Bag No</label>
+                                                                                <input type="text" class="form-control" name="bag_no[{{$p->product_id}}][]" placeholder="bag no" value="">
+                                                                            </div>
+                                                                            <div class="col-3">
+                                                                                <label for="quantity" class="form-label">Quantity Kg</label>
+                                                                                <input type="text" class="form-control" name="quantity_detail[{{$p->product_id}}][]" placeholder="quantity" value="">
+                                                                            </div>
+                                                                            <div class="col-3">
+                                                                                <label for="note" class="form-label">Comment</label>
+                                                                                <input type="text" class="form-control" name="bag_comment[{{$p->product_id}}][]" placeholder="quantity" value="">
+                                                                            </div>
+                                                                            <div class="col-2 text-start">
+                                                                                <label for="ac" class="form-label">Action</label><br>
+                                                                                <span class="text-primary pe-2"><i style="font-size: 1.3rem;" onclick="addBagRow(this,{{$p->product_id}})" class="bi bi-plus-square-fill"></i></span>
+                                                                                <span class="text-danger"><i style="font-size: 1.3rem;" onclick="removeBagRow(this)" class="bi bi-dash-square-fill"></i></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforelse
                                                                 </div>
                                                             </div>
                                                         </div>
