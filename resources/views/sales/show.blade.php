@@ -61,6 +61,13 @@
                             </tbody>
                         </table>
                         <table class="tbl_expense" style="width:100%">
+                            @php
+                                $totalBag = 0;
+                                $totalKg = 0;
+                                $totalLess = 0;
+                                $totalActual = 0;
+                                $totalAmount = 0;
+                            @endphp
                             <tbody>
                                 <tr class="tbl_expense bg-secondary text-white">
                                     <th class="tbl_expense" style="text-align: center; padding: 5px;">{{__('SL NO')}}</th>
@@ -87,12 +94,30 @@
                                     <td class="tbl_expense td_hide" style="text-align: center; padding: 5px;">{{money_format(round($s->rate_kg))}}</td>
                                     <td class="tbl_expense td_hide" style="text-align: center; padding: 5px;">{{money_format(round($s->amount))}}</td>
                                 </tr>
+                                @php
+                                    $totalBag += $s->quantity_bag;
+                                    $totalKg += $s->quantity_kg;
+                                    $totalLess += $s->less_quantity_kg;
+                                    $totalActual += $s->actual_quantity;
+                                    $totalAmount += $s->amount;
+                                @endphp
                                 @empty
                                 <tr>
                                     <th colspan="10">No data Found</th>
                                 </tr>
                                 @endforelse
                             </tbody>
+                            <tfoot>
+                                <tr class="tbl_expense">
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;" colspan="4">Total</th>
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">{{money_format($totalBag)}}</th>
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">{{money_format($totalKg)}}</th>
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">{{money_format($totalLess)}}</th>
+                                    <th class="tbl_expense" style="text-align: center; padding: 5px;">{{money_format($totalActual)}}</th>
+                                    <th class="tbl_expense td_hide" style="text-align: center; padding: 5px;"></th>
+                                    <th class="tbl_expense td_hide" style="text-align: center; padding: 5px;">{{money_format($totalAmount)}}</th>
+                                </tr>
+                            </tfoot>
                         </table>
 
                         <div class="td_hide" style="margin-top: 3rem;"><h5>ADD FOR SALES:</h5></div>
