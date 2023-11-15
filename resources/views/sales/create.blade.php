@@ -266,17 +266,13 @@
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 <script>
-    function change_data(e){
-        $('.brnch').hide();
-        $('.brnch'+e).show();
-    }
+function change_data(e){
+    $('.brnch').hide();
+    $('.brnch'+e).show();
+}
 
 </script>
-
 <script>
-
-
-
 $(function() {
     $("#item_search").bind("paste", function(e){
         $("#item_search").autocomplete('search');
