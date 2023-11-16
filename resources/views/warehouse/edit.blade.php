@@ -15,7 +15,7 @@
                               @method('patch')
                               <input type="hidden" name="uptoken" value="{{encryptor('encrypt',$warehouse->id)}}">
                               <div class="row">
-                                  <div class="col-lg-4 col-md-6 col-sm-12">
+                                  <div class="col-lg-4 col-md-6 col-sm-12 d-none">
                                       <div class="form-group">
                                           <label for="branch_id">{{__('Branch')}}<span class="text-danger">*</span></label>
                                           <select class="form-control form-select" name="branch" id="branch">

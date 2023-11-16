@@ -14,7 +14,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">{{__('#SL')}}</th>
-                                <th scope="col">{{__('Branch')}}</th>
+                                {{-- <th scope="col">{{__('Branch')}}</th> --}}
                                 <th scope="col">{{__('Name')}}</th>
                                 <th scope="col">{{__('Contact')}}</th>
                                 <th scope="col">{{__('Address')}}</th>
@@ -25,7 +25,7 @@
                             @forelse($warehouses as $war)
                             <tr>
                             <th scope="row">{{ ++$loop->index }}</th>
-                                <td>{{$war->branch->name}}</td> 
+                                {{-- <td>{{$war->branch->name}}</td>  --}}
                                 <td>{{$war->name}}</td>
                                 <td>{{$war->contact}}</td>
                                 <td>{{$war->address}}</td>
@@ -43,11 +43,14 @@
                             </tr>
                             @empty
                             <tr>
-                                <th colspan="6" class="text-center">No Data Found</th>
+                                <th colspan="5" class="text-center">No Data Found</th>
                             </tr>
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="my-3">
+                        {!! $warehouses->links()!!}
+                    </div>
                 </div>
             </div>
         </div>
