@@ -174,18 +174,20 @@
                         <tr style="vertical-align: top; height: 0;">
                             <th class="tbl_table_border_right" style="color: #4F709C; text-align: left; padding-left: 5px;">
                                 {{$s->product?->product_name}}
-                                <table class="tbl_mini_table" style="width: 50%;">
-                                    <tr class="tbl_mini_table">
-                                        <th class="tbl_mini_table">B.No</th>
-                                        <th class="tbl_mini_table">Q.kg</th>
-                                    </tr>
-                                    @foreach ($s->bag_detail as $bag_detail)
-                                    <tr class="tbl_mini_table">
-                                        <td class="tbl_mini_table">{{ $bag_detail->bag_no }}</td>
-                                        <td class="tbl_mini_table">{{ $bag_detail->quantity_kg }}</td>
-                                    </tr>
-                                    @endforeach
-                                </table>
+                                @if(count($s->bag_detail) > 0)
+                                    <table class="tbl_mini_table" style="width: 50%;">
+                                        <tr class="tbl_mini_table">
+                                            <th class="tbl_mini_table">B.No</th>
+                                            <th class="tbl_mini_table">Q.kg</th>
+                                        </tr>
+                                        @foreach ($s->bag_detail as $bag_detail)
+                                        <tr class="tbl_mini_table">
+                                            <td class="tbl_mini_table">{{ $bag_detail->bag_no }}</td>
+                                            <td class="tbl_mini_table">{{ $bag_detail->quantity_kg }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </table>
+                                @endif
                                     
                                     
                             </th>

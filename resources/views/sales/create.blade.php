@@ -478,7 +478,7 @@ function addBagRow(button,pid) {
                     </div>
                     <div class="col-3">
                         <label for="bagno" class="form-label">Quantity Kg</label>
-                        <input type="text" class="form-control" name="quantity_detail[${pid}][]" placeholder="quantity">
+                        <input type="number" class="form-control" name="quantity_detail[${pid}][]" placeholder="quantity">
                     </div>
                     <div class="col-3">
                         <label for="bagno" class="form-label">Comment</label>

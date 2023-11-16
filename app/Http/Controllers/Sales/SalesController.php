@@ -164,7 +164,7 @@ class SalesController extends Controller
                                             </div>
                                             <div class="col-3">
                                                 <label for="bagno" class="form-label">Quantity Kg</label>
-                                                <input type="text" class="form-control" name="quantity_detail['.$product->id.'][]" placeholder="quantity">
+                                                <input type="number" class="form-control" name="quantity_detail['.$product->id.'][]" placeholder="quantity">
                                             </div>
                                             <div class="col-3">
                                                 <label for="bagno" class="form-label">Comment</label>
@@ -289,15 +289,17 @@ class SalesController extends Controller
 
                             if(isset($request->bag_lot_no[$product_id])){
                                 foreach($request->bag_lot_no[$product_id] as $b=>$bag_lot_no){
-                                    $bag = new BagDetail;
-                                    $bag->sales_id = $pur->id;
-                                    $bag->sales_details_id = $pd->id;
-                                    $bag->product_id = $pd->product_id;
-                                    $bag->lot_no = $bag_lot_no;
-                                    $bag->bag_no = $request->bag_no[$product_id][$b];
-                                    $bag->quantity_kg = $request->quantity_detail[$product_id][$b];
-                                    $bag->comment = $request->bag_comment[$product_id][$b];
-                                    $bag->save();
+                                    if($request->quantity_detail[$product_id][$b] > 0){
+                                        $bag = new BagDetail;
+                                        $bag->sales_id = $pur->id;
+                                        $bag->sales_details_id = $pd->id;
+                                        $bag->product_id = $pd->product_id;
+                                        $bag->lot_no = $bag_lot_no;
+                                        $bag->bag_no = $request->bag_no[$product_id][$b];
+                                        $bag->quantity_kg = $request->quantity_detail[$product_id][$b];
+                                        $bag->comment = $request->bag_comment[$product_id][$b];
+                                        $bag->save();
+                                    }
                                 }
                             }
                         }
@@ -771,15 +773,17 @@ class SalesController extends Controller
 
                                 if(isset($request->bag_lot_no[$product_id])){
                                     foreach($request->bag_lot_no[$product_id] as $b=>$bag_lot_no){
-                                        $bag = new BagDetail;
-                                        $bag->sales_id = $pur->id;
-                                        $bag->sales_details_id = $pd->id;
-                                        $bag->product_id = $pd->product_id;
-                                        $bag->lot_no = $bag_lot_no;
-                                        $bag->bag_no = $request->bag_no[$product_id][$b];
-                                        $bag->quantity_kg = $request->quantity_detail[$product_id][$b];
-                                        $bag->comment = $request->bag_comment[$product_id][$b];
-                                        $bag->save();
+                                        if($request->quantity_detail[$product_id][$b] > 0){
+                                            $bag = new BagDetail;
+                                            $bag->sales_id = $pur->id;
+                                            $bag->sales_details_id = $pd->id;
+                                            $bag->product_id = $pd->product_id;
+                                            $bag->lot_no = $bag_lot_no;
+                                            $bag->bag_no = $request->bag_no[$product_id][$b];
+                                            $bag->quantity_kg = $request->quantity_detail[$product_id][$b];
+                                            $bag->comment = $request->bag_comment[$product_id][$b];
+                                            $bag->save();
+                                        }
                                     }
                                 }
                             }
