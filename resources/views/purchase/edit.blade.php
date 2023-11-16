@@ -131,7 +131,7 @@
                                             @forelse ($purchaseDetails as $p)
                                             <tr class="text-center">
                                                 <td class="py-2 px-1"><input type="hidden" name="product_id[]" value="{{$p->product_id}}">{{$p->product?->product_name}}</td>
-                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="lot_no[]" type="text" value="{{$p->lot_no}}" class="form-control lot_no"></td>
+                                                <td class="py-2 px-1"><input name="lot_no[]" type="text" value="{{$p->lot_no}}" class="form-control lot_no" required></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="brand[]" type="text" value="{{$p->brand}}" class="form-control brand"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" value="{{$p->quantity_bag}}" class="form-control qty_bag"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" value="{{$p->quantity_kg}}" class="form-control qty_kg"></td>

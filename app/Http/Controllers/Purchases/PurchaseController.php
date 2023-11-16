@@ -138,7 +138,7 @@ class PurchaseController extends Controller
             $product=Product::where(company())->where('id',$request->item_id)->first();
             $data='<tr class="text-center">';
             $data.='<td class="py-2 px-1">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'"></td>';
-            $data.='<td class="py-2 px-1"><input onBlur="Availability(this)" name="lot_no[]" type="text" class="form-control lot_no"></td>';
+            $data.='<td class="py-2 px-1"><input onBlur="Availability(this)" name="lot_no[]" type="text" class="form-control lot_no" required></td>';
             $data.='<td class="py-2 px-1"><input name="brand[]" type="text" class="form-control brand"></td>';
             $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" class="form-control qty_bag" value="0"></td>';
             $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" class="form-control qty_kg" value="0"></td>';
