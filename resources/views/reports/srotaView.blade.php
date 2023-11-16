@@ -23,10 +23,16 @@
         $address = optional($purchase->first()->regular_purchase->supplier)->address;
     @endphp
 @endif
-@php $purchasePayment=array(); @endphp
+@php $purchasePayment=array();$purchaseCost=array(); @endphp
 @if($account_id)
     @php
         $purchasePayment=\App\Models\Vouchers\PurVoucherBkdns::where('lc_no',$lotNumber)->where('particulars','!=','Purchase Income due')->where('table_id',$account_id)->where('table_name','child_twos')->where(company())->get();
+        
+        /* get purchase expense */
+        $childone = \App\Models\Accounts\Child_one::where(company())->whereIn('head_code',[5310,4120])->pluck('id');
+        $childTow = \App\Models\Accounts\Child_two::where(company())->whereIn('child_one_id',$childone)->pluck('id');
+        $purVBkdnID=\App\Models\Vouchers\PurVoucherBkdns::where('lc_no',$lotNumber)->where('table_name','child_twos')->where('debit','>',0)->whereIn('table_id',$childTow)->where(company())->pluck('id');
+        $purchaseCost=\App\Models\Vouchers\GeneralLedger::whereIn('purchase_voucher_bkdn_id',$purVBkdnID)->where(company())->get();
     @endphp
 @endif
 
@@ -334,6 +340,19 @@
                                                 $subPurchaseExpense += $ex->cost_amount;
                                             @endphp
                                             @endif
+                                        @endforeach
+                                    @endif
+
+                                    @if($purchaseCost)
+                                        @foreach ($purchaseCost as $ex)
+                                            <tr>
+                                                <th style="text-align: left;">{{$ex->journal_title}}</th>
+                                                <th style="text-align: right;">{{ money_format(round($ex->dr))}}</th>
+                                            </tr>
+                                            @php
+                                                $subPurchaseExpense += $ex->dr;
+                                            @endphp
+
                                         @endforeach
                                     @endif
                                     

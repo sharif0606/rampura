@@ -310,6 +310,7 @@ class RegularPurchaseController extends Controller
                                 $gl->company_id =company()['company_id'];
                                 $gl->journal_title=$jvb->particulars;
                                 $gl->rec_date=$jv->current_date;
+                                $gl->lc_no=$jvb->lc_no;
                                 $gl->jv_id=$voucher_no;
                                 $gl->purchase_voucher_bkdn_id=$jvb->id;
                                 $gl->created_by=currentUserId();
@@ -344,6 +345,7 @@ class RegularPurchaseController extends Controller
                                         $gl->company_id =company()['company_id'];
                                         $gl->journal_title=$jvb->particulars;
                                         $gl->rec_date=$jv->current_date;
+                                        $gl->lc_no=$jvb->lc_no;
                                         $gl->jv_id=$voucher_no;
                                         $gl->purchase_voucher_bkdn_id=$jvb->id;
                                         $gl->created_by=currentUserId();
@@ -379,6 +381,7 @@ class RegularPurchaseController extends Controller
                                     $gl->company_id =company()['company_id'];
                                     $gl->journal_title=$jvb->particulars;
                                     $gl->rec_date=$jv->current_date;
+                                    $gl->lc_no=$jvb->lc_no;
                                     $gl->jv_id=$voucher_no;
                                     $gl->purchase_voucher_bkdn_id=$jvb->id;
                                     $gl->created_by=currentUserId();
@@ -440,6 +443,7 @@ class RegularPurchaseController extends Controller
                                         $gl->company_id =company()['company_id'];
                                         $gl->journal_title=$jvb->particulars;
                                         $gl->rec_date=$jv->current_date;
+                                        $gl->lc_no=$jvb->lc_no;
                                         $gl->jv_id=$voucher_no;
                                         $gl->purchase_voucher_bkdn_id=$jvb->id;
                                         $gl->created_by=currentUserId();
@@ -475,6 +479,7 @@ class RegularPurchaseController extends Controller
                                             $gl->company_id =company()['company_id'];
                                             $gl->journal_title=$jvb->particulars;
                                             $gl->rec_date=$jv->current_date;
+                                            $gl->lc_no=$jvb->lc_no;
                                             $gl->jv_id=$voucher_no;
                                             $gl->purchase_voucher_bkdn_id=$jvb->id;
                                             $gl->created_by=currentUserId();
@@ -756,6 +761,7 @@ class RegularPurchaseController extends Controller
                                 $gl->company_id =company()['company_id'];
                                 $gl->journal_title=$jvb->particulars;
                                 $gl->rec_date=$jv->current_date;
+                                $gl->lc_no=$jvb->lc_no;
                                 $gl->jv_id=$voucher_no;
                                 $gl->purchase_voucher_bkdn_id=$jvb->id;
                                 $gl->created_by=currentUserId();
@@ -790,6 +796,7 @@ class RegularPurchaseController extends Controller
                                         $gl->company_id =company()['company_id'];
                                         $gl->journal_title=$jvb->particulars;
                                         $gl->rec_date=$jv->current_date;
+                                        $gl->lc_no=$jvb->lc_no;
                                         $gl->jv_id=$voucher_no;
                                         $gl->purchase_voucher_bkdn_id=$jvb->id;
                                         $gl->created_by=currentUserId();
@@ -825,6 +832,7 @@ class RegularPurchaseController extends Controller
                                     $gl->company_id =company()['company_id'];
                                     $gl->journal_title=$jvb->particulars;
                                     $gl->rec_date=$jv->current_date;
+                                    $gl->lc_no=$jvb->lc_no;
                                     $gl->jv_id=$voucher_no;
                                     $gl->purchase_voucher_bkdn_id=$jvb->id;
                                     $gl->created_by=currentUserId();
@@ -886,6 +894,7 @@ class RegularPurchaseController extends Controller
                                         $gl->company_id =company()['company_id'];
                                         $gl->journal_title=$jvb->particulars;
                                         $gl->rec_date=$jv->current_date;
+                                        $gl->lc_no=$jvb->lc_no;
                                         $gl->jv_id=$voucher_no;
                                         $gl->purchase_voucher_bkdn_id=$jvb->id;
                                         $gl->created_by=currentUserId();
@@ -921,6 +930,7 @@ class RegularPurchaseController extends Controller
                                             $gl->company_id =company()['company_id'];
                                             $gl->journal_title=$jvb->particulars;
                                             $gl->rec_date=$jv->current_date;
+                                            $gl->lc_no=$jvb->lc_no;
                                             $gl->jv_id=$voucher_no;
                                             $gl->purchase_voucher_bkdn_id=$jvb->id;
                                             $gl->created_by=currentUserId();

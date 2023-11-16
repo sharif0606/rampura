@@ -166,6 +166,7 @@ class SalesVoucherController extends Controller
                             $gl->company_id =company()['company_id'];
                             $gl->journal_title=$credit[2];
                             $gl->rec_date=$request->current_date;
+                            $gl->lc_no=$jvb->lc_no;
                             $gl->jv_id=$voucher_no;
                             $gl->sales_voucher_bkdn_id=$jvb->id;
                             $gl->created_by=currentUserId();
@@ -198,6 +199,7 @@ class SalesVoucherController extends Controller
                                 $gl->company_id =company()['company_id'];
                                 $gl->journal_title=!empty($acccode)?$acccode:"";
                                 $gl->rec_date=$request->current_date;
+                                $gl->lc_no=$jvb->lc_no;
                                 $gl->jv_id=$voucher_no;
                                 $gl->sales_voucher_bkdn_id=$jvb->id;
                                 $gl->created_by=currentUserId();
