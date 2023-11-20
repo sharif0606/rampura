@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Supplier\AddNewRequest;
 use App\Http\Requests\Supplier\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
+use App\Models\Accounts\Child_one;
 use App\Models\Accounts\Child_two;
 use Exception;
 use Carbon\Carbon;
@@ -86,8 +87,9 @@ class SupplierController extends Controller
             $sup->company_id=company()['company_id'];
             $sup->created_by=currentUserId();
             if($sup->save()){
+                $id_child_one = Child_one::where('head_code','2130')->where(company())->first();
                 $ach = new Child_two;
-                $ach->child_one_id=4;
+                $ach->child_one_id= $id_child_one->id;
                 $ach->company_id=company()['company_id'];
                 $ach->head_name=$request->supplier_name;
                 $ach->head_code = '2130'.$sup->id;
@@ -164,15 +166,16 @@ class SupplierController extends Controller
             $sup->address= $request->address;
             $sup->updated_by=currentUserId();
             if($sup->save()){
-                $ach = Child_two::where('head_code', '2130' . $sup->id)->first();
+                $ach = Child_two::where('head_code', '2130' . $sup->id)->where(company())->first();
                 if($ach){
                     $ach->head_name=$request->supplier_name;
                     $ach->opening_balance =$request->openingAmount ?? 0;
                     $ach->updated_by=currentUserId();
                     $ach->save();
                 }else{
+                    $id_child_one = Child_one::where('head_code','2130')->where(company())->first();
                     $ach = new Child_two;
-                    $ach->child_one_id=4;
+                    $ach->child_one_id=$id_child_one->id;
                     $ach->company_id=company()['company_id'];
                     $ach->head_name=$request->supplier_name;
                     $ach->head_code = '2130'.$sup->id;

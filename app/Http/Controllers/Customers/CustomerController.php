@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Customer\AddNewRequest;
 use App\Http\Requests\Customer\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
+use App\Models\Accounts\Child_one;
 use App\Models\Accounts\Child_two;
 use Exception;
 use DB;
@@ -85,8 +86,9 @@ class CustomerController extends Controller
             $cus->company_id=company()['company_id'];
             //$cus->branch_id=branch()['branch_id'] ?? null;
             if($cus->save()){
+                $id_child_one = Child_one::where('head_code','1130')->where(company())->first();
                 $ach = new Child_two;
-                $ach->child_one_id=3;
+                $ach->child_one_id=$id_child_one->id;
                 $ach->company_id=company()['company_id'];
                 $ach->head_name= $request->customer_name;
                 $ach->head_code = '1130'.$cus->id;
@@ -162,15 +164,16 @@ class CustomerController extends Controller
             $sup->address= $request->address;
             $sup->updated_by=currentUserId();
             if($sup->save()){DB::enableQueryLog();
-                $ach = Child_two::where('head_code', "1130$sup->id")->first();
+                $ach = Child_two::where('head_code', "1130$sup->id")->where(company())->first();
                 if($ach){
                     $ach->head_name= $request->customer_name;
                     $ach->opening_balance =$request->openingAmount ?? 0;
                     $ach->updated_by=currentUserId();
                     $ach->save();
                 }else{
+                    $id_child_one = Child_one::where('head_code','1130')->where(company())->first();
                     $ach = new Child_two;
-                    $ach->child_one_id=3;
+                    $ach->child_one_id= $id_child_one->id;
                     $ach->company_id=company()['company_id'];
                     $ach->head_name= $request->customer_name;
                     $ach->head_code = '1130'.$sup->id;
