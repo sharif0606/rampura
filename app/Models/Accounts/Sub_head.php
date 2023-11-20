@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sub_head extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory;
     public function master_account(){
         return $this->belongsTo(Master_account::class,'master_head_id','id');
     }

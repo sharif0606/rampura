@@ -97,10 +97,9 @@ class CustomerController extends Controller
                     $cus->save();
                     DB::commit();
                     return redirect()->route(currentUser().'.customer.index')->with($this->resMessageHtml(true,null,'Successfully created'));
-                }else
-                    return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
-            }else
-                return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+                }
+            }
+            
         }catch(Exception $e){
             DB::rollback();
             dd($e);
@@ -162,8 +161,8 @@ class CustomerController extends Controller
             $sup->post_code= $request->postCode;
             $sup->address= $request->address;
             $sup->updated_by=currentUserId();
-            if($sup->save()){
-                $ach = Child_two::where('head_code', '1130' . $sup->id)->first();
+            if($sup->save()){DB::enableQueryLog();
+                $ach = Child_two::where('head_code', "1130$sup->id")->first();
                 if($ach){
                     $ach->head_name= $request->customer_name;
                     $ach->opening_balance =$request->openingAmount ?? 0;
@@ -185,7 +184,7 @@ class CustomerController extends Controller
             }else
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
-            //dd($e);
+            dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }

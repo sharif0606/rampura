@@ -299,6 +299,7 @@ class RegularPurchaseController extends Controller
                             $jvb->table_name="child_ones";
                             $jvb->table_id="8";
                             $jvb->debit=$request->amount[$i];
+                            $jvb->created_at=$jv->current_date;
                             if($jvb->save()){
                                 $table_name=$jvb->table_name;
                                 if($table_name=="master_accounts"){$field_name="master_account_id";}
@@ -334,6 +335,7 @@ class RegularPurchaseController extends Controller
                                     $jvb->table_name=explode('~',$child_two_id)[0];
                                     $jvb->table_id=explode('~',$child_two_id)[1];
                                     $jvb->debit=$request->cost_amount[$j];
+                                    $jvb->created_at=$jv->current_date;
                                     if($jvb->save()){
                                         $table_name=$jvb->table_name;
                                         if($table_name=="master_accounts"){$field_name="master_account_id";}
@@ -370,6 +372,7 @@ class RegularPurchaseController extends Controller
                                 $jvb->table_name="child_twos";
                                 $jvb->table_id=$sup_head;
                                 $jvb->credit=$amount;
+                                $jvb->created_at=$jv->current_date;
                                 if($jvb->save()){
                                     $table_name=$jvb->table_name;
                                     if($table_name=="master_accounts"){$field_name="master_account_id";}
@@ -432,6 +435,7 @@ class RegularPurchaseController extends Controller
                                     $jvb->table_name="child_twos";
                                     $jvb->table_id=$sup_head;
                                     $jvb->debit=$amount;
+                                    $jvb->created_at=$jv->current_date;
                                     if($jvb->save()){
                                         $table_name=$jvb->table_name;
                                         if($table_name=="master_accounts"){$field_name="master_account_id";}
@@ -468,6 +472,7 @@ class RegularPurchaseController extends Controller
                                         $jvb->table_name=explode('~',$child_two_id)[0];
                                         $jvb->table_id=explode('~',$child_two_id)[1];
                                         $jvb->credit=$request->cost_amount[$j];
+                                        $jvb->created_at=$jv->current_date;
                                         if($jvb->save()){
                                             $table_name=$jvb->table_name;
                                             if($table_name=="master_accounts"){$field_name="master_account_id";}
@@ -750,6 +755,7 @@ class RegularPurchaseController extends Controller
                             $jvb->table_name="child_ones";
                             $jvb->table_id="8";
                             $jvb->debit=$request->amount[$i];
+                            $jvb->created_at=$jv->current_date;
                             if($jvb->save()){
                                 $table_name=$jvb->table_name;
                                 if($table_name=="master_accounts"){$field_name="master_account_id";}
@@ -785,6 +791,7 @@ class RegularPurchaseController extends Controller
                                     $jvb->table_name=explode('~',$child_two_id)[0];
                                     $jvb->table_id=explode('~',$child_two_id)[1];
                                     $jvb->debit=$request->cost_amount[$j];
+                                    $jvb->created_at=$jv->current_date;
                                     if($jvb->save()){
                                         $table_name=$jvb->table_name;
                                         if($table_name=="master_accounts"){$field_name="master_account_id";}
@@ -821,6 +828,7 @@ class RegularPurchaseController extends Controller
                                 $jvb->table_name="child_twos";
                                 $jvb->table_id=$sup_head;
                                 $jvb->credit=$amount;
+                                $jvb->created_at=$jv->current_date;
                                 if($jvb->save()){
                                     $table_name=$jvb->table_name;
                                     if($table_name=="master_accounts"){$field_name="master_account_id";}
@@ -883,6 +891,7 @@ class RegularPurchaseController extends Controller
                                     $jvb->table_name="child_twos";
                                     $jvb->table_id=$sup_head;
                                     $jvb->debit=$amount;
+                                    $jvb->created_at=$jv->current_date;
                                     if($jvb->save()){
                                         $table_name=$jvb->table_name;
                                         if($table_name=="master_accounts"){$field_name="master_account_id";}
@@ -919,6 +928,7 @@ class RegularPurchaseController extends Controller
                                         $jvb->table_name=explode('~',$child_two_id)[0];
                                         $jvb->table_id=explode('~',$child_two_id)[1];
                                         $jvb->credit=$request->cost_amount[$j];
+                                        $jvb->created_at=$jv->current_date;
                                         if($jvb->save()){
                                             $table_name=$jvb->table_name;
                                             if($table_name=="master_accounts"){$field_name="master_account_id";}
