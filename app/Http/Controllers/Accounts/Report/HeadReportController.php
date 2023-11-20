@@ -39,13 +39,15 @@ class HeadReportController extends Controller{
             if($checkpurchase){
                 /* for supplier */
                 $suppliercode=PurVoucherBkdns::whereBetween('created_at', [$startDate, $endDate])->where('supplier_id',substr($head_code,4))->pluck('id');
-                $accData=Generalledger::whereBetween('rec_date', [$startDate, $endDate])->whereIn('purchase_voucher_bkdn_id',$suppliercode)->orderBy('rec_date')->where(company())->get();
+                $accData=Generalledger::whereIn('purchase_voucher_bkdn_id',$suppliercode)->orderBy('rec_date')->get();
             }else{
                 /* for customer */
                 $checksales=Generalledger::where($table_id_name,$head_id)->whereNotNull('sales_voucher_bkdn_id')->where(company())->count();
+               
                 if($checksales){
                     $customercode=SalVoucherBkdns::whereBetween('created_at', [$startDate, $endDate])->where('customer_id',substr($head_code,4))->pluck('id');
-                    $accData=Generalledger::whereBetween('rec_date', [$startDate, $endDate])->whereIn('sales_voucher_bkdn_id',$customercode)->orderBy('rec_date')->where(company())->get();
+                    $accData=Generalledger::whereIn('sales_voucher_bkdn_id',$customercode)->orderBy('rec_date')->get();
+                
                 }else{
                     /* for other */
                     $accData=Generalledger::whereBetween('rec_date', [$startDate, $endDate])->where($table_id_name,$head_id)->orderBy('rec_date')->where(company())->get();
