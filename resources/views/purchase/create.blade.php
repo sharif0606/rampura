@@ -183,6 +183,7 @@
                                         </tfoot>
                                     </table>
                                 </div>
+                                
                             </div>
 
 
@@ -247,9 +248,39 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-lg-12 col-sm-12 col-md-12 mt-3">
+                                    <div><h5>Receiving Information:</h5></div>
+                                    <table class="tbl_expense" style="width:100%;">
+                                        <tbody id="expense">
+                                            <tr class="tbl_expense text-center">
+                                                <th class="tbl_expense">BL No</th>
+                                                <th class="tbl_expense">BL Date</th>
+                                                <th class="tbl_expense">Port No</th>
+                                                <th class="tbl_expense">Port Name</th>
+                                                <th class="tbl_expense">Truck No</th>
+                                                <th class="tbl_expense">Date</th>
+                                                <th class="tbl_expense">Sea No</th>
+                                                <th class="tbl_expense">Date</th>
+                                            </tr>
+                                            <tr class="tbl_expense">
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="bl_no"></td>
+                                                <td class="tbl_expense"><input type="date" class="form-control" name="bl_date"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="port_no"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="port_name"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="truck_no"></td>
+                                                <td class="tbl_expense"><input type="date" class="form-control" name="truck_date"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="sea_no"></td>
+                                                <td class="tbl_expense"><input type="date" class="form-control" name="sea_date"></td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-12">
-                                    <label for="" class="form-label"><b>Note</b></label>
-                                    <textarea class="form-control" name="note" rows="3">{{old('note')}}</textarea>
+                                    <label for="" class="form-label m-0"><b>Narration</b></label>
+                                    <textarea class="form-control" name="note" rows="2">{{old('note')}}</textarea>
                                 </div>
                             </div>
 
