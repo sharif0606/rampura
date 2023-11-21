@@ -92,16 +92,18 @@
                                     <a href="{{route(currentUser().'.rpurchase.show',encryptor('encrypt',$pur->id))}}">
                                         <i class="bi bi-eye-fill"></i>
                                     </a>&nbsp;
-                                    <a href="{{route(currentUser().'.rpurchase.edit',encryptor('encrypt',$pur->id))}}">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    {{-- <a href="javascript:void()" onclick="$('#form{{$pur->id}}').submit()">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                    <form id="form{{$pur->id}}" action="{{route(currentUser().'.purchase.destroy',encryptor('encrypt',$pur->id))}}" method="post">
-                                        @csrf
-                                        @method('delete')
-                                    </form> --}}
+                                    @if(currentUser() == 'admin' || currentUser() == 'owner')
+                                        <a href="{{route(currentUser().'.rpurchase.edit',encryptor('encrypt',$pur->id))}}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        {{-- <a href="javascript:void()" onclick="$('#form{{$pur->id}}').submit()">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <form id="form{{$pur->id}}" action="{{route(currentUser().'.purchase.destroy',encryptor('encrypt',$pur->id))}}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                        </form> --}}
+                                    @endif
                                 </td>
                             </tr>
                             @empty

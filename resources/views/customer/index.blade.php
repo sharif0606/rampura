@@ -67,16 +67,18 @@
                                 <td>{{$sup->division?->name}}</td>
                                 <td>{{$sup->district?->name}}</td> --}}
                                 <td class="white-space-nowrap">
-                                    <a href="{{route(currentUser().'.customer.edit',encryptor('encrypt',$sup->id))}}">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a class="text-danger" href="javascript:void()" onclick="$('#form{{$sup->id}}').submit()">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                    <form id="form{{$sup->id}}" onsubmit="return confirm('Are You Sure?')" action="{{route(currentUser().'.customer.destroy',encryptor('encrypt',$sup->id))}}" method="post">
-                                        @csrf
-                                        @method('delete')
-                                    </form>
+                                    @if(currentUser() == 'admin' || currentUser() == 'owner')
+                                        <a href="{{route(currentUser().'.customer.edit',encryptor('encrypt',$sup->id))}}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a class="text-danger" href="javascript:void()" onclick="$('#form{{$sup->id}}').submit()">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <form id="form{{$sup->id}}" onsubmit="return confirm('Are You Sure?')" action="{{route(currentUser().'.customer.destroy',encryptor('encrypt',$sup->id))}}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                             @empty

@@ -96,16 +96,18 @@
                                     <a href="{{route(currentUser().'.sales.memo',encryptor('encrypt',$s->id))}}">
                                         <i class="bi bi-receipt"></i>
                                     </a>&nbsp;
-                                    <a href="{{route(currentUser().'.sales.edit',encryptor('encrypt',$s->id))}}">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    {{--<a href="javascript:void()" onclick="$('#form{{$s->id}}').submit()">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                    <form id="form{{$s->id}}" action="{{route(currentUser().'.purchase.destroy',encryptor('encrypt',$pur->id))}}" method="post">
-                                        @csrf
-                                        @method('delete')
-                                    </form>--}}
+                                    @if(currentUser() == 'admin' || currentUser() == 'owner')
+                                        <a href="{{route(currentUser().'.sales.edit',encryptor('encrypt',$s->id))}}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        {{--<a href="javascript:void()" onclick="$('#form{{$s->id}}').submit()">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <form id="form{{$s->id}}" action="{{route(currentUser().'.purchase.destroy',encryptor('encrypt',$pur->id))}}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                        </form>--}}
+                                    @endif
                                 </td>
                             </tr>
                             @empty

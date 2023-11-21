@@ -30,17 +30,19 @@
                                
                                     <td>{{$d->opening_balance}}</td>
                                     <td class="white-space-nowrap">
-                                        <a href="{{route(currentUser().'.child_two.edit',encryptor('encrypt',$d->id))}}">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                        {{-- <a class="text-danger" href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                        <form id="form{{$d->id}}" onsubmit="return confirm('Are you sure?')" action="{{route(currentUser().'.child_two.destroy',encryptor('encrypt',$d->id))}}" method="post">
-                                            @csrf
-                                            @method('delete')
-                                            
-                                        </form> --}}
+                                        @if(currentUser() == 'admin' || currentUser() == 'owner')
+                                            <a href="{{route(currentUser().'.child_two.edit',encryptor('encrypt',$d->id))}}">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                            {{-- <a class="text-danger" href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                            <form id="form{{$d->id}}" onsubmit="return confirm('Are you sure?')" action="{{route(currentUser().'.child_two.destroy',encryptor('encrypt',$d->id))}}" method="post">
+                                                @csrf
+                                                @method('delete')
+                                                
+                                            </form> --}}
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty

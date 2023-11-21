@@ -36,16 +36,18 @@
                                 <td>{{$d->name}}</td>
                                 <td>{{$d->name_bn}}</td>
                                 <td class="white-space-nowrap">
-                                    <a href="{{route(currentUser().'.upazila.edit',encryptor('encrypt',$d->id))}}">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <!--<a href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                    <form id="form{{$d->id}}" action="{{route(currentUser().'.country.destroy',encryptor('encrypt',$d->id))}}" method="post">
-                                        @csrf
-                                        @method('delete')
-                                    </form>-->
+                                    @if(currentUser() == 'admin' || currentUser() == 'owner')
+                                        <a href="{{route(currentUser().'.upazila.edit',encryptor('encrypt',$d->id))}}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <!--<a href="javascript:void()" onclick="$('#form{{$d->id}}').submit()">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <form id="form{{$d->id}}" action="{{route(currentUser().'.country.destroy',encryptor('encrypt',$d->id))}}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                        </form>-->
+                                    @endif
                                 </td>
                             </tr>
                             @empty

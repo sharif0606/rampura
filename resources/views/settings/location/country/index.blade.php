@@ -36,14 +36,16 @@
                                 <td>{{$d->name_bn}}</td>
                                 <td>{{$d->code}}</td>
                                 <td class="white-space-nowrap">
-                                    <a href="{{route(currentUser().'.country.edit',encryptor('encrypt',$d->id))}}">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    
-                                    <form id="form{{$d->id}}" action="{{route(currentUser().'.country.destroy',encryptor('encrypt',$d->id))}}" method="post">
-                                        @csrf
-                                        @method('delete')
-                                    </form>
+                                    @if(currentUser() == 'admin' || currentUser() == 'owner')
+                                        <a href="{{route(currentUser().'.country.edit',encryptor('encrypt',$d->id))}}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        
+                                        <form id="form{{$d->id}}" action="{{route(currentUser().'.country.destroy',encryptor('encrypt',$d->id))}}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                             @empty

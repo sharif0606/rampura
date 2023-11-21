@@ -29,10 +29,11 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        if( currentUser()=='owner')
-            $customers = Customer::where(company());
-        else
-            $customers = Customer::where(company())->where(branch());
+        $customers = Customer::where(company());
+        // if( currentUser()=='owner')
+        //     $customers = Customer::where(company());
+        // else
+        //     $customers = Customer::where(company())->where(branch());
 
         if($request->name)
             $customers=$customers->where('customer_name','like','%'.$request->name.'%');

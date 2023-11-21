@@ -56,9 +56,11 @@
                                     <a href="{{route(currentUser().'.journal.show',encryptor('encrypt',$cr->id))}}">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="{{route(currentUser().'.journal.edit',encryptor('encrypt',$cr->id))}}">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
+                                    @if(currentUser() == 'admin' || currentUser() == 'owner')
+                                        <a href="{{route(currentUser().'.journal.edit',encryptor('encrypt',$cr->id))}}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                             @empty

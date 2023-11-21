@@ -27,7 +27,7 @@ class isSalesmanager
             app()->setLocale($user->language); // language
             if(!$user){
                 return redirect()->route('logOut');
-            }else if(currentUser() != 'salesmanager'){
+            }else if(currentUser() != 'manager'){
                 return redirect()->back()->with($this->resMessageHtml(false,'error','Access Denied'));
             }else{
                 return $next($request);

@@ -64,16 +64,18 @@ class PurchaseController extends Controller
     public function create()
     {
         $branches = Branch::where(company())->get();
-        if( currentUser()=='owner'){
-            $suppliers = Supplier::where(company())->get();
-            $Warehouses = Warehouse::where(company())->get();
-        }else{
-            $suppliers = Supplier::where(company())->where(branch())->get();
-            $Warehouses = Warehouse::where(company())->where(branch())->get();
-        }
-            $childone = Child_one::where(company())->whereIn('head_code',[5310,4120])->pluck('id');
-            
-            $childTow = Child_two::where(company())->whereIn('child_one_id',$childone)->get();
+        $suppliers = Supplier::where(company())->get();
+        $Warehouses = Warehouse::where(company())->get();
+        // if( currentUser()=='owner'){
+        //     $suppliers = Supplier::where(company())->get();
+        //     $Warehouses = Warehouse::where(company())->get();
+        // }else{
+        //     $suppliers = Supplier::where(company())->where(branch())->get();
+        //     $Warehouses = Warehouse::where(company())->where(branch())->get();
+        // }
+        $childone = Child_one::where(company())->whereIn('head_code',[5310,4120])->pluck('id');
+        
+        $childTow = Child_two::where(company())->whereIn('child_one_id',$childone)->get();
 
         $paymethod=array();
         $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();

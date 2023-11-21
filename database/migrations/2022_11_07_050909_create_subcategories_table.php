@@ -18,6 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id')->index();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->string('name');
+            $table->string('hs_code')->nullable();
+            $table->string('custom_duty')->nullable();
             $table->unsignedBigInteger('company_id')->nullable()->index();
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
             $table->unsignedBigInteger('branch_id')->nullable()->index();

@@ -17,7 +17,7 @@
                             <input type="hidden" name="uptoken" value="{{encryptor('encrypt',$subcategory->id)}}">
                             <div class="row">
 
-                                <div class="col-md-6 col-12">
+                                <div class="col-lg-4 col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label for="Category">{{__('Category')}}<span class="text-danger">*</span></label>
                                         <select class="form-control form-select" name="category" id="category">
@@ -33,7 +33,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-12">
+                                <div class="col-lg-4 col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label for="Sub Category">{{__('Sub Category')}}<span class="text-danger">*</span></label>
                                         <input type="text" id="subCat" class="form-control"
@@ -43,10 +43,21 @@
                                             @endif
                                     </div>
                                 </div>
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="hs">{{__('HS-Code')}}</label>
+                                        <input type="text" class="form-control" value="{{ old('hs_code',$subcategory->hs_code)}}" name="hs_code">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="custom-duty">{{__('Custom Duty')}}</label>
+                                        <input type="text" class="form-control" value="{{ old('custom_duty',$subcategory->custom_duty)}}" name="custom_duty">
+                                    </div>
+                                </div>
 
                                 <div class="col-12 d-flex justify-content-start">
                                     <button type="submit" class="btn btn-info me-1 mb-1">{{__('Update')}}</button>
-                                    
                                 </div>
                             </div>
                         </form>

@@ -31,14 +31,16 @@
                                 <td>{{$war->address}}</td>
                                 
                                 <td class="white-space-nowrap">
-                                    <a href="{{route(currentUser().'.warehouse.edit',encryptor('encrypt',$war->id))}}">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    
-                                    <form id="form{{$war->id}}" action="{{route(currentUser().'.warehouse.destroy',encryptor('encrypt',$war->id))}}" method="post">
-                                        @csrf
-                                        @method('delete')
-                                    </form>
+                                    @if(currentUser() == 'admin' || currentUser() == 'owner')
+                                        <a href="{{route(currentUser().'.warehouse.edit',encryptor('encrypt',$war->id))}}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        
+                                        {{-- <form id="form{{$war->id}}" action="{{route(currentUser().'.warehouse.destroy',encryptor('encrypt',$war->id))}}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                        </form> --}}
+                                    @endif
                                 </td>
                             </tr>
                             @empty

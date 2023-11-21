@@ -66,17 +66,19 @@
                                 {{-- <td>@if($p->status == 1) Active @else Inactive @endif</td> --}}
                                 <!-- or <td>{{ $p->status == 1?"Active":"Inactive" }}</td>-->
                                 <td class="white-space-nowrap">
-                                    <a href="{{route(currentUser().'.product.edit',encryptor('encrypt',$p->id))}}">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a class="text-danger" href="javascript:void()" onclick="$('#form{{$p->id}}').submit()">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                    <form id="form{{$p->id}}" action="{{route(currentUser().'.product.destroy',encryptor('encrypt',$p->id))}}" method="post">
-                                        @csrf
-                                        @method('delete')
-                                        
-                                    </form>
+                                    @if(currentUser() == 'admin' || currentUser() == 'owner')
+                                        <a href="{{route(currentUser().'.product.edit',encryptor('encrypt',$p->id))}}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a class="text-danger" href="javascript:void()" onclick="$('#form{{$p->id}}').submit()">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <form id="form{{$p->id}}" action="{{route(currentUser().'.product.destroy',encryptor('encrypt',$p->id))}}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                            
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                             @empty

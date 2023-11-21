@@ -25,17 +25,19 @@
                                 <td>{{$child->subcategory?->name}}</td>
                                 <td>{{$child->name}}</td>
                                 <td class="white-space-nowrap">
-                                    <a href="{{route(currentUser().'.childcategory.edit',encryptor('encrypt',$child->id))}}">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <!-- <a href="javascript:void()" onclick="$('#form{{$child->id}}').submit()">
-                                        <i class="bi bi-trash"></i>
-                                    </a> -->
-                                    <!-- <form id="form{{$child->id}}" action="{{route(currentUser().'.childcategory.destroy',encryptor('encrypt',$child->id))}}" method="post">
-                                        @csrf
-                                        @method('delete')
-                                        
-                                    </form> -->
+                                    @if(currentUser() == 'admin' || currentUser() == 'owner')
+                                        <a href="{{route(currentUser().'.childcategory.edit',encryptor('encrypt',$child->id))}}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <!-- <a href="javascript:void()" onclick="$('#form{{$child->id}}').submit()">
+                                            <i class="bi bi-trash"></i>
+                                        </a> -->
+                                        <!-- <form id="form{{$child->id}}" action="{{route(currentUser().'.childcategory.destroy',encryptor('encrypt',$child->id))}}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                            
+                                        </form> -->
+                                    @endif
                                 </td>
                             </tr>
                             @empty

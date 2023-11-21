@@ -30,10 +30,11 @@ class SupplierController extends Controller
      */
     public function index(Request $request)
     {
-        if( currentUser()=='owner')
-            $suppliers = Supplier::where(company());
-        else
-            $suppliers = Supplier::where(company())->where(branch());
+        $suppliers = Supplier::where(company());
+        // if( currentUser()=='owner')
+        //     $suppliers = Supplier::where(company());
+        // else
+        //     $suppliers = Supplier::where(company())->where(branch());
         
         if($request->name)
         $suppliers=$suppliers->where('supplier_name','like','%'.$request->name.'%');

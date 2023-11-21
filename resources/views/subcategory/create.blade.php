@@ -14,7 +14,7 @@
                         <form class="form" method="post" action="{{route(currentUser().'.subcategory.store')}}">
                             @csrf
                             <div class="row">
-                                <div class="col-md-6 col-12">
+                                <div class="col-lg-4 col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label for="Category">{{__('Category')}}<span class="text-danger">*</span></label>
                                         <select class="form-control form-select" name="category" id="category">
@@ -32,7 +32,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="col-md-6 col-12">
+                                <div class="col-lg-4 col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label for="Sub Category">{{__('Sub Category')}}<span class="text-danger">*</span></label>
                                         <input type="text" id="subCat" class="form-control"
@@ -40,6 +40,18 @@
                                             @if($errors->has('subCat'))
                                             <span class="text-danger"> {{ $errors->first('subCat') }}</span>
                                             @endif
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="hs">{{__('HS-Code')}}</label>
+                                        <input type="text" class="form-control" value="{{ old('hs_code')}}" name="hs_code">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="custom-duty">{{__('Custom Duty')}}</label>
+                                        <input type="text" class="form-control" value="{{ old('custom_duty')}}" name="custom_duty">
                                     </div>
                                 </div>
 

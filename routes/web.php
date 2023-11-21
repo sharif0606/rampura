@@ -197,21 +197,99 @@ Route::group(['middleware'=>isOwner::class],function(){
 });
 
 Route::group(['middleware'=>isSalesmanager::class],function(){
-    Route::prefix('salesmanager')->group(function(){
-        Route::get('/dashboard', [dash::class,'salesmanagerDashboard'])->name('salesmanager.dashboard');
-        Route::get('/profile', [profile::class,'ownerProfile'])->name('salesmanager.profile');
-        Route::get('/profile-update', [profile::class,'ownerProfile'])->name('salesmanager.profile.update');
-        Route::resource('users',user::class,['as'=>'salesmanager']);
+    Route::prefix('manager')->group(function(){
+        Route::get('/dashboard', [dash::class,'salesmanagerDashboard'])->name('manager.dashboard');
+        Route::get('/profile', [profile::class,'ownerProfile'])->name('manager.profile');
+        Route::get('/profile-update', [profile::class,'ownerProfile'])->name('manager.profile.update');
+        
+        //settings
+        Route::resource('users',user::class,['as'=>'manager']);
+        Route::resource('company',company::class,['as'=>'manager']);
+        Route::resource('brand',brand::class,['as'=>'manager']);
+        Route::resource('branch',branch::class,['as'=>'manager']);
+        Route::resource('warehouse',warehouse::class,['as'=>'manager']);
+        Route::resource('country',country::class,['as'=>'manager']);
+        Route::resource('division',division::class,['as'=>'manager']);
+        Route::resource('district',district::class,['as'=>'manager']);
+        Route::resource('upazila',upazila::class,['as'=>'manager']);
+
+
+        //Supplier and Customer
+        Route::resource('supplier',supplier::class,['as'=>'manager']);
+        Route::resource('customer',customer::class,['as'=>'manager']);
+
+
+        //report
+        Route::get('/stock-report',[report::class,'stockreport'])->name('manager.sreport');
+        Route::get('/stock-report-individual/{id}',[report::class,'stockindividual'])->name('manager.stock.individual');
+        Route::get('/stock-report-individual-by-lot/{lot_no}',[report::class,'stockindividualByLot'])->name('manager.stock.individual_lot');
+        Route::get('/salreport',[report::class,'salesReport'])->name('manager.salreport');
+        Route::get('/purchase-report',[report::class,'purchaseReport'])->name('manager.purchase_report');
+        Route::get('/beparian-report',[report::class,'beparianPurchaseReport'])->name('manager.beparian_report');
+        Route::get('/regular-report',[report::class,'regularPurchaseReport'])->name('manager.regular_report');
+        Route::get('/all-purchase-report',[report::class,'allPurchaseReport'])->name('manager.all_pur_report');
+        Route::get('/srota',[report::class,'srota'])->name('manager.srota');
+        Route::get('/srota-view',[report::class,'srotaView'])->name('manager.srota_view');
+
+        //Product
+        Route::resource('category',category::class,['as'=>'manager']);
+        Route::resource('subcategory',subcat::class,['as'=>'manager']);
+        Route::resource('childcategory',childcat::class,['as'=>'manager']);
+        Route::resource('product',product::class,['as'=>'manager']);
+
+        //Accounts
+        Route::resource('master',master::class,['as'=>'manager']);
+        Route::resource('sub_head',sub_head::class,['as'=>'manager']);
+        Route::resource('child_one',child_one::class,['as'=>'manager']);
+        Route::resource('child_two',child_two::class,['as'=>'manager']);
+        Route::resource('navigate',navigate::class,['as'=>'manager']);
+
+        Route::get('incomeStatement',[statement::class,'index'])->name('manager.incomeStatement');
+        Route::get('incomeStatement_details',[statement::class,'details'])->name('manager.incomeStatement.details');
+        Route::get('/profitloss', [profitloss::class, 'index'])->name('manager.profitloss');
+        Route::get('/balancesheet', [balancesheet::class, 'index'])->name('manager.balancesheet');
+        Route::get('/headreport', [headreport::class, 'index'])->name('manager.headreport');
+
+        //Voucher
+        Route::resource('purchase_voucher',PurchaseVoucher::class,['as'=>'manager']);
+        Route::resource('sales_voucher',SalesVoucher::class,['as'=>'manager']);
+        Route::resource('credit',credit::class,['as'=>'manager']);
+        Route::resource('debit',debit::class,['as'=>'manager']);
+        Route::get('get_head', [credit::class, 'get_head'])->name('manager.get_head');
+        Route::resource('journal',journal::class,['as'=>'manager']);
+        Route::get('journal_get_head', [journal::class, 'get_head'])->name('manager.journal_get_head');
+
+        //Purchase
+        Route::resource('purchase',purchase::class,['as'=>'manager']);
+        Route::resource('bpurchase',bpurchase::class,['as'=>'manager']);
+        Route::resource('rpurchase',rpurchase::class,['as'=>'manager']);
+        Route::get('/purchase-pending-expense',[purPending::class,'purchase_pending_expense'])->name('manager.pur_pending_exp');
+        Route::get('/purchase-payment',[purPending::class,'purchase_supplier_payment'])->name('manager.pur_pending_pay');
+        Route::get('/product_search', [purchase::class,'product_search'])->name('manager.pur.product_search');
+        Route::get('/product_search_data', [purchase::class,'product_search_data'])->name('manager.pur.product_search_data');
+
+        //lc check
+        Route::get('/check-lc', [purchase::class, 'checkLcNo'])->name('manager.checkLcNo');
+
+        //Sale
+        Route::resource('sales',sales::class,['as'=>'manager']);
+        Route::get('/sale-view{id}', [sales::class,'saleView'])->name('manager.sales.view');
+        Route::get('/sale-memo{id}', [sales::class,'saleMemo'])->name('manager.sales.memo');
+        Route::get('/product_sc', [sales::class,'product_sc'])->name('manager.sales.product_sc');
+        Route::get('/product_sc_d', [sales::class,'product_sc_d'])->name('manager.sales.product_sc_d');
+
+        Route::get('/sales-pending-expense',[salPending::class,'sales_pending_expense'])->name('manager.sales_pending_exp');
+        Route::get('/sales-payment',[salPending::class,'sales_customer_payment'])->name('manager.sales_pending_pay');
 
     });
 });
 
 Route::group(['middleware'=>isSalesman::class],function(){
-    Route::prefix('salesman')->group(function(){
-        Route::get('/dashboard', [dash::class,'salesmanDashboard'])->name('salesman.dashboard');
-        Route::get('/profile', [profile::class,'ownerProfile'])->name('salesman.profile');
-        Route::get('/profile-update', [profile::class,'ownerProfile'])->name('salesman.profile.update');
-        Route::resource('users',user::class,['as'=>'salesman']);
+    Route::prefix('accountsofficer')->group(function(){
+        Route::get('/dashboard', [dash::class,'salesmanDashboard'])->name('accountsofficer.dashboard');
+        Route::get('/profile', [profile::class,'ownerProfile'])->name('accountsofficer.profile');
+        Route::get('/profile-update', [profile::class,'ownerProfile'])->name('accountsofficer.profile.update');
+        Route::resource('users',user::class,['as'=>'accountsofficer']);
 
     });
 });

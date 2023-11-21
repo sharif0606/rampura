@@ -49,6 +49,8 @@ class SubcategoryController extends Controller
             $subcat= new Subcategory;
             $subcat->category_id=$request->category;
             $subcat->name=$request->subCat;
+            $subcat->hs_code=$request->hs_code;
+            $subcat->custom_duty=$request->custom_duty;
             $subcat->company_id=company()['company_id'];
             $subcat->created_by=currentUserId();
             if($subcat->save())
@@ -98,6 +100,8 @@ class SubcategoryController extends Controller
             $subcat=Subcategory::findOrFail(encryptor('decrypt',$id));
             $subcat->category_id=$request->category;
             $subcat->name=$request->subCat;
+            $subcat->hs_code=$request->hs_code;
+            $subcat->custom_duty=$request->custom_duty;
             $subcat->updated_by=currentUserId();
             if($subcat->save())
                 return redirect()->route(currentUser().'.subcategory.index')->with($this->resMessageHtml(true,null,'Successfully created'));

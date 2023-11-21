@@ -46,9 +46,11 @@
                                 <td>{{$cr->createdBy?->name}}</td>
                                 <td>{{$cr->updatedBy?->name}}</td>
                                 <td class="white-space-nowrap">
-                                    <a href="{{route(currentUser().'.purchase_voucher.edit',encryptor('encrypt',$cr->id))}}">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
+                                    @if(currentUser() == 'admin' || currentUser() == 'owner')
+                                        <a href="{{route(currentUser().'.purchase_voucher.edit',encryptor('encrypt',$cr->id))}}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                             @empty
