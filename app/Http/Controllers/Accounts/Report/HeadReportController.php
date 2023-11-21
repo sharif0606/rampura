@@ -6,12 +6,8 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Vouchers\PurVoucherBkdns;
 use App\Models\Vouchers\SalVoucherBkdns;
-
 use App\Models\Vouchers\GeneralLedger;
-
 use Illuminate\Http\Request;
-
-use DB;
 
 class HeadReportController extends Controller{
     public function index(Request $r){
