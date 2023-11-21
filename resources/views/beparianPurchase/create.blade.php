@@ -244,8 +244,42 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-lg-12 col-sm-12 col-md-12 mt-3">
+                                    <div><h5>Receiving Information:</h5></div>
+                                    <table class="tbl_expense" style="width:100%;">
+                                        <tbody id="expense">
+                                            <tr class="tbl_expense text-center">
+                                                <th class="tbl_expense">BL No</th>
+                                                <th class="tbl_expense">BL Date</th>
+                                                <th class="tbl_expense">Port No</th>
+                                                <th class="tbl_expense">Port Name</th>
+                                                <th class="tbl_expense">Assesment No</th>
+                                                <th class="tbl_expense">Date</th>
+                                                <th class="tbl_expense">Truck No</th>
+                                                <th class="tbl_expense">Date</th>
+                                                <th class="tbl_expense">Sea No</th>
+                                                <th class="tbl_expense">Date</th>
+                                            </tr>
+                                            <tr class="tbl_expense">
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="bl_no" value="{{old('bl_no')}}"></td>
+                                                <td class="tbl_expense"><input type="date" class="form-control" name="bl_date" value="{{old('bl_date')}}"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="port_no" value="{{old('port_no')}}"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="port_name" value="{{old('port_name')}}"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="assesment_no" value="{{old('assesment_no')}}"></td>
+                                                <td class="tbl_expense"><input type="date" class="form-control" name="assesment_date" value="{{old('assesment_date')}}"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="truck_no" value="{{old('truck_no')}}"></td>
+                                                <td class="tbl_expense"><input type="date" class="form-control" name="truck_date" value="{{old('truck_date')}}"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="sea_no" value="{{old('sea_no')}}"></td>
+                                                <td class="tbl_expense"><input type="date" class="form-control" name="sea_date" value="{{old('sea_date')}}"></td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-12">
-                                    <label for="" class="form-label"><b>Note</b></label>
+                                    <label for="" class="form-label"><b>Narration</b></label>
                                     <textarea class="form-control" name="note" rows="3">{{old('note')}}</textarea>
                                 </div>
                             </div>

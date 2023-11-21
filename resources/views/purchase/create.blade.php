@@ -257,20 +257,24 @@
                                                 <th class="tbl_expense">BL Date</th>
                                                 <th class="tbl_expense">Port No</th>
                                                 <th class="tbl_expense">Port Name</th>
+                                                <th class="tbl_expense">Assesment No</th>
+                                                <th class="tbl_expense">Date</th>
                                                 <th class="tbl_expense">Truck No</th>
                                                 <th class="tbl_expense">Date</th>
                                                 <th class="tbl_expense">Sea No</th>
                                                 <th class="tbl_expense">Date</th>
                                             </tr>
                                             <tr class="tbl_expense">
-                                                <td class="tbl_expense"><input type="text" class="form-control" name="bl_no"></td>
-                                                <td class="tbl_expense"><input type="date" class="form-control" name="bl_date"></td>
-                                                <td class="tbl_expense"><input type="text" class="form-control" name="port_no"></td>
-                                                <td class="tbl_expense"><input type="text" class="form-control" name="port_name"></td>
-                                                <td class="tbl_expense"><input type="text" class="form-control" name="truck_no"></td>
-                                                <td class="tbl_expense"><input type="date" class="form-control" name="truck_date"></td>
-                                                <td class="tbl_expense"><input type="text" class="form-control" name="sea_no"></td>
-                                                <td class="tbl_expense"><input type="date" class="form-control" name="sea_date"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="bl_no" value="{{old('bl_no')}}"></td>
+                                                <td class="tbl_expense"><input type="date" class="form-control" name="bl_date" value="{{old('bl_date')}}"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="port_no" value="{{old('port_no')}}"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="port_name" value="{{old('port_name')}}"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="assesment_no" value="{{old('assesment_no')}}"></td>
+                                                <td class="tbl_expense"><input type="date" class="form-control" name="assesment_date" value="{{old('assesment_date')}}"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="truck_no" value="{{old('truck_no')}}"></td>
+                                                <td class="tbl_expense"><input type="date" class="form-control" name="truck_date" value="{{old('truck_date')}}"></td>
+                                                <td class="tbl_expense"><input type="text" class="form-control" name="sea_no" value="{{old('sea_no')}}"></td>
+                                                <td class="tbl_expense"><input type="date" class="form-control" name="sea_date" value="{{old('sea_date')}}"></td>
                                             </tr>
                                             
                                         </tbody>

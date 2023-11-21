@@ -165,8 +165,8 @@
         <a href="#" class='sidebar-link'><i class="bi bi-receipt"></i><span>{{__('Voucher')}}</span>
         </a>
         <ul class="submenu">
-            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.credit.index')}}">{{__('Credit Voucher')}}</a></li>
-            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.debit.index')}}">{{__('Debit Voucher')}}</a></li>
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.credit.index')}}">{{__('Receive/Cr Voucher')}}</a></li>
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.debit.index')}}">{{__('Payment/Dr Voucher')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.journal.index')}}">{{__('Journal Voucher')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.purchase_voucher.index')}}">{{__('Purchase Voucher')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sales_voucher.index')}}">{{__('Sales Voucher')}}</a></li>

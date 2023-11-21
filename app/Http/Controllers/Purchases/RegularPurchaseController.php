@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Purchases\AddNewRequest;
 use App\Http\Requests\Purchases\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
+use App\Models\Purchases\PurReceiveInformation;
 use App\Models\Suppliers\SupplierPayment;
 use App\Models\Suppliers\SupplierPaymentDetails;
 use App\Models\Vouchers\GeneralLedger;
@@ -158,6 +159,20 @@ class RegularPurchaseController extends Controller
             $pur->payment_status=0;
             $pur->status=1;
             if($pur->save()){
+                $pri = new PurReceiveInformation;
+                $pri->company_id=company()['company_id'];
+                $pri->regular_purchase_id=$pur->id;
+                $pri->bl_no = $request->bl_no;
+                $pri->bl_date = $request->bl_date;
+                $pri->port_no = $request->port_no;
+                $pri->port_name = $request->port_name;
+                $pri->assesment_no = $request->assesment_no;
+                $pri->assesment_date = $request->assesment_date;
+                $pri->truck_no = $request->truck_no;
+                $pri->truck_date = $request->truck_date;
+                $pri->sea_no = $request->sea_no;
+                $pri->sea_date = $request->sea_date;
+                $pri->save();
                 if($request->product_id){
                     foreach($request->product_id as $i=>$product_id){
                         $pd=new Purchase_details;
@@ -543,6 +558,7 @@ class RegularPurchaseController extends Controller
             $Warehouses = Warehouse::where(company())->where(branch())->get();
         }
             $purchase = Regular_purchase::findOrFail(encryptor('decrypt',$id));
+            $purReceiveInfo = PurReceiveInformation::where('regular_purchase_id',$purchase->id)->get();
             $purchaseDetails = Purchase_details::where('regular_purchase_id',$purchase->id)->get();
             $childone = Child_one::where(company())->whereIn('head_code',[5310,4120])->pluck('id');
             $childTow = Child_two::where(company())->whereIn('child_one_id',$childone)->get();
@@ -578,7 +594,7 @@ class RegularPurchaseController extends Controller
             }
         }
         
-        return view('regularPurchase.edit',compact('branches','suppliers','Warehouses','purchase','purchaseDetails','childTow','expense','paymethod','supplerPayment','supplierPaymentDetails'));
+        return view('regularPurchase.edit',compact('branches','suppliers','Warehouses','purchase','purReceiveInfo','purchaseDetails','childTow','expense','paymethod','supplerPayment','supplierPaymentDetails'));
     }
 
     /**
@@ -606,6 +622,35 @@ class RegularPurchaseController extends Controller
             $pur->updated_by=currentUserId();
 
             if($pur->save()){
+                $fpri = PurReceiveInformation::where('regular_purchase_id',$pur->id)->where(company())->first();
+                if($fpri){
+                    $fpri->bl_no = $request->bl_no;
+                    $fpri->bl_date = $request->bl_date;
+                    $fpri->port_no = $request->port_no;
+                    $fpri->port_name = $request->port_name;
+                    $fpri->assesment_no = $request->assesment_no;
+                    $fpri->assesment_date = $request->assesment_date;
+                    $fpri->truck_no = $request->truck_no;
+                    $fpri->truck_date = $request->truck_date;
+                    $fpri->sea_no = $request->sea_no;
+                    $fpri->sea_date = $request->sea_date;
+                    $fpri->save();
+                }else{
+                    $pri = new PurReceiveInformation;
+                    $pri->company_id=company()['company_id'];
+                    $pri->regular_purchase_id=$pur->id;
+                    $pri->bl_no = $request->bl_no;
+                    $pri->bl_date = $request->bl_date;
+                    $pri->port_no = $request->port_no;
+                    $pri->port_name = $request->port_name;
+                    $pri->assesment_no = $request->assesment_no;
+                    $pri->assesment_date = $request->assesment_date;
+                    $pri->truck_no = $request->truck_no;
+                    $pri->truck_date = $request->truck_date;
+                    $pri->sea_no = $request->sea_no;
+                    $pri->sea_date = $request->sea_date;
+                    $pri->save();
+                }
                 if($request->product_id){
                     Purchase_details::where('regular_purchase_id',$pur->id)->delete();
                     Stock::where('regular_purchase_id',$pur->id)->delete();
