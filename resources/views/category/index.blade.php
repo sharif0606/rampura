@@ -43,7 +43,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <th colspan="4" class="text-center">No Category Found</th>
+                                    <th colspan="3" class="text-center">No Data Found</th>
                                 </tr>
                                 @endforelse
                             </tbody>
