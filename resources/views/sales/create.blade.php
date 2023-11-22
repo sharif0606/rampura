@@ -239,7 +239,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <label for="" class="form-label"><b>Note</b></label>
+                                    <label for="" class="form-label"><b>Narration</b></label>
                                     <textarea class="form-control" name="note" rows="3">{{old('note')}}</textarea>
                                 </div>
                             </div>

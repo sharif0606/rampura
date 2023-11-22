@@ -136,15 +136,15 @@
                     <th style="text-align: left; color: #4F709C; padding: 7px 0 7px 0;">নং</th>
                     <td></td>
                     <th style="text-align: right; color: #4F709C; padding: 7px 2px 7px 0;">তারিখঃ</th>
-                    <td style="width: 20%; padding: 7px 0 7px 0;"><input type="text" value="{{ \Carbon\Carbon::now()->format('d-m-Y') }}" class="tinput"></td>
+                    <td style="width: 20%; color: #4F709C; padding: 7px 0 7px 0;">{{ \Carbon\Carbon::now()->format('d-m-Y') }}</td>
                 </tr>
                 <tr>
                     <th style="text-align: left; color: #4F709C; padding: 7px 0 7px 0;">নাম</th>
-                    <td colspan="3" style="padding: 7px 0 7px 0;"><input type="text" value="{{$show_data->customer?->customer_name}}" class="tinput"></td>
+                    <td colspan="3" style="padding: 7px 0 7px 0;"><p style="padding: 0; margin: 0; border-top: solid 1px; border-color: #4F709C; color: #4F709C;">{{$show_data->customer?->customer_name}}</p></td>
                 </tr>
                 <tr>
                     <th style="text-align: left; color: #4F709C; padding: 7px 0 7px 0;">ঠিকানা</th>
-                    <td colspan="3" style="padding: 7px 0 7px 0;"><input type="text" value="{{$show_data->customer?->address}}" class="tinput"></td>
+                    <td colspan="3" style="padding: 7px 0 7px 0;"><p style="padding: 0; margin: 0; border-top: solid 1px; border-color: #4F709C; color: #4F709C;">{{$show_data->customer?->address}}</p></td>
                 </tr>
             </thead>
         </table>

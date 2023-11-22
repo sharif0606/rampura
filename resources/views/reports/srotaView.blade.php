@@ -174,17 +174,17 @@
                 </tr>
                 <tr>
                     <th style="text-align: left; color: green; padding: 7px 0 7px 0;">নং</th>
-                    <td><span>{{$id}}</span></td>
+                    <td><span style="color: green;">{{$id}}</span></td>
                     <th style="text-align: right; color: green; padding: 7px 2px 7px 0;">তারিখঃ</th>
-                    <td style="width: 20%; padding: 7px 0 7px 0;"><input type="text" value="{{ \Carbon\Carbon::now()->format('d-m-Y') }}" class="tinput" readonly></td>
+                    <td style="width: 20%; padding: 7px 0 7px 0;"><p style="padding: 0; margin: 0; color: green;">{{ \Carbon\Carbon::now()->format('d-m-Y') }}</p></td>
                 </tr>
                 <tr>
                     <th style="text-align: left; color: green; padding: 7px 0 7px 0;">নাম</th>
-                    <td colspan="3" style="padding: 7px 0 7px 0;"><input type="text" value="{{$supplier}}" class="tinput" readonly></td>
+                    <td colspan="3" style="padding: 7px 0 7px 0;"><p style="padding: 0; margin: 0; border-top: solid 1px; border-color: green; color: green;">{{$supplier}}</p></td>
                 </tr>
                 <tr>
                     <th style="text-align: left; color: green; padding: 7px 0 7px 0;">ঠিকানা</th>
-                    <td colspan="3" style="padding: 7px 0 7px 0;"><input type="text" value="{{$address}}" class="tinput" readonly></td>
+                    <td colspan="3" style="padding: 7px 0 7px 0;"><p style="padding: 0; margin: 0; border-top: solid 1px; border-color: green; color: green;">{{$address}}</p></td>
                 </tr>
             </thead>
         </table>
