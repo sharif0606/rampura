@@ -141,6 +141,7 @@
                                     </tr>
                             </tbody>
                         </table>
+                        <div style="margin-top: 5px; margin-bottom: 5px;"><h6>{{$show_data->note}}</h6></div>
                         <table style="width: 100%; margin-top: 1rem;">
                             <tr style="text-align: center;">
                                 <th style="text-align: right; width:70%; padding-right: 5px; "><h6>PER KG EXPENSE/COSTING :</h6></th>

@@ -70,14 +70,14 @@
                                         <a href="{{route(currentUser().'.product.edit',encryptor('encrypt',$p->id))}}">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <a class="text-danger" href="javascript:void()" onclick="$('#form{{$p->id}}').submit()">
+                                        {{-- <a class="text-danger" href="javascript:void()" onclick="$('#form{{$p->id}}').submit()">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                         <form id="form{{$p->id}}" action="{{route(currentUser().'.product.destroy',encryptor('encrypt',$p->id))}}" method="post">
                                             @csrf
                                             @method('delete')
                                             
-                                        </form>
+                                        </form> --}}
                                     @endif
                                 </td>
                             </tr>

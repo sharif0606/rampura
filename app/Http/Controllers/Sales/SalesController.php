@@ -43,10 +43,11 @@ class SalesController extends Controller
     public function index(Request $request)
     {
         $customers = Customer::where(company())->get();
-        if( currentUser()=='owner')
-            $sales = Sales::where(company());
-        else
-            $sales = Sales::where(company())->where(branch());
+        $sales = Sales::where(company());
+        // if( currentUser()=='owner')
+        //     $sales = Sales::where(company());
+        // else
+        //     $sales = Sales::where(company())->where(branch());
 
         if($request->nane)
         $sales=$sales->where('customer_id','like','%'.$request->nane.'%');
@@ -64,13 +65,15 @@ class SalesController extends Controller
     public function create()
     {
         $branches = Branch::where(company())->get();
-        if( currentUser()=='owner'){
-            $customers = Customer::where(company())->get();
-            $Warehouses = Warehouse::where(company())->get();
-        }else{
-            $customers = Customer::where(company())->where(branch())->get();
-            $Warehouses = Warehouse::where(company())->where(branch())->get();
-        }
+        $customers = Customer::where(company())->get();
+        $Warehouses = Warehouse::where(company())->get();
+        // if( currentUser()=='owner'){
+        //     $customers = Customer::where(company())->get();
+        //     $Warehouses = Warehouse::where(company())->get();
+        // }else{
+        //     $customers = Customer::where(company())->where(branch())->get();
+        //     $Warehouses = Warehouse::where(company())->where(branch())->get();
+        // }
 
         $childone = Child_one::where(company())->where('head_code',5320)->first();
         $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();

@@ -139,7 +139,8 @@
                                     </tr>
                             </tbody>
                         </table>
-                        <div class="td_hide" style="margin-top: 5px; margin-bottom: 5px;"><h6>Note: Merchandise sold is non - refundable (Call for Delivery +01837-772467)</h6></div>
+                        {{-- <div class="td_hide" style="margin-top: 5px; margin-bottom: 5px;"><h6>Note: Merchandise sold is non - refundable (Call for Delivery +01837-772467)</h6></div> --}}
+                        <div class="td_hide" style="margin-top: 5px; margin-bottom: 5px;"><h6>{{$show_data->note}}</h6></div>
                         <div class="td_hide" style="text-align: end; padding-right: 100px; margin-top:5rem; margin-bottom: 4rem;">
                             <h6>AUTHORISED SIGNTORY</h6>
                         </div>

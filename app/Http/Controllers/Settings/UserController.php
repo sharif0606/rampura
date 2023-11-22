@@ -38,10 +38,10 @@ class UserController extends Controller
     {
         if(currentUser() == 'owner'){
             $branches=Branch::where(company())->get();
-            $roles=Role::whereIn('id',[3,4])->get();
+            $roles=Role::whereIn('id',[3,4,5])->get();
         }else{
             $branches=Branch::where(company())->get();
-            $roles=Role::where('id',4)->get();
+            $roles=Role::where('id',[4,5])->get();
         }
        
         return view('settings.users.create',compact('roles','branches'));
@@ -99,10 +99,10 @@ class UserController extends Controller
     {
         if(currentUser() == 'owner'){
             $branches=Branch::where(company())->get();
-            $roles=Role::whereIn('id',[3,4])->get();
+            $roles=Role::whereIn('id',[3,4,5])->get();
         }else{
             $branches=Branch::where(company())->get();
-            $roles=Role::whereIn('id',[4])->get();
+            $roles=Role::whereIn('id',[4,5])->get();
         }
         $user=User::findOrFail(encryptor('decrypt',$id));
        

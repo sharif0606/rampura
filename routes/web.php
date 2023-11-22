@@ -53,6 +53,7 @@ use App\Http\Middleware\isAdmin;
 use App\Http\Middleware\isOwner;
 use App\Http\Middleware\isSalesmanager;
 use App\Http\Middleware\isSalesman;
+use App\Http\Middleware\isExecutive;
 
 /*
 |--------------------------------------------------------------------------
@@ -289,7 +290,173 @@ Route::group(['middleware'=>isSalesman::class],function(){
         Route::get('/dashboard', [dash::class,'salesmanDashboard'])->name('accountsofficer.dashboard');
         Route::get('/profile', [profile::class,'ownerProfile'])->name('accountsofficer.profile');
         Route::get('/profile-update', [profile::class,'ownerProfile'])->name('accountsofficer.profile.update');
+        
+        //settings
         Route::resource('users',user::class,['as'=>'accountsofficer']);
+        Route::resource('company',company::class,['as'=>'accountsofficer']);
+        Route::resource('brand',brand::class,['as'=>'accountsofficer']);
+        Route::resource('branch',branch::class,['as'=>'accountsofficer']);
+        Route::resource('warehouse',warehouse::class,['as'=>'accountsofficer']);
+        Route::resource('country',country::class,['as'=>'accountsofficer']);
+        Route::resource('division',division::class,['as'=>'accountsofficer']);
+        Route::resource('district',district::class,['as'=>'accountsofficer']);
+        Route::resource('upazila',upazila::class,['as'=>'accountsofficer']);
+
+
+        //Supplier and Customer
+        Route::resource('supplier',supplier::class,['as'=>'accountsofficer']);
+        Route::resource('customer',customer::class,['as'=>'accountsofficer']);
+
+
+        //report
+        Route::get('/stock-report',[report::class,'stockreport'])->name('accountsofficer.sreport');
+        Route::get('/stock-report-individual/{id}',[report::class,'stockindividual'])->name('accountsofficer.stock.individual');
+        Route::get('/stock-report-individual-by-lot/{lot_no}',[report::class,'stockindividualByLot'])->name('accountsofficer.stock.individual_lot');
+        Route::get('/salreport',[report::class,'salesReport'])->name('accountsofficer.salreport');
+        Route::get('/purchase-report',[report::class,'purchaseReport'])->name('accountsofficer.purchase_report');
+        Route::get('/beparian-report',[report::class,'beparianPurchaseReport'])->name('accountsofficer.beparian_report');
+        Route::get('/regular-report',[report::class,'regularPurchaseReport'])->name('accountsofficer.regular_report');
+        Route::get('/all-purchase-report',[report::class,'allPurchaseReport'])->name('accountsofficer.all_pur_report');
+        Route::get('/srota',[report::class,'srota'])->name('accountsofficer.srota');
+        Route::get('/srota-view',[report::class,'srotaView'])->name('accountsofficer.srota_view');
+
+        //Product
+        Route::resource('category',category::class,['as'=>'accountsofficer']);
+        Route::resource('subcategory',subcat::class,['as'=>'accountsofficer']);
+        Route::resource('childcategory',childcat::class,['as'=>'accountsofficer']);
+        Route::resource('product',product::class,['as'=>'accountsofficer']);
+
+        //Accounts
+        Route::resource('master',master::class,['as'=>'accountsofficer']);
+        Route::resource('sub_head',sub_head::class,['as'=>'accountsofficer']);
+        Route::resource('child_one',child_one::class,['as'=>'accountsofficer']);
+        Route::resource('child_two',child_two::class,['as'=>'accountsofficer']);
+        Route::resource('navigate',navigate::class,['as'=>'accountsofficer']);
+
+        Route::get('incomeStatement',[statement::class,'index'])->name('accountsofficer.incomeStatement');
+        Route::get('incomeStatement_details',[statement::class,'details'])->name('accountsofficer.incomeStatement.details');
+        Route::get('/profitloss', [profitloss::class, 'index'])->name('accountsofficer.profitloss');
+        Route::get('/balancesheet', [balancesheet::class, 'index'])->name('accountsofficer.balancesheet');
+        Route::get('/headreport', [headreport::class, 'index'])->name('accountsofficer.headreport');
+
+        //Voucher
+        Route::resource('purchase_voucher',PurchaseVoucher::class,['as'=>'accountsofficer']);
+        Route::resource('sales_voucher',SalesVoucher::class,['as'=>'accountsofficer']);
+        Route::resource('credit',credit::class,['as'=>'accountsofficer']);
+        Route::resource('debit',debit::class,['as'=>'accountsofficer']);
+        Route::get('get_head', [credit::class, 'get_head'])->name('accountsofficer.get_head');
+        Route::resource('journal',journal::class,['as'=>'accountsofficer']);
+        Route::get('journal_get_head', [journal::class, 'get_head'])->name('accountsofficer.journal_get_head');
+
+        //Purchase
+        Route::resource('purchase',purchase::class,['as'=>'accountsofficer']);
+        Route::resource('bpurchase',bpurchase::class,['as'=>'accountsofficer']);
+        Route::resource('rpurchase',rpurchase::class,['as'=>'accountsofficer']);
+        Route::get('/purchase-pending-expense',[purPending::class,'purchase_pending_expense'])->name('accountsofficer.pur_pending_exp');
+        Route::get('/purchase-payment',[purPending::class,'purchase_supplier_payment'])->name('accountsofficer.pur_pending_pay');
+        Route::get('/product_search', [purchase::class,'product_search'])->name('accountsofficer.pur.product_search');
+        Route::get('/product_search_data', [purchase::class,'product_search_data'])->name('accountsofficer.pur.product_search_data');
+
+        //lc check
+        Route::get('/check-lc', [purchase::class, 'checkLcNo'])->name('accountsofficer.checkLcNo');
+
+        //Sale
+        Route::resource('sales',sales::class,['as'=>'accountsofficer']);
+        Route::get('/sale-view{id}', [sales::class,'saleView'])->name('accountsofficer.sales.view');
+        Route::get('/sale-memo{id}', [sales::class,'saleMemo'])->name('accountsofficer.sales.memo');
+        Route::get('/product_sc', [sales::class,'product_sc'])->name('accountsofficer.sales.product_sc');
+        Route::get('/product_sc_d', [sales::class,'product_sc_d'])->name('accountsofficer.sales.product_sc_d');
+
+        Route::get('/sales-pending-expense',[salPending::class,'sales_pending_expense'])->name('accountsofficer.sales_pending_exp');
+        Route::get('/sales-payment',[salPending::class,'sales_customer_payment'])->name('accountsofficer.sales_pending_pay');
+
+    });
+});
+
+Route::group(['middleware'=>isExecutive::class],function(){
+    Route::prefix('executiveofficer')->group(function(){
+        Route::get('/dashboard', [dash::class,'executiveDashboard'])->name('executiveofficer.dashboard');
+        Route::get('/profile', [profile::class,'ownerProfile'])->name('executiveofficer.profile');
+        Route::get('/profile-update', [profile::class,'ownerProfile'])->name('executiveofficer.profile.update');
+        
+        //settings
+        Route::resource('users',user::class,['as'=>'executiveofficer']);
+        Route::resource('company',company::class,['as'=>'executiveofficer']);
+        Route::resource('brand',brand::class,['as'=>'executiveofficer']);
+        Route::resource('branch',branch::class,['as'=>'executiveofficer']);
+        Route::resource('warehouse',warehouse::class,['as'=>'executiveofficer']);
+        Route::resource('country',country::class,['as'=>'executiveofficer']);
+        Route::resource('division',division::class,['as'=>'executiveofficer']);
+        Route::resource('district',district::class,['as'=>'executiveofficer']);
+        Route::resource('upazila',upazila::class,['as'=>'executiveofficer']);
+
+
+        //Supplier and Customer
+        Route::resource('supplier',supplier::class,['as'=>'executiveofficer']);
+        Route::resource('customer',customer::class,['as'=>'executiveofficer']);
+
+
+        //report
+        Route::get('/stock-report',[report::class,'stockreport'])->name('executiveofficer.sreport');
+        Route::get('/stock-report-individual/{id}',[report::class,'stockindividual'])->name('executiveofficer.stock.individual');
+        Route::get('/stock-report-individual-by-lot/{lot_no}',[report::class,'stockindividualByLot'])->name('executiveofficer.stock.individual_lot');
+        Route::get('/salreport',[report::class,'salesReport'])->name('executiveofficer.salreport');
+        Route::get('/purchase-report',[report::class,'purchaseReport'])->name('executiveofficer.purchase_report');
+        Route::get('/beparian-report',[report::class,'beparianPurchaseReport'])->name('executiveofficer.beparian_report');
+        Route::get('/regular-report',[report::class,'regularPurchaseReport'])->name('executiveofficer.regular_report');
+        Route::get('/all-purchase-report',[report::class,'allPurchaseReport'])->name('executiveofficer.all_pur_report');
+        Route::get('/srota',[report::class,'srota'])->name('executiveofficer.srota');
+        Route::get('/srota-view',[report::class,'srotaView'])->name('executiveofficer.srota_view');
+
+        //Product
+        Route::resource('category',category::class,['as'=>'executiveofficer']);
+        Route::resource('subcategory',subcat::class,['as'=>'executiveofficer']);
+        Route::resource('childcategory',childcat::class,['as'=>'executiveofficer']);
+        Route::resource('product',product::class,['as'=>'executiveofficer']);
+
+        //Accounts
+        Route::resource('master',master::class,['as'=>'executiveofficer']);
+        Route::resource('sub_head',sub_head::class,['as'=>'executiveofficer']);
+        Route::resource('child_one',child_one::class,['as'=>'executiveofficer']);
+        Route::resource('child_two',child_two::class,['as'=>'executiveofficer']);
+        Route::resource('navigate',navigate::class,['as'=>'executiveofficer']);
+
+        Route::get('incomeStatement',[statement::class,'index'])->name('executiveofficer.incomeStatement');
+        Route::get('incomeStatement_details',[statement::class,'details'])->name('executiveofficer.incomeStatement.details');
+        Route::get('/profitloss', [profitloss::class, 'index'])->name('executiveofficer.profitloss');
+        Route::get('/balancesheet', [balancesheet::class, 'index'])->name('executiveofficer.balancesheet');
+        Route::get('/headreport', [headreport::class, 'index'])->name('executiveofficer.headreport');
+
+        //Voucher
+        Route::resource('purchase_voucher',PurchaseVoucher::class,['as'=>'executiveofficer']);
+        Route::resource('sales_voucher',SalesVoucher::class,['as'=>'executiveofficer']);
+        Route::resource('credit',credit::class,['as'=>'executiveofficer']);
+        Route::resource('debit',debit::class,['as'=>'executiveofficer']);
+        Route::get('get_head', [credit::class, 'get_head'])->name('executiveofficer.get_head');
+        Route::resource('journal',journal::class,['as'=>'executiveofficer']);
+        Route::get('journal_get_head', [journal::class, 'get_head'])->name('executiveofficer.journal_get_head');
+
+        //Purchase
+        Route::resource('purchase',purchase::class,['as'=>'executiveofficer']);
+        Route::resource('bpurchase',bpurchase::class,['as'=>'executiveofficer']);
+        Route::resource('rpurchase',rpurchase::class,['as'=>'executiveofficer']);
+        Route::get('/purchase-pending-expense',[purPending::class,'purchase_pending_expense'])->name('executiveofficer.pur_pending_exp');
+        Route::get('/purchase-payment',[purPending::class,'purchase_supplier_payment'])->name('executiveofficer.pur_pending_pay');
+        Route::get('/product_search', [purchase::class,'product_search'])->name('executiveofficer.pur.product_search');
+        Route::get('/product_search_data', [purchase::class,'product_search_data'])->name('executiveofficer.pur.product_search_data');
+
+        //lc check
+        Route::get('/check-lc', [purchase::class, 'checkLcNo'])->name('executiveofficer.checkLcNo');
+
+        //Sale
+        Route::resource('sales',sales::class,['as'=>'executiveofficer']);
+        Route::get('/sale-view{id}', [sales::class,'saleView'])->name('executiveofficer.sales.view');
+        Route::get('/sale-memo{id}', [sales::class,'saleMemo'])->name('executiveofficer.sales.memo');
+        Route::get('/product_sc', [sales::class,'product_sc'])->name('executiveofficer.sales.product_sc');
+        Route::get('/product_sc_d', [sales::class,'product_sc_d'])->name('executiveofficer.sales.product_sc_d');
+
+        Route::get('/sales-pending-expense',[salPending::class,'sales_pending_expense'])->name('executiveofficer.sales_pending_exp');
+        Route::get('/sales-payment',[salPending::class,'sales_customer_payment'])->name('executiveofficer.sales_pending_pay');
 
     });
 });
