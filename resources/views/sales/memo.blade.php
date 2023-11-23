@@ -201,7 +201,6 @@
                                 {{ money_format(round($s->amount))}}
                             </th>
                         </tr>
-                        
                     @empty
                         <tr>
                             <td colspan="3">No data found</td>
