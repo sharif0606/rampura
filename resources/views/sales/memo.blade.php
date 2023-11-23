@@ -188,8 +188,6 @@
                                         @endforeach
                                     </table>
                                 @endif
-                                    
-                                    
                             </th>
                             <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;">{{ money_format(round($s->quantity_bag))}}</th>
                             <th class="tbl_table_border_right" style="color: #4F709C; background-color: #cdddf1; text-align: center;">{{ money_format(round($s->actual_quantity))}}</th>
