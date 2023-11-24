@@ -339,7 +339,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-12 col-sm-12 col-md-12 mt-3">
+                                <div class="col-lg-12 col-sm-12 col-md-12 mt-3 tbl-scroll">
                                     <div><h5>Receiving Information:</h5></div>
                                     <table class="tbl_expense" style="width:100%;">
                                         <tbody id="expense">
