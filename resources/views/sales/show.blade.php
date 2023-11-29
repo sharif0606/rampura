@@ -69,7 +69,7 @@
                                 $totalAmount = 0;
                             @endphp
                             <tbody>
-                                <tr class="tbl_expense bg-secondary text-white">
+                                <tr class="tbl_expense bg-primary text-white">
                                     <th class="tbl_expense" style="text-align: center; padding: 5px;">{{__('SL NO')}}</th>
                                     <th class="tbl_expense" style="text-align: center; padding: 5px;">DESCRIPTION OF GOODS</th>
                                     <th class="tbl_expense" style="text-align: center; padding: 5px;">LOT/ LC NO</th>
