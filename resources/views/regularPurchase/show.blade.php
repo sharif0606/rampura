@@ -64,7 +64,7 @@
                         </table>
                         <table class="tbl_expense" style="width:100%">
                             <tbody>
-                                <tr class="tbl_expense bg-secondary text-white">
+                                <tr class="tbl_expense bg-primary text-white">
                                     <th class="tbl_expense" style="text-align: center; padding: 5px;">{{__('SL NO')}}</th>
                                     <th class="tbl_expense" style="text-align: center; padding: 5px;">DESCRIPTION OF GOODS</th>
                                     <th class="tbl_expense" style="text-align: center; padding: 5px;">LOT/ LC NO</th>
@@ -159,7 +159,12 @@
                         </div>
                         <table style="width: 100%; margin-top: 2rem;">
                             <tr style="padding-top: 5rem;">
-                                <th style="text-align: center;"><span style="position: absolute; bottom: 63px; left: 16%;">{{$show_data->createdBy?->name}}</span><h6 style="position: relative">PREPARED BY</h6></th>
+                                <th style="text-align: center;">{{$show_data->createdBy?->name}}</th>
+                                <th style="text-align: center;"></th>
+                                <th style="text-align: center;"></th>
+                            </tr>
+                            <tr style="padding-top: 5rem;">
+                                <th style="text-align: center;"><h6>PREPARED BY</h6></th>
                                 <th style="text-align: center;"><h6>CHECKED BY</h6></th>
                                 <th style="text-align: center;"><h6>VERIFIED BY</h6></th>
                             </tr>
