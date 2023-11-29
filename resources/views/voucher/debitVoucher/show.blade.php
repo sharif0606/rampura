@@ -43,7 +43,7 @@
                                         <label for="name">{{__('Name')}}: </label>{{$dvoucher->pay_name}}
                                     </div>
                                 </div>
-                                <div class="col-md-4 col-12">
+                                <div class="col-md-4 col-12 no_print">
                                     <div class="form-group">
                                         <label for="Purpose">{{__('Purpose')}}: </label> {{$dvoucher->purpose}}
                                     </div>
@@ -95,6 +95,13 @@
                                         @endif
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-12 d-none only_print">
+                                    <div class="form-group">
+                                        <label for="Purpose">{{__('Purpose')}}: </label> {{$dvoucher->purpose}}
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-group">
