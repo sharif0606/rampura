@@ -124,7 +124,7 @@
 												<td>{{$acc->journal_title}}</td>
 												<td>{{money_format((float)$acc->dr, 2, '.', '')}} @php $deb+=$acc->dr; @endphp</td>
 												<td>{{money_format((float)$acc->cr, 2, '.', '')}} @php $cre+=$acc->cr; @endphp</td>
-												<td>{{$balance>0?abs($balance)." DR":abs(($balance))." CR"}}</td>
+												<td>{{$balance>0?money_format(abs($balance))." DR":money_format(abs($balance))." CR"}}</td>
 												<td><a href="#"></a></td>
 											</tr>
 										@endforeach
@@ -135,7 +135,7 @@
 										<th colspan="4" style="text-align:right">Total</th>
 										<th><?= money_format($deb) ?></th>
 										<th><?= money_format($cre) ?></th>
-										<th>{{$balance>0?abs($balance)." DR":abs($balance)." CR"}}</th>
+										<th>{{$balance>0?money_format(abs($balance))." DR":money_format(abs($balance))." CR"}}</th>
 										<th></th>
 									</tr>
 								</tfoot>
