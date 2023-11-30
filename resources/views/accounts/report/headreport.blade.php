@@ -122,9 +122,9 @@
 												<td>{{date("d M, Y",strtotime($acc->created_at))}}</td>
 												<td>{{$acc->jv_id}}</td>
 												<td>{{$acc->journal_title}}</td>
-												<td>{{number_format((float)$acc->dr, 2, '.', '')}} @php $deb+=$acc->dr; @endphp</td>
-												<td>{{number_format((float)$acc->cr, 2, '.', '')}} @php $cre+=$acc->cr; @endphp</td>
-												<td>{{$balance>0?abs($balance)." DR":abs($balance)." CR"}}</td>
+												<td>{{money_format((float)$acc->dr, 2, '.', '')}} @php $deb+=$acc->dr; @endphp</td>
+												<td>{{money_format((float)$acc->cr, 2, '.', '')}} @php $cre+=$acc->cr; @endphp</td>
+												<td>{{$balance>0?abs($balance)." DR":abs(($balance))." CR"}}</td>
 												<td><a href="#"></a></td>
 											</tr>
 										@endforeach
@@ -133,8 +133,8 @@
 								<tfoot>
 									<tr>
 										<th colspan="4" style="text-align:right">Total</th>
-										<th><?= $deb ?></th>
-										<th><?= $cre ?></th>
+										<th><?= money_format($deb) ?></th>
+										<th><?= money_format($cre) ?></th>
 										<th>{{$balance>0?abs($balance)." DR":abs($balance)." CR"}}</th>
 										<th></th>
 									</tr>
