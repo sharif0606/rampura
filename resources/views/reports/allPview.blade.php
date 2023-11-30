@@ -80,10 +80,10 @@
                                                 <td>{{$d->product_name}}</td>
                                                 <td>{{$d->lot_no}}</td>
                                                 <td>{{$d->brand}}</td>
-                                                <td>{{$d->quantity_bag}}</td>
-                                                <td>{{$d->quantity_kg}}</td>
+                                                <td>{{money_format($d->quantity_bag)}}</td>
+                                                <td>{{money_format($d->quantity_kg)}}</td>
                                                 <td>{{$d->rate_kg}}</td>
-                                                <td>{{$d->amount}}</td>
+                                                <td>{{money_format($d->amount)}}</td>
                                             </tr>
                                             @php
                                                 $totalBagQty += $d->quantity_bag;
@@ -99,10 +99,10 @@
                                         <tfoot>
                                             <tr class="text-center">
                                                 <th colspan="4" class="p-2">Total</th>
-                                                <th class="p-2">{{$totalBagQty}}</th>
-                                                <th class="p-2">{{$totalQty}}</th>
+                                                <th class="p-2">{{money_format($totalBagQty)}}</th>
+                                                <th class="p-2">{{money_format($totalQty)}}</th>
                                                 <th class="p-2"></th>
-                                                <th class="p-2">{{$amount}}</th>
+                                                <th class="p-2">{{money_format($amount)}}</th>
                                                 {{-- <th class="p-2">{{$saleCommission}}</th>
                                                 <th class="p-2">{{$totalAmount}}</th> --}}
                                             </tr>

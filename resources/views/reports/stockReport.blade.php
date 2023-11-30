@@ -111,8 +111,8 @@
                                             <td><a href="{{route(currentUser().'.stock.individual',$s->product_id)}}">{{$s->product_name}}</a></td>
                                             <td><a href="{{route(currentUser().'.stock.individual_lot',$s->lot_no)}}">{{$s->lot_no}}</a></td>
                                             <td>{{$s->brand}}</td>
-                                            <td>{{$s->bagQty}}</td>
-                                            <td>{{$s->qty}}</td>
+                                            <td>{{money_format($s->bagQty)}}</td>
+                                            <td>{{money_format($s->qty)}}</td>
                                             <td>
                                                 @php
                                                     $wh= App\Models\Settings\Warehouse::where('id',$s->warehouse_id)->first();
@@ -136,10 +136,10 @@
                                     <tfoot>
                                         <tr class="text-center">
                                             <th colspan="5" class="p-2">Total</th>
-                                            <th class="p-2">{{$totalBagQty}}</th>
-                                            <th class="p-2">{{$totalQty}}</th>
+                                            <th class="p-2">{{money_format($totalBagQty)}}</th>
+                                            <th class="p-2">{{money_format($totalQty)}}</th>
                                             <th class="p-2" colspan="2"></th>
-                                            <th class="p-2">{{$totalAmount}}</th>
+                                            <th class="p-2">{{money_format($totalAmount)}}</th>
                                         </tr>
                                     </tfoot>
                                 </table>

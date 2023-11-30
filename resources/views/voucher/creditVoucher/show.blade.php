@@ -76,7 +76,7 @@
                                     <tfoot>
                                         <tr>
                                             <th style="text-align:right;" colspan="2">{{__('Total Amount Tk.')}}</th>
-                                            <th style="text-align:center;">{{$creditVoucher->debit_sum}}</th>
+                                            <th style="text-align:center;">{{money_format($creditVoucher->debit_sum)}}</th>
                                             <th></th>
                                         </tr>
                                     </tfoot>
@@ -87,7 +87,7 @@
                                                 <tr class="text-center">
                                                     <td style='widht: 5%;'>1</td>
                                                     <td style='widht: 57%;'>{{$bk->account_code}}</td>
-                                                    <td style='widht: 14%;'>{{$bk->credit}}</td>
+                                                    <td style='widht: 14%;'>{{money_format($bk->credit)}}</td>
                                                     <td style='widht: 14%;'>{{$bk->particulars}}</td>
                                                 </tr>
                                                 @endif
