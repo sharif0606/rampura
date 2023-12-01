@@ -115,12 +115,12 @@
                                             <td>{{money_format($s->qty)}}</td>
                                             <td>
                                                 @php
-                                                    $wh= App\Models\Settings\Warehouse::where('id',$s->warehouse_id)->first();
+                                                    $wh= App\Models\Settings\Warehouse::where('id',$s->warehouse_id)->where('company_id', $s->company_id)->first();
                                                 @endphp
                                                 {{$wh->name}}
                                             </td>
                                             <td>{{$s->unit_price}}</td>
-                                            <td>{{$s->qty*$s->avunitprice}}</td>
+                                            <td>{{money_format($s->qty*$s->avunitprice)}}</td>
                                         </tr>
                                         @php
                                             $totalBagQty += $s->bagQty;
