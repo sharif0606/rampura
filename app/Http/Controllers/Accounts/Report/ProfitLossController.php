@@ -52,32 +52,32 @@ class ProfitLossController extends Controller{
     	}
     	
         $income=Subhead::whereIn('masterhead_id',[4])->pluck('id')->toArray();
-        $incomechildone=Chieldheadone::whereIn('subhead_id',$income)->pluck('id')->toArray();
-        $incomechildtwo=Chieldheadtwo::whereIn('chieldheadone_id',$incomechildone)->pluck('id')->toArray();
+        $incomechildone=Chieldheadone::whereIn('sub_head_id',$income)->pluck('id')->toArray();
+        $incomechildtwo=Chieldheadtwo::whereIn('child_one_id',$incomechildone)->pluck('id')->toArray();
         
         $incwhere="(";
         if($income){
             $incomeimp=implode(',',$income);
-            $incwhere.="subhead_id in ($incomeimp)";
+            $incwhere.="sub_head_id in ($incomeimp)";
         }
         if($incomechildone){
             $incomechildoneimp=implode(',',$incomechildone);
-            $incwhere.=" or chieldheadone_id in ($incomechildoneimp)";
+            $incwhere.=" or child_one_id in ($incomechildoneimp)";
         }
         if($incomechildtwo){
             $incomechildtwoimp=implode(',',$incomechildtwo);
-            $incwhere.=" or chieldheadtwo_id in ($incomechildtwoimp)";
+            $incwhere.=" or child_two_id in ($incomechildtwoimp)";
         }
         $incwhere.=")";
         
         $dataincome=DB::select("select 
                             (CASE 
-                                WHEN generalledgers.subhead_id THEN (select concat(subhead_code,'-',head_name) from subheads where subheads.id=generalledgers.subhead_id)
-                                WHEN generalledgers.chieldheadone_id THEN (select concat(chieldone_code,'-',head_name) from chieldheadones where chieldheadones.id=generalledgers.chieldheadone_id)
-                                WHEN generalledgers.chieldheadtwo_id THEN (select concat(chieldtwo_code,'-',head_name) from chieldheadtwos where chieldheadtwos.id=generalledgers.chieldheadtwo_id)
+                                WHEN generalledgers.sub_head_id THEN (select concat(head_code,'-',head_name) from subheads where subheads.id=generalledgers.sub_head_id)
+                                WHEN generalledgers.child_one_id THEN (select concat(head_code,'-',head_name) from child_ones where child_ones.id=generalledgers.child_one_id)
+                                WHEN generalledgers.child_two_id THEN (select concat(head_code,'-',head_name) from child_twos where child_twos.id=generalledgers.child_two_id)
                                 ELSE 'None-0'
                             END) AS head_name,
-        (sum(generalledgers.cr) - sum(generalledgers.dr)) as income from generalledgers where  $incwhere and ${$type} group by subhead_id,chieldheadone_id,chieldheadtwo_id");
+        (sum(generalledgers.cr) - sum(generalledgers.dr)) as income from generalledgers where  $incwhere and ${$type} group by sub_head_id,child_one_id,child_two_id");
         return $dataincome;
     
     }
@@ -92,32 +92,32 @@ class ProfitLossController extends Controller{
     	}
     	
         $expence=Subhead::whereIn('masterhead_id',[5])->pluck('id')->toArray();
-        $expencechildone=Chieldheadone::whereIn('subhead_id',$expence)->pluck('id')->toArray();
-        $expencechildtwo=Chieldheadtwo::whereIn('chieldheadone_id',$expencechildone)->pluck('id')->toArray();
+        $expencechildone=Chieldheadone::whereIn('sub_head_id',$expence)->pluck('id')->toArray();
+        $expencechildtwo=Chieldheadtwo::whereIn('child_one_id',$expencechildone)->pluck('id')->toArray();
         
         $expwhere="(";
         if($expence){
             $expenceimp=implode(',',$expence);
-            $expwhere.="subhead_id in ($expenceimp)";
+            $expwhere.="sub_head_id in ($expenceimp)";
         }
         if($expencechildone){
             $expencechildoneimp=implode(',',$expencechildone);
-            $expwhere.=" or chieldheadone_id in ($expencechildoneimp)";
+            $expwhere.=" or child_one_id in ($expencechildoneimp)";
         }
         if($expencechildtwo){
             $expencechildtwoimp=implode(',',$expencechildtwo);
-            $expwhere.=" or chieldheadtwo_id in ($expencechildtwoimp)";
+            $expwhere.=" or child_two_id in ($expencechildtwoimp)";
         }
         $expwhere.=")";
         
         $dataexpence=DB::select("select 
                             (CASE 
-                                WHEN generalledgers.subhead_id THEN (select concat(subhead_code,'-',head_name) from subheads where subheads.id=generalledgers.subhead_id)
-                                WHEN generalledgers.chieldheadone_id THEN (select concat(chieldone_code,'-',head_name) from chieldheadones where chieldheadones.id=generalledgers.chieldheadone_id)
-                                WHEN generalledgers.chieldheadtwo_id THEN (select concat(chieldtwo_code,'-',head_name) from chieldheadtwos where chieldheadtwos.id=generalledgers.chieldheadtwo_id)
+                                WHEN generalledgers.sub_head_id THEN (select concat(head_code,'-',head_name) from subheads where subheads.id=generalledgers.sub_head_id)
+                                WHEN generalledgers.child_one_id THEN (select concat(head_code,'-',head_name) from child_ones where child_ones.id=generalledgers.child_one_id)
+                                WHEN generalledgers.child_two_id THEN (select concat(head_code,'-',head_name) from child_twos where child_twos.id=generalledgers.child_two_id)
                                 ELSE 'None-0'
                             END) AS head_name,
-        (sum(generalledgers.dr) - sum(generalledgers.cr)) as cost from generalledgers where  $expwhere and ${$type} group by subhead_id,chieldheadone_id,chieldheadtwo_id");
+        (sum(generalledgers.dr) - sum(generalledgers.cr)) as cost from generalledgers where  $expwhere and ${$type} group by sub_head_id,child_one_id,child_two_id");
         return $dataexpence;
     
     }

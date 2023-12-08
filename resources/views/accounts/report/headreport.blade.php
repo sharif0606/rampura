@@ -28,9 +28,9 @@
 								<tr style="text-align: center;">
 									<th colspan="2">
 										<h4>{{encryptor('decrypt', request()->session()->get('companyName'))}}</h4>
-                                    <p>{{encryptor('decrypt', request()->session()->get('companyAddress'))}}</p>
-                                    <p>IMPORT, EXPORTER, WHOLESALER, RETAILSALER & COMMISSION AGENT</p>
-                                    <p>E-MAIL: <a href="#" style="border-bottom: solid 1px; border-color:blue;">{{encryptor('decrypt', request()->session()->get('companyEmail'))}}</a> Contact: {{encryptor('decrypt', request()->session()->get('companyContact'))}}</p>
+										<p>{{encryptor('decrypt', request()->session()->get('companyAddress'))}}</p>
+										<p>IMPORT, EXPORTER, WHOLESALER, RETAILSALER & COMMISSION AGENT</p>
+										<p>E-MAIL: <a href="#" style="border-bottom: solid 1px; border-color:blue;">{{encryptor('decrypt', request()->session()->get('companyEmail'))}}</a> Contact: {{encryptor('decrypt', request()->session()->get('companyContact'))}}</p>
 										<h4 style="padding-bottom: 2.5rem;">Head Wise Report</h4>
 									</th>
 								</tr>
@@ -52,7 +52,7 @@
 														<option value="{{$h->chield_one->id}}~child_one_id~{{$h->chield_one->opening_balance}}~{{$h->chield_one->head_code}}" @if($head_id==$h->chield_one->id."child_one_id") selected @endif>{{$h->chield_one->head_name}}</option>
 													@elseif($h->child_two_id && $h->chield_two)
 														<option value="{{$h->chield_two->id}}~child_two_id~{{$h->chield_two->opening_balance}}~{{$h->chield_two->head_code}}" @if($head_id==$h->chield_two->id."child_two_id") selected @endif>{{$h->chield_two->head_name}}</option>
-												@endif
+													@endif
 												@endforeach
 											@endif
 										</select>
@@ -91,8 +91,8 @@
 									</tr>
 								</thead>
 								<tbody>
-									@php $balance=$deb=$cre=0; @endphp
-									@php if($opening_bal>0) $deb=$opening_bal; else $cre=$opening_bal; @endphp
+									@php $balance=$deb=$cre=0; $sumdr=$accOldData->sum('dr');$sumcr=$accOldData->sum('cr'); echo $opening_bal; @endphp
+									@php if($opening_bal>0) $sumdr+=$opening_bal; else $sumcr+=$opening_bal; @endphp
 									@if($accData)
 										<tr>
 											<td>{{date("d M, Y",strtotime($startDate))}}</td>
@@ -102,12 +102,12 @@
 											<td></td>
 											<td></td>
 											<td>
-												@if($accOldData->sum('dr')>$accOldData->sum('cr'))
-													{{ ($accOldData->sum('dr') - $accOldData->sum('cr')) }} DR
-													@php $balance+= ($accOldData->sum('dr') - $accOldData->sum('cr')); @endphp
-												@elseif($accOldData->sum('dr')<$accOldData->sum('cr'))
-													{{ ($accOldData->sum('cr') - $accOldData->sum('dr')) }} CR
-													@php $balance+= ($accOldData->sum('dr') - $accOldData->sum('cr')); @endphp
+												@if($sumdr>$sumcr)
+													{{ ($sumdr - $sumcr) }} DR
+													@php $balance+= ($sumdr - $sumcr); @endphp
+												@elseif($sumdr<$sumcr)
+													{{ ($sumcr - $sumdr) }} CR
+													@php $balance+= ($sumdr - $sumcr); @endphp
 												@else
 														0
 												@endif
