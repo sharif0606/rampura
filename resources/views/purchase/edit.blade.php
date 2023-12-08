@@ -124,6 +124,7 @@
                                                 $lessTotal = 0;
                                                 $actualQtyTotal = 0;
                                                 $amountTotal = 0;
+                                                $formattedPricePerKg = 0;
                                             @endphp
                                             <?php $firstBatchId = optional($purchase->stock)->first()->batch_id; ?>
                                             <input type="hidden" name="batch_id" value="{{$firstBatchId}}">
@@ -253,8 +254,11 @@
                                 <div class="col-4 mt-2 text-start">
                                     <label for="" class="form-group">
                                         @php
+                                        if($actualQtyTotal != 0){
+
                                             $pricePerKg = $purchase->grand_total / $actualQtyTotal;
                                             $formattedPricePerKg = number_format($pricePerKg, 2);
+                                        }
                                         @endphp
                                         <h5 class="perKgCost">{{$formattedPricePerKg}}</h5>
                                     </label>

@@ -84,6 +84,7 @@
                                     $totalLess = 0;
                                     $actualQtyTotal = 0;
                                     $totalAmount = 0;
+                                    $formattedPricePerKg = 0;
                                 @endphp
                                 @forelse($purDetail as $s)
                                 <tr class="tbl_expense">
@@ -149,8 +150,11 @@
                                 <th style="text-align: right; width:70%; padding-right: 5px; "><h6>PER KG EXPENSE/COSTING :</h6></th>
                                 <td style="text-align: left; width:30%; ">
                                     @php
+                                    if($actualQtyTotal !=0){
+
                                         $pricePerKg = $show_data->grand_total / $actualQtyTotal;
                                         $formattedPricePerKg = number_format($pricePerKg, 2);
+                                    }
                                     @endphp
                                     <h6>{{$formattedPricePerKg}} /-</h6>
                                 </td>
