@@ -146,7 +146,7 @@
                         </div>
                         <table class="td_hide" style="width: 100%; margin-top: 2rem;">
                             <tr style="padding-top: 5rem;">
-                                <th style="text-align: center;">{{$show_data->createdBy?->name}}</th>
+                                <td style="text-align: center;"><span style="border-bottom: solid 1px;">{{$show_data->createdBy?->name}}</span></td>
                                 <th style="text-align: center;"></th>
                                 <th style="text-align: center;"></th>
                             </tr>

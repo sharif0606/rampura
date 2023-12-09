@@ -126,7 +126,7 @@
                             <div class="d-none only_print text-center">
                                 <table style="width: 100%; margin-top: 4rem;">
                                     <tr style="padding-top: 5rem;">
-                                        <th style="text-align: center;">{{encryptor('decrypt', request()->session()->get('userName'))}}</th>
+                                        <td style="text-align: center;"><span style="border-bottom: solid 1px;">{{encryptor('decrypt', request()->session()->get('userName'))}}</span></td>
                                         <th style="text-align: center;"></th>
                                         <th style="text-align: center;"></th>
                                     </tr>
