@@ -27,7 +27,7 @@
                         border: 1px solid;
                         border-collapse: collapse;
                         }
-                        </style>
+                    </style>
                     <div class="card-body">
                         <table style="width: 100%">
                             <tr style="text-align: center;">

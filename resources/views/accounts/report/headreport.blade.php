@@ -6,6 +6,13 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 @endpush
 @section('content')
+<style>
+
+	.tbl_border{
+	border: 1px solid;
+	border-collapse: collapse;
+	}
+</style>
 <section id="multiple-column-form">
     <div class="row match-height">
         <div class="col-12">
@@ -20,6 +27,7 @@
 							{{Session::get('response')['message']}}
 						</div>
 					@endif
+					
 			
 					{{-- <div class="text-center"><h4>Head Wise Report Search</h4></div> --}}
 					<div class="card-body" id="result_show">
@@ -77,17 +85,17 @@
 		
 						<div class="tbl_scroll">
 							<div class="d-none mb-2 only_print" id="print-content"></div>
-							<table class="table table-bordered table-hover" width="100%">
+							<table class="table table-hover" width="100%">
 								<thead>
-									<tr>
-										<td>Trans Date</td>
-										<td>Entry Date</td>
-										<td>Voucher No</td>
-										<td>Particulars</td>
-										<td>Debit</td>
-										<td>Credit</td>
-										<td>Balance</td>
-										<td>Details</td>
+									<tr class="tbl_border">
+										<td class="tbl_border">Trans Date</td>
+										<td class="tbl_border">Entry Date</td>
+										<td class="tbl_border">Voucher No</td>
+										<td class="tbl_border">Particulars</td>
+										<td class="tbl_border">Debit</td>
+										<td class="tbl_border">Credit</td>
+										<td class="tbl_border">Balance</td>
+										<td class="tbl_border">Details</td>
 									</tr>
 								</thead>
 								<tbody>
@@ -95,14 +103,14 @@
 									@if($accData)
 									 @php $sumdr=$accOldData->sum('dr');$sumcr=$accOldData->sum('cr'); @endphp
 									@php if($opening_bal>0) $sumdr+=$opening_bal; else $sumcr+=$opening_bal; @endphp
-										<tr>
-											<td>{{date("d M, Y",strtotime($startDate))}}</td>
-											<td></td>
-											<td></td>
-											<td>B/F</td>
-											<td></td>
-											<td></td>
-											<td>
+										<tr class="tbl_border">
+											<td class="tbl_border">{{date("d M, Y",strtotime($startDate))}}</td>
+											<td class="tbl_border"></td>
+											<td class="tbl_border"></td>
+											<td class="tbl_border">B/F</td>
+											<td class="tbl_border"></td>
+											<td class="tbl_border"></td>
+											<td class="tbl_border">
 												@if($sumdr>$sumcr)
 													{{ ($sumdr - $sumcr) }} DR
 													@php $balance+= ($sumdr - $sumcr); @endphp
@@ -113,31 +121,31 @@
 														0
 												@endif
 											</td>
-											<td></td>
+											<td class="tbl_border"></td>
 										</tr>
 										@foreach($accData as $acc)
 											@if($acc->dr>0)@php $balance+=$acc->dr; @endphp @endif
 											@if($acc->cr>0)@php $balance-=$acc->cr; @endphp @endif
-											<tr>
-												<td>{{date("d M, Y",strtotime($acc->rec_date))}}</td>
-												<td>{{date("d M, Y",strtotime($acc->created_at))}}</td>
-												<td>{{$acc->jv_id}}</td>
-												<td>{{$acc->journal_title}}</td>
-												<td>{{money_format((float)$acc->dr, 2, '.', '')}} @php $deb+=$acc->dr; @endphp</td>
-												<td>{{money_format((float)$acc->cr, 2, '.', '')}} @php $cre+=$acc->cr; @endphp</td>
-												<td>{{$balance>0?money_format(abs($balance))." DR":money_format(abs($balance))." CR"}}</td>
-												<td><a href="#"></a></td>
+											<tr class="tbl_border">
+												<td class="tbl_border">{{date("d M, Y",strtotime($acc->rec_date))}}</td>
+												<td class="tbl_border">{{date("d M, Y",strtotime($acc->created_at))}}</td>
+												<td class="tbl_border">{{$acc->jv_id}}</td>
+												<td class="tbl_border">{{$acc->journal_title}}</td>
+												<td class="tbl_border">{{money_format((float)$acc->dr, 2, '.', '')}} @php $deb+=$acc->dr; @endphp</td>
+												<td class="tbl_border">{{money_format((float)$acc->cr, 2, '.', '')}} @php $cre+=$acc->cr; @endphp</td>
+												<td class="tbl_border">{{$balance>0?money_format(abs($balance))." DR":money_format(abs($balance))." CR"}}</td>
+												<td class="tbl_border"><a href="#"></a></td>
 											</tr>
 										@endforeach
 									@endif
 								</tbody>
 								<tfoot>
-									<tr>
-										<th colspan="4" style="text-align:right">Total</th>
-										<th><?= money_format($deb) ?></th>
-										<th><?= money_format($cre) ?></th>
-										<th>{{$balance>0?money_format(abs($balance))." DR":money_format(abs($balance))." CR"}}</th>
-										<th></th>
+									<tr class="tbl_border">
+										<th class="tbl_border" colspan="4" style="text-align:right">Total</th>
+										<th class="tbl_border"><?= money_format($deb) ?></th>
+										<th class="tbl_border"><?= money_format($cre) ?></th>
+										<th class="tbl_border">{{$balance>0?money_format(abs($balance))." DR":money_format(abs($balance))." CR"}}</th>
+										<th class="tbl_border"></th>
 									</tr>
 								</tfoot>
 							</table>
@@ -213,9 +221,9 @@
         var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
         WinPrint.document.write('<link rel="stylesheet" href="{{ asset('assets/css/main/app.css') }}" type="text/css"/>');
 
-		var style = '<style media="print">.no_print{ display:none}body{color:#000 !important;background-color:#FFF; font-size:14px; padding-top:50px}.only_print{ display:block !important;}</style>';
+		var style = '<style media="print">.no_print{ display:none}body{color:#000 !important;background-color:#FFF; font-size:14px; padding-top:50px}.only_print{ display:block !important;} .tbl_border{ border: 1px solid; border-collapse: collapse;}</style>';
         WinPrint.document.write(style);
-
+                        
 		//WinPrint.document.write(printContentDiv.innerHTML);
         WinPrint.document.write(prtContent.innerHTML); // Include the rest of the content
         WinPrint.document.close();
