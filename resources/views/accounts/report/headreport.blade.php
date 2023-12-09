@@ -91,9 +91,10 @@
 									</tr>
 								</thead>
 								<tbody>
-									@php $balance=$deb=$cre=0; $sumdr=$accOldData->sum('dr');$sumcr=$accOldData->sum('cr'); echo $opening_bal; @endphp
-									@php if($opening_bal>0) $sumdr+=$opening_bal; else $sumcr+=$opening_bal; @endphp
+									@php $balance=$deb=$cre=0; @endphp
 									@if($accData)
+									 @php $sumdr=$accOldData->sum('dr');$sumcr=$accOldData->sum('cr'); @endphp
+									@php if($opening_bal>0) $sumdr+=$opening_bal; else $sumcr+=$opening_bal; @endphp
 										<tr>
 											<td>{{date("d M, Y",strtotime($startDate))}}</td>
 											<td></td>

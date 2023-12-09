@@ -34,27 +34,25 @@ class AuthenticationController extends Controller
                     $user->contact_no=$request->PhoneNumber;
                     $user->email=$request->EmailAddress;
                     $user->password=Hash::make($request->password);
-                    $user->company_id=1;//$company->id;
+                    $user->company_id=$company->id;
                     $user->role_id=2;
                     if($user->save())
                         return redirect('login')->with($this->resMessageHtml(true,null,'Successfully Registred'));
                     else
                         return redirect('login')->with($this->resMessageHtml(false,'error','Please try again'));
                 }else
-                    return redirect('login')->with($this->resMessageHtml(false,'error','Please try again'));
+                    return redirect('login')->with($this->resMessageHtml(false,'error','Branch not saved. Please try again'));
             }else
-                return redirect('login')->with($this->resMessageHtml(false,'error','Please try again'));
+                return redirect('login')->with($this->resMessageHtml(false,'error','Company not saved. Please try again'));
         }catch(Exception $e){
             //dd($e);
             return redirect('login')->with($this->resMessageHtml(false,'error','Please try again'));
         }
 
     }
-
     public function signInForm(){
         return view('authentication.login');
     }
-
     public function signInCheck(SigninRequest $request){
         try{
             $user=User::where('contact_no',$request->PhoneNumber)->orWhere('email',$request->PhoneNumber)->first();
@@ -71,7 +69,6 @@ class AuthenticationController extends Controller
             return redirect()->route('login')->with($this->resMessageHtml(false,'error','Your phone number or password is wrong!'));
         }
     }
-
     public function setSession($user){
         return request()->session()->put(
                 [
@@ -93,7 +90,6 @@ class AuthenticationController extends Controller
                 ]
             );
     }
-
     public function singOut(){
         request()->session()->flush();
         return redirect('login')->with($this->resMessageHtml(false,'error',currentUserId()));
