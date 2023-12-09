@@ -398,7 +398,7 @@ class JournalVoucherController extends Controller
     public function edit($id)
     {
         $journalVoucher=JournalVoucher::findOrFail(encryptor('decrypt',$id));
-		$jvbkdn=JournalVoucherBkdn::where('journal_voucher_id',$id)->get();
+		$jvbkdn=JournalVoucherBkdn::where('journal_voucher_id',encryptor('decrypt',$id))->get();
 		return view('voucher.journalVoucher.edit',compact('journalVoucher','jvbkdn'));
     }
 

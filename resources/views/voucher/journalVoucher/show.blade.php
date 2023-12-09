@@ -69,13 +69,15 @@
                                         <tr class="text-center">
                                             <th>{{__('SN#')}}</th>
                                             <th>{{__('A/C Head')}}</th>
-                                            <th>{{__('Amount')}}</th>
+                                            <th>{{__('Dr')}}</th>
+                                            <th>{{__('Cr')}}</th>
                                             <th>{{__('Remarks')}}</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th style="text-align:right;" colspan="2">{{__('Total Amount Tk.')}}</th>
+                                            <th style="text-align:center;">{{money_format($journalVoucher->debit_sum)}}</th>
                                             <th style="text-align:center;">{{money_format($journalVoucher->debit_sum)}}</th>
                                             <th></th>
                                         </tr>
@@ -88,6 +90,7 @@
                                                     <td style='width: 5%;'>1</td>
                                                     <td style='width: 57%;'>{{$bk->account_code}}</td>
                                                     <td style='width: 14%;'>{{money_format($bk->debit)}}</td>
+                                                    <td style='width: 14%;'>{{money_format($bk->credit)}}</td>
                                                     <td style='width: 14%;'>{{$bk->particulars}}</td>
                                                 </tr>
                                                 @endif
