@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Accounts;
+namespace App\Http\Controllers\Accounts\Report;
 
 use App\Http\Controllers\Controller;
 
@@ -27,7 +27,7 @@ class IncomeStatementController extends Controller
     public function details(Request $r){
         $month=$r->month;
         $year=$r->year;
-        $acc_head=Master_account::where(company())->get();
+        $acc_head=Master_account::with('sub_head')->where(company())->get();
         /* operating income */
         $incomeheadop=array();
         $incomeheadopone=array();
@@ -107,7 +107,7 @@ class IncomeStatementController extends Controller
                                             $expenseheadnoptwo[]=$child_two->id;
                                         }
                                     }else{
-                                        if($child_one->head_code!="53001")
+                                        if($child_one->head_code!="5310")
                                             $expenseheadnopone[]=$child_one->id;
                                         else
                                             $tax_data[]=$child_one->id;
@@ -129,19 +129,22 @@ class IncomeStatementController extends Controller
             $datas=$year."-01-01";
             $datae=$year."-12-31";
         }
-            //\DB::connection()->enableQueryLog();
+           // \DB::connection()->enableQueryLog();
             /* operating income */
-            $opincome=GeneralLedger::whereBetween('rec_date',[$datas,$datae])
+            $opincome=GeneralLedger::where(company())->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($incomeheadop,$incomeheadopone,$incomeheadoptwo){
-                $query->orWhere(function($query) use ($incomeheadop){
-                     $query->whereIn('sub_head_id',$incomeheadop);
-                });
-                $query->orWhere(function($query) use ($incomeheadopone){
-                     $query->whereIn('child_one_id',$incomeheadopone);
-                });
-                $query->orWhere(function($query) use ($incomeheadoptwo){
-                     $query->whereIn('child_two_id',$incomeheadoptwo);
-                });
+                if($incomeheadop)
+                    $query->orWhere(function($query) use ($incomeheadop){
+                        $query->whereIn('sub_head_id',$incomeheadop);
+                    });
+                if($incomeheadopone)
+                    $query->orWhere(function($query) use ($incomeheadopone){
+                        $query->whereIn('child_one_id',$incomeheadopone);
+                    });
+                if($incomeheadoptwo)
+                    $query->orWhere(function($query) use ($incomeheadoptwo){
+                        $query->whereIn('child_two_id',$incomeheadoptwo);
+                    });
             })
             ->get();
 
@@ -177,6 +180,7 @@ class IncomeStatementController extends Controller
             })
             ->get();
             
+
             /* nonoperating expense */
             $nonopexpense=GeneralLedger::whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($expenseheadnop,$expenseheadnopone,$expenseheadnoptwo){
@@ -199,7 +203,7 @@ class IncomeStatementController extends Controller
                 });
             })
             ->get();
-        
+            
         $data='<div class="col-lg-12 stretch-card">
                 
                 <div class="card">

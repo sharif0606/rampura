@@ -315,7 +315,7 @@ class RegularPurchaseController extends Controller
                             $jvb->particulars="Purchase";
                             $jvb->account_code="Purchase-5330";
                             $jvb->table_name="child_ones";
-                            $jvb->table_id="8";
+                            $jvb->table_id=Child_one::select('id')->where(company())->where('head_code',"5330")->first()->toArray()['id'];
                             $jvb->debit=$request->amount[$i];
                             $jvb->created_at=$jv->current_date;
                             if($jvb->save()){
@@ -377,7 +377,7 @@ class RegularPurchaseController extends Controller
                             }
                         }
                         // credit side purchase
-                        $sup_head=Child_two::select('id')->where('head_code',"2130".$request->supplierName)->first()->toArray()['id'];
+                        $sup_head=Child_two::select('id')->where(company())->where('head_code',"2130".$request->supplierName)->first()->toArray()['id'];
                         foreach($lot_noa as $lc=>$amount){
                             if($amount > 0){
                                 $jvb=new PurVoucherBkdns;
@@ -440,7 +440,7 @@ class RegularPurchaseController extends Controller
                         if($jv->save()){
                             $vouchersIds[]=$jv->id;
                             // debit side purchase
-                            $sup_head=Child_two::select('id')->where('head_code',"2130".$request->supplierName)->first()->toArray()['id'];
+                            $sup_head=Child_two::select('id')->where(company())->where('head_code',"2130".$request->supplierName)->first()->toArray()['id'];
                             foreach($lot_noInc as $lc=>$amount){
                                 if($amount > 0){
                                     $jvb=new PurVoucherBkdns;
@@ -801,7 +801,7 @@ class RegularPurchaseController extends Controller
                             $jvb->particulars="Purchase";
                             $jvb->account_code="Purchase-5330";
                             $jvb->table_name="child_ones";
-                            $jvb->table_id="8";
+                            $jvb->table_id=Child_one::select('id')->where(company())->where('head_code',"5330")->first()->toArray()['id'];
                             $jvb->debit=$request->amount[$i];
                             $jvb->created_at=$jv->current_date;
                             if($jvb->save()){
@@ -863,7 +863,7 @@ class RegularPurchaseController extends Controller
                             }
                         }
                         // credit side purchase
-                        $sup_head=Child_two::select('id')->where('head_code',"2130".$request->supplierName)->first()->toArray()['id'];
+                        $sup_head=Child_two::select('id')->where(company())->where('head_code',"2130".$request->supplierName)->first()->toArray()['id'];
                         foreach($lot_noa as $lc=>$amount){
                             if($amount > 0){
                                 $jvb=new PurVoucherBkdns;
@@ -926,7 +926,7 @@ class RegularPurchaseController extends Controller
                         if($jv->save()){
                             $vouchersIds[]=$jv->id;
                             // debit side purchase
-                            $sup_head=Child_two::select('id')->where('head_code',"2130".$request->supplierName)->first()->toArray()['id'];
+                            $sup_head=Child_two::select('id')->where(company())->where('head_code',"2130".$request->supplierName)->first()->toArray()['id'];
                             foreach($lot_noInc as $lc=>$amount){
                                 if($amount > 0){
                                     $jvb=new PurVoucherBkdns;

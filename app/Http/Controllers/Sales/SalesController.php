@@ -392,7 +392,7 @@ class SalesController extends Controller
                     }
                     if($jv->save()){
                         $vouchersIds[]=$jv->id;
-                        $customer_head=Child_two::select('id')->where('head_code',"1130".$request->customerName)->first()->toArray()['id'];
+                        $customer_head=Child_two::select('id')->where(company())->where('head_code',"1130".$request->customerName)->first()->toArray()['id'];
                         foreach($lot_noa as $lc=>$amount){
                             if($amount > 0){
                                 $jvb=new SalVoucherBkdns;
@@ -421,6 +421,7 @@ class SalesController extends Controller
                                     $gl->sales_voucher_bkdn_id=$jvb->id;
                                     $gl->created_by=currentUserId();
                                     $gl->dr=$jvb->debit;
+                                    $gl->lc_no=$jvb->lc_no;
                                     $gl->{$field_name}=$jvb->table_id;
                                     $gl->save();
                                 }
@@ -438,7 +439,7 @@ class SalesController extends Controller
                             $jvb->particulars="Sales";
                             $jvb->account_code="Sales-4110";
                             $jvb->table_name="child_ones";
-                            $jvb->table_id="7";
+                            $jvb->table_id=Child_one::select('id')->where(company())->where('head_code',"4110")->first()->toArray()['id'];
                             $jvb->credit=$request->amount[$i];
                             $jvb->created_at=$jv->current_date;
                             if($jvb->save()){
@@ -456,6 +457,7 @@ class SalesController extends Controller
                                 $gl->sales_voucher_bkdn_id=$jvb->id;
                                 $gl->created_by=currentUserId();
                                 $gl->cr=$jvb->credit;
+                                $gl->lc_no=$jvb->lc_no;
                                 $gl->{$field_name}=$jvb->table_id;
                                 $gl->save();
                             }
@@ -492,6 +494,7 @@ class SalesController extends Controller
                                         $gl->sales_voucher_bkdn_id=$jvb->id;
                                         $gl->created_by=currentUserId();
                                         $gl->cr=$jvb->credit;
+                                        $gl->lc_no=$jvb->lc_no;
                                         $gl->{$field_name}=$jvb->table_id;
                                         $gl->save();
                                     }
@@ -557,6 +560,7 @@ class SalesController extends Controller
                                         $gl->sales_voucher_bkdn_id=$jvb->id;
                                         $gl->created_by=currentUserId();
                                         $gl->dr=$jvb->debit;
+                                        $gl->lc_no=$jvb->lc_no;
                                         $gl->{$field_name}=$jvb->table_id;
                                         $gl->save();
                                     }
@@ -915,6 +919,7 @@ class SalesController extends Controller
                                     $gl->sales_voucher_bkdn_id=$jvb->id;
                                     $gl->created_by=currentUserId();
                                     $gl->dr=$jvb->debit;
+                                    $gl->lc_no=$jvb->lc_no;
                                     $gl->{$field_name}=$jvb->table_id;
                                     $gl->save();
                                 }
@@ -932,7 +937,7 @@ class SalesController extends Controller
                             $jvb->particulars="Sales";
                             $jvb->account_code="Sales-4110";
                             $jvb->table_name="child_ones";
-                            $jvb->table_id="7";
+                            $jvb->table_id=Child_one::select('id')->where(company())->where('head_code',"4110")->first()->toArray()['id'];
                             $jvb->credit=$request->amount[$i];
                             $jvb->created_at=$jv->current_date;
                             if($jvb->save()){
@@ -950,6 +955,7 @@ class SalesController extends Controller
                                 $gl->sales_voucher_bkdn_id=$jvb->id;
                                 $gl->created_by=currentUserId();
                                 $gl->cr=$jvb->credit;
+                                $gl->lc_no=$jvb->lc_no;
                                 $gl->{$field_name}=$jvb->table_id;
                                 $gl->save();
                             }
@@ -984,6 +990,7 @@ class SalesController extends Controller
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
                                         $gl->sales_voucher_bkdn_id=$jvb->id;
+                                        $gl->lc_no=$jvb->lc_no;
                                         $gl->created_by=currentUserId();
                                         $gl->cr=$jvb->credit;
                                         $gl->{$field_name}=$jvb->table_id;
@@ -1051,6 +1058,7 @@ class SalesController extends Controller
                                         $gl->sales_voucher_bkdn_id=$jvb->id;
                                         $gl->created_by=currentUserId();
                                         $gl->dr=$jvb->debit;
+                                        $gl->lc_no=$jvb->lc_no;
                                         $gl->{$field_name}=$jvb->table_id;
                                         $gl->save();
                                     }

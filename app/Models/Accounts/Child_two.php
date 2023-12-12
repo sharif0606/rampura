@@ -10,6 +10,6 @@ class Child_two extends Model
 {
     use HasFactory;
     public function child_one(){
-        return $this->belongsTo(Child_one::class);
+        return $this->belongsTo(Child_one::class)->where(company());
     }
 }

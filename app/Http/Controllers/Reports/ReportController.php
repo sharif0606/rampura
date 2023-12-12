@@ -16,6 +16,7 @@ use App\Models\Expenses\ExpenseOfSales;
 use App\Models\Products\Category;
 use App\Models\Products\Product;
 use App\Models\Purchases\Purchase_details;
+use App\Models\Vouchers\GeneralLedger;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
@@ -43,6 +44,7 @@ class ReportController extends Controller
     
     //     return view('reports.stockReport', compact('stock'));
     // }
+
 
     public function stockreport(Request $request)
     {
@@ -137,10 +139,7 @@ class ReportController extends Controller
     
         return view('reports.allPview', compact('data','product','category'));
     }
-    
-
    
-
     public function purchaseReport(Request $request)
     {
         // dd($request->all());
@@ -300,5 +299,16 @@ class ReportController extends Controller
         
     //     return view('reports.srotaView', compact('purchase', 'sales','purExpense','salExpense'));
     // }
+
+    public function lc_report(Request $request)
+    {
+        $lc_data = false;
+       
+        if ($request->lc_no) {
+           $lc_data = GeneralLedger::where(company())->where('lc_no',$request->lc_no)->get();
+        }
+    
+        return view('reports.lc_report', compact('lc_data'));
+    }
 
 }

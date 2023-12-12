@@ -38,7 +38,7 @@ use App\Http\Controllers\Accounts\SubHeadController as sub_head;
 use App\Http\Controllers\Accounts\ChildOneController as child_one;
 use App\Http\Controllers\Accounts\ChildTwoController as child_two;
 use App\Http\Controllers\Accounts\NavigationHeadViewController as navigate;
-use App\Http\Controllers\Accounts\IncomeStatementController as statement;
+use App\Http\Controllers\Accounts\Report\IncomeStatementController as statement;
 use App\Http\Controllers\Accounts\Report\HeadReportController as headreport;
 use App\Http\Controllers\Accounts\Report\BalanceSheetController as balancesheet;
 use App\Http\Controllers\Accounts\Report\ProfitLossController as profitloss;
@@ -135,6 +135,7 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/all-purchase-report',[report::class,'allPurchaseReport'])->name('owner.all_pur_report');
         Route::get('/srota',[report::class,'srota'])->name('owner.srota');
         Route::get('/srota-view',[report::class,'srotaView'])->name('owner.srota_view');
+        Route::get('/lc_report',[report::class,'lc_report'])->name('owner.lc_report');
 
         //Product
         Route::resource('category',category::class,['as'=>'owner']);
@@ -231,6 +232,7 @@ Route::group(['middleware'=>isSalesmanager::class],function(){
         Route::get('/all-purchase-report',[report::class,'allPurchaseReport'])->name('manager.all_pur_report');
         Route::get('/srota',[report::class,'srota'])->name('manager.srota');
         Route::get('/srota-view',[report::class,'srotaView'])->name('manager.srota_view');
+        Route::get('/lc_report',[report::class,'lc_report'])->name('manager.lc_report');
 
         //Product
         Route::resource('category',category::class,['as'=>'manager']);
@@ -319,6 +321,7 @@ Route::group(['middleware'=>isSalesman::class],function(){
         Route::get('/all-purchase-report',[report::class,'allPurchaseReport'])->name('accountsofficer.all_pur_report');
         Route::get('/srota',[report::class,'srota'])->name('accountsofficer.srota');
         Route::get('/srota-view',[report::class,'srotaView'])->name('accountsofficer.srota_view');
+        Route::get('/lc_report',[report::class,'lc_report'])->name('accountsofficer.lc_report');
 
         //Product
         Route::resource('category',category::class,['as'=>'accountsofficer']);
@@ -407,6 +410,7 @@ Route::group(['middleware'=>isExecutive::class],function(){
         Route::get('/all-purchase-report',[report::class,'allPurchaseReport'])->name('executiveofficer.all_pur_report');
         Route::get('/srota',[report::class,'srota'])->name('executiveofficer.srota');
         Route::get('/srota-view',[report::class,'srotaView'])->name('executiveofficer.srota_view');
+        Route::get('/lc_report',[report::class,'lc_report'])->name('executiveofficer.lc_report');
 
         //Product
         Route::resource('category',category::class,['as'=>'executiveofficer']);
