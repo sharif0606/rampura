@@ -366,7 +366,7 @@
                                     <tr>
                                         <th style="text-align: left;"><span style="color: green;">নগদ পরিশোধ</span></th>
                                         <td style="text-align: right;">
-                                            <span style="color: green;">{{money_format(round($totalPayment)); }}</span>
+                                            <span style="color: green;">{{money_format(round($totalPayment)) }}</span>
                                         </td>
                                     </tr>
                                 </table>
@@ -386,7 +386,7 @@
                                         @php
                                             $totalSalesAmount= $subSalesAmount;
                                         @endphp
-                                        <span style="color: green;">{{$formattedAmount = money_format(round($totalSalesAmount));}}</span>
+                                        <span style="color: green;">{{$formattedAmount = money_format(round($totalSalesAmount))}}</span>
                                     </td>
                                 </tr>
                                 <tr>

@@ -273,7 +273,7 @@
                                                 $dueTotal = $nitTotal - $totalPayment;
 
                                             @endphp
-                                            <span style="border-top: double;">{{$dueTotal>0?money_format(round($dueTotal)):0;}}</span>
+                                            <span style="border-top: double;">{{$dueTotal>0?money_format(round($dueTotal)):0}}</span>
                                         </td>
                                     </tr>
                                 </tbody>
