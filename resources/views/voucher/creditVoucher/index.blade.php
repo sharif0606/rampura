@@ -9,7 +9,6 @@
     <div class="row" id="table-bordered">
         <div class="col-12">
             <div class="card">
-                
                 @if(Session::has('response'))
                     {!!Session::get('response')['message']!!}
                 @endif
@@ -51,6 +50,13 @@
                                         <a href="{{route(currentUser().'.credit.edit',encryptor('encrypt',$cr->id))}}">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
+                                        <a class="text-danger" href="javascript:void()" onclick="$('#form{{$cr->id}}').submit()">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <form id="form{{$cr->id}}" onsubmit="return confirm('Are you sure to delete this record?')" action="{{route(currentUser().'.credit.destroy',encryptor('encrypt',$cr->id))}}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                        </form>
                                     @endif
                                 </td>
                             </tr>

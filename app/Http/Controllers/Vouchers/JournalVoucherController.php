@@ -423,7 +423,9 @@ class JournalVoucherController extends Controller
 			$request->slip->move(public_path('uploads/slip'), $imageName);
 			$journalVoucher->slip=$imageName;
 		}
-        $journalVoucher->save();
+        if($journalVoucher->save()){
+			Generalledger::where('journal_voucher_id', $journalVoucher->id)->update(['lc_no'=>$request->lc_no]);
+		}
         return redirect()->route(currentUser().'.journal.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));
     }
 
@@ -433,8 +435,30 @@ class JournalVoucherController extends Controller
      * @param  \App\Models\Voucher\JournalVoucher  $journalVoucher
      * @return \Illuminate\Http\Response
      */
-    public function destroy(JournalVoucher $journalVoucher)
+    public function destroy($id)
     {
-        //
+		try {
+            DB::beginTransaction();
+			$cvid=encryptor('decrypt',$id);
+			$cv= JournalVoucher::find($cvid);
+			if($cv->delete()){
+				if(JournalVoucherBkdn::where('journal_voucher_id',$cvid)->delete()){
+					if(GeneralLedger::where('journal_voucher_id',$cvid)->delete()){
+						DB::commit();
+						return redirect()->back()->with($this->resMessageHtml(true,null,'Successfully deleted'));
+					}else{
+						return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+					}
+				}else{
+					return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+				}
+			}else{
+				return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+			}
+		}catch (Exception $e) {
+			// dd($e);
+			DB::rollBack();
+			return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+		}
     }
 }

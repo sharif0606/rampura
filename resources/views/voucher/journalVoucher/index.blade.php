@@ -60,6 +60,13 @@
                                         <a href="{{route(currentUser().'.journal.edit',encryptor('encrypt',$cr->id))}}">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
+                                        <a class="text-danger" href="javascript:void()" onclick="$('#form{{$cr->id}}').submit()">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <form id="form{{$cr->id}}" onsubmit="return confirm('Are you sure to delete this record?')" action="{{route(currentUser().'.journal.destroy',encryptor('encrypt',$cr->id))}}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                        </form>
                                     @endif
                                 </td>
                             </tr>

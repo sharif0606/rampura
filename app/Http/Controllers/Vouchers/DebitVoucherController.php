@@ -452,7 +452,14 @@ class DebitVoucherController extends Controller
 			$request->slip->move(public_path('uploads/slip'), $imageName);
 			$dv->slip=$imageName;
 		}
-        $dv->save();
+		if($dv->save()){
+			foreach($request->bkdn_id as $bkdn){
+				$jvb= DevoucherBkdn::findOrFail($bkdn);
+				$jvb->particulars=$request->particulars[$bkdn];
+				$jvb->save();
+			}
+		}
+		
         return redirect()->route(currentUser().'.debit.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));
     }
 
@@ -462,8 +469,30 @@ class DebitVoucherController extends Controller
      * @param  \App\Models\Voucher\DebitVoucher  $debitVoucher
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DebitVoucher $debitVoucher)
+    public function destroy($id)
     {
-        //
+		try {
+            DB::beginTransaction();
+			$cvid=encryptor('decrypt',$id);
+			$cv= DebitVoucher::find($cvid);
+			if($cv->delete()){
+				if(DevoucherBkdn::where('debit_voucher_id',$cvid)->delete()){
+					if(GeneralLedger::where('debit_voucher_id',$cvid)->delete()){
+						DB::commit();
+						return redirect()->back()->with($this->resMessageHtml(true,null,'Successfully deleted'));
+					}else{
+						return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+					}
+				}else{
+					return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+				}
+			}else{
+				return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+			}
+		}catch (Exception $e) {
+			// dd($e);
+			DB::rollBack();
+			return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+		}
     }
 }

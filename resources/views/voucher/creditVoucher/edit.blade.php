@@ -77,12 +77,6 @@
                                                 <th><input type='text' class='form-control' name='debit_sum' id='debit_sum' value='{{$creditVoucher->debit_sum}}' style='text-align:center; border:none;' readonly autocomplete="off" /></th>
                                                 <th></th>
                                             </tr>
-                                            <tr>
-                                                <th style="text-align:right;" colspan="4">
-                                                    <input type='button' class='btn btn-primary' value='Add' onClick='add_row();'>
-                                                    <input type='button' class='btn btn-danger' value='Remove' onClick='remove_row();'>
-                                                </th>
-                                            </tr>
                                         </tfoot>
                                         <tbody style="background:#eee;">
                                             @if($crevoucherbkdn)
@@ -100,7 +94,8 @@
                                                         <input type='text' disabled class='cls_debit form-control' value='{{$bk->credit}}' style='text-align:center; border:none;' /> 
                                                         </td>
                                                         <td style='text-align:left;'>
-                                                        <input type='text' class=" form-control" value='{{$bk->particulars}}' style='text-align:left;border:none;' />
+                                                            <input type='hidden' name="bkdn_id[]" value='{{$bk->id}}'/>
+                                                            <input type='text' name="particulars[{{$bk->id}}]" class=" form-control" value='{{$bk->particulars}}' style='text-align:left;border:none;' />
                                                         </td>
                                                     </tr>
                                                     @endif

@@ -39,10 +39,16 @@
                                             <input type="text" id="pay_name" class="form-control" value="{{old('pay_name',$journalVoucher->pay_name)}}" name="pay_name">
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-lg-3 col-sm-6">
                                         <div class="form-group">
                                             <label for="Purpose">{{__('Purpose')}}</label>
                                             <input type="text" id="purpose" class="form-control" value="{{old('purpose',$journalVoucher->purpose)}}" name="purpose">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6">
+                                        <div class="form-group">
+                                            <label>LC Number</label>
+                                            <input type="text" class="form-control" name="lc_no" value="{{old('lc_no',$journalVoucher->generalLedgers[0]->lc_no)}}">
                                         </div>
                                     </div>
                                 </div>
@@ -53,9 +59,10 @@
                                         <thead>
                                             <tr>
                                                 <th>{{__('SN#')}}</th>
-                                                <th>{{__('A/C Head')}}</th>
-                                                <th>{{__('Amount')}}</th>
                                                 <th>{{__('Remarks')}}</th>
+                                                <th>{{__('A/C Head')}}</th>
+                                                <th>{{__('Dr')}}</th>
+                                                <th>{{__('Cr')}}</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
@@ -64,18 +71,12 @@
                                                 <th>{{$journalVoucher->debit_sum}}</th>
                                                 <th>{{$journalVoucher->credit_sum}}</th>
                                             </tr>
-                                            <tr>
-                                                <th style="text-align:right;" colspan="4">
-                                                    <input type='button' class='btn btn-primary' value='Add' onClick='add_row();'>
-                                                    <input type='button' class='btn btn-danger' value='Remove' onClick='remove_row();'>
-                                                </th>
-                                            </tr>
                                         </tfoot>
                                         <tbody style="background:#eee;">
                                             @if($jvbkdn)
-                                                @foreach($jvbkdn as $bk)
+                                                @foreach($jvbkdn as $i=>$bk)
                                                     <tr>
-                                                        <td style='text-align:center;' id='increment_1'>1</td>
+                                                        <td style='text-align:center;' id='increment_1'>{{++$i}}</td>
                                                         <td style='text-align:left;'>{{$bk->particulars}}</td>
                                                         <td style='text-align:left;'>{{$bk->account_code}}</td>
                                                         <td style='text-align:left;'>{{$bk->debit}}</td>

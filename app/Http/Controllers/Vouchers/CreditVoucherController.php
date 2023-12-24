@@ -453,7 +453,13 @@ class CreditVoucherController extends Controller
 			$request->slip->move(public_path('uploads/slip'), $imageName);
 			$cv->slip=$imageName;
 		}
-        $cv->save();
+		if($cv->save()){
+			foreach($request->bkdn_id as $cvbkdn){
+				$jvb= CreVoucherBkdn::findOrFail($cvbkdn);
+				$jvb->particulars=$request->particulars[$cvbkdn];
+				$jvb->save();
+			}
+		}
         return redirect()->route(currentUser().'.credit.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));
     }
 
@@ -463,8 +469,30 @@ class CreditVoucherController extends Controller
      * @param  \App\Models\CreditVoucher  $creditVoucher
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CreditVoucher $creditVoucher)
+    public function destroy($id)
     {
-        //
+		try {
+            DB::beginTransaction();
+			$cvid=encryptor('decrypt',$id);
+			$cv= CreditVoucher::find($cvid);
+			if($cv->delete()){
+				if(CreVoucherBkdn::where('credit_voucher_id',$cvid)->delete()){
+					if(GeneralLedger::where('credit_voucher_id',$cvid)->delete()){
+						DB::commit();
+						return redirect()->back()->with($this->resMessageHtml(true,null,'Successfully deleted'));
+					}else{
+						return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+					}
+				}else{
+					return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+				}
+			}else{
+				return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+			}
+		}catch (Exception $e) {
+			// dd($e);
+			DB::rollBack();
+			return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+		}
     }
 }
