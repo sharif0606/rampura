@@ -20,9 +20,15 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories=Category::where(company())->orderBy('id', 'DESC')->paginate(10);
+        $categories=Category::where(company());
+
+        if($request->name)
+        $categories=$categories->where('category','like','%'.$request->name.'%');
+
+        $categories=$categories->orderBy('id', 'DESC')->paginate(10);
+
         return view('category.index',compact('categories'));
     }
 

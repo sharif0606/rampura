@@ -20,9 +20,17 @@ class SubcategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $subcategories=Subcategory::where(company())->orderBy('id', 'DESC')->paginate(10);
+        $subcategories=Subcategory::where(company());
+
+        if($request->name)
+        $subcategories=$subcategories->where('name','like','%'.$request->name.'%')
+                                    ->orWhere('hs_code','like','%'.$request->name.'%')
+                                    ->orWhere('custom_duty','like','%'.$request->name.'%');
+
+        $subcategories=$subcategories->orderBy('id', 'DESC')->paginate(10);
+
         return view('subcategory.index',compact('subcategories'));
     }
 
