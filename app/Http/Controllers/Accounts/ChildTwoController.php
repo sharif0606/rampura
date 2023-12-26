@@ -20,9 +20,15 @@ class ChildTwoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data= Child_two::where(company())->paginate(10);
+        $data= Child_two::where(company());
+
+        if($request->name)
+        $data=$data->where('head_name','like','%'.$request->name.'%')
+                                    ->orWhere('head_code','like','%'.$request->name.'%');
+
+        $data=$data->orderBy('id', 'DESC')->paginate(10);
         return view('accounts.child_two.index',compact('data'));
     }
 

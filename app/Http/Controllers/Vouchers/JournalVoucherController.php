@@ -24,9 +24,14 @@ class JournalVoucherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $journalVoucher=JournalVoucher::where(company())->orderBy('id', 'DESC')->paginate(15);
+        $journalVoucher=JournalVoucher::where(company());
+
+		if($request->name)
+        $journalVoucher=$journalVoucher->where('voucher_no','like','%'.$request->name.'%');
+
+        $journalVoucher=$journalVoucher->orderBy('id', 'DESC')->paginate(15);
         return view('voucher.journalVoucher.index',compact('journalVoucher'));
     }
 

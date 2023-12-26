@@ -11,8 +11,30 @@
                 @if(Session::has('response'))
                     {!!Session::get('response')['message']!!}
                 @endif
-                <div>
-                    <a class="float-end" href="{{route(currentUser().'.purchase_voucher.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
+                <div class="row pb-1">
+                    <div class="col-10">
+                        <form action="" method="get">
+                            <div class="row">
+                                <div class="input-group input-group-sm d-flex justify-content-between" >
+                                    <div class="d-flex" style="width: 150px;">
+                                        <input type="text" name="name" value="{{isset($_GET['name'])?$_GET['name']:''}}" class="form-control float-start" placeholder="head name, head code" style="width: 200px;">
+                                    
+                                        <div class="input-group-append" style="margin-left: 6px;">
+                                            <button type="submit" class="btn btn-info">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                        </div>
+                                        <div class="input-group-append" style="margin-left: -2px;">
+                                            <a class="btn btn-warning ms-2" href="{{route(currentUser().'.purchase_voucher.index')}}" title="Clear"><i class="bi bi-arrow-clockwise"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-2">
+                        <a class=" float-end" href="{{route(currentUser().'.purchase_voucher.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
+                    </div>
                 </div>
                 <!-- table bordered -->
                 <div class="table-responsive">

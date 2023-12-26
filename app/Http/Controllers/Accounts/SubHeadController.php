@@ -20,9 +20,15 @@ class SubHeadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data= Sub_head::where(company())->paginate(10);
+        $data= Sub_head::where(company());
+
+        if($request->name)
+        $data=$data->where('head_name','like','%'.$request->name.'%')
+                                    ->orWhere('head_code','like','%'.$request->name.'%');
+
+        $data=$data->orderBy('id', 'DESC')->paginate(10);
         return view('accounts.sub_head.index',compact('data'));
     }
 

@@ -18,6 +18,7 @@ use App\Models\Customers\Customer;
 use DB;
 use Session;
 use Exception;
+use Illuminate\Support\Facades\Redis;
 
 class SalesVoucherController extends Controller
 {
@@ -27,9 +28,14 @@ class SalesVoucherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data= SalesVoucher::where(company())->orderBy('id', 'DESC')->paginate(15);
+        $data= SalesVoucher::where(company());
+
+        if($request->name)
+        $data=$data->where('voucher_no','like','%'.$request->name.'%');
+
+        $data=$data->orderBy('id', 'DESC')->paginate(15);
         return view('voucher.salesVoucher.index',compact('data'));
     }
 

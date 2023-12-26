@@ -25,9 +25,14 @@ class DebitVoucherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $debitVoucher= DebitVoucher::where(company())->orderBy('id', 'DESC')->paginate(15);
+        $debitVoucher= DebitVoucher::where(company());
+
+		if($request->name)
+        $debitVoucher=$debitVoucher->where('voucher_no','like','%'.$request->name.'%');
+
+        $debitVoucher=$debitVoucher->orderBy('id', 'DESC')->paginate(15);
         return view('voucher.debitVoucher.index',compact('debitVoucher'));
     }
 

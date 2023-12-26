@@ -27,9 +27,14 @@ class PurchaseVoucherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data= PurchaseVoucher::where(company())->orderBy('id', 'DESC')->paginate(15);
+        $data= PurchaseVoucher::where(company());
+
+        if($request->name)
+        $data=$data->where('voucher_no','like','%'.$request->name.'%');
+
+        $data=$data->orderBy('id', 'DESC')->paginate(15);
         return view('voucher.purchaseVoucher.index',compact('data'));
     }
 
