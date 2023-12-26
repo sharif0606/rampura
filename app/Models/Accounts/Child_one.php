@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Child_one extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     public function sub_head(){
         return $this->belongsTo(Sub_head::class)->where(company());
     }

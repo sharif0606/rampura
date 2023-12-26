@@ -32,6 +32,7 @@ return new class extends Migration
              $table->unsignedBigInteger('created_by')->index()->default(2);
              $table->unsignedBigInteger('updated_by')->index()->nullable();
              $table->timestamps();
+             $table->softDeletes()->nullable();
         });
     }
 

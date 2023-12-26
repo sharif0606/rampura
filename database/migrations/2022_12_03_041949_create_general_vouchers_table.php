@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('voucher_no');
             $table->timestamps();
+            $table->softDeletes()->nullable();
         });
     }
 

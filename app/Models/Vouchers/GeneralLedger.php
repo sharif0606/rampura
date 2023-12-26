@@ -4,10 +4,11 @@ namespace App\Models\Vouchers;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class GeneralLedger extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     public function master_head(){
         return $this->belongsTo('App\Models\Accounts\Master_account','master_account_id','id');

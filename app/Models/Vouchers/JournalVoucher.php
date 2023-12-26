@@ -5,10 +5,11 @@ namespace App\Models\Vouchers;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JournalVoucher extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     public function generalLedgers() {
         return $this->hasMany(GeneralLedger::class, 'journal_voucher_id', 'id');
     }
