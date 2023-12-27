@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('lot_no')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
+            $table->softDeletes()->nullable();
         });
     }
 

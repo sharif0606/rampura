@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Purchases\Beparian_purchase;
 use App\Models\Purchases\Purchase;
 use App\Models\Purchases\Regular_purchase;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ExpenseOfPurchase extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     public function expense(){
         return $this->belongsTo(Child_two::class,'child_two_id','id');
     }

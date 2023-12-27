@@ -26,6 +26,7 @@ return new class extends Migration
             $table->decimal('total_due',14,2)->default(0)->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
+            $table->softDeletes()->nullable();
         });
     }
 

@@ -29,6 +29,7 @@ return new class extends Migration
             $table->decimal('amount',14,2)->default(0)->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
+            $table->softDeletes()->nullable();
         });
     }
 
