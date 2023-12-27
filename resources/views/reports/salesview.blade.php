@@ -5,7 +5,6 @@
 
 @section('content')
 <style>
-
     .tbl_border{
     border: 1px solid;
     border-collapse: collapse;
