@@ -130,13 +130,6 @@
                                             <td class="tbl_border"></td>
                                             <td class="tbl_border"></td>
                                         </tr>
-                                        @php
-                                            $totalBagQty += $d->quantity_bag;
-                                            $totalQty += $d->quantity_kg;
-                                            $amount += $d->amount;
-                                            // $saleCommission += $d->sale_commission;
-                                            // $totalAmount += $d->total_amount;
-                                        @endphp
                                         @empty
                                         <tr>
                                             <th colspan="11" class="text-center">No data Found</th>
