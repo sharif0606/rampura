@@ -60,11 +60,9 @@
                             <div class="row m-4">
                                 <div class="col-6 d-flex justify-content-end">
                                     <button type="submit" class="btn btn-sm btn-success me-1 mb-1 ps-5 pe-5">{{__('Show')}}</button>
-                                    
                                 </div>
                                 <div class="col-6 d-flex justify-content-Start">
                                     <a href="{{route(currentUser().'.salreport')}}" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Reset')}}</a>
-                                    
                                 </div>
                             </div>
                             <div class="table-responsive">
@@ -104,7 +102,6 @@
                                                     {{money_format($d->amount)}} Cr
                                                 @else
                                                 @endif
-                                                
                                             </td>
                                             <td class="tbl_border"></td>
                                             <td class="tbl_border"></td>
