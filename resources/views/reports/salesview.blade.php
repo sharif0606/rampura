@@ -143,15 +143,6 @@
                                         </tr>
                                         @endforelse
                                     </tbody>
-                                    {{-- <tfoot>
-                                        <tr class="text-center">
-                                            <th colspan="5" class="p-2">Total</th>
-                                            <th class="p-2">{{money_format($totalBagQty)}}</th>
-                                            <th class="p-2">{{money_format($totalQty)}}</th>
-                                            <th class="p-2"></th>
-                                            <th class="p-2">{{money_format($amount)}}</th>
-                                        </tr>
-                                    </tfoot> --}}
                                 </table>
                             </div>
                         </form>
