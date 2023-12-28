@@ -85,13 +85,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                            $totalBagQty = 0;
-                                            $totalQty = 0;
-                                            $amount = 0;
-                                            // $saleCommission = 0;
-                                            // $totalAmount = 0;
-                                        @endphp
                                         @forelse($data as $d)
                                         <tr class="tbl_border text-center">
                                             <td class="tbl_border" scope="row">{{ $d->sales_date }}</td>
