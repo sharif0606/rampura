@@ -278,12 +278,12 @@ class ReportController extends Controller
             ->select('sales.*', 'sales_details.*')
             ->where('sales.company_id', company()['company_id']);
 
-        if ($request->customer) {
-            $query->where('sales.customer_id', $request->customer);
+        if (!empty($request->customer)) {
+            //$query->where('sales.customer_id', $request->customer);
             // dd($query->toSql());
         }
         if ($request->lc_no) {
-            $query->where('sales_details.lot_no', $request->lc_no);
+            //$query->where('sales_details.lot_no', $request->lc_no);
             // dd($query->toSql());
         }
 
