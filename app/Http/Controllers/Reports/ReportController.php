@@ -236,38 +236,6 @@ class ReportController extends Controller
         return view('reports.rpview', compact('data', 'suppliers'));
     }
 
-    // public function salesReport(Request $request)
-    // {
-    //     // dd($request->all());
-    //     $customers = Customer::where(company())->get();
-
-    //     $query = Sales_details::join('sales', 'sales.id', '=', 'sales_details.sales_id')
-    //         ->groupBy('sales_details.id')
-    //         ->select('sales.*', 'sales_details.*')
-    //         ->where('sales.company_id', company()['company_id']);
-
-    //     if ($request->customer) {
-    //         $query->where('sales.customer_id', $request->customer);
-    //         // dd($query->toSql());
-    //     }
-    //     if ($request->lc_no) {
-    //         $query->where('sales_details.lot_no', $request->lc_no);
-    //         // dd($query->toSql());
-    //     }
-
-    //     if ($request->fdate && $request->tdate) {
-    //         $fdate = Carbon::parse($request->fdate)->toDateString();
-    //         $tdate = Carbon::parse($request->tdate)->toDateString();
-    
-    //         $query->whereBetween(DB::raw('DATE(sales.sales_date)'), [$fdate, $tdate]);
-    //         //  dd($query->toSql());
-    //     }
-
-    //     $data = $query->get();
-        
-    //     return view('reports.salesview', compact('data', 'customers'));
-    // }
-
     public function salesReport(Request $request)
     {
         // dd($request->all());
@@ -278,12 +246,12 @@ class ReportController extends Controller
             ->select('sales.*', 'sales_details.*')
             ->where('sales.company_id', company()['company_id']);
 
-        if (!empty($request->customer)) {
-            //$query->where('sales.customer_id', $request->customer);
+        if ($request->customer) {
+            $query->where('sales.customer_id', $request->customer);
             // dd($query->toSql());
         }
         if ($request->lc_no) {
-            //$query->where('sales_details.lot_no', $request->lc_no);
+            $query->where('sales_details.lot_no', $request->lc_no);
             // dd($query->toSql());
         }
 
@@ -299,6 +267,8 @@ class ReportController extends Controller
         
         return view('reports.salesview', compact('data', 'customers'));
     }
+
+    
 
     public function srota(Request $request)
     {
