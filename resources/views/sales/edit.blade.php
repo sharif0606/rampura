@@ -99,6 +99,13 @@
                                         <span class="text-danger"> {{ $errors->first('sales_date') }}</span>
                                     @endif
                                 </div>
+
+                                <div class="col-md-2 mt-2">
+                                    <label for="vhoucher type" class="float-end"><h6>{{__('Voucher Type')}}<span class="text-danger">*</span></h6></label>
+                                </div>
+                                <div class="col-md-4 mt-2">
+                                    <input type="text" class="form-control" value="{{ old('voucher_type',$sales->voucher_type)}}" name="voucher_type" required>
+                                </div>
                             </div>
                             <div class="row m-3">
                                 <div class="col-8 offset-2">

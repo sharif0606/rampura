@@ -91,7 +91,7 @@
                                         <tr class="tbl_border text-center">
                                             <td class="tbl_border" scope="row">{{ $d->sales_date }}</td>
                                             <td class="tbl_border">{{$d->customer?->customer_name}}</td>
-                                            <td class="tbl_border">Sales Voucher</td>
+                                            <td class="tbl_border">{{$d->voucher_type}}</td>
                                             <td class="tbl_border"><b>{{money_format($d->quantity_kg)}} কেজি</b></td>
                                             <td class="tbl_border">{{money_format($d->quantity_bag)}} বস্তা</td>
                                             <td class="tbl_border"></td>

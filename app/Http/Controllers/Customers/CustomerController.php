@@ -29,7 +29,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $customers = Customer::where(company());
+        $customers = Customer::whereNotIn('is_walking', [1])->where(company());
         // if( currentUser()=='owner')
         //     $customers = Customer::where(company());
         // else
@@ -83,6 +83,7 @@ class CustomerController extends Controller
             $cus->post_code= $request->postCode;
             $cus->post_code= $request->postCode;
             $cus->address= $request->address;
+            $cus->is_walking= $request->is_walking;
             $cus->created_by=currentUserId();
             $cus->company_id=company()['company_id'];
             //$cus->branch_id=branch()['branch_id'] ?? null;
@@ -163,6 +164,7 @@ class CustomerController extends Controller
             $sup->post_code= $request->postCode;
             $sup->post_code= $request->postCode;
             $sup->address= $request->address;
+            $sup->is_walking= $request->is_walking;
             $sup->updated_by=currentUserId();
             if($sup->save()){DB::enableQueryLog();
                 $ach = Child_two::where('head_code', "1130$sup->id")->where(company())->first();
