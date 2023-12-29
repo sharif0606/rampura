@@ -83,6 +83,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            $sumComission = 0;
+                                            $sumLoading = 0;
+                                        @endphp
                                         @forelse($data as $d)
                                         <tr class="tbl_border text-center">
                                             <td class="tbl_border" scope="row">{{ $d->sales_date }}</td>
@@ -103,8 +107,30 @@
                                                 @else
                                                 @endif
                                             </td>
-                                            <td class="tbl_border"></td>
-                                            <td class="tbl_border"></td>
+                                            <td class="tbl_border">
+                                                @if ($d->sales?->expense)
+                                                    @foreach ($d->sales?->expense as $com)
+                                                        @if ($com->child_two_id == '14' || $com->child_two_id == '57' || $com->child_two_id == '76' || $com->child_two_id == '94' || $com->child_two_id == '130')
+                                                            @php
+                                                                $sumComission += $com->cost_amount;
+                                                            @endphp
+                                                        @endif
+                                                    @endforeach
+                                                    {{money_format($sumComission)}} Cr
+                                                @endif
+                                            </td>
+                                            <td class="tbl_border">
+                                                @if ($d->sales?->expense)
+                                                    @foreach ($d->sales?->expense as $com)
+                                                        @if ($com->child_two_id == '13' || $com->child_two_id == '56' || $com->child_two_id == '75' || $com->child_two_id == '93' || $com->child_two_id == '129')
+                                                            @php
+                                                                $sumLoading += $com->cost_amount;
+                                                            @endphp
+                                                        @endif
+                                                    @endforeach
+                                                    {{money_format($sumLoading)}} Cr
+                                                @endif
+                                            </td>
                                             <td class="tbl_border"></td>
                                         </tr>
                                         <tr class="tbl_border text-center">
