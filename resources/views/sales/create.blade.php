@@ -670,5 +670,6 @@ function check_due(){
         });
     });
 </script>
+
 <script src="{{ asset('/assets/js/full_screen.js') }}"></script>
 @endpush
