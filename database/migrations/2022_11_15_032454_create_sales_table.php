@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('customer_id')->index()->foreign()->references('id')->on('customers')->onDelete('cascade');
             $table->string('voucher_no')->nullable();
-            $table->string('voucher_type')->nullable();
+            $table->integer('voucher_type')->default(0)->comment('0 regular voucher,1 cash voucher');
+            $table->string('voucher_note')->nullable();
             $table->date('sales_date');
             $table->string('reference_no')->nullable();
             $table->decimal('grand_total',10,2)->default(0);

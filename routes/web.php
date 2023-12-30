@@ -183,6 +183,7 @@ Route::group(['middleware'=>isOwner::class],function(){
 
         //Sale
         Route::resource('sales',sales::class,['as'=>'owner']);
+        Route::get('/sales-cash', [sales::class,'cashSale'])->name('owner.sales.cash');
         Route::get('/sale-view{id}', [sales::class,'saleView'])->name('owner.sales.view');
         Route::get('/sale-memo{id}', [sales::class,'saleMemo'])->name('owner.sales.memo');
         Route::get('/product_sc', [sales::class,'product_sc'])->name('owner.sales.product_sc');
@@ -276,6 +277,7 @@ Route::group(['middleware'=>isSalesmanager::class],function(){
 
         //Sale
         Route::resource('sales',sales::class,['as'=>'manager']);
+        Route::get('/sales-cash', [sales::class,'cashSale'])->name('manager.sales.cash');
         Route::get('/sale-view{id}', [sales::class,'saleView'])->name('manager.sales.view');
         Route::get('/sale-memo{id}', [sales::class,'saleMemo'])->name('manager.sales.memo');
         Route::get('/product_sc', [sales::class,'product_sc'])->name('manager.sales.product_sc');
@@ -365,6 +367,7 @@ Route::group(['middleware'=>isSalesman::class],function(){
 
         //Sale
         Route::resource('sales',sales::class,['as'=>'accountsofficer']);
+        Route::get('/sales-cash', [sales::class,'cashSale'])->name('accountsofficer.sales.cash');
         Route::get('/sale-view{id}', [sales::class,'saleView'])->name('accountsofficer.sales.view');
         Route::get('/sale-memo{id}', [sales::class,'saleMemo'])->name('accountsofficer.sales.memo');
         Route::get('/product_sc', [sales::class,'product_sc'])->name('accountsofficer.sales.product_sc');
@@ -454,6 +457,7 @@ Route::group(['middleware'=>isExecutive::class],function(){
 
         //Sale
         Route::resource('sales',sales::class,['as'=>'executiveofficer']);
+        Route::get('/sales-cash', [sales::class,'cashSale'])->name('executiveofficer.sales.cash');
         Route::get('/sale-view{id}', [sales::class,'saleView'])->name('executiveofficer.sales.view');
         Route::get('/sale-memo{id}', [sales::class,'saleMemo'])->name('executiveofficer.sales.memo');
         Route::get('/product_sc', [sales::class,'product_sc'])->name('executiveofficer.sales.product_sc');

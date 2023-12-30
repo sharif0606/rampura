@@ -26,8 +26,12 @@
                     <div class="card-body">
                         <form class="form" method="post" action="{{route(currentUser().'.sales.store')}}">
                             @csrf
-                            <input type="hidden" name="voucher_type" value="0">
                             <div class="row">
+                                
+                                    <input type="hidden" name="voucher_type" value="1">
+                                    <input type="hidden" name="customerName" id="walkingCustomer" value="{{$walking_customer?->id}}">
+                                    <input type="hidden" name="customer_r_name" id="customer_r_name" value="{{$walking_customer?->customer_name}}">
+                               
                                 @if( currentUser()=='owner')
                                     <div class="col-md-2 mt-2">
                                         <label for="branch_id" class="float-end" ><h6>{{__('Branches Name')}}<span class="text-danger">*</span></h6></label>
@@ -48,23 +52,6 @@
                                     <input type="hidden" value="{{ branch()['branch_id']}}" name="branch_id" id="branch_id">
                                 @endif
 
-                                <div class="col-md-2 mt-2">
-                                    <label for="customrName" class="float-end"><h6>{{__('Customer')}}<span class="text-danger">*</span></h6></label>
-                                </div>
-                                <div class="col-md-4">
-                                    <select class="choices form-select" name="customerName" id="customerName" onchange="$('#customer_r_name').val($(this).find('option:selected').text())">
-                                        <option value="">Select Customer</option>
-                                        @forelse($customers as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('customerName')==$d->id?"selected":""}}> {{ $d->customer_name}}-[{{ $d->upazila?->name}}]</option>
-                                        @empty
-                                            <option value="">No Data found</option>
-                                        @endforelse
-                                    </select>
-                                    @if($errors->has('customerName'))
-                                        <span class="text-danger"> {{ $errors->first('customerName') }}</span>
-                                    @endif
-                                    <input type="hidden" name="customer_r_name" id="customer_r_name">
-                                </div>
 
                                 <div class="col-md-2 mt-2">
                                     <label for="warehouse_id" class="float-end"><h6>{{__('Warehouse')}}<span class="text-danger">*</span></h6></label>
@@ -93,6 +80,7 @@
                                         <span class="text-danger"> {{ $errors->first('sales_date') }}</span>
                                     @endif
                                 </div>
+
                             </div>
                             <div class="row m-3">
                                 <div class="col-8 offset-2">
@@ -242,7 +230,7 @@
                             
                             <div class="row my-3">
                                 <div class="col-12 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary me-1 mb-1" id="submitBtn">{{__('Save')}}</button>
+                                    <button type="submit" class="btn btn-primary me-1 mb-1" id="submitBtn" disabled>{{__('Save')}}</button>
                                 </div>
                                 <div id="dueMessage" class="text-danger text-end"></div>
                             </div>
@@ -605,35 +593,21 @@
         $('.tdue_p').val(totalDue.toFixed(2));
         
         check_due();
-       
+        
     }
 
     function check_due(){
         var due=(isNaN(parseFloat($('.tdue_p').val().trim()))) ? 0 :parseFloat($('.tdue_p').val().trim());
         if(due == 0){
-            $('.voucherType').val('sales on cash');
+            $('#submitBtn').removeAttr('disabled');
+            $('#dueMessage').text("")
         }else{
-            $('.voucherType').val('sales on due');
+            $('#submitBtn').prop('disabled', true);
+            $('#dueMessage').text("You cannot sell dues")
         }
     }
 
 //END
-
-    $(document).ready(function () {
-        $('#customerName').change(function () {
-            var selectedValue = $(this).val();
-
-            if (selectedValue === '') {
-                $('input[name="customerName"]').prop('checked', true);
-            } else {
-                $('input[name="customerName"]').prop('checked', false);
-            }
-        });
-    });
-
-
-    
-       
 
 </script>
 
