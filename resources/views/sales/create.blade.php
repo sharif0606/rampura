@@ -663,7 +663,6 @@ function check_due(){
                 $('#dueMessage').text('');
             }
         }
-
         checkConditions();
 
         $('#walkingCustomer, .tdue_p').change(function () {
