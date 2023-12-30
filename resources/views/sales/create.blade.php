@@ -27,6 +27,10 @@
                         <form class="form" method="post" action="{{route(currentUser().'.sales.store')}}">
                             @csrf
                             <div class="row">
+                                <div class="col-12 text-end">
+                                    <label for="walking-customer">Walking Customer</label>
+                                    <input type="checkbox" name="customerName" id="walkingCustomer" value="{{$walking_customer->id}}" checked>
+                                </div>
                                 @if( currentUser()=='owner')
                                     <div class="col-md-2 mt-2">
                                         <label for="branch_id" class="float-end" ><h6>{{__('Branches Name')}}<span class="text-danger">*</span></h6></label>
@@ -66,8 +70,6 @@
                                     @endif
                                     <input type="hidden" name="customer_r_name" id="customer_r_name">
                                 </div>
-                                
-
 
                                 <div class="col-md-2 mt-2">
                                     <label for="warehouse_id" class="float-end"><h6>{{__('Warehouse')}}<span class="text-danger">*</span></h6></label>
@@ -102,7 +104,7 @@
                                     <label for="vhoucher type" class="float-end"><h6>{{__('Voucher Type')}}<span class="text-danger">*</span></h6></label>
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" class="form-control" value="{{ old('voucher_type')}}" name="voucher_type" required>
+                                    <input type="text" class="form-control voucherType" value="sales on cash" name="voucher_type" required>
                                 </div>
                             </div>
                             <div class="row m-3">
@@ -253,8 +255,9 @@
                             
                             <div class="row my-3">
                                 <div class="col-12 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary me-1 mb-1">{{__('Save')}}</button>
+                                    <button type="submit" class="btn btn-primary me-1 mb-1" id="submitBtn">{{__('Save')}}</button>
                                 </div>
+                                <div id="dueMessage" class="text-danger text-end"></div>
                             </div>
                         </form>
                     </div>
@@ -614,9 +617,59 @@ function total_calculate() {
     $('.tdue').text(totalDue.toFixed(2));
     $('.tdue_p').val(totalDue.toFixed(2));
     
+    check_due();
+    checkConditions();
+}
+
+function check_due(){
+    var due=(isNaN(parseFloat($('.tdue_p').val().trim()))) ? 0 :parseFloat($('.tdue_p').val().trim());
+    if(due == 0){
+        $('.voucherType').val('sales on cash');
+    }else{
+        $('.voucherType').val('sales on due');
+    }
 }
 
 //END
+</script>
+<script>
+    $(document).ready(function () {
+        $('#customerName').change(function () {
+            var selectedValue = $(this).val();
+
+            if (selectedValue === '') {
+                $('input[name="customerName"]').prop('checked', true);
+            } else {
+                $('input[name="customerName"]').prop('checked', false);
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        function checkConditions() {
+            var totalDue = parseFloat($('.tdue_p').val());
+            var walkingCustomerChecked = $('#walkingCustomer').is(':checked');
+            var submitButton = $('#submitBtn');
+
+            if (walkingCustomerChecked && totalDue == 0) {
+                submitButton.prop('disabled', false);
+                $('#dueMessage').text('');
+            } else if(walkingCustomerChecked && totalDue != 0) {
+                submitButton.prop('disabled', true);
+                $('#dueMessage').text('Need to due amount 0');
+            }else{
+                submitButton.prop('disabled', false);
+                $('#dueMessage').text('');
+            }
+        }
+
+        checkConditions();
+
+        $('#walkingCustomer, .tdue_p').change(function () {
+            checkConditions();
+        });
+    });
 </script>
 <script src="{{ asset('/assets/js/full_screen.js') }}"></script>
 @endpush

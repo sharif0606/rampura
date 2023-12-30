@@ -65,7 +65,8 @@ class SalesController extends Controller
     public function create()
     {
         $branches = Branch::where(company())->get();
-        $customers = Customer::where(company())->get();
+        $customers = Customer::whereNotIn('is_walking', [1])->where(company())->get();
+        $walking_customer = Customer::whereNotIn('is_walking', [0])->where(company())->first();
         $Warehouses = Warehouse::where(company())->get();
         // if( currentUser()=='owner'){
         //     $customers = Customer::where(company())->get();
@@ -106,7 +107,7 @@ class SalesController extends Controller
             }
         }
 
-        return view('sales.create',compact('branches','customers','Warehouses','childTow','paymethod'));
+        return view('sales.create',compact('branches','customers','walking_customer','Warehouses','childTow','paymethod'));
     }
 
     /**
