@@ -665,7 +665,7 @@ class SalesController extends Controller
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
             DB::rollback();
-            //  dd($e);
+             dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }
@@ -712,7 +712,7 @@ class SalesController extends Controller
     {
         $branches = Branch::where(company())->get();
         if( currentUser()=='owner'){
-            $customers = Customer::where(company())->get();
+            $customers = Customer::whereNotIn('is_walking', [1])->where(company())->get();
             $Warehouses = Warehouse::where(company())->get();
             $sales = Sales::findOrFail(encryptor('decrypt',$id));
             $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
@@ -771,6 +771,69 @@ class SalesController extends Controller
         return view('sales.edit',compact('branches','customers','Warehouses','sales','salesDetails','bagDetails','bagDetailsBySalesDetail','childTow','expense','paymethod','customerPayment','customerPaymentDetails'));
     }
 
+    public function cashSaleEdit($id)
+    {
+        $branches = Branch::where(company())->get();
+        if( currentUser()=='owner'){
+            $walking_customer = Customer::whereNotIn('is_walking', [0])->where(company())->first();
+            $Warehouses = Warehouse::where(company())->get();
+            $sales = Sales::findOrFail(encryptor('decrypt',$id));
+            $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
+            
+            $bagDetailsBySalesDetail = [];
+            $bagDetails = [];
+            foreach ($salesDetails as $sd) {
+                $bagDetails = BagDetail::where('sales_id', $sales->id)
+                    ->where('sales_details_id', $sd->id)
+                    ->get();
+
+                $bagDetailsBySalesDetail[$sd->id] = $bagDetails;
+            }
+
+            $childone = Child_one::where(company())->where('head_code',5320)->first();
+            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
+            // $expense = ExpenseOfSales::where('sales_id',$sales->id)->pluck('cost_amount','child_two_id');
+            $expense = ExpenseOfSales::where('sales_id',$sales->id)->get();
+            $customerPayment = CustomerPayment::where(company())->where('sales_id',$sales->id)->first();
+            $customerPaymentDetails = CustomerPaymentDetails::where(company())->where('customer_payment_id',$customerPayment->id)->get();
+        }else{
+            $customers = Customer::where(company())->where(branch())->get();
+            $Warehouses = Warehouse::where(company())->where(branch())->get();
+            $sales = Sales::findOrFail(encryptor('decrypt',$id));
+            $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
+        }
+
+        $paymethod=array();
+        $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
+        
+        if($account_data){
+            foreach($account_data as $ad){
+                $shead=Child_two::where('child_one_id',$ad->id);
+                if($shead->count() > 0){
+					$shead=$shead->get();
+                    foreach($shead as $sh){
+                        $paymethod[]=array(
+                                        'id'=>$sh->id,
+                                        'head_code'=>$sh->head_code,
+                                        'head_name'=>$sh->head_name,
+                                        'table_name'=>'child_twos'
+                                    );
+                    }
+                }else{
+                    $paymethod[]=array(
+                        'id'=>$ad->id,
+                        'head_code'=>$ad->head_code,
+                        'head_name'=>$ad->head_name,
+                        'table_name'=>'child_ones'
+                    );
+                }
+                
+            }
+        }
+
+        return view('sales.cashsalesedit',compact('branches','walking_customer','Warehouses','sales','salesDetails','bagDetails','bagDetailsBySalesDetail','childTow','expense','paymethod','customerPayment','customerPaymentDetails'));
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -789,6 +852,14 @@ class SalesController extends Controller
             $pur->customer_id=$request->customerName;
             $pur->sales_date=date('Y-m-d', strtotime($request->sales_date));
             $pur->voucher_type= $request->voucher_type;
+
+            if($request->voucher_type==1)
+                $pur->voucher_note= "Cash Sales";
+            elseif($request->total_due  <= 0)
+                $pur->voucher_note= "Cash Sales";
+            else
+                $pur->voucher_note= "Sales on due";
+
             $pur->grand_total=$request->tgrandtotal;
             $pur->company_id=company()['company_id'];
             $pur->branch_id=$request->branch_id;
@@ -1164,7 +1235,7 @@ class SalesController extends Controller
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
             DB::rollback();
-             //dd($e);
+             dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }

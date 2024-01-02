@@ -81,7 +81,7 @@
                             <tr>
                                 <th scope="row">{{ ++$loop->index }}</th>
                                 <td>{{$s->customer?->customer_name}}</td>
-                                <td>{{$s->sales_date}}</td>
+                                <td>{{ date('d-M-y', strtotime($s->sales_date)) }}</td>
                                 <td>{{$s->grand_total}}</td>
                                 <td>{{$s->branch?->name}}</td>
                                 <td>{{$s->warehouse?->name}}</td>
@@ -97,9 +97,15 @@
                                         <i class="bi bi-receipt"></i>
                                     </a>&nbsp;
                                     @if(currentUser() == 'admin' || currentUser() == 'owner')
+                                    @if ($s->voucher_type != '1')
                                         <a href="{{route(currentUser().'.sales.edit',encryptor('encrypt',$s->id))}}">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
+                                    @else
+                                        <a href="{{route(currentUser().'.sales_cash_edit',encryptor('encrypt',$s->id))}}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    @endif
                                         {{--<a href="javascript:void()" onclick="$('#form{{$s->id}}').submit()">
                                             <i class="bi bi-trash"></i>
                                         </a>
