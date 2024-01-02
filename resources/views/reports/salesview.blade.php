@@ -84,8 +84,14 @@
                                     </thead>
                                     <tbody>
                                         @php
-                                            $sumComission = 0;
+                                            $sumCommission = 0;
                                             $sumLoading = 0;
+                                            $totalkg = 0;
+                                            $totalBag = 0;
+                                            $totalGross = 0;
+                                            $totalAmount = 0;
+                                            $totalCommission = 0;
+                                            $totalLoading = 0;
                                         @endphp
                                         @forelse($data as $d)
                                         <tr class="tbl_border text-center">
@@ -112,11 +118,11 @@
                                                     @foreach ($d->sales?->expense as $com)
                                                         @if ($com->child_two_id == '14' || $com->child_two_id == '57' || $com->child_two_id == '76' || $com->child_two_id == '94' || $com->child_two_id == '130')
                                                             @php
-                                                                $sumComission += $com->cost_amount;
+                                                                $sumCommission += $com->cost_amount;
                                                             @endphp
                                                         @endif
                                                     @endforeach
-                                                    {{money_format($sumComission)}} Cr
+                                                    {{money_format($sumCommission)}} Cr
                                                 @endif
                                             </td>
                                             <td class="tbl_border">
@@ -146,12 +152,33 @@
                                             <td class="tbl_border"></td>
                                             <td class="tbl_border"></td>
                                         </tr>
+                                        @php
+                                        $totalkg += $d->quantity_kg;
+                                        $totalBag += $d->quantity_bag;
+                                        $totalGross += $d->grand_total;
+                                        $totalAmount += $d->amount;
+                                        $totalCommission += $sumCommission;
+                                        $totalLoading += $sumLoading;
+                                        @endphp
                                         @empty
                                         <tr>
                                             <th colspan="11" class="text-center">No data Found</th>
                                         </tr>
                                         @endforelse
                                     </tbody>
+                                    <tfoot>
+                                        <tr class="text-center">
+                                            <th colspan="3" class="tbl_border">Total</th>
+                                            <th class="tbl_border">{{money_format($totalkg)}} কেজি</th>
+                                            <th class="tbl_border">{{money_format($totalBag)}} বস্তা</th>
+                                            <th class="tbl_border"></th>
+                                            <th class="tbl_border">{{money_format($totalGross)}} Dr</th>
+                                            <th class="tbl_border">{{money_format($totalAmount)}} Cr</th>
+                                            <th class="tbl_border">{{money_format($totalCommission)}} Cr</th>
+                                            <th class="tbl_border">{{money_format($totalLoading)}} Cr</th>
+                                            <th class="tbl_border"></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </form>
