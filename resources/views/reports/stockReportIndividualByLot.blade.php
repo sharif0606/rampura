@@ -23,7 +23,7 @@
                 <div class="card-content" id="result_show">
                     <style>
 
-                        .tbl_expense{
+                        .tbl_border{
                         border: 1px solid;
                         border-collapse: collapse;
                         }
@@ -42,75 +42,91 @@
                             </tr>
                         </table>
                         <div class="tbl_scroll">
-                            <table class="tbl_expense" style="width:100%">
+                            <table class="tbl_border" style="width:100%">
                                 <tbody>
-                                    <tr class="tbl_expense bg-secondary text-white">
-                                        <th colspan="3" class="tbl_expense" style="text-align: center; padding: 5px;">PARTICULARS</th>
-                                        <th colspan="4" class="tbl_expense" style="text-align: center; padding: 5px;">INWARDS</th>
-                                        <th colspan="4" class="tbl_expense" style="text-align: center; padding: 5px;">OUTWARDS</th>
-                                        <th colspan="2" class="tbl_expense" style="text-align: center; padding: 5px;">COLSING STOCK</th>
+                                    <tr class="tbl_border bg-secondary text-white">
+                                        <th colspan="3" class="tbl_border" style="text-align: center; padding: 5px;">PARTICULARS</th>
+                                        <th colspan="4" class="tbl_border" style="text-align: center; padding: 5px;">INWARDS</th>
+                                        <th colspan="4" class="tbl_border" style="text-align: center; padding: 5px;">OUTWARDS</th>
+                                        <th colspan="2" class="tbl_border" style="text-align: center; padding: 5px;">COLSING STOCK</th>
                                     </tr>
-                                    <tr class="tbl_expense bg-secondary text-white">
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Particulars</th>
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Voh Type</th>
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Vch No</th>
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Quantity Bag</th>
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Quantity Kg</th>
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Rate In Kg</th>
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Value</th>
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Quantity Bag</th>
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Quantity Kg</th>
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Rate In Kg</th>
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Value</th>
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Quantity Bag</th>
-                                        <th class="tbl_expense" style="text-align: center; padding: 5px;">Quantity Kg</th>
+                                    <tr class="tbl_border bg-secondary text-white">
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Particulars</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Voh Type</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Vch No</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Quantity Bag</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Quantity Kg</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Rate In Kg</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Value</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Quantity Bag</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Quantity Kg</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Rate In Kg</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Value</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Quantity Bag</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">Quantity Kg</th>
                                     </tr>
                                     @php
                                         $actualQtyTotalkg = 0;
                                         $actualQtyTotalbag = 0;
+                                        $totalPurBag = 0;
+                                        $totalPurKg = 0;
+                                        $totalPurAmount = 0;
+                                        $totalSalBag = 0;
+                                        $totalSalKg = 0;
+                                        $totalSalAmount = 0;
                                     @endphp
                                     @forelse($stock as $s)
-                                    <tr class="tbl_expense">
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">
+                                    <tr class="tbl_border">
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">
                                             {{$s->purchase?->supplier?->supplier_name}}
                                             {{$s->beparian_purchase?->supplier?->supplier_name}}
                                             {{$s->regular_purchase?->supplier?->supplier_name}}
                                             {{$s->sales?->customer?->customer_name}}
                                         </td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">
                                            @if($s->sales_id) Sales @else Purchase  @endif
                                         </td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">
                                             {{$s->purchase?->voucher_no}}
                                             {{$s->beparian_purchase?->voucher_no}}
                                             {{$s->regular_purchase?->voucher_no}}
                                             {{$s->sales?->voucher_no}}
                                         </td>
                                         @if($s->sales_id)
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity_bag}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->unit_price}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->total_amount}}</td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;"></td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;"></td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;"></td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;"></td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">{{$s->quantity_bag}}</td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">{{$s->quantity}}</td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">{{$s->unit_price}}</td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">{{$s->total_amount}}</td>
+                                        @php
+                                            $totalSalBag += $s->quantity_bag;
+                                            $totalSalKg += $s->quantity;
+                                            $totalSalAmount += $s->total_amount;
+                                        @endphp
                                         @else
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity_bag}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->quantity}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->unit_price}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">{{$s->total_amount}}</td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;"></td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">{{$s->quantity_bag}}</td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">{{$s->quantity}}</td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">{{$s->unit_price}}</td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">{{$s->total_amount}}</td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;"></td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;"></td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;"></td>
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;"></td>
+                                        @php
+                                            $totalPurBag += $s->quantity_bag;
+                                            $totalPurKg += $s->quantity;
+                                            $totalPurAmount += $s->total_amount;
+                                        @endphp
                                         @endif
                                         
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">
                                              @php echo $actualQtyTotalbag += $s->quantity_bag; @endphp
                                             
                                         </td>
-                                        <td class="tbl_expense" style="text-align: center; padding: 5px;">
+                                        <td class="tbl_border" style="text-align: center; padding: 5px;">
                                            @php echo $actualQtyTotalkg += $s->quantity; @endphp
                                         </td>
                                     </tr>
@@ -120,9 +136,29 @@
                                     </tr>
                                     @endforelse
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th class="tbl_border" colspan="3" style="text-align: center; padding: 5px;">Total</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">{{$totalPurBag}}</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">{{$totalPurKg}}</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;"></th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">{{$totalPurAmount}}</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">{{$totalSalBag}}</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">{{$totalSalKg}}</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;"></th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;">{{$totalSalAmount}}</th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;"></th>
+                                        <th class="tbl_border" style="text-align: center; padding: 5px;"></th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                         <table style="width: 100%; margin-top: 5rem;">
+                            <tr style="padding-top: 5rem;">
+                                <td style="text-align: center;"><span style="border-bottom: solid 1px;">{{encryptor('decrypt', request()->session()->get('userName'))}}</span></td>
+                                <th style="text-align: center;"></th>
+                                <th style="text-align: center;"></th>
+                            </tr>
                             <tr style="padding-top: 5rem;">
                                 <th style="text-align: center;"><h6>CHECKED BY</h6></th>
                                 <th style="text-align: center;"><h6>VERIFIED BY</h6></th>

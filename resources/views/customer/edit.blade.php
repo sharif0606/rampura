@@ -142,7 +142,7 @@
                                             
                                         </div>
                                     </div>
-                                    <!--<div class="col-md-4 col-12">
+                                    <div class="col-md-4 col-12 d-none">
                                         <div class="form-group">
                                             <label for="walking" class="form-label">{{__('Is Walking')}}</label>
                                             <select name="is_walking" class="form-control form-select">
@@ -150,7 +150,7 @@
                                                 <option value="1" {{ old('is_walking',$customer->is_walking)== '1' ?"selected":""}}>Yes</option>
                                             </select>
                                         </div>
-                                    </div>-->
+                                    </div>
                                 </div>
                                 
                                 <div class="row">

@@ -106,7 +106,7 @@ class CustomerController extends Controller
             
         }catch(Exception $e){
             DB::rollback();
-            // dd($e);
+            dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }
