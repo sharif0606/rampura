@@ -70,7 +70,15 @@ LC Expense Report
                                                 @if($acc->dr>0)@php $balance+=$acc->dr; @endphp @endif
                                                 @if($acc->cr>0)@php $balance-=$acc->cr; @endphp @endif
                                                 <tr class="tbl_border">
-                                                    <td class="tbl_border">{{$acc->journal_title}}</td>
+                                                    <td class="tbl_border">
+                                                        @if($acc->chield_two)
+                                                            {{$acc->chield_two?->head_name}}
+                                                        @elseif($acc->chield_one)
+                                                            {{$acc->chield_one?->head_name}}
+                                                        @else
+                                                            {{$acc->sub_head?->head_name}}
+                                                        @endif
+                                                    </td>
                                                     <td class="tbl_border">{{money_format((float)$acc->dr, 2, '.', '')}} @php $deb+=$acc->dr; @endphp</td>
                                                     <td class="tbl_border">{{money_format((float)$acc->cr, 2, '.', '')}} @php $cre+=$acc->cr; @endphp</td>
                                                     <td class="tbl_border">{{$balance>0?money_format(abs($balance))." DR":money_format(abs($balance))." CR"}}</td>
