@@ -138,6 +138,16 @@
                                             <input type="text" class="form-control" value="{{ old('contact_bn',$company->contact_bn)}}" name="contact_bn">
                                         </div>
                                     </div>
+                              </div>
+                              <div class="row">
+                                    <hr>
+                                    <div class="text-center"><h4>For LC Expense</h4></div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="name">LC Expense Head Code</label>
+                                            <textarea class="form-control" name="lc_expense" rows="2">{{ old('lc_expense',$company->lc_expense)}}</textarea>
+                                        </div>
+                                    </div>
                                     <div class="col-12 d-flex justify-content-end">
                                         <button type="submit" class="btn btn-primary mb-1">{{__('Save')}}</button>
                                     </div>
@@ -149,6 +159,4 @@
           </div>
       </div>
   </section>
-  <!-- // Basic multiple Column Form section end -->
-</div>
 @endsection
