@@ -1,10 +1,10 @@
 
 
 <ul class="menu">
-    <div class="sidebar-search">
+    {{-- <div class="sidebar-search">
         <input type="text" class="form-control" id="menuSearch" placeholder="Search menu..." oninput="searchMenu()" style="border: 1px solid #75b7f3;">
         <div id="searchSuggestions" class="search-suggestions"></div>
-    </div>
+    </div> --}}
     <li class="sidebar-item">
         <a href="{{route(currentUser().'.dashboard')}}" class='sidebar-link'>
             <i class="bi bi-grid-fill"></i>
