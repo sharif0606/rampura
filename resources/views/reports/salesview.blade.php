@@ -115,10 +115,13 @@
                                             </td>
                                             <td class="tbl_border">
                                                 @if ($d->sales?->expense)
+                                                @php
+                                                $sumCommission = 0;
+                                                @endphp
                                                     @foreach ($d->sales?->expense as $com)
                                                         @if ($com->child_two_id == '14' || $com->child_two_id == '57' || $com->child_two_id == '76' || $com->child_two_id == '94' || $com->child_two_id == '130')
                                                             @php
-                                                                $sumCommission = $com->cost_amount;
+                                                                $sumCommission += $com->cost_amount;
                                                             @endphp
                                                         @endif
                                                     @endforeach
@@ -127,10 +130,13 @@
                                             </td>
                                             <td class="tbl_border">
                                                 @if ($d->sales?->expense)
+                                                @php
+                                                $sumLoading = 0;
+                                                @endphp
                                                     @foreach ($d->sales?->expense as $com)
                                                         @if ($com->child_two_id == '13' || $com->child_two_id == '56' || $com->child_two_id == '75' || $com->child_two_id == '93' || $com->child_two_id == '129')
                                                             @php
-                                                                $sumLoading = $com->cost_amount;
+                                                                $sumLoading += $com->cost_amount;
                                                             @endphp
                                                         @endif
                                                     @endforeach

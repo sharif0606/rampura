@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
-
-
+use App\Models\Accounts\Child_one;
+use App\Models\Accounts\Child_two;
 use App\Models\Purchases\Purchase;
 use App\Models\Sales\Sales_details;
 use App\Models\Sales\Sales;
@@ -18,6 +18,7 @@ use App\Models\Products\Product;
 use App\Models\Purchases\Purchase_details;
 use App\Models\Vouchers\GeneralLedger;
 use Illuminate\Http\Request;
+use App\Models\Settings\Company;
 use DB;
 use Carbon\Carbon;
 
@@ -305,9 +306,26 @@ class ReportController extends Controller
     public function lc_report(Request $request)
     {
         $lc_data = false;
-       
         if ($request->lc_no) {
-           $lc_data = GeneralLedger::where(company())->where('lc_no',$request->lc_no)->get();
+        $leexp=Company::where('id',company()['company_id'])->pluck('lc_expense');
+            if($leexp[0]){
+                $leexp=explode(',',$leexp[0]);
+                $childOne= Child_one::whereIn('head_code',$leexp)->where(company())->pluck('id');
+                $childTwo = Child_two::whereIn('head_code',$leexp)->where(company())->pluck('id');
+                $lc_data = GeneralLedger::where(company())->where('lc_no',$request->lc_no)
+                ->where(function($query) use ($childTwo,$childOne){
+                    if($childOne){
+                        $query->orWhere(function($query) use ($childOne){
+                            $query->whereIn('child_one_id',$childOne);
+                        });
+                    }
+                    if($childTwo){
+                        $query->orWhere(function($query) use ($childTwo){
+                            $query->whereIn('child_two_id',$childTwo);
+                        });
+                    }
+                })->get();
+            }
         }
     
         return view('reports.lc_report', compact('lc_data'));

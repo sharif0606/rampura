@@ -129,7 +129,7 @@ class IncomeStatementController extends Controller
             $datas=$year."-01-01";
             $datae=$year."-12-31";
         }
-           // \DB::connection()->enableQueryLog();
+            DB::connection()->enableQueryLog();
             /* operating income */
             $opincome=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->where(company())->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($incomeheadop,$incomeheadopone,$incomeheadoptwo){
@@ -148,7 +148,8 @@ class IncomeStatementController extends Controller
             })->groupBy('journal_title')
             ->get();
 
-            //$queries = \DB::getQueryLog();
+            $queries = DB::getQueryLog();
+            print_r($queries);
             //dd($queries);
             /* nonoperating income */
             $nonopincome=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])

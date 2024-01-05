@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('contact')->nullable();
             $table->string('email')->nullable();
+            $table->string('lc_expense')->nullable();
             $table->string('company_bn')->nullable();
             $table->string('contact_bn')->nullable();
             $table->string('address_bn')->nullable();
