@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mukto Holesaler | @yield('siteTitle', 'POS')</title>
+    <title>Khatungonj Treading Software | @yield('siteTitle', 'Muktodhara Technology Ltd')</title>
     
 <link rel="stylesheet" href="{{ asset('assets/css/main/app.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/main/style.css') }}">
@@ -51,7 +51,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="sidebar-menu">
+				<div class="sidebar-menu pb-5 mb-4">
                     @include('layout.nav.'.currentUser())
 				</div>
 			</div>
@@ -128,6 +128,34 @@
     });
 </script>
 {{-- //nav active code --}}
+<script>
+    function searchMenu() {
+        var searchValue = document.getElementById("menuSearch").value.toLowerCase();
+        var submenuItems = document.querySelectorAll(".submenu-item");
+        var suggestionsContainer = document.getElementById("searchSuggestions");
+        suggestionsContainer.innerHTML = "";
+
+        submenuItems.forEach(function (item) {
+            var menuItemText = item.textContent.toLowerCase();
+
+            // Check if the anchor's href is not equal to #
+            var menuItemLink = item.querySelector('a');
+            if (menuItemLink && menuItemLink.getAttribute('href') !== '#') {
+                if (menuItemText.includes(searchValue)) {
+                    var suggestion = document.createElement("div");
+                    suggestion.textContent = item.textContent;
+                    suggestion.className = "suggestion-item";
+                    suggestion.onclick = function () {
+                        if (menuItemLink) {
+                            menuItemLink.click();
+                        }
+                    };
+                    suggestionsContainer.appendChild(suggestion);
+                }
+            }
+        });
+    }
+</script>
 <script>
     $(document).ready(function() {
         // Get the current page URL

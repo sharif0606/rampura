@@ -157,3 +157,30 @@ th[data-title]:not([data-title=""]) {
     background-color: rgb(246, 246, 246) !important;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }
+
+/* menu search css */
+.search-suggestions {
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    /* border: 1px solid #ccc; */
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.suggestion-item {
+    padding: 5px;
+    cursor: pointer;
+    border-bottom: 1px solid #ccc;
+    white-space: nowrap; /* Prevent line break */
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item a {
+    display: block; /* Display each link on a new line */
+}
+/* menu search css */

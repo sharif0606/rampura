@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD | @yield('siteTitle', 'POS')</title>
+    <title>Khatungonj Treading Software | @yield('siteTitle', 'Muktodhara Technology Ltd')</title>
     
 <link rel="stylesheet" href="{{ asset('assets/css/main/app.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/pages/auth.css') }}">
