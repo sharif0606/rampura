@@ -69,8 +69,9 @@
                                 <th scope="col">{{__('GrandTotal')}}</th>
                                 <th scope="col">{{__('Branch')}}</th>
                                 <th scope="col">{{__('Warehouse')}}</th>
-                                <th scope="col">{{__('Status')}}</th>
+                                {{-- <th scope="col">{{__('Status')}}</th> --}}
                                 {{-- <th scope="col">{{__('Payment Status')}}</th> --}}
+                                <th scope="col">{{__('Lot Number')}}</th>
                                 <th scope="col">{{__('Created By')}}</th>
                                 <th scope="col">{{__('Updated By')}}</th>
                                 <th class="white-space-nowrap">{{__('Action') }}</th>
@@ -85,8 +86,15 @@
                                 <td>{{$s->grand_total}}</td>
                                 <td>{{$s->branch?->name}}</td>
                                 <td>{{$s->warehouse?->name}}</td>
-                                <td>{{$st[$s->status]}}</td>
+                                {{-- <td>{{$st[$s->status]}}</td> --}}
                                 {{-- <td>{{$pst[$s->payment_status]}}</td> --}}
+                                <td>
+                                    @if($s->sale_lot)
+                                        @foreach ($s->sale_lot as $lot)
+                                            {{$lot->lot_no}},
+                                        @endforeach
+                                    @endif
+                                </td>
                                 <td>{{$s->createdBy?->name}}</td>
                                 <td>{{$s->updatedBy?->name}}</td>
                                 <td class="white-space-nowrap">

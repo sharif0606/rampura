@@ -69,8 +69,8 @@
                                 <th scope="col">{{__('Date')}}</th>
                                 <th scope="col">{{__('GrandTotal')}}</th>
                                 <th scope="col">{{__('Warehouse')}}</th>
-                                <th scope="col">{{__('Status')}}</th>
-                                <th scope="col">{{__('Payment Status')}}</th>
+                                {{-- <th scope="col">{{__('Status')}}</th>
+                                <th scope="col">{{__('Payment Status')}}</th> --}}
                                 <th scope="col">{{__('Created By')}}</th>
                                 <th scope="col">{{__('Updated By')}}</th>
                                 <th class="white-space-nowrap">{{__('Action') }}</th>
@@ -84,8 +84,15 @@
                                 <td>{{$pur->purchase_date}}</td>
                                 <td>{{$pur->grand_total}}</td>
                                 <td>{{$pur->warehouse?->name}}</td>
-                                <td>{{$st[$pur->status]}}</td>
-                                <td>{{$pst[$pur->payment_status]}}</td>
+                                {{-- <td>{{$st[$pur->status]}}</td>
+                                <td>{{$pst[$pur->payment_status]}}</td> --}}
+                                <td>
+                                    @if($pur->purchase_lot)
+                                        @foreach ($pur->purchase_lot as $lot)
+                                            {{$lot->lot_no}},
+                                        @endforeach
+                                    @endif
+                                </td>
                                 <td>{{$pur->createdBy?->name}}</td>
                                 <td>{{$pur->updatedBy?->name}}</td>
                                 <td class="white-space-nowrap">

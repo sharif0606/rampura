@@ -32,6 +32,10 @@ class Beparian_purchase extends Model
         return $this->belongsTo(User::class,'updated_by','id');
     }
 
+    public function purchase_lot(){
+        return $this->hasMany(Purchase_details::class,'beparian_purchase_id','id');
+    }
+
     public function expense(){
         return $this->hasMany(ExpenseOfPurchase::class,'beparian_purchase_id','id');
     }

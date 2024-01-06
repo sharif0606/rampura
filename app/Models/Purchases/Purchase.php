@@ -31,6 +31,9 @@ class Purchase extends Model
     public function updatedBy(){
         return $this->belongsTo(User::class,'updated_by','id');
     }
+    public function purchase_lot(){
+        return $this->hasMany(Purchase_details::class,'purchase_id','id');
+    }
     public function expense(){
         return $this->hasMany(ExpenseOfPurchase::class,'purchase_id','id');
     }

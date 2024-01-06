@@ -32,6 +32,10 @@ class Regular_purchase extends Model
         return $this->belongsTo(User::class,'updated_by','id');
     }
 
+    public function purchase_lot(){
+        return $this->hasMany(Purchase_details::class,'regular_purchase_id','id');
+    }
+
     public function expense(){
         return $this->hasMany(ExpenseOfPurchase::class,'regular_purchase_id','id');
     }

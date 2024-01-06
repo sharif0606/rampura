@@ -34,6 +34,11 @@ class Sales extends Model
     public function warehouse(){
         return $this->belongsTo(Warehouse::class);
     }
+
+    public function sale_lot(){
+        return $this->hasMany(Sales_details::class,'sales_id','id');
+    }
+
     public function expense(){
         return $this->hasMany(ExpenseOfSales::class,'sales_id','id');
     }
