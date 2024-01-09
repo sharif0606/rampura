@@ -48,7 +48,7 @@ class BeparianPurchaseController extends Controller
         //     $purchases = Beparian_purchase::where(company())->where(branch());
 
         if($request->nane)
-        $purchases=$purchases->where('supplier_id','like','%'.$request->nane.'%');
+            $purchases=$purchases->where('supplier_id','like','%'.$request->nane.'%');
 
         $purchases=$purchases->orderBy('id', 'DESC')->paginate(12);    
         return view('beparianPurchase.index',compact('purchases','suppliers'));

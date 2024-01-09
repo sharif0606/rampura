@@ -29,6 +29,7 @@
                             <div class="row">
                                 <div class="input-group input-group-sm d-flex justify-content-between">
                                     <div class="d-flex">
+                                        <input type="text" class="form-control" name="lot_no" value="{{request('lot_no')}}" placeholder="Lot Number">
                                         <select class="form-control choices" name="nane">
                                             <option value="">Select Supplier</option>
                                             @forelse($suppliers as $d)
