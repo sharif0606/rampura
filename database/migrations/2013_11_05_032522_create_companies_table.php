@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('lc_expense')->nullable();
             $table->string('income_head')->nullable();
+            $table->string('expense_head')->nullable();
+            $table->string('tax_head')->nullable();
             $table->string('company_bn')->nullable();
             $table->string('contact_bn')->nullable();
             $table->string('address_bn')->nullable();
