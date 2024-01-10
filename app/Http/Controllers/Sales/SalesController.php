@@ -44,13 +44,17 @@ class SalesController extends Controller
     {
         $customers = Customer::where(company())->get();
         $sales = Sales::where(company());
-        // if( currentUser()=='owner')
-        //     $sales = Sales::where(company());
-        // else
-        //     $sales = Sales::where(company())->where(branch());
+        $sales = Sales::with('sale_lot','customer','warehouse','createdBy','updatedBy')->where(company());
 
         if($request->nane)
-        $sales=$sales->where('customer_id','like','%'.$request->nane.'%');
+            $sales=$sales->where('customer_id','like','%'.$request->nane.'%');
+
+        if($request->lot_no){
+            $lotno=$request->lot_no;
+            $sales=$sales->whereHas('sale_lot', function($q) use ($lotno){
+                $q->where('lot_no', $lotno);
+            });
+        }
 
         $sales=$sales->orderBy('id', 'DESC')->paginate(12);
 

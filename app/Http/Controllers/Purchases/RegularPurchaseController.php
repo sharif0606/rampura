@@ -41,15 +41,18 @@ class RegularPurchaseController extends Controller
     public function index(Request $request)
     {
         $suppliers= Supplier::where(company())->get();
-        $purchases = Regular_purchase::where(company());
-        // if( currentUser()=='owner')
-        //     $purchases = Regular_purchase::where(company());
-        // else
-        //     $purchases = Regular_purchase::where(company())->where(branch());
-            
+        $purchases = Regular_purchase::with('purchase_lot','supplier','warehouse','createdBy','updatedBy')->where(company());
+   
         if($request->nane)
         $purchases=$purchases->where('supplier_id','like','%'.$request->nane.'%');
 
+        if($request->lot_no){
+            $lotno=$request->lot_no;
+            $purchases=$purchases->whereHas('purchase_lot', function($q) use ($lotno){
+                $q->where('lot_no', $lotno);
+            });
+        }
+        
         $purchases=$purchases->orderBy('id', 'DESC')->paginate(12);
 
         return view('regularPurchase.index',compact('purchases','suppliers'));
