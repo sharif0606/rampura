@@ -58,7 +58,6 @@ class PurchaseController extends Controller
         }
 
         $purchases=$purchases->orderBy('id', 'DESC')->paginate(12);
-            
         
         return view('purchase.index',compact('purchases','suppliers'));
     }
