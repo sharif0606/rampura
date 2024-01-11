@@ -142,10 +142,32 @@
                               <div class="row">
                                     <hr>
                                     <div class="text-center"><h4>For LC Expense</h4></div>
-                                    <div class="col-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
                                         <div class="form-group">
                                             <label for="name">LC Expense Head Code</label>
                                             <textarea class="form-control" name="lc_expense" rows="2">{{ old('lc_expense',$company->lc_expense)}}</textarea>
+                                            <span class="text-danger">Value must be comma separated!</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label for="name">Income Head Code</label>
+                                            <textarea class="form-control" name="income_head" rows="2">{{ old('income_head',$company->income_head)}}</textarea>
+                                            <span class="text-danger">Value must be comma separated!</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label for="name">Expense Head Code</label>
+                                            <textarea class="form-control" name="expense_head" rows="2">{{ old('expense_head',$company->expense_head)}}</textarea>
+                                            <span class="text-danger">Value must be comma separated!</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label for="name">Tax Head Code</label>
+                                            <textarea class="form-control" name="tax_head" rows="2">{{ old('tax_head',$company->tax_head)}}</textarea>
+                                            <span class="text-danger">Value must be comma separated!</span>
                                         </div>
                                     </div>
                                     <div class="col-12 d-flex justify-content-end">

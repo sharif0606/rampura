@@ -106,6 +106,9 @@ class CompanyController extends Controller
             $com=Company::findOrFail(encryptor('decrypt',$id));
             $com->name=$request->name;
             $com->lc_expense=$request->lc_expense;
+            $com->income_head=$request->income_head;
+            $com->expense_head=$request->expense_head;
+            $com->tax_head=$request->tax_head;
             $com->company_bn=$request->company_bn;
             $com->contact=$request->contact;
             $com->contact_bn=$request->contact_bn;
