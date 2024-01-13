@@ -58,6 +58,9 @@ class ChildTwoController extends Controller
             $mac->head_name= $request->head_name;
             $mac->head_code= $request->head_code;
             $mac->opening_balance= $request->opening_balance;
+            if($request->opening_balance > 0){
+                $mac->created_at= $request->opening_balance_date;
+            }
             $mac->created_by=currentUserId();
 
         if($mac->save())

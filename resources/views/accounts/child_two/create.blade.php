@@ -14,7 +14,7 @@
                             @csrf
                             <div class="row">
 
-                                <div class="col-md-6 col-12">
+                                <div class="col-lg-4 col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label for="child_one">{{__('Child One')}}</label>
                                         <select class="form-control form-select" name="child_one" id="child_one">
@@ -31,7 +31,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="col-md-6 col-12">
+                                <div class="col-lg-4 col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label for="head_name">{{__('Head Name')}}</label>
                                         <input onkeyup="removeCharacter(this)" type="text" id="head_name" class="form-control"
@@ -41,7 +41,7 @@
                                     <span class="text-danger"> {{ $errors->first('head_name') }}</span>
                                     @endif
                                 </div>
-                                <div class="col-md-6 col-12">
+                                <div class="col-lg-4 col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label onkeyup="removeCharacter(this)" for="head_code">{{__('Head Code')}}</label>
                                         <input type="text" id="head_code" class="form-control"
@@ -51,17 +51,23 @@
                                     <span class="text-danger"> {{ $errors->first('head_code') }}</span>
                                     @endif
                                 </div>
-                                <div class="col-md-6 col-12">
+                                <div class="col-lg-4 col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label for="opening_balance">{{__('Opening Balance')}}</label>
-                                        <input type="number" step="any" id="opening_balance" class="form-control"
+                                        <input type="number" step="any" onkeyup="check_opb()" class="form-control op_balance"
                                             placeholder="Opening Balance" value="{{ old('opening_balance')}}" name="opening_balance" required>
                                     </div>
                                 </div>
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="opening-balance-date">{{__('Opening Balance Date')}}</label>
+                                        <input type="date" class="form-control" id="opbDate" value="{{ old('opening_balance_date')}}" name="opening_balance_date">
+                                        <span id="reqMessage" class="text-danger text-start"></span>
+                                    </div>
+                                </div>
 
-                                <div class="col-12 d-flex justify-content-start">
-                                    <button type="submit" class="btn btn-primary me-1 mb-1">{{__('Save')}}</button>
-                                    
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary me-1 mb-1" id="submitBtn">{{__('Save')}}</button>
                                 </div>
                             </div>
                         </form>
@@ -78,6 +84,17 @@
     function removeCharacter(e) {
         newString = e.value.replace("-", " ");
         e.value= newString;
+    }
+
+    function check_opb(){
+        var opb=(isNaN(parseFloat($('.op_balance').val().trim()))) ? 0 :parseFloat($('.op_balance').val().trim());
+        if(opb > 0){
+            $('#opbDate').prop('required', true);
+            $('#reqMessage').text("This Field is required")
+        }else{
+            $('#opbDate').removeAttr('required');
+            $('#reqMessage').text("")
+        }
     }
 </script>
 @endpush

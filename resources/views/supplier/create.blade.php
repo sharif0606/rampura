@@ -83,7 +83,14 @@
                                     <div class="col-md-4 col-12">
                                         <div class="form-group">
                                             <label for="openingAmount">{{__('Opening Balance')}}</label>
-                                            <input type="number" id="openingAmount" class="form-control" value="{{ old('openingAmount')}}" name="openingAmount">
+                                            <input type="number" onkeyup="check_opb()" id="openingAmount" class="form-control op_balance" value="{{ old('openingAmount')}}" name="openingAmount">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <div class="form-group">
+                                            <label for="opening-balance-date">{{__('Opening Balance Date')}}</label>
+                                            <input type="date" class="form-control" id="opbDate" value="{{ old('opening_balance_date')}}" name="opening_balance_date">
+                                            <span id="reqMessage" class="text-danger text-start"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-12">
@@ -193,7 +200,16 @@
         $('.upa'+e).show();
     }
 
-    
+    function check_opb(){
+        var opb=(isNaN(parseFloat($('.op_balance').val().trim()))) ? 0 :parseFloat($('.op_balance').val().trim());
+        if(opb > 0){
+            $('#opbDate').prop('required', true);
+            $('#reqMessage').text("This Field is required")
+        }else{
+            $('#opbDate').removeAttr('required');
+            $('#reqMessage').text("")
+        }
+    }
    
     
 </script>
