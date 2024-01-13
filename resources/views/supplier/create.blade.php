@@ -210,7 +210,5 @@
             $('#reqMessage').text("")
         }
     }
-   
-    
 </script>
 @endpush
