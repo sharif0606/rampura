@@ -6,9 +6,10 @@ namespace App\Models\Stock;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Products\Product;
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Stock extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     public function warehouses(){
         return $this->belongsTo(Warehouse::class,'warehouse_id','id');

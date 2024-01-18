@@ -48,6 +48,8 @@ class SalesController extends Controller
 
         if($request->nane)
             $sales=$sales->where('customer_id','like','%'.$request->nane.'%');
+        if($request->sales_date)
+            $sales=$sales->where('sales_date',$request->sales_date);
 
         if($request->lot_no){
             $lotno=$request->lot_no;
@@ -875,9 +877,9 @@ class SalesController extends Controller
             if($pur->save()){
                 
                 if($request->product_id){
-                    Sales_details::where('sales_id',$pur->id)->delete();
-                    BagDetail::where('sales_id',$pur->id)->delete();
-                    Stock::where('sales_id',$pur->id)->delete();
+                    Sales_details::where('sales_id',$pur->id)->forceDelete();
+                    BagDetail::where('sales_id',$pur->id)->forceDelete();
+                    Stock::where('sales_id',$pur->id)->forceDelete();
                     foreach($request->product_id as $i=>$product_id){
                         if($request->lot_no[$i]>0){
                             $pd=new Sales_details;
@@ -935,7 +937,7 @@ class SalesController extends Controller
                     }
                 }
                 if($request->child_two_id){
-                    ExpenseOfSales::where('sales_id',$pur->id)->delete();
+                    ExpenseOfSales::where('sales_id',$pur->id)->forceDelete();
                     foreach($request->child_two_id as $j=>$child_two_id){
                         if($request->cost_amount[$j] > 0){
                             $ex = new ExpenseOfSales;
@@ -957,8 +959,8 @@ class SalesController extends Controller
                     }
                 }
                 if($request->total_pay_amount){
-                    CustomerPayment::where('sales_id',$pur->id)->delete();
-                    CustomerPaymentDetails::where('sales_id',$pur->id)->delete();
+                    CustomerPayment::where('sales_id',$pur->id)->forceDelete();
+                    CustomerPaymentDetails::where('sales_id',$pur->id)->forceDelete();
                     $payment=new CustomerPayment;
                     $payment->sales_id = $pur->id;
                     $payment->company_id = company()['company_id'];
@@ -993,9 +995,9 @@ class SalesController extends Controller
                     }
                 }
                 $purrefArr=explode(',',$pur->reference_no);
-                SalesVoucher::whereIn('id',$purrefArr)->delete();
-                SalVoucherBkdns::whereIn('sales_voucher_id',$purrefArr)->delete();
-                GeneralLedger::whereIn('sales_voucher_id',$purrefArr)->delete();
+                SalesVoucher::whereIn('id',$purrefArr)->forceDelete();
+                SalVoucherBkdns::whereIn('sales_voucher_id',$purrefArr)->forceDelete();
+                GeneralLedger::whereIn('sales_voucher_id',$purrefArr)->forceDelete();
                 /* hit to account voucher */
                 $vouchersIds=array();
                 /* create due voucher */
@@ -1250,8 +1252,36 @@ class SalesController extends Controller
      * @param  \App\Models\Sales\Sales  $sales
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Sales $sales)
+    public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+        try{
+            $sales_id=encryptor('decrypt',$id);
+            $pur=  Sales::findOrFail($sales_id);
+            $purrefArr=explode(',',$pur->reference_no);
+            
+            if($pur->delete()){
+                Sales_details::where('sales_id',$sales_id)->delete();
+                BagDetail::where('sales_id',$sales_id)->delete();
+                Stock::where('sales_id',$sales_id)->delete();
+                ExpenseOfSales::where('sales_id',$sales_id)->delete();
+                CustomerPayment::where('sales_id',$sales_id)->delete();
+                CustomerPaymentDetails::where('sales_id',$sales_id)->delete();
+                    
+                if($purrefArr){
+                    SalesVoucher::whereIn('id',$purrefArr)->delete();
+                    SalVoucherBkdns::whereIn('sales_voucher_id',$purrefArr)->delete();
+                    GeneralLedger::whereIn('sales_voucher_id',$purrefArr)->delete();
+                }
+                
+                DB::commit();
+                return redirect()->route(currentUser().'.sales.index')->with($this->resMessageHtml(true,null,'Successfully deleted'));
+            }else
+                return redirect()->back()->with($this->resMessageHtml(false,'error','Please try again'));
+        }catch(Exception $e){
+            DB::rollback();
+            //  dd($e);
+            return redirect()->back()->with($this->resMessageHtml(false,'error','Please try again'));
+        }
     }
 }

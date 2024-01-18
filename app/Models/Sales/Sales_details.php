@@ -6,10 +6,11 @@ use App\Models\Products\Product;
 use App\Models\Customers\Customer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sales_details extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     public function product(){
         return $this->belongsTo(Product::class);
     }

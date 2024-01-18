@@ -16,17 +16,14 @@
 <link rel="stylesheet" href="{{ asset('assets/css/shared/iconly.css') }}">
 {{-- choice css --}}
 <link rel="stylesheet" href="{{ asset('assets/extensions/choices.js/public/assets/styles/choices.css') }}">
-<!-- Include jQuery UI CSS file -->
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
 <style>
     .choices__list--dropdown .choices__item--selectable {
         padding-right: 0;
     }
 </style>
 @stack('styles')
-<script src="https://code.jquery.com/jquery-3.6.1.min.js"
-  integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
-  crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 </head>
 
 <body>
@@ -119,7 +116,8 @@
 <script src="{{ asset('/assets/js/bootstrap.js') }}"></script>
 <script src="{{ asset('/assets/js/app.js') }}"></script>
 <!-- Include jQuery UI library -->
-<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 <script src="{{ asset('/assets/extensions/choices.js/public/assets/scripts/choices.min.js')}}"></script>
 <script src="{{ asset('/assets/js/pages/form-element-select.js')}}"></script>
 <script>

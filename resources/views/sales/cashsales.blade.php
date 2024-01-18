@@ -244,12 +244,6 @@
 @endsection
 
 @push('scripts')
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-<!-- jQuery UI library -->
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 <script>
     function change_data(e){
         $('.brnch').hide();
@@ -352,7 +346,7 @@
                 $("#item_search").val('');
                 $("#item_search").removeClass('ui-autocomplete-loader-center');
             },error: function(e){
-                console.log("error "+e);
+                console.log(e);
             }
         });
         

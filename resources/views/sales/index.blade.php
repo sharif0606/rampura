@@ -28,29 +28,30 @@
                         <form action="" method="get">
                             <div class="row">
                                 <div class="input-group input-group-sm d-flex justify-content-between">
-                                    <div class="col-4 pe-1">
+                                    <div class="col-3 pe-1">
+                                        <label>Lot Number</label>
                                         <input type="text" class="form-control" name="lot_no" value="{{request('lot_no')}}" placeholder="Lot Number">
                                     </div>
-                                    <div class="col-8">
-                                        <div class="d-flex">
-                                            <select class="form-control choices" name="nane">
-                                                <option value="">Select Customer</option>
-                                                @forelse($customers as $d)
-                                                    <option value="{{$d->id}}" {{ (request('nane') == $d->id ? 'selected' : '') }}> {{ $d->customer_name}}-[{{ $d->upazila?->name}}]</option>
-                                                @empty
-                                                    <option value="">No Data Found</option>
-                                                @endforelse
-                                            </select>
-                        
-                                            <div class="input-group-append" style="margin-left: 6px;">
-                                                <button type="submit" class="btn btn-info">
-                                                    <i class="bi bi-search"></i>
-                                                </button>
-                                            </div>
-                                            <div class="input-group-append" style="margin-left: -2px;">
-                                                <a class="btn btn-warning ms-2" href="{{route(currentUser().'.sales.index')}}" title="Clear"><i class="bi bi-arrow-clockwise"></i></a>
-                                            </div>
-                                        </div>
+                                    <div class="col-3 pe-1">
+                                        <label>Sales Date</label>
+                                        <input type="date" id="datepicker" class="form-control hasDatepicker" name="sales_date" value="{{request('sales_date')}}" placeholder="dd-mm-yyyy"/>
+                                    </div>
+                                    <div class="col-3">
+                                        <label>Customer</label><br>
+                                        <select class="form-control choices" name="nane">
+                                            <option value="">Select Customer</option>
+                                            @forelse($customers as $d)
+                                                <option value="{{$d->id}}" {{ (request('nane') == $d->id ? 'selected' : '') }}> {{ $d->customer_name}}-[{{ $d->upazila?->name}}]</option>
+                                            @empty
+                                                <option value="">No Data Found</option>
+                                            @endforelse
+                                        </select>
+                                    </div>
+                                    <div class="col-3 mt-1">
+                                        <button type="submit" class="btn btn-info ms-2 mt-3">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                        <a class="btn btn-warning ms-2 mt-3" href="{{route(currentUser().'.sales.index')}}" title="Clear"><i class="bi bi-arrow-clockwise"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -110,22 +111,22 @@
                                         <i class="bi bi-receipt"></i>
                                     </a>&nbsp;
                                     @if(currentUser() == 'admin' || currentUser() == 'owner')
-                                    @if ($s->voucher_type != '1')
-                                        <a href="{{route(currentUser().'.sales.edit',encryptor('encrypt',$s->id))}}">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                    @else
-                                        <a href="{{route(currentUser().'.sales_cash_edit',encryptor('encrypt',$s->id))}}">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                    @endif
-                                        {{--<a href="javascript:void()" onclick="$('#form{{$s->id}}').submit()">
+                                        @if ($s->voucher_type != '1')
+                                            <a href="{{route(currentUser().'.sales.edit',encryptor('encrypt',$s->id))}}">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        @else
+                                            <a href="{{route(currentUser().'.sales_cash_edit',encryptor('encrypt',$s->id))}}">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        @endif
+                                        <a href="javascript:void()" onclick="$('#form{{$s->id}}').submit()">
                                             <i class="bi bi-trash"></i>
                                         </a>
-                                        <form id="form{{$s->id}}" action="{{route(currentUser().'.purchase.destroy',encryptor('encrypt',$pur->id))}}" method="post">
+                                        <form id="form{{$s->id}}" action="{{route(currentUser().'.sales.destroy',encryptor('encrypt',$s->id))}}" method="post">
                                             @csrf
                                             @method('delete')
-                                        </form>--}}
+                                        </form>
                                     @endif
                                 </td>
                             </tr>
@@ -137,7 +138,7 @@
                         </tbody>
                     </table>
                     <div class="my-3">
-                        {!! $sales->links()!!}
+                        {!! $sales->withQueryString()->links() !!}
                     </div>
                 </div>
             </div>
