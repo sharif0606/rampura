@@ -92,14 +92,15 @@
                                             $totalAmount = 0;
                                             $totalCommission = 0;
                                             $totalLoading = 0;
+                                            $totalBrocker = 0;
                                         @endphp
                                         @forelse($data as $d)
                                         <tr class="tbl_border text-center">
                                             <td class="tbl_border" scope="row">{{ date('d-M-y', strtotime($d->sales_date)) }}</td>
                                             <td class="tbl_border">{{$d->customer?->customer_name}}</td>
                                             <td class="tbl_border">{{$d->voucher_note}}</td>
-                                            <td class="tbl_border"><b>{{money_format($d->quantity_kg)}} কেজি</b></td>
-                                            <td class="tbl_border">{{money_format($d->quantity_bag)}} বস্তা</td>
+                                            <td class="tbl_border"><b>{{money_format($d->sale_lot->sum('quantity_kg'))}} কেজি</b></td>
+                                            <td class="tbl_border">{{money_format($d->sale_lot->sum('quantity_bag'))}} বস্তা</td>
                                             <td class="tbl_border"></td>
                                             <td class="tbl_border">
                                                 @if ($d->grand_total != '')
@@ -108,17 +109,16 @@
                                                 @endif
                                             </td>
                                             <td class="tbl_border">
-                                                @if ($d->amount != '')
-                                                    {{money_format($d->amount)}} Cr
-                                                @else
+                                                @if ($d->sale_lot->sum('amount') != '')
+                                                    {{-- {{money_format($d->sale_lot->sum('amount'))}} Cr --}}
                                                 @endif
                                             </td>
                                             <td class="tbl_border">
-                                                @if ($d->sales?->expense)
+                                                @if ($d->expense)
                                                 @php
                                                 $sumCommission = 0;
                                                 @endphp
-                                                    @foreach ($d->sales?->expense as $com)
+                                                    @foreach ($d->expense as $com)
                                                         @if ($com->child_two_id == '14' || $com->child_two_id == '57' || $com->child_two_id == '76' || $com->child_two_id == '94' || $com->child_two_id == '130')
                                                             @php
                                                                 $sumCommission += $com->cost_amount;
@@ -129,11 +129,11 @@
                                                 @endif
                                             </td>
                                             <td class="tbl_border">
-                                                @if ($d->sales?->expense)
+                                                @if ($d->expense)
                                                 @php
                                                 $sumLoading = 0;
                                                 @endphp
-                                                    @foreach ($d->sales?->expense as $com)
+                                                    @foreach ($d->expense as $com)
                                                         @if ($com->child_two_id == '13' || $com->child_two_id == '56' || $com->child_two_id == '75' || $com->child_two_id == '93' || $com->child_two_id == '129')
                                                             @php
                                                                 $sumLoading += $com->cost_amount;
@@ -143,29 +143,77 @@
                                                     {{money_format($sumLoading)}} Cr
                                                 @endif
                                             </td>
-                                            <td class="tbl_border"></td>
+                                            <td class="tbl_border">
+                                                @if ($d->expense)
+                                                @php
+                                                $sumBrocker = 0;
+                                                @endphp
+                                                    @foreach ($d->expense as $com)
+                                                        @if ($com->child_two_id == '294')
+                                                            @php
+                                                                $sumBrocker += $com->cost_amount;
+                                                            @endphp
+                                                        @endif
+                                                    @endforeach
+                                                    {{money_format($sumBrocker)}} Cr
+                                                @endif
+                                            </td>
                                         </tr>
-                                        <tr class="tbl_border text-center">
-                                            <td class="tbl_border"></td>
-                                            <td class="tbl_border">{{$d->product?->product_name}}--{{$d->lot_no}}--{{$d->brand}}</td>
-                                            <td class="tbl_border"></td>
-                                            <td class="tbl_border">{{money_format($d->quantity_kg)}} কেজি</td>
-                                            <td class="tbl_border">{{money_format($d->quantity_bag)}} বস্তা</td>
-                                            <td class="tbl_border">{{$d->rate_kg}}</td>
-                                            <td class="tbl_border"></td>
-                                            <td class="tbl_border"></td>
-                                            <td class="tbl_border"></td>
-                                            <td class="tbl_border"></td>
-                                            <td class="tbl_border"></td>
-                                        </tr>
+                                        @forelse($d->sale_lot as $sd)
+                                            @if(request('lc_no'))
+                                                @if(request('lc_no')==$sd->lot_no)
+                                                    <tr class="tbl_border text-center">
+                                                        <td class="tbl_border"> </td>
+                                                        <td class="tbl_border">{{$sd->product?->product_name}}--{{$sd->lot_no}}--{{$sd->brand}}</td>
+                                                        <td class="tbl_border"></td>
+                                                        <td class="tbl_border">{{money_format($sd->quantity_kg)}} কেজি</td>
+                                                        <td class="tbl_border">{{money_format($sd->quantity_bag)}} বস্তা</td>
+                                                        <td class="tbl_border">{{$d->rate_kg}}</td>
+                                                        <td class="tbl_border"></td>
+                                                        <td class="tbl_border">
+                                                            @if ($sd->amount != '')
+                                                                {{money_format($sd->amount)}} Cr
+                                                            @endif
+                                                        </td>
+                                                        <td class="tbl_border"></td>
+                                                        <td class="tbl_border"></td>
+                                                        <td class="tbl_border"></td>
+                                                    </tr>
+                                                @endif
+                                            @else
+                                                <tr class="tbl_border text-center">
+                                                    <td class="tbl_border"> </td>
+                                                    <td class="tbl_border">{{$sd->product?->product_name}}--{{$sd->lot_no}}--{{$sd->brand}}</td>
+                                                    <td class="tbl_border"></td>
+                                                    <td class="tbl_border">{{money_format($sd->quantity_kg)}} কেজি</td>
+                                                    <td class="tbl_border">{{money_format($sd->quantity_bag)}} বস্তা</td>
+                                                    <td class="tbl_border">{{$d->rate_kg}}</td>
+                                                    <td class="tbl_border"></td>
+                                                    <td class="tbl_border">
+                                                        @if ($sd->amount != '')
+                                                            {{money_format($sd->amount)}} Cr
+                                                        @endif
+                                                    </td>
+                                                    <td class="tbl_border"></td>
+                                                    <td class="tbl_border"></td>
+                                                    <td class="tbl_border"></td>
+                                                </tr>
+                                            @endif
+                                            @php
+                                            $totalkg += $sd->quantity_kg;
+                                            $totalBag += $sd->quantity_bag;
+                                            $totalAmount += $sd->amount;
+                                            @endphp
+                                        @empty
+
+                                        @endforelse
                                         @php
-                                        $totalkg += $d->quantity_kg;
-                                        $totalBag += $d->quantity_bag;
                                         $totalGross += $d->grand_total;
-                                        $totalAmount += $d->amount;
                                         $totalCommission += $sumCommission;
                                         $totalLoading += $sumLoading;
+                                        $totalBrocker += $sumBrocker;
                                         @endphp
+
                                         @empty
                                         <tr>
                                             <th colspan="11" class="text-center">No data Found</th>
@@ -182,7 +230,7 @@
                                             <th class="tbl_border">{{money_format($totalAmount)}} Cr</th>
                                             <th class="tbl_border">{{money_format($totalCommission)}} Cr</th>
                                             <th class="tbl_border">{{money_format($totalLoading)}} Cr</th>
-                                            <th class="tbl_border"></th>
+                                            <th class="tbl_border">{{money_format($totalBrocker)}} Cr</th>
                                         </tr>
                                     </tfoot>
                                 </table>
