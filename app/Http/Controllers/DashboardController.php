@@ -47,20 +47,36 @@ class DashboardController extends Controller
     * sales manager dashboard
     */
     public function salesmanagerDashboard(){
-        return view('dasbhoard.salesmanager');
+        $ldate = new DateTime('today');
+
+        $supplier = Supplier::where(company())->count();
+        $customer = Customer::where('is_walking',0)->where(company())->count();
+        $totalPurchase = Purchase::where(company())->count();
+        $totalRegularPurchase = Regular_purchase::where(company())->count();
+        $totalBeparianPurchase = Beparian_purchase::where(company())->count();
+        $totalPurchaseAmount = Purchase::where(company())->sum('grand_total');
+        $totalRegularPurchaseAmount = Regular_purchase::where(company())->sum('grand_total');
+        $totalBeparianPurchaseAmount = Beparian_purchase::where(company())->sum('grand_total');
+        $todayPurchaseAmount = Purchase::where('purchase_date',$ldate->format('Y-m-d'))->where(company())->sum('grand_total');
+        $todayRegularPurchaseAmount = Regular_purchase::where('purchase_date',$ldate->format('Y-m-d'))->where(company())->sum('grand_total');
+        $todayBeparianPurchaseAmount = Beparian_purchase::where('purchase_date',$ldate->format('Y-m-d'))->where(company())->sum('grand_total');
+        $totalSale = Sales::where(company())->count();
+        $totalSaleAmount = Sales::where(company())->sum('grand_total');
+        $todayTotalSaleAmount = Sales::where('sales_date',$ldate->format('Y-m-d'))->where(company())->sum('grand_total');
+        return view('dasbhoard.salesmanager',compact('supplier','customer','totalPurchase','totalBeparianPurchase','totalRegularPurchase','totalSale','totalPurchaseAmount','totalRegularPurchaseAmount','totalBeparianPurchaseAmount','totalSaleAmount','todayTotalSaleAmount','todayPurchaseAmount','todayRegularPurchaseAmount','todayBeparianPurchaseAmount'));
     }
 
     /*
     * sales man dashboard
     */
     public function salesmanDashboard(){
-        return view('dasbhoard.salesman');
+        return view('dasbhoard.salesman',compact('supplier','customer','totalPurchase','totalBeparianPurchase','totalRegularPurchase','totalSale','totalPurchaseAmount','totalRegularPurchaseAmount','totalBeparianPurchaseAmount','totalSaleAmount','todayTotalSaleAmount','todayPurchaseAmount','todayRegularPurchaseAmount','todayBeparianPurchaseAmount'));
     }
 
     /*
     * sales man dashboard
     */
     public function executiveDashboard(){
-        return view('dasbhoard.executive');
+        return view('dasbhoard.executive',compact('supplier','customer','totalPurchase','totalBeparianPurchase','totalRegularPurchase','totalSale','totalPurchaseAmount','totalRegularPurchaseAmount','totalBeparianPurchaseAmount','totalSaleAmount','todayTotalSaleAmount','todayPurchaseAmount','todayRegularPurchaseAmount','todayBeparianPurchaseAmount'));
     }
 }
