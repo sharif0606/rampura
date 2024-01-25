@@ -183,6 +183,7 @@
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.regular_report')}}" >{{__('Regular Report')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.all_pur_report')}}" >{{__('Purchase All')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.salreport')}}" >{{__('Sales Report')}}</a></li>
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.salreport_account')}}" >{{__('Sales Report With AC')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.sreport')}}" >{{__('Stock Report')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.srota')}}" >{{__('Srota')}}</a></li>
             <li class="text-bold py-2 border-bottom ">Accounts Report</li>

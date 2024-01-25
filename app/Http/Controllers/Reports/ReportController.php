@@ -299,6 +299,35 @@ class ReportController extends Controller
         
         return view('reports.salesview', compact('data', 'customers'));
     }
+    public function salesReportAccount(Request $request)
+    {
+        // dd($request->all());
+        $customers = Customer::where(company())->get();
+
+        $query = Sales::where(company());
+
+        if ($request->customer) {
+            $query->where('customer_id', $request->customer);
+        }
+        if($request->lc_no){
+            $lotno=$request->lc_no;
+            $query->whereHas('sale_lot', function($q) use ($lotno){
+                $q->where('lot_no', $lotno);
+            });
+        }
+        
+
+        if ($request->fdate && $request->tdate) {
+            $fdate = Carbon::parse($request->fdate)->toDateString();
+            $tdate = Carbon::parse($request->tdate)->toDateString();
+    
+            $query->whereBetween(DB::raw('DATE(sales_date)'), [$fdate, $tdate]);
+        }
+
+        $data = $query->orderBy('sales_date','DESC')->get();
+        
+        return view('reports.salesviewacc', compact('data', 'customers'));
+    }
 
     
 

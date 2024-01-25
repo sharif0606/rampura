@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Sales Reports'))
+@section('pageTitle',trans('Sales Reports with Accounts'))
 @section('pageSubTitle',trans('Reports'))
 
 @section('content')
@@ -50,7 +50,7 @@
 
 
                                 <div class="col-md-2 mt-4">
-                                    <label for="supplierName" class="float-end mt-2"><h6>{{__('Party Name')}}</h6></label>
+                                    <label for="customer" class="float-end mt-2"><h6>{{__('Party Name')}}</h6></label>
                                 </div>
                                 <div class="col-md-4 mt-4">
                                     <select class="form-control form-select" name="customer" id="customer">
@@ -85,7 +85,7 @@
                                     <button type="submit" class="btn btn-sm btn-success me-1 mb-1 ps-5 pe-5">{{__('Show')}}</button>
                                 </div>
                                 <div class="col-6 d-flex justify-content-Start">
-                                    <a href="{{route(currentUser().'.salreport')}}" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Reset')}}</a>
+                                    <a href="{{route(currentUser().'.salreport_account')}}" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Reset')}}</a>
                                 </div>
                             </div>
                             <div class="table-responsive">
@@ -96,7 +96,7 @@
                                             <th class="p-2 tbl_border">{{__('Date')}}</th>
                                             <th class="p-2 tbl_border">{{__('Particulars')}}</th>
                                             <th class="p-2 tbl_border">{{__('Voucher Type')}}</th>
-                                            <th class="p-2 tbl_border">{{__('Quantity')}}</th>
+                                            <th class="p-2 tbl_border">{{__('Quantity(Stock)')}}</th>
                                             <th class="p-2 tbl_border">{{__('Alt.Unints')}}</th>
                                             <th class="p-2 tbl_border">{{__('Rate')}}</th>
                                             <th class="p-2 tbl_border">{{__('Gross Total')}}</th>
@@ -201,7 +201,19 @@
                                                         <td class="tbl_border"> </td>
                                                         <td class="tbl_border">{{$sd->product?->product_name}}--{{$sd->lot_no}}--{{$sd->brand}}</td>
                                                         <td class="tbl_border"></td>
-                                                        <td class="tbl_border">{{money_format($sd->quantity_kg)}} কেজি</td>
+                                                        <td class="tbl_border">
+                                                            {{money_format($sd->quantity_kg)}} কেজি
+                                                            @php
+                                                                $product = $sd->product;
+                                                                $lotWiseStock = 0;
+                                                                if ($product) {
+                                                                    $lotWiseStock = App\Models\Stock\Stock::where('product_id', $product->id)
+                                                                                ->where('company_id', company())
+                                                                                ->sum('quantity');
+                                                                }
+                                                            @endphp
+                                                            ({{ money_format($lotWiseStock) }})
+                                                        </td>
                                                         <td class="tbl_border">{{money_format($sd->quantity_bag)}} বস্তা</td>
                                                         <td class="tbl_border">{{$d->rate_kg}}</td>
                                                         <td class="tbl_border"></td>
@@ -225,7 +237,20 @@
                                                     <td class="tbl_border"> </td>
                                                     <td class="tbl_border">{{$sd->product?->product_name}}--{{$sd->lot_no}}--{{$sd->brand}}</td>
                                                     <td class="tbl_border"></td>
-                                                    <td class="tbl_border">{{money_format($sd->quantity_kg)}} কেজি</td>
+                                                    <td class="tbl_border">
+                                                        {{money_format($sd->quantity_kg)}} কেজি
+                                                        @php
+                                                            $product = $sd->product;
+                                                            $Stock = 0;
+                                                            if ($product) {
+                                                                $Stock = App\Models\Stock\Stock::where('product_id', $product->id)
+                                                                            ->where('company_id', company())
+                                                                            ->sum('quantity');
+                                                            }
+                                                        @endphp
+                                                        ({{ money_format($Stock) }})
+                                                        
+                                                    </td>
                                                     <td class="tbl_border">{{money_format($sd->quantity_bag)}} বস্তা</td>
                                                     <td class="tbl_border">{{$d->rate_kg}}</td>
                                                     <td class="tbl_border"></td>
