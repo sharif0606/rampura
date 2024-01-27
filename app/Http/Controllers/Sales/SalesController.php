@@ -712,8 +712,7 @@ class SalesController extends Controller
      * @param  \App\Models\Sales\Sales  $sales
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id){
         $branches = Branch::where(company())->get();
         if( currentUser()=='owner'){
             $customers = Customer::whereNotIn('is_walking', [1])->where(company())->get();
@@ -775,8 +774,7 @@ class SalesController extends Controller
         return view('sales.edit',compact('branches','customers','Warehouses','sales','salesDetails','bagDetails','bagDetailsBySalesDetail','childTow','expense','paymethod','customerPayment','customerPaymentDetails'));
     }
 
-    public function cashSaleEdit($id)
-    {
+    public function cashSaleEdit($id){
         $branches = Branch::where(company())->get();
         if( currentUser()=='owner'){
             $walking_customer = Customer::whereNotIn('is_walking', [0])->where(company())->first();

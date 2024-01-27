@@ -117,7 +117,7 @@
                                             $totalBrocker = 0;
                                         @endphp
                                         @forelse($data as $d)
-                                            @php $subgrand_total= 0; @endphp
+                                            @php $subgrand_total=$subcr= 0; @endphp
 
                                             @if ($d->expense)
                                                 @php
@@ -164,19 +164,25 @@
                                             </td>
                                             <td class="tbl_border"></td>
                                             <td class="tbl_border">
-                                                
-                                                @if($d->payment_full?->total_payment > 0)
+                                                @if($d->payment_full?->sum('total_payment') > 0)
                                                     @if(request('lc_no') && request('lc_no')!='')
-                                                        @php $subgrand_total= $d->payment->where('lot_no',request('lc_no'))->sum('amount'); @endphp
+                                                        @php $subgrand_total= $d->payment->where('lc_no',request('lc_no'))->sum('amount'); @endphp
                                                     @else
-                                                        @php $subgrand_total= $d->payment_full?->total_payment @endphp
+                                                        @php $subgrand_total= $d->payment_full?->sum('total_payment') @endphp
                                                     @endif
                                                     {{money_format($subgrand_total)}} Dr
                                                 @endif
                                             </td>
                                             <td class="tbl_border">
-                                                @if($d->payment_full?->total_due > 0)
-                                                    {{$d->payment_full?->total_due}} Cr
+                                                @if($d->payment_full?->sum('total_due') > 0)
+                                                    @if(request('lc_no') && request('lc_no')!='')
+                                                        @php 
+                                                            $subcr= ($d->sale_lot->where('lot_no',request('lc_no'))->sum('amount')+$sumCommission+$sumLoading+$sumBrocker) - $d->payment->where('lc_no',request('lc_no'))->sum('amount');
+                                                        @endphp
+                                                    @else
+                                                        @php $subcr= $d->payment_full?->sum('total_due') @endphp
+                                                    @endif
+                                                    {{money_format($subcr)}} Cr
                                                 @endif
                                             </td>
                                             <td class="tbl_border">
@@ -266,7 +272,7 @@
                                         @endforelse
                                         @php
                                         $totalGross += $subgrand_total;
-                                        $totalCR += $d->payment_full?->total_due;
+                                        $totalCR += $subcr;
                                         $totalCommission += $sumCommission;
                                         $totalLoading += $sumLoading;
                                         $totalBrocker += $sumBrocker;
