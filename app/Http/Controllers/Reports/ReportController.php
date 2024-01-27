@@ -74,7 +74,7 @@ class ReportController extends Controller
         $sql = "SELECT products.*, stocks.*, SUM(stocks.quantity) as qty, SUM(stocks.quantity_bag) as bagQty, AVG(stocks.unit_price) as avunitprice 
                 FROM stocks 
                 JOIN products ON products.id = stocks.product_id 
-                WHERE stocks.company_id = ? $where 
+                WHERE stocks.company_id = ? AND stocks.deleted_at IS NULL $where 
                 GROUP BY stocks.lot_no, stocks.brand";
     
         $stock = DB::select($sql, [$company]);
