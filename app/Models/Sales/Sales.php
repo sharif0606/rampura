@@ -45,4 +45,7 @@ class Sales extends Model
     public function payment(){
         return $this->hasMany(CustomerPaymentDetails::class,'sales_id','id');
     }
+    public function payment_full(){
+        return $this->hasOne(CustomerPayment::class,'sales_id','id');
+    }
 }

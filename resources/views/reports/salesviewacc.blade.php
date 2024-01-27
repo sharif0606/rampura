@@ -111,7 +111,7 @@
                                             $totalkg = 0;
                                             $totalBag = 0;
                                             $totalGross = 0;
-                                            $totalAmount = 0;
+                                            $totalCR = 0;
                                             $totalCommission = 0;
                                             $totalLoading = 0;
                                             $totalBrocker = 0;
@@ -164,18 +164,19 @@
                                             </td>
                                             <td class="tbl_border"></td>
                                             <td class="tbl_border">
-                                                @if($d->sale_lot->sum('amount') != '')
+                                                
+                                                @if($d->payment_full?->total_payment > 0)
                                                     @if(request('lc_no') && request('lc_no')!='')
-                                                        @php $subgrand_total= $d->sale_lot->where('lot_no',request('lc_no'))->sum('amount')+$sumCommission+$sumLoading+$sumBrocker; @endphp
+                                                        @php $subgrand_total= $d->payment->where('lot_no',request('lc_no'))->sum('amount'); @endphp
                                                     @else
-                                                        @php $subgrand_total= $d->sale_lot->sum('amount')+$sumCommission+$sumLoading+$sumBrocker; @endphp
+                                                        @php $subgrand_total= $d->payment_full?->total_payment @endphp
                                                     @endif
                                                     {{money_format($subgrand_total)}} Dr
                                                 @endif
                                             </td>
                                             <td class="tbl_border">
-                                                @if ($d->sale_lot->sum('amount') != '')
-                                                    {{-- {{money_format($d->sale_lot->sum('amount'))}} Cr --}}
+                                                @if($d->payment_full?->total_due > 0)
+                                                    {{$d->payment_full?->total_due}} Cr
                                                 @endif
                                             </td>
                                             <td class="tbl_border">
@@ -217,11 +218,7 @@
                                                         <td class="tbl_border">{{money_format($sd->quantity_bag)}} বস্তা</td>
                                                         <td class="tbl_border">{{$d->rate_kg}}</td>
                                                         <td class="tbl_border"></td>
-                                                        <td class="tbl_border">
-                                                            @if ($sd->amount != '')
-                                                                {{money_format($sd->amount)}} Cr
-                                                            @endif
-                                                        </td>
+                                                        <td class="tbl_border"> </td>
                                                         <td class="tbl_border"></td>
                                                         <td class="tbl_border"></td>
                                                         <td class="tbl_border"></td>
@@ -229,7 +226,6 @@
                                                     @php
                                                         $totalkg += $sd->quantity_kg;
                                                         $totalBag += $sd->quantity_bag;
-                                                        $totalAmount += $sd->amount;
                                                     @endphp
                                                 @endif
                                             @else
@@ -254,11 +250,7 @@
                                                     <td class="tbl_border">{{money_format($sd->quantity_bag)}} বস্তা</td>
                                                     <td class="tbl_border">{{$d->rate_kg}}</td>
                                                     <td class="tbl_border"></td>
-                                                    <td class="tbl_border">
-                                                        @if ($sd->amount != '')
-                                                            {{money_format($sd->amount)}} Cr
-                                                        @endif
-                                                    </td>
+                                                    <td class="tbl_border"></td>
                                                     <td class="tbl_border"></td>
                                                     <td class="tbl_border"></td>
                                                     <td class="tbl_border"></td>
@@ -266,7 +258,6 @@
                                                 @php
                                                     $totalkg += $sd->quantity_kg;
                                                     $totalBag += $sd->quantity_bag;
-                                                    $totalAmount += $sd->amount;
                                                 @endphp
                                             @endif
                                             
@@ -275,6 +266,7 @@
                                         @endforelse
                                         @php
                                         $totalGross += $subgrand_total;
+                                        $totalCR += $d->payment_full?->total_due;
                                         $totalCommission += $sumCommission;
                                         $totalLoading += $sumLoading;
                                         $totalBrocker += $sumBrocker;
@@ -293,7 +285,7 @@
                                             <th class="tbl_border">{{money_format($totalBag)}} বস্তা</th>
                                             <th class="tbl_border"></th>
                                             <th class="tbl_border">{{money_format($totalGross)}} Dr</th>
-                                            <th class="tbl_border">{{money_format($totalAmount)}} Cr</th>
+                                            <th class="tbl_border">{{money_format($totalCR)}} Cr</th>
                                             <th class="tbl_border">{{money_format($totalCommission)}} Cr</th>
                                             <th class="tbl_border">{{money_format($totalLoading)}} Cr</th>
                                             <th class="tbl_border">{{money_format($totalBrocker)}} Cr</th>

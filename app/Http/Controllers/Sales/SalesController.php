@@ -184,8 +184,7 @@ class SalesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function product_sc_d(Request $request)
-    {
+    public function product_sc_d(Request $request){
         if($request->item_id){
             list($item_id,$lot_no,$brand,$batch_id)=explode("^",$request->item_id);
             $product=collect(\DB::select("SELECT products.id,products.product_name,products.bar_code,stocks.lot_no,stocks.unit_price,sum(stocks.quantity_bag) as bag_qty, sum(stocks.quantity) as qty, stocks.brand FROM `products` JOIN stocks on stocks.product_id=products.id WHERE stocks.company_id=".company()['company_id']." and stocks.branch_id=".$request->branch_id." and stocks.warehouse_id=".$request->warehouse_id." and stocks.product_id=".$item_id." and stocks.lot_no='".$lot_no."' and stocks.brand='".$brand."' and stocks.batch_id='".$batch_id."' GROUP BY stocks.batch_id"))->first();
@@ -284,8 +283,7 @@ class SalesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AddNewRequest $request)
-    {
+    public function store(AddNewRequest $request){
         DB::beginTransaction();
         try{
 
