@@ -58,7 +58,8 @@
                         </div>
                     </div>
                     <div class="col-sm-4 pt-3 mt-2">
-                        <button class="btn btn-primary btn-block" type="button" onclick="get_details_report()">Get Report</button>
+                        <button class="btn btn-primary" type="button" onclick="get_details_report()">Get Report</button>
+                        <button class="btn btn-primary" type="button" onclick="get_details_without_sales_report()">Get Report (without Beparian)</button>
                     </div>
                 </div>
                 <div class="row">
@@ -97,6 +98,39 @@
 		if (year) {
 			$.ajax({
 				url: "{{route(currentUser().'.incomeStatement.details')}}",
+				data: {
+					'month': month,
+					'year': year
+				},
+				dataType: 'json',
+				success: function(data) {
+                    console.log(data);
+                    $('#details').html(data);
+					result = '' + data['result'] + '';
+					mainContent = '' + data['mainContent'] + '';
+
+					if (result == 'success')
+						$('#details').html(mainContent);
+
+				},
+				error: function(e) {
+					console.log(e);
+				}
+			});
+		} else {
+			alert("Please select any Year");
+			$('#year').focus();
+		}
+		return false; // keeps the page from not refreshing     
+	}
+</script>
+<script>
+	function get_details_without_sales_report() {
+		var month = $('#month').val();
+		var year = $('#year').val();
+		if (year) {
+			$.ajax({
+				url: "{{route(currentUser().'.incomeStatement.details_without_sales')}}",
 				data: {
 					'month': month,
 					'year': year

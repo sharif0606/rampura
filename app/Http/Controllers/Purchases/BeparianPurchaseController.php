@@ -26,6 +26,7 @@ use App\Models\Vouchers\GeneralLedger;
 use App\Models\Vouchers\GeneralVoucher;
 use App\Models\Vouchers\PurchaseVoucher;
 use App\Models\Vouchers\PurVoucherBkdns;
+use App\Models\Products\LcNumber;
 use Exception;
 use DB;
 use Carbon\Carbon;
@@ -521,6 +522,20 @@ class BeparianPurchaseController extends Controller
                 }
                 
                 Beparian_purchase::where('id', $pur->id)->update(['reference_no' =>implode(',',$vouchersIds)]);
+                if($request->lot_no){
+                    foreach($request->lot_no as $i=>$lclotno){
+                        $oldlc=LcNumber::where('product_id',$request->product_id[$i])->where('lot_no',$lclotno)->first();
+                        if(!$oldlc){
+                            $newlc=new LcNumber;
+                            $newlc->product_id=$request->product_id[$i];
+                            $newlc->lot_name=$lclotno;
+                            $newlc->lot_no=$lclotno;
+                            $newlc->billable=0;
+                            $newlc->save();
+                        }
+                    }
+                }
+                
                 DB::commit();
                 
                 return redirect()->route(currentUser().'.bpurchase.index')->with($this->resMessageHtml(true,null,'Successfully created'));
@@ -1007,6 +1022,19 @@ class BeparianPurchaseController extends Controller
                 }
                 
                 Beparian_purchase::where('id', $pur->id)->update(['reference_no' =>implode(',',$vouchersIds)]);
+                if($request->lot_no){
+                    foreach($request->lot_no as $i=>$lclotno){
+                        $oldlc=LcNumber::where('product_id',$request->product_id[$i])->where('lot_no',$lclotno)->first();
+                        if(!$oldlc){
+                            $newlc=new LcNumber;
+                            $newlc->product_id=$request->product_id[$i];
+                            $newlc->lot_name=$lclotno;
+                            $newlc->lot_no=$lclotno;
+                            $newlc->billable=0;
+                            $newlc->save();
+                        }
+                    }
+                }
                 DB::commit();
                 
                 return redirect()->route(currentUser().'.bpurchase.index')->with($this->resMessageHtml(true,null,'Successfully created'));

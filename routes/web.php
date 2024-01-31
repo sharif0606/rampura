@@ -157,6 +157,7 @@ Route::group(['middleware'=>isOwner::class],function(){
 
         Route::get('incomeStatement',[statement::class,'index'])->name('owner.incomeStatement');
         Route::get('incomeStatement_details',[statement::class,'details'])->name('owner.incomeStatement.details');
+        Route::get('incomeStatement_details_without_sales',[statement::class,'details_without_sales'])->name('owner.incomeStatement.details_without_sales');
         Route::get('/profitloss', [profitloss::class, 'index'])->name('owner.profitloss');
         Route::get('/balancesheet', [balancesheet::class, 'index'])->name('owner.balancesheet');
         Route::get('/headreport', [headreport::class, 'index'])->name('owner.headreport');

@@ -26,6 +26,7 @@ use App\Models\Suppliers\SupplierPaymentDetails;
 use App\Models\Vouchers\PurchaseVoucher;
 use App\Models\Vouchers\PurVoucherBkdns;
 use App\Models\Vouchers\GeneralVoucher;
+use App\Models\Products\LcNumber;
 use Exception;
 use DB;
 use Carbon\Carbon;
@@ -577,7 +578,19 @@ class PurchaseController extends Controller
                 }
 
                 Purchase::where('id', $pur->id)->update(['reference_no' =>implode(',',$vouchersIds)]);
-
+                if($request->lot_no){
+                    foreach($request->lot_no as $i=>$lclotno){
+                        $oldlc=LcNumber::where('product_id',$request->product_id[$i])->where('lot_no',$lclotno)->first();
+                        if(!$oldlc){
+                            $newlc=new LcNumber;
+                            $newlc->product_id=$request->product_id[$i];
+                            $newlc->lot_name=$lclotno;
+                            $newlc->lot_no=$lclotno;
+                            $newlc->billable=1;
+                            $newlc->save();
+                        }
+                    }
+                }
                 DB::commit();
                 
                 return redirect()->route(currentUser().'.purchase.index')->with($this->resMessageHtml(true,null,'Successfully created'));
@@ -1070,6 +1083,19 @@ class PurchaseController extends Controller
                 }
                 
                 Purchase::where('id', $pur->id)->update(['reference_no' =>implode(',',$vouchersIds)]);
+                if($request->lot_no){
+                    foreach($request->lot_no as $i=>$lclotno){
+                        $oldlc=LcNumber::where('product_id',$request->product_id[$i])->where('lot_no',$lclotno)->first();
+                        if(!$oldlc){
+                            $newlc=new LcNumber;
+                            $newlc->product_id=$request->product_id[$i];
+                            $newlc->lot_name=$lclotno;
+                            $newlc->lot_no=$lclotno;
+                            $newlc->billable=1;
+                            $newlc->save();
+                        }
+                    }
+                }
                 DB::commit();
                 
                 return redirect()->route(currentUser().'.purchase.index')->with($this->resMessageHtml(true,null,'Successfully Update'));
