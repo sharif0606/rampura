@@ -316,14 +316,13 @@ class ReportController extends Controller
             });
         }
         
-
         if ($request->fdate && $request->tdate) {
             $fdate = Carbon::parse($request->fdate)->toDateString();
             $tdate = Carbon::parse($request->tdate)->toDateString();
     
             $query->whereBetween(DB::raw('DATE(sales_date)'), [$fdate, $tdate]);
         }
-
+       
         $data = $query->orderBy('sales_date','DESC')->get();
         
         return view('reports.salesviewacc', compact('data', 'customers'));

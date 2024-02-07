@@ -387,7 +387,7 @@ class IncomeStatementController extends Controller
         }
             //DB::connection()->enableQueryLog();
             /* operating income */
-            $opincome=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->where(company())->whereBetween('rec_date',[$datas,$datae])
+            $opincome=GeneralLedger::selectRaw('account_title, sum(cr) as cr,sum(dr) as dr')->where(company())->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($incomeheadop,$incomeheadopone,$incomeheadoptwo){
                 if($incomeheadop)
                     $query->orWhere(function($query) use ($incomeheadop){
@@ -401,14 +401,14 @@ class IncomeStatementController extends Controller
                     $query->orWhere(function($query) use ($incomeheadoptwo){
                         $query->whereIn('child_two_id',$incomeheadoptwo);
                     });
-            })->groupBy('journal_title')
+            })->groupBy('account_title')
             ->get();
 
             //$queries = DB::getQueryLog();
             //print_r($queries);
             //dd($queries);
             /* nonoperating income */
-            $nonopincome=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
+            $nonopincome=GeneralLedger::selectRaw('account_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($incomeheadnop,$incomeheadnopone,$incomeheadnoptwo){
                 $query->orWhere(function($query) use ($incomeheadnop){
                      $query->whereIn('sub_head_id',$incomeheadnop);
@@ -419,11 +419,11 @@ class IncomeStatementController extends Controller
                 $query->orWhere(function($query) use ($incomeheadnoptwo){
                      $query->whereIn('child_two_id',$incomeheadnoptwo);
                 });
-            })->groupBy('journal_title')
+            })->groupBy('account_title')
             ->get();
             
             /* operating expense */
-            $opexpense=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
+            $opexpense=GeneralLedger::selectRaw('account_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($expenseheadop,$expenseheadopone,$expenseheadoptwo){
                 $query->orWhere(function($query) use ($expenseheadop){
                      $query->whereIn('sub_head_id',$expenseheadop);
@@ -434,12 +434,12 @@ class IncomeStatementController extends Controller
                 $query->orWhere(function($query) use ($expenseheadoptwo){
                      $query->whereIn('child_two_id',$expenseheadoptwo);
                 });
-            })
+            })->groupBy('account_title')
             ->get();
             
 
             /* nonoperating expense */
-            $nonopexpense=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
+            $nonopexpense=GeneralLedger::selectRaw('account_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($expenseheadnop,$expenseheadnopone,$expenseheadnoptwo){
                 $query->orWhere(function($query) use ($expenseheadnop){
                      $query->whereIn('sub_head_id',$expenseheadnop);
@@ -450,7 +450,7 @@ class IncomeStatementController extends Controller
                 $query->orWhere(function($query) use ($expenseheadnoptwo){
                      $query->whereIn('child_two_id',$expenseheadnoptwo);
                 });
-            })
+            })->groupBy('account_title')
             ->get();
             /* tax expense */
             $taxamount=GeneralLedger::whereBetween('rec_date',[$datas,$datae])
@@ -487,7 +487,7 @@ class IncomeStatementController extends Controller
                             $opinc+=$opi->cr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$opi->journal_title.' </td>';
+                            $data.='<td> '.$opi->account_title.' </td>';
                             $data.='<td class="text-right"> '.$opi->cr.' </td>';
                             $data.='</tr>';
                         }
@@ -503,7 +503,7 @@ class IncomeStatementController extends Controller
                             $opexp+=$opi->dr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$opi->journal_title.' </td>';
+                            $data.='<td> '.$opi->account_title.' </td>';
                             $data.='<td class="text-right"> '.$opi->dr.' </td>';
                             $data.='</tr>';
                         }
@@ -524,7 +524,7 @@ class IncomeStatementController extends Controller
                             $nonopinc+=$opi->cr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$opi->journal_title.' </td>';
+                            $data.='<td> '.$opi->account_title.' </td>';
                             $data.='<td class="text-right"> '.$opi->cr.' </td>';
                             $data.='</tr>';
                             
@@ -543,7 +543,7 @@ class IncomeStatementController extends Controller
                             $nonopexp+=$opi->dr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$opi->journal_title.' </td>';
+                            $data.='<td> '.$opi->account_title.' </td>';
                             $data.='<td class="text-right"> '.$opi->dr.' </td>';
                             $data.='</tr>';
                             
@@ -569,7 +569,7 @@ class IncomeStatementController extends Controller
                             $tax+=$t->dr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$t->journal_title.' </td>';
+                            $data.='<td> '.$t->account_title.' </td>';
                             $data.='<td class="text-right"> '.$t->dr.' </td>';
                             $data.='</tr>';
                             
@@ -643,7 +643,7 @@ class IncomeStatementController extends Controller
 
             //DB::connection()->enableQueryLog();
             /* operating income */
-            $opincome=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr,child_one_id')->where(company())->whereBetween('rec_date',[$datas,$datae])
+            $opincome=GeneralLedger::selectRaw('account_title, sum(cr) as cr,sum(dr) as dr,child_one_id')->where(company())->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($incomeheadop,$incomeheadopone,$incomeheadoptwo){
                 if($incomeheadop)
                     $query->orWhere(function($query) use ($incomeheadop){
@@ -657,14 +657,14 @@ class IncomeStatementController extends Controller
                     $query->orWhere(function($query) use ($incomeheadoptwo){
                         $query->whereIn('child_two_id',$incomeheadoptwo);
                     });
-            })->groupBy('journal_title')
+            })->groupBy('account_title')
             ->get();
 
             //$queries = DB::getQueryLog();
             //print_r($queries);
             //dd($queries);
             /* nonoperating income */
-            $nonopincome=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
+            $nonopincome=GeneralLedger::selectRaw('account_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($incomeheadnop,$incomeheadnopone,$incomeheadnoptwo){
                 $query->orWhere(function($query) use ($incomeheadnop){
                      $query->whereIn('sub_head_id',$incomeheadnop);
@@ -675,11 +675,11 @@ class IncomeStatementController extends Controller
                 $query->orWhere(function($query) use ($incomeheadnoptwo){
                      $query->whereIn('child_two_id',$incomeheadnoptwo);
                 });
-            })->groupBy('journal_title')
+            })->groupBy('account_title')
             ->get();
             
             /* operating expense */
-            $opexpense=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
+            $opexpense=GeneralLedger::selectRaw('account_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($expenseheadop,$expenseheadopone,$expenseheadoptwo){
                 $query->orWhere(function($query) use ($expenseheadop){
                      $query->whereIn('sub_head_id',$expenseheadop);
@@ -690,12 +690,12 @@ class IncomeStatementController extends Controller
                 $query->orWhere(function($query) use ($expenseheadoptwo){
                      $query->whereIn('child_two_id',$expenseheadoptwo);
                 });
-            })
+            })->groupBy('account_title')
             ->get();
             
 
             /* nonoperating expense */
-            $nonopexpense=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
+            $nonopexpense=GeneralLedger::selectRaw('account_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($expenseheadnop,$expenseheadnopone,$expenseheadnoptwo){
                 $query->orWhere(function($query) use ($expenseheadnop){
                      $query->whereIn('sub_head_id',$expenseheadnop);
@@ -706,7 +706,7 @@ class IncomeStatementController extends Controller
                 $query->orWhere(function($query) use ($expenseheadnoptwo){
                      $query->whereIn('child_two_id',$expenseheadnoptwo);
                 });
-            })
+            })->groupBy('account_title')
             ->get();
             /* tax expense */
             $taxamount=GeneralLedger::whereBetween('rec_date',[$datas,$datae])
@@ -752,7 +752,7 @@ class IncomeStatementController extends Controller
                             $opinc+=$opicr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$opi->journal_title.' </td>';
+                            $data.='<td> '.$opi->account_title.' </td>';
                             $data.='<td class="text-right"> '.$opicr.' </td>';
                             $data.='</tr>';
                         }
@@ -768,7 +768,7 @@ class IncomeStatementController extends Controller
                             $opexp+=$opi->dr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$opi->journal_title.' </td>';
+                            $data.='<td> '.$opi->account_title.' </td>';
                             $data.='<td class="text-right"> '.$opi->dr.' </td>';
                             $data.='</tr>';
                         }
@@ -789,7 +789,7 @@ class IncomeStatementController extends Controller
                             $nonopinc+=$opi->cr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$opi->journal_title.' </td>';
+                            $data.='<td> '.$opi->account_title.' </td>';
                             $data.='<td class="text-right"> '.$opi->cr.' </td>';
                             $data.='</tr>';
                             
@@ -808,7 +808,7 @@ class IncomeStatementController extends Controller
                             $nonopexp+=$opi->dr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$opi->journal_title.' </td>';
+                            $data.='<td> '.$opi->account_title.' </td>';
                             $data.='<td class="text-right"> '.$opi->dr.' </td>';
                             $data.='</tr>';
                             
@@ -834,7 +834,7 @@ class IncomeStatementController extends Controller
                             $tax+=$t->dr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$t->journal_title.' </td>';
+                            $data.='<td> '.$t->account_title.' </td>';
                             $data.='<td class="text-right"> '.$t->dr.' </td>';
                             $data.='</tr>';
                             
@@ -963,7 +963,7 @@ class IncomeStatementController extends Controller
         }
             //DB::connection()->enableQueryLog();
             /* operating income */
-            $opincome=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->where(company())->whereBetween('rec_date',[$datas,$datae])
+            $opincome=GeneralLedger::selectRaw('account_title, sum(cr) as cr,sum(dr) as dr')->where(company())->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($incomeheadop,$incomeheadopone,$incomeheadoptwo){
                 if($incomeheadop)
                     $query->orWhere(function($query) use ($incomeheadop){
@@ -977,14 +977,14 @@ class IncomeStatementController extends Controller
                     $query->orWhere(function($query) use ($incomeheadoptwo){
                         $query->whereIn('child_two_id',$incomeheadoptwo);
                     });
-            })->groupBy('journal_title')
+            })->groupBy('account_title')
             ->get();
 
             //$queries = DB::getQueryLog();
             //print_r($queries);
             //dd($queries);
             /* nonoperating income */
-            $nonopincome=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
+            $nonopincome=GeneralLedger::selectRaw('account_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($incomeheadnop,$incomeheadnopone,$incomeheadnoptwo){
                 $query->orWhere(function($query) use ($incomeheadnop){
                      $query->whereIn('sub_head_id',$incomeheadnop);
@@ -995,11 +995,11 @@ class IncomeStatementController extends Controller
                 $query->orWhere(function($query) use ($incomeheadnoptwo){
                      $query->whereIn('child_two_id',$incomeheadnoptwo);
                 });
-            })->groupBy('journal_title')
+            })->groupBy('account_title')
             ->get();
             
             /* operating expense */
-            $opexpense=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
+            $opexpense=GeneralLedger::selectRaw('account_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($expenseheadop,$expenseheadopone,$expenseheadoptwo){
                 $query->orWhere(function($query) use ($expenseheadop){
                      $query->whereIn('sub_head_id',$expenseheadop);
@@ -1010,12 +1010,12 @@ class IncomeStatementController extends Controller
                 $query->orWhere(function($query) use ($expenseheadoptwo){
                      $query->whereIn('child_two_id',$expenseheadoptwo);
                 });
-            })
+            })->groupBy('account_title')
             ->get();
             
 
             /* nonoperating expense */
-            $nonopexpense=GeneralLedger::selectRaw('journal_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
+            $nonopexpense=GeneralLedger::selectRaw('account_title, sum(cr) as cr,sum(dr) as dr')->whereBetween('rec_date',[$datas,$datae])
             ->where(function($query) use ($expenseheadnop,$expenseheadnopone,$expenseheadnoptwo){
                 $query->orWhere(function($query) use ($expenseheadnop){
                      $query->whereIn('sub_head_id',$expenseheadnop);
@@ -1026,7 +1026,7 @@ class IncomeStatementController extends Controller
                 $query->orWhere(function($query) use ($expenseheadnoptwo){
                      $query->whereIn('child_two_id',$expenseheadnoptwo);
                 });
-            })
+            })->groupBy('account_title')
             ->get();
             /* tax expense */
             $taxamount=GeneralLedger::whereBetween('rec_date',[$datas,$datae])
@@ -1063,7 +1063,7 @@ class IncomeStatementController extends Controller
                             $opinc+=$opi->cr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$opi->journal_title.' </td>';
+                            $data.='<td> '.$opi->account_title.' </td>';
                             $data.='<td class="text-right"> '.$opi->cr.' </td>';
                             $data.='</tr>';
                         }
@@ -1079,7 +1079,7 @@ class IncomeStatementController extends Controller
                             $opexp+=$opi->dr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$opi->journal_title.' </td>';
+                            $data.='<td> '.$opi->account_title.' </td>';
                             $data.='<td class="text-right"> '.$opi->dr.' </td>';
                             $data.='</tr>';
                         }
@@ -1100,7 +1100,7 @@ class IncomeStatementController extends Controller
                             $nonopinc+=$opi->cr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$opi->journal_title.' </td>';
+                            $data.='<td> '.$opi->account_title.' </td>';
                             $data.='<td class="text-right"> '.$opi->cr.' </td>';
                             $data.='</tr>';
                             
@@ -1119,7 +1119,7 @@ class IncomeStatementController extends Controller
                             $nonopexp+=$opi->dr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$opi->journal_title.' </td>';
+                            $data.='<td> '.$opi->account_title.' </td>';
                             $data.='<td class="text-right"> '.$opi->dr.' </td>';
                             $data.='</tr>';
                             
@@ -1145,7 +1145,7 @@ class IncomeStatementController extends Controller
                             $tax+=$t->dr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
-                            $data.='<td> '.$t->journal_title.' </td>';
+                            $data.='<td> '.$t->account_title.' </td>';
                             $data.='<td class="text-right"> '.$t->dr.' </td>';
                             $data.='</tr>';
                             

@@ -166,7 +166,8 @@ class PurchaseVoucherController extends Controller
     							$gl=new GeneralLedger;
                                 $gl->purchase_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=!empty($acccode)?$acccode:"";
+                                $gl->journal_title=$jvb->particulars;
+                                $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$request->current_date;
                                 $gl->lc_no=$jvb->lc_no;
                                 $gl->jv_id=$voucher_no;
@@ -200,7 +201,8 @@ class PurchaseVoucherController extends Controller
 							$gl=new GeneralLedger;
                             $gl->purchase_voucher_id=$jv->id;
                             $gl->company_id =company()['company_id'];
-                            $gl->journal_title=$credit[2];
+                            $gl->journal_title=$jvb->particulars;
+                            $gl->account_title=$jvb->account_code;
                             $gl->rec_date=$request->current_date;
                             $gl->lc_no=$jvb->lc_no;
                             $gl->jv_id=$voucher_no;

@@ -265,6 +265,7 @@ class PurchaseController extends Controller
                             $stock->unit_price=$pd->rate_kg;
                             $stock->quantity_bag=$pd->quantity_bag;
                             $stock->total_amount=$pd->amount;
+                            $stock->stock_date=$pur->purchase_date;
                             $stock->save();
                             
                             //calculate lot/lc payment
@@ -373,7 +374,7 @@ class PurchaseController extends Controller
 
                             $jvb->company_id =company()['company_id'];
                             $jvb->particulars="Purchase";
-                            $jvb->account_code="Purchase-5330";
+                            $jvb->account_code="5330-Purchase";
                             $jvb->table_name="child_ones";
                             $jvb->table_id=Child_one::select('id')->where(company())->where('head_code',"5330")->first()->toArray()['id'];
                             $jvb->debit=$request->amount[$i];
@@ -388,6 +389,7 @@ class PurchaseController extends Controller
                                 $gl->purchase_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
                                 $gl->journal_title=$jvb->particulars;
+                                $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$jv->current_date;
                                 $gl->lc_no=$jvb->lc_no;
                                 $gl->jv_id=$voucher_no;
@@ -409,7 +411,7 @@ class PurchaseController extends Controller
 
                                     $jvb->company_id =company()['company_id'];
                                     $jvb->particulars="Purchase Expense";
-                                    $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
+                                    $jvb->account_code=explode('~',$child_two_id)[3]."-".explode('~',$child_two_id)[2]; //2=>head name 3=> head code
                                     $jvb->table_name=explode('~',$child_two_id)[0];
                                     $jvb->table_id=explode('~',$child_two_id)[1];
                                     $jvb->debit=$request->cost_amount[$j];
@@ -424,6 +426,7 @@ class PurchaseController extends Controller
                                         $gl->purchase_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
                                         $gl->journal_title=$jvb->particulars;
+                                        $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->lc_no=$jvb->lc_no;
                                         $gl->jv_id=$voucher_no;
@@ -446,7 +449,7 @@ class PurchaseController extends Controller
                                 $jvb->lc_no=$lc;
                                 $jvb->company_id =company()['company_id'];
                                 $jvb->particulars="Purchase due";
-                                $jvb->account_code=$request->supplier_r_name."-2130".$request->supplierName; //2=>head name 3=> head code
+                                $jvb->account_code="2130".$request->supplierName.'-'.$request->supplier_r_name; //2=>head name 3=> head code
                                 $jvb->table_name="child_twos";
                                 $jvb->table_id=$sup_head;
                                 $jvb->credit=$amount;
@@ -461,6 +464,7 @@ class PurchaseController extends Controller
                                     $gl->purchase_voucher_id=$jv->id;
                                     $gl->company_id =company()['company_id'];
                                     $gl->journal_title=$jvb->particulars;
+                                    $gl->account_title=$jvb->account_code;
                                     $gl->rec_date=$jv->current_date;
                                     $gl->lc_no=$jvb->lc_no;
                                     $gl->jv_id=$voucher_no;
@@ -509,7 +513,7 @@ class PurchaseController extends Controller
                                     $jvb->lc_no=$lc;
                                     $jvb->company_id =company()['company_id'];
                                     $jvb->particulars="Purchase Income due";
-                                    $jvb->account_code=$request->supplier_r_name."-2130".$request->supplierName; //2=>head name 3=> head code
+                                    $jvb->account_code="2130".$request->supplierName."-".$request->supplier_r_name; //2=>head name 3=> head code
                                     $jvb->table_name="child_twos";
                                     $jvb->table_id=$sup_head;
                                     $jvb->debit=$amount;
@@ -524,6 +528,7 @@ class PurchaseController extends Controller
                                         $gl->purchase_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
                                         $gl->journal_title=$jvb->particulars;
+                                        $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->lc_no=$jvb->lc_no;
                                         $gl->jv_id=$voucher_no;
@@ -546,7 +551,7 @@ class PurchaseController extends Controller
 
                                         $jvb->company_id =company()['company_id'];
                                         $jvb->particulars="Purchase Income";
-                                        $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
+                                        $jvb->account_code=explode('~',$child_two_id)[3]."-".explode('~',$child_two_id)[2]; //2=>head name 3=> head code
                                         $jvb->table_name=explode('~',$child_two_id)[0];
                                         $jvb->table_id=explode('~',$child_two_id)[1];
                                         $jvb->credit=$request->cost_amount[$j];
@@ -561,6 +566,7 @@ class PurchaseController extends Controller
                                             $gl->purchase_voucher_id=$jv->id;
                                             $gl->company_id =company()['company_id'];
                                             $gl->journal_title=$jvb->particulars;
+                                            $gl->account_title=$jvb->account_code;
                                             $gl->rec_date=$jv->current_date;
                                             $gl->lc_no=$jvb->lc_no;
                                             $gl->jv_id=$voucher_no;
@@ -761,6 +767,7 @@ class PurchaseController extends Controller
                                 $stock->unit_price=$pd->rate_kg;
                                 $stock->quantity_bag=$pd->quantity_bag;
                                 $stock->total_amount=$pd->amount;
+                                $stock->stock_date=$pur->purchase_date;
                                 $stock->save();
                                 
                                 //calculate lot/lc payment
@@ -878,7 +885,7 @@ class PurchaseController extends Controller
 
                             $jvb->company_id =company()['company_id'];
                             $jvb->particulars="Purchase";
-                            $jvb->account_code="Purchase-5330";
+                            $jvb->account_code="5330-Purchase";
                             $jvb->table_name="child_ones";
                             $jvb->table_id=Child_one::select('id')->where(company())->where('head_code',"5330")->first()->toArray()['id'];
                             $jvb->debit=$request->amount[$i];
@@ -893,6 +900,7 @@ class PurchaseController extends Controller
                                 $gl->purchase_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
                                 $gl->journal_title=$jvb->particulars;
+                                $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$jv->current_date;
                                 $gl->lc_no=$jvb->lc_no;
                                 $gl->jv_id=$voucher_no;
@@ -914,7 +922,7 @@ class PurchaseController extends Controller
 
                                     $jvb->company_id =company()['company_id'];
                                     $jvb->particulars="Purchase Expense";
-                                    $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
+                                    $jvb->account_code=explode('~',$child_two_id)[3]."-".explode('~',$child_two_id)[2]; //2=>head name 3=> head code
                                     $jvb->table_name=explode('~',$child_two_id)[0];
                                     $jvb->table_id=explode('~',$child_two_id)[1];
                                     $jvb->debit=$request->cost_amount[$j];
@@ -929,6 +937,7 @@ class PurchaseController extends Controller
                                         $gl->purchase_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
                                         $gl->journal_title=$jvb->particulars;
+                                        $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->lc_no=$jvb->lc_no;
                                         $gl->jv_id=$voucher_no;
@@ -951,7 +960,7 @@ class PurchaseController extends Controller
                                 $jvb->lc_no=$lc;
                                 $jvb->company_id =company()['company_id'];
                                 $jvb->particulars="Purchase due";
-                                $jvb->account_code=$request->supplier_r_name."-2130".$request->supplierName; //2=>head name 3=> head code
+                                $jvb->account_code="2130".$request->supplierName.'-'.$request->supplier_r_name; //2=>head name 3=> head code
                                 $jvb->table_name="child_twos";
                                 $jvb->table_id=$sup_head;
                                 $jvb->credit=$amount;
@@ -966,6 +975,7 @@ class PurchaseController extends Controller
                                     $gl->purchase_voucher_id=$jv->id;
                                     $gl->company_id =company()['company_id'];
                                     $gl->journal_title=$jvb->particulars;
+                                    $gl->account_title=$jvb->account_code;
                                     $gl->rec_date=$jv->current_date;
                                     $gl->lc_no=$jvb->lc_no;
                                     $gl->jv_id=$voucher_no;
@@ -1014,7 +1024,7 @@ class PurchaseController extends Controller
                                     $jvb->lc_no=$lc;
                                     $jvb->company_id =company()['company_id'];
                                     $jvb->particulars="Purchase Income due";
-                                    $jvb->account_code=$request->supplier_r_name."-2130".$request->supplierName; //2=>head name 3=> head code
+                                    $jvb->account_code="2130".$request->supplierName.'-'.$request->supplier_r_name; //2=>head name 3=> head code
                                     $jvb->table_name="child_twos";
                                     $jvb->table_id=$sup_head;
                                     $jvb->debit=$amount;
@@ -1029,6 +1039,7 @@ class PurchaseController extends Controller
                                         $gl->purchase_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
                                         $gl->journal_title=$jvb->particulars;
+                                        $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->lc_no=$jvb->lc_no;
                                         $gl->jv_id=$voucher_no;
@@ -1051,7 +1062,7 @@ class PurchaseController extends Controller
 
                                         $jvb->company_id =company()['company_id'];
                                         $jvb->particulars="Purchase Income";
-                                        $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
+                                        $jvb->account_code=explode('~',$child_two_id)[3]."-".explode('~',$child_two_id)[2]; //2=>head name 3=> head code
                                         $jvb->table_name=explode('~',$child_two_id)[0];
                                         $jvb->table_id=explode('~',$child_two_id)[1];
                                         $jvb->credit=$request->cost_amount[$j];
@@ -1066,6 +1077,7 @@ class PurchaseController extends Controller
                                             $gl->purchase_voucher_id=$jv->id;
                                             $gl->company_id =company()['company_id'];
                                             $gl->journal_title=$jvb->particulars;
+                                            $gl->account_title=$jvb->account_code;
                                             $gl->rec_date=$jv->current_date;
                                             $gl->lc_no=$jvb->lc_no;
                                             $gl->jv_id=$voucher_no;

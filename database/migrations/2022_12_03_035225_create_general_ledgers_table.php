@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('company_id')->nullable()->index();
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
             $table->string('journal_title')->nullable();
+            $table->string('account_title')->nullable();
             $table->string('dr')->default(0);
             $table->string('cr')->default(0);
             $table->string('rec_date');

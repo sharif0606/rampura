@@ -32,6 +32,7 @@ return new class extends Migration
             $table->decimal('discount',10,2)->default(0)->nullable();
             $table->decimal('unit_price',10,2)->nullable()->default(0);
             $table->decimal('total_amount',10,2)->nullable()->default(0);
+            $table->date('stock_date');
             $table->timestamps();
         });
     }

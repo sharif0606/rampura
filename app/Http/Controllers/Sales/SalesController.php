@@ -342,6 +342,7 @@ class SalesController extends Controller
                             $stock->batch_id=$pd->batch_id;
                             $stock->unit_price=$pd->rate_kg;
                             $stock->total_amount=$pd->amount;
+                            $stock->stock_date=$pur->sales_date;
                             $stock->save();
                             //calculate lot/lc payment
                             if(isset($lot_noa[$pd->lot_no])){
@@ -461,7 +462,7 @@ class SalesController extends Controller
                                 $jvb->lc_no=$lc;
                                 $jvb->company_id =company()['company_id'];
                                 $jvb->particulars="Sales due";
-                                $jvb->account_code=$request->customer_r_name."-1130".$request->customerName; //2=>head name 3=> head code
+                                $jvb->account_code="1130".$request->customerName."-".$request->customer_r_name; //2=>head name 3=> head code
                                 $jvb->table_name="child_twos";
                                 $jvb->table_id=$customer_head;
                                 $jvb->debit=$amount;
@@ -476,6 +477,7 @@ class SalesController extends Controller
                                     $gl->sales_voucher_id=$jv->id;
                                     $gl->company_id =company()['company_id'];
                                     $gl->journal_title=$jvb->particulars;
+                                    $gl->account_title=$jvb->account_code;
                                     $gl->rec_date=$jv->current_date;
                                     $gl->jv_id=$voucher_no;
                                     $gl->sales_voucher_bkdn_id=$jvb->id;
@@ -497,7 +499,7 @@ class SalesController extends Controller
 
                             $jvb->company_id =company()['company_id'];
                             $jvb->particulars="Sales";
-                            $jvb->account_code="Sales-4110";
+                            $jvb->account_code="4110-Sales";
                             $jvb->table_name="child_ones";
                             $jvb->table_id=Child_one::select('id')->where(company())->where('head_code',"4110")->first()->toArray()['id'];
                             $jvb->credit=$request->amount[$i];
@@ -512,6 +514,7 @@ class SalesController extends Controller
                                 $gl->sales_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
                                 $gl->journal_title=$jvb->particulars;
+                                $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$jv->current_date;
                                 $gl->jv_id=$voucher_no;
                                 $gl->sales_voucher_bkdn_id=$jvb->id;
@@ -534,7 +537,7 @@ class SalesController extends Controller
     
                                     $jvb->company_id =company()['company_id'];
                                     $jvb->particulars="Sales Expense";
-                                    $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
+                                    $jvb->account_code=explode('~',$child_two_id)[3]."-".explode('~',$child_two_id)[2]; //2=>head name 3=> head code
                                     $jvb->table_name=explode('~',$child_two_id)[0];
                                     $jvb->table_id=explode('~',$child_two_id)[1];
                                     $jvb->credit=$request->cost_amount[$j];
@@ -549,6 +552,7 @@ class SalesController extends Controller
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
                                         $gl->journal_title=$jvb->particulars;
+                                        $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
                                         $gl->sales_voucher_bkdn_id=$jvb->id;
@@ -600,7 +604,7 @@ class SalesController extends Controller
                                     $jvb->lc_no=!empty($request->lc_no_payment[$i])?$request->lc_no_payment[$i]:0;
                                     $jvb->company_id =company()['company_id'];
                                     $jvb->particulars="Sales Payment";
-                                    $jvb->account_code=explode('~',$acccode)[2]."-".explode('~',$acccode)[3]; //2=>head name 3=> head code
+                                    $jvb->account_code=explode('~',$acccode)[3]."-".explode('~',$acccode)[2]; //2=>head name 3=> head code
                                     $jvb->table_name=explode('~',$acccode)[0];
                                     $jvb->table_id=explode('~',$acccode)[1];
                                     $jvb->debit=$request->pay_amount[$i];
@@ -615,6 +619,7 @@ class SalesController extends Controller
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
                                         $gl->journal_title=$jvb->particulars;
+                                        $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
                                         $gl->sales_voucher_bkdn_id=$jvb->id;
@@ -631,7 +636,7 @@ class SalesController extends Controller
                                     $jvc->lc_no=!empty($request->lc_no_payment[$i])?$request->lc_no_payment[$i]:0;
                                     $jvc->company_id =company()['company_id'];
                                     $jvc->particulars="Sales Payment";
-                                    $jvc->account_code=$request->customer_r_name."-1130".$request->customerName; //2=>head name 3=> head code
+                                    $jvc->account_code="1130".$request->customerName."-".$request->customer_r_name; //2=>head name 3=> head code
                                     $jvc->table_name="child_twos";
                                     $jvc->table_id=$customer_head;
                                     $jvc->credit=$request->pay_amount[$i];
@@ -905,6 +910,7 @@ class SalesController extends Controller
                                 $stock->batch_id=$pd->batch_id;
                                 $stock->unit_price=$pd->rate_kg;
                                 $stock->total_amount=$pd->amount;
+                                $stock->stock_date=$pur->sales_date;
                                 $stock->save();
                                 //calculate lot/lc payment
                                 if(isset($lot_noa[$pd->lot_no])){
@@ -1029,7 +1035,7 @@ class SalesController extends Controller
                                 $jvb->lc_no=$lc;
                                 $jvb->company_id =company()['company_id'];
                                 $jvb->particulars="Sales due";
-                                $jvb->account_code=$request->customer_r_name."-1130".$request->customerName; //2=>head name 3=> head code
+                                $jvb->account_code="1130".$request->customerName."-".$request->customer_r_name; //2=>head name 3=> head code
                                 $jvb->table_name="child_twos";
                                 $jvb->table_id=$customer_head;
                                 $jvb->debit=$amount;
@@ -1044,6 +1050,7 @@ class SalesController extends Controller
                                     $gl->sales_voucher_id=$jv->id;
                                     $gl->company_id =company()['company_id'];
                                     $gl->journal_title=$jvb->particulars;
+                                    $gl->account_title=$jvb->account_code;
                                     $gl->rec_date=$jv->current_date;
                                     $gl->jv_id=$voucher_no;
                                     $gl->sales_voucher_bkdn_id=$jvb->id;
@@ -1065,7 +1072,7 @@ class SalesController extends Controller
 
                             $jvb->company_id =company()['company_id'];
                             $jvb->particulars="Sales";
-                            $jvb->account_code="Sales-4110";
+                            $jvb->account_code="4110-Sales";
                             $jvb->table_name="child_ones";
                             $jvb->table_id=Child_one::select('id')->where(company())->where('head_code',"4110")->first()->toArray()['id'];
                             $jvb->credit=$request->amount[$i];
@@ -1080,6 +1087,7 @@ class SalesController extends Controller
                                 $gl->sales_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
                                 $gl->journal_title=$jvb->particulars;
+                                $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$jv->current_date;
                                 $gl->jv_id=$voucher_no;
                                 $gl->sales_voucher_bkdn_id=$jvb->id;
@@ -1102,7 +1110,7 @@ class SalesController extends Controller
     
                                     $jvb->company_id =company()['company_id'];
                                     $jvb->particulars="Sales Expense";
-                                    $jvb->account_code=explode('~',$child_two_id)[2]."-".explode('~',$child_two_id)[3]; //2=>head name 3=> head code
+                                    $jvb->account_code=explode('~',$child_two_id)[3]."-".explode('~',$child_two_id)[2]; //2=>head name 3=> head code
                                     $jvb->table_name=explode('~',$child_two_id)[0];
                                     $jvb->table_id=explode('~',$child_two_id)[1];
                                     $jvb->credit=$request->cost_amount[$j];
@@ -1117,6 +1125,7 @@ class SalesController extends Controller
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
                                         $gl->journal_title=$jvb->particulars;
+                                        $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
                                         $gl->sales_voucher_bkdn_id=$jvb->id;
@@ -1168,7 +1177,7 @@ class SalesController extends Controller
                                     $jvb->lc_no=!empty($request->lc_no_payment[$i])?$request->lc_no_payment[$i]:0;
                                     $jvb->company_id =company()['company_id'];
                                     $jvb->particulars="Sales Payment";
-                                    $jvb->account_code=explode('~',$acccode)[2]."-".explode('~',$acccode)[3]; //2=>head name 3=> head code
+                                    $jvb->account_code=explode('~',$acccode)[3]."-".explode('~',$acccode)[2]; //2=>head name 3=> head code
                                     $jvb->table_name=explode('~',$acccode)[0];
                                     $jvb->table_id=explode('~',$acccode)[1];
                                     $jvb->debit=$request->pay_amount[$i];
@@ -1183,6 +1192,7 @@ class SalesController extends Controller
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
                                         $gl->journal_title=$jvb->particulars;
+                                        $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
                                         $gl->sales_voucher_bkdn_id=$jvb->id;
@@ -1199,7 +1209,7 @@ class SalesController extends Controller
                                     $jvc->lc_no=!empty($request->lc_no_payment[$i])?$request->lc_no_payment[$i]:0;
                                     $jvc->company_id =company()['company_id'];
                                     $jvc->particulars="Sales Payment";
-                                    $jvc->account_code=$request->customer_r_name."-1130".$request->customerName; //2=>head name 3=> head code
+                                    $jvc->account_code="1130".$request->customerName."-".$request->customer_r_name; //2=>head name 3=> head code
                                     $jvc->table_name="child_twos";
                                     $jvc->table_id=$customer_head;
                                     $jvc->credit=$request->pay_amount[$i];
