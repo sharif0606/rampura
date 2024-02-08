@@ -141,8 +141,8 @@
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" value="{{$p->quantity_kg}}" class="form-control qty_kg"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" value="{{$p->less_quantity_kg}}" class="form-control less_qty_kg"></td>
                                                 <td class="py-2 px-1"><input name="actual_qty[]" readonly type="text" class="form-control actual_qty" value="{{$p->actual_quantity}}"></td>
-                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value="{{$p->rate_kg}}"></td>
-                                                <td class="py-2 px-1"><input onkeyup="get_amount(this)" name="amount[]" type="text" class="form-control amount" value="{{$p->amount}}"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value="{{$p->rate_kg}}" readonly></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_amount(this)" name="amount[]" type="text" class="form-control amount" value="{{$p->amount}}" readonly></td>
                                                 <td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>
                                             </tr>
                                             @php
@@ -502,7 +502,7 @@ function return_row_with_data(item_id){
   $("#item_search").addClass('ui-autocomplete-loader-center');
     $.ajax({
             autoFocus:true,
-                url: "{{route(currentUser().'.pur.product_search_data')}}",
+                url: "{{route(currentUser().'.pur.beparian_product_search_data')}}",
                 method: 'GET',
                 dataType: 'json',
                 data: {

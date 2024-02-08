@@ -179,6 +179,7 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/purchase-payment',[purPending::class,'purchase_supplier_payment'])->name('owner.pur_pending_pay');
         Route::get('/product_search', [purchase::class,'product_search'])->name('owner.pur.product_search');
         Route::get('/product_search_data', [purchase::class,'product_search_data'])->name('owner.pur.product_search_data');
+        Route::get('/beparian_product_search_data', [bpurchase::class,'beparian_product_search_data'])->name('owner.pur.beparian_product_search_data');
 
         //lc check
         Route::get('/check-lc', [purchase::class, 'checkLcNo'])->name('owner.checkLcNo');

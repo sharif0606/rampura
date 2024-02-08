@@ -388,7 +388,7 @@ function return_row_with_data(item_id){
   $("#item_search").addClass('ui-autocomplete-loader-center');
     $.ajax({
             autoFocus:true,
-                url: "{{route(currentUser().'.pur.product_search_data')}}",
+                url: "{{route(currentUser().'.pur.beparian_product_search_data')}}",
                 method: 'GET',
                 dataType: 'json',
                 data: {
