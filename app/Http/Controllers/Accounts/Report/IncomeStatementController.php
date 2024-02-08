@@ -374,9 +374,15 @@ class IncomeStatementController extends Controller
         $expenseheadop=Sub_head::whereIn('head_code',explode(',',$accheaddata->expense_head))->where(company())->pluck('id');
         $expenseheadopone=Child_one::whereIn('head_code',explode(',',$accheaddata->expense_head))->where(company())->pluck('id');
         $expenseheadoptwo=Child_two::whereIn('head_code',explode(',',$accheaddata->expense_head))->where(company())->pluck('id');
-       
-        // print_r($incomeheadopone);
-        // die();
+        $stock=DB::select("SELECT `product_id`, sum(`quantity`) as qty, (((select sum(`total_amount`) FROM stocks as stp WHERE stp.product_id=stocks.product_id and stp.quantity > 0 and stp.deleted_at is null) / (select sum(`quantity`) FROM stocks as stp WHERE stp.product_id=stocks.product_id and stp.quantity > 0 and stp.deleted_at is null) ) * sum(`quantity`)) as rate FROM `stocks` WHERE `stock_date` <= '2024-02-08' and deleted_at is null GROUP BY `product_id`");
+        $stock_price=0;
+        if($stock){
+            foreach($stock as $st){
+                $stock_price+= $st->rate;
+            }
+            
+        }
+        
        
         if($month){
             $datas=$year."-".$month."-01";
@@ -500,6 +506,11 @@ class IncomeStatementController extends Controller
                     /* operating Expense */
                     if($opexpense){
                         foreach($opexpense as $opi){
+                            if(explode('-',$opi->account_title)[0] == "5330"){
+                                $opi->dr=($opi->dr - $stock_price);
+                            }elseif(explode('-',$opi->account_title)[1] == "5330"){
+                                $opi->dr=($opi->dr - $stock_price);
+                            }
                             $opexp+=$opi->dr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
@@ -625,6 +636,15 @@ class IncomeStatementController extends Controller
         $expenseheadopone=Child_one::whereIn('head_code',explode(',',$accheaddata->expense_head))->where(company())->pluck('id');
         $expenseheadoptwo=Child_two::whereIn('head_code',explode(',',$accheaddata->expense_head))->where(company())->pluck('id');
        
+        $stock=DB::select("SELECT `product_id`, sum(`quantity`) as qty, (((select sum(`total_amount`) FROM stocks as stp WHERE stp.product_id=stocks.product_id and stp.quantity > 0 and stp.deleted_at is null) / (select sum(`quantity`) FROM stocks as stp WHERE stp.product_id=stocks.product_id and stp.quantity > 0 and stp.deleted_at is null) ) * sum(`quantity`)) as rate FROM `stocks` WHERE `stock_date` <= '2024-02-08' and deleted_at is null GROUP BY `product_id`");
+        $stock_price=0;
+        if($stock){
+            foreach($stock as $st){
+                $stock_price+= $st->rate;
+            }
+            
+        }
+
         // print_r($incomeheadopone);
         // die();
        
@@ -765,6 +785,11 @@ class IncomeStatementController extends Controller
                     /* operating Expense */
                     if($opexpense){
                         foreach($opexpense as $opi){
+                            if(explode('-',$opi->account_title)[0] == "5330"){
+                                $opi->dr=($opi->dr - $stock_price);
+                            }elseif(explode('-',$opi->account_title)[1] == "5330"){
+                                $opi->dr=($opi->dr - $stock_price);
+                            }
                             $opexp+=$opi->dr;
                             $data.='<tr class="table-info">';
                             $data.='<td>'.$i++.'</td>';
