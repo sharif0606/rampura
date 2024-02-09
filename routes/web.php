@@ -137,6 +137,7 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/srota',[report::class,'srota'])->name('owner.srota');
         Route::get('/srota-view',[report::class,'srotaView'])->name('owner.srota_view');
         Route::get('/lc_report',[report::class,'lc_report'])->name('owner.lc_report');
+        Route::get('/statement-report',[report::class,'statement'])->name('owner.statement_report');
 
         //Product
         Route::resource('category',category::class,['as'=>'owner']);
@@ -169,7 +170,7 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::resource('debit',debit::class,['as'=>'owner']);
         Route::get('get_head', [credit::class, 'get_head'])->name('owner.get_head');
         Route::resource('journal',journal::class,['as'=>'owner']);
-        Route::get('journal_get_head', [journal::class, 'get_head'])->name('owner.journal_get_head');
+        Route::get('journal_get_head', [journal::class, 'get_head_journal'])->name('owner.journal_get_head');
 
         //Purchase
         Route::resource('purchase',purchase::class,['as'=>'owner']);
@@ -265,7 +266,7 @@ Route::group(['middleware'=>isSalesmanager::class],function(){
         Route::resource('debit',debit::class,['as'=>'manager']);
         Route::get('get_head', [credit::class, 'get_head'])->name('manager.get_head');
         Route::resource('journal',journal::class,['as'=>'manager']);
-        Route::get('journal_get_head', [journal::class, 'get_head'])->name('manager.journal_get_head');
+        Route::get('journal_get_head', [journal::class, 'get_head_journal'])->name('manager.journal_get_head');
 
         //Purchase
         Route::resource('purchase',purchase::class,['as'=>'manager']);
@@ -355,7 +356,7 @@ Route::group(['middleware'=>isSalesman::class],function(){
         Route::resource('debit',debit::class,['as'=>'accountsofficer']);
         Route::get('get_head', [credit::class, 'get_head'])->name('accountsofficer.get_head');
         Route::resource('journal',journal::class,['as'=>'accountsofficer']);
-        Route::get('journal_get_head', [journal::class, 'get_head'])->name('accountsofficer.journal_get_head');
+        Route::get('journal_get_head', [journal::class, 'get_head_journal'])->name('accountsofficer.journal_get_head');
 
         //Purchase
         Route::resource('purchase',purchase::class,['as'=>'accountsofficer']);
@@ -445,7 +446,7 @@ Route::group(['middleware'=>isExecutive::class],function(){
         Route::resource('debit',debit::class,['as'=>'executiveofficer']);
         Route::get('get_head', [credit::class, 'get_head'])->name('executiveofficer.get_head');
         Route::resource('journal',journal::class,['as'=>'executiveofficer']);
-        Route::get('journal_get_head', [journal::class, 'get_head'])->name('executiveofficer.journal_get_head');
+        Route::get('journal_get_head', [journal::class, 'get_head_journal'])->name('executiveofficer.journal_get_head');
 
         //Purchase
         Route::resource('purchase',purchase::class,['as'=>'executiveofficer']);

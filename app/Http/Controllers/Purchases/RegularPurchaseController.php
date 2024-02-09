@@ -119,12 +119,13 @@ class RegularPurchaseController extends Controller
 
      public function create_voucher_no(){
 		$voucher_no="";
-		$query = GeneralVoucher::latest()->first();
+		$query = GeneralVoucher::where(company())->latest()->first();
 		if(!empty($query)){
 		    $voucher_no = $query->voucher_no;
 			$voucher_no+=1;
 			$gv=new GeneralVoucher;
 			$gv->voucher_no=$voucher_no;
+			$gv->company_id=company()['company_id'];
 			if($gv->save())
 				return $voucher_no;
 			else
@@ -133,6 +134,7 @@ class RegularPurchaseController extends Controller
 			$voucher_no=10000001;
 			$gv=new GeneralVoucher;
 			$gv->voucher_no=$voucher_no;
+			$gv->company_id=company()['company_id'];
 			if($gv->save())
 				return $voucher_no;
 			else
@@ -332,7 +334,7 @@ class RegularPurchaseController extends Controller
                                 $gl=new GeneralLedger;
                                 $gl->purchase_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=$jvb->particulars;
+                                $gl->journal_title=$request->supplier_r_name;
                                 $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$jv->current_date;
                                 $gl->lc_no=$jvb->lc_no;
@@ -369,7 +371,7 @@ class RegularPurchaseController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->purchase_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$jvb->particulars;
+                                        $gl->journal_title=$request->supplier_r_name;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->lc_no=$jvb->lc_no;
@@ -407,7 +409,7 @@ class RegularPurchaseController extends Controller
                                     $gl=new GeneralLedger;
                                     $gl->purchase_voucher_id=$jv->id;
                                     $gl->company_id =company()['company_id'];
-                                    $gl->journal_title=$jvb->particulars;
+                                    $gl->journal_title=$request->supplier_r_name;
                                     $gl->account_title=$jvb->account_code;
                                     $gl->rec_date=$jv->current_date;
                                     $gl->lc_no=$jvb->lc_no;
@@ -471,7 +473,7 @@ class RegularPurchaseController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->purchase_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$jvb->particulars;
+                                        $gl->journal_title=$request->supplier_r_name;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->lc_no=$jvb->lc_no;
@@ -509,7 +511,7 @@ class RegularPurchaseController extends Controller
                                             $gl=new GeneralLedger;
                                             $gl->purchase_voucher_id=$jv->id;
                                             $gl->company_id =company()['company_id'];
-                                            $gl->journal_title=$jvb->particulars;
+                                            $gl->journal_title=$request->supplier_r_name;
                                             $gl->account_title=$jvb->account_code;
                                             $gl->rec_date=$jv->current_date;
                                             $gl->lc_no=$jvb->lc_no;
@@ -786,6 +788,8 @@ class RegularPurchaseController extends Controller
                 }
                 /* hit to account voucher */
                 $purrefArr=explode(',',$pur->reference_no);
+                $vnon=PurchaseVoucher::whereIn('id',$purrefArr)->pluck('voucher_no');
+                GeneralVoucher::whereIn('voucher_no',$vnon)->forceDelete();
                 PurchaseVoucher::whereIn('id',$purrefArr)->delete();
                 PurVoucherBkdns::whereIn('purchase_voucher_id',$purrefArr)->delete();
                 GeneralLedger::whereIn('purchase_voucher_id',$purrefArr)->delete();
@@ -837,7 +841,7 @@ class RegularPurchaseController extends Controller
                                 $gl=new GeneralLedger;
                                 $gl->purchase_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=$jvb->particulars;
+                                $gl->journal_title=$request->supplier_r_name;
                                 $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$jv->current_date;
                                 $gl->lc_no=$jvb->lc_no;
@@ -874,7 +878,7 @@ class RegularPurchaseController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->purchase_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$jvb->particulars;
+                                        $gl->journal_title=$request->supplier_r_name;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->lc_no=$jvb->lc_no;
@@ -912,7 +916,7 @@ class RegularPurchaseController extends Controller
                                     $gl=new GeneralLedger;
                                     $gl->purchase_voucher_id=$jv->id;
                                     $gl->company_id =company()['company_id'];
-                                    $gl->journal_title=$jvb->particulars;
+                                    $gl->journal_title=$request->supplier_r_name;
                                     $gl->account_title=$jvb->account_code;
                                     $gl->rec_date=$jv->current_date;
                                     $gl->lc_no=$jvb->lc_no;
@@ -976,7 +980,7 @@ class RegularPurchaseController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->purchase_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$jvb->particulars;
+                                        $gl->journal_title=$request->supplier_r_name;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->lc_no=$jvb->lc_no;
@@ -1014,7 +1018,7 @@ class RegularPurchaseController extends Controller
                                             $gl=new GeneralLedger;
                                             $gl->purchase_voucher_id=$jv->id;
                                             $gl->company_id =company()['company_id'];
-                                            $gl->journal_title=$jvb->particulars;
+                                            $gl->journal_title=$request->supplier_r_name;
                                             $gl->account_title=$jvb->account_code;
                                             $gl->rec_date=$jv->current_date;
                                             $gl->lc_no=$jvb->lc_no;

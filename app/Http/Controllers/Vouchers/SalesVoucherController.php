@@ -2,25 +2,21 @@
 
 namespace App\Http\Controllers\Vouchers;
 
-use App\Http\Controllers\Controller;
 
-use App\Models\Settings\Company;
 use App\Models\Vouchers\SalesVoucher;
 use App\Models\Vouchers\SalVoucherBkdns;
 use App\Models\Expenses\ExpenseOfSales;
-use App\Models\Vouchers\GeneralVoucher;
 use App\Models\Vouchers\GeneralLedger;
 use App\Models\Accounts\Child_one;
 use App\Models\Accounts\Child_two;
 use Illuminate\Http\Request;
 use App\Http\Traits\ResponseTrait;
-use App\Models\Customers\Customer;
 use DB;
 use Session;
 use Exception;
 use Illuminate\Support\Facades\Redis;
 
-class SalesVoucherController extends Controller
+class SalesVoucherController extends VoucherController
 {
     use ResponseTrait;
     /**
@@ -81,36 +77,7 @@ class SalesVoucherController extends Controller
 		}
     }
     
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-
-    public function create_voucher_no(){
-		$voucher_no="";
-		$query = GeneralVoucher::latest()->first();
-		if(!empty($query)){
-		    $voucher_no = $query->voucher_no;
-			$voucher_no+=1;
-			$gv=new GeneralVoucher;
-			$gv->voucher_no=$voucher_no;
-			if($gv->save())
-				return $voucher_no;
-			else
-				return $voucher_no="";
-		}else {
-			$voucher_no=10000001;
-			$gv=new GeneralVoucher;
-			$gv->voucher_no=$voucher_no;
-			if($gv->save())
-				return $voucher_no;
-			else
-				return $voucher_no="";
-		}
-    }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -170,7 +137,7 @@ class SalesVoucherController extends Controller
 							$gl=new GeneralLedger;
                             $gl->sales_voucher_id=$jv->id;
                             $gl->company_id =company()['company_id'];
-                            $gl->journal_title=$jvb->particulars;
+                            $gl->journal_title=$jv->customer;
                             $gl->account_title=$jvb->account_code;
                             $gl->rec_date=$request->current_date;
                             $gl->lc_no=$jvb->lc_no;
@@ -204,7 +171,7 @@ class SalesVoucherController extends Controller
     							$gl=new GeneralLedger;
                                 $gl->sales_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=$jvb->particulars;
+                                $gl->journal_title=$jv->customer;
                                 $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$request->current_date;
                                 $gl->lc_no=$jvb->lc_no;

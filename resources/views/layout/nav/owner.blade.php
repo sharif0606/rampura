@@ -109,6 +109,7 @@
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.srota')}}" >{{__('Srota')}}</a></li>
             <li class="text-bold py-2 border-bottom ">Accounts Report</li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.incomeStatement')}}">{{__('Income Statement')}}</a></li>
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.statement_report')}}">{{__('Statement')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.headreport')}}" >{{__('Account Head Report')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.lc_report')}}" >{{__('LC Expense Report')}}</a></li>
         </ul>

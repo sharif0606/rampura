@@ -390,4 +390,51 @@ class ReportController extends Controller
         return view('reports.lc_report', compact('lc_data'));
     }
 
+    // public function statement(Request $request) {
+
+    //     $childOne = Child_one::where('head_code', 1130)->where(company())->first();
+    //     $childTwo = Child_two::where('child_one_id', $childOne->id)->where(company())->get();
+    //     if ($childTwo->isNotEmpty()) {
+    //         $childTwoIds = $childTwo->pluck('id')->toArray();
+    //         $customerPayment = GeneralLedger::whereIn('child_two_id', $childTwoIds)->get();
+            
+    //     }else{
+    //         $customerPayment = 'No Data Found';
+    //     }
+    //     return view('reports.statement', compact('customerPayment'));
+    // }
+    public function statement(Request $request) {
+        if ($request->fdate && $request->tdate) {
+            $fdate = Carbon::parse($request->fdate)->toDateString();
+            $tdate = Carbon::parse($request->tdate)->toDateString();
+        }else{
+            $fdate = Carbon::now()->toDateString();
+            $tdate = Carbon::now()->toDateString();
+        }
+        echo $fdate;
+            //$query->whereBetween(DB::raw('DATE(regular_purchases.purchase_date)'), [$fdate, $tdate]);
+            //  dd($query->toSql());
+        
+
+        $childOne = Child_one::where('head_code', 1130)->where(company())->first();
+        $receivable = Child_two::where('child_one_id', $childOne->id)->where(company())->pluck('id');
+        $childOne = Child_one::where('head_code', 2130)->where(company())->first();
+        $payable = Child_two::where('child_one_id', $childOne->id)->where(company())->pluck('id');
+        $childOne = Child_one::where('head_code', 1110)->where(company())->first();
+        $cash = Child_two::where('child_one_id', $childOne->id)->where(company())->pluck('id');
+
+        $cpjvid = GeneralLedger::whereIn('child_two_id',$receivable)
+                            //->whereBetween('rec_date', [$fdate, $tdate])
+                            ->pluck('jv_id');
+        $customerPayment = GeneralLedger::whereIn('jv_id',$cpjvid)->whereIn('child_two_id',$cash)->get();
+
+        $spjvid = GeneralLedger::whereIn('child_two_id',$payable)
+                            //->whereBetween('rec_date', [$fdate, $tdate])
+                            ->pluck('jv_id');
+        $supplierayment = GeneralLedger::whereIn('jv_id',$spjvid)->whereIn('child_two_id',$cash)->get();
+                            //dd($cash);
+        return view('reports.statement', compact('customerPayment','supplierayment','cash'));
+    }
+    
+
 }

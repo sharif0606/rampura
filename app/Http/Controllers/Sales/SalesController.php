@@ -256,12 +256,13 @@ class SalesController extends Controller
 
      public function create_voucher_no(){
 		$voucher_no="";
-		$query = GeneralVoucher::latest()->first();
+		$query = GeneralVoucher::where(company())->latest()->first();
 		if(!empty($query)){
 		    $voucher_no = $query->voucher_no;
 			$voucher_no+=1;
 			$gv=new GeneralVoucher;
 			$gv->voucher_no=$voucher_no;
+			$gv->company_id=company()['company_id'];
 			if($gv->save())
 				return $voucher_no;
 			else
@@ -270,6 +271,7 @@ class SalesController extends Controller
 			$voucher_no=10000001;
 			$gv=new GeneralVoucher;
 			$gv->voucher_no=$voucher_no;
+			$gv->company_id=company()['company_id'];
 			if($gv->save())
 				return $voucher_no;
 			else
@@ -476,7 +478,7 @@ class SalesController extends Controller
                                     $gl=new GeneralLedger;
                                     $gl->sales_voucher_id=$jv->id;
                                     $gl->company_id =company()['company_id'];
-                                    $gl->journal_title=$jvb->particulars;
+                                    $gl->journal_title=$request->customer_r_name;
                                     $gl->account_title=$jvb->account_code;
                                     $gl->rec_date=$jv->current_date;
                                     $gl->jv_id=$voucher_no;
@@ -513,7 +515,7 @@ class SalesController extends Controller
                                 $gl=new GeneralLedger;
                                 $gl->sales_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=$jvb->particulars;
+                                $gl->journal_title=$request->customer_r_name;
                                 $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$jv->current_date;
                                 $gl->jv_id=$voucher_no;
@@ -551,7 +553,7 @@ class SalesController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$jvb->particulars;
+                                        $gl->journal_title=$request->customer_r_name;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
@@ -618,7 +620,7 @@ class SalesController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$jvb->particulars;
+                                        $gl->journal_title=$request->customer_r_name;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
@@ -650,7 +652,7 @@ class SalesController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$jvc->particulars;
+                                        $gl->journal_title=$request->customer_r_name;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
                                         $gl->sales_voucher_bkdn_id=$jvc->id;
@@ -997,6 +999,8 @@ class SalesController extends Controller
                     }
                 }
                 $purrefArr=explode(',',$pur->reference_no);
+                $vnon=SalesVoucher::whereIn('id',$purrefArr)->pluck('voucher_no');
+                GeneralVoucher::whereIn('voucher_no',$vnon)->forceDelete();
                 SalesVoucher::whereIn('id',$purrefArr)->forceDelete();
                 SalVoucherBkdns::whereIn('sales_voucher_id',$purrefArr)->forceDelete();
                 GeneralLedger::whereIn('sales_voucher_id',$purrefArr)->forceDelete();
@@ -1049,7 +1053,7 @@ class SalesController extends Controller
                                     $gl=new GeneralLedger;
                                     $gl->sales_voucher_id=$jv->id;
                                     $gl->company_id =company()['company_id'];
-                                    $gl->journal_title=$jvb->particulars;
+                                    $gl->journal_title=$request->customer_r_name;
                                     $gl->account_title=$jvb->account_code;
                                     $gl->rec_date=$jv->current_date;
                                     $gl->jv_id=$voucher_no;
@@ -1086,7 +1090,7 @@ class SalesController extends Controller
                                 $gl=new GeneralLedger;
                                 $gl->sales_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=$jvb->particulars;
+                                $gl->journal_title=$request->customer_r_name;
                                 $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$jv->current_date;
                                 $gl->jv_id=$voucher_no;
@@ -1124,7 +1128,7 @@ class SalesController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$jvb->particulars;
+                                        $gl->journal_title=$request->customer_r_name;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
@@ -1191,7 +1195,7 @@ class SalesController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$jvb->particulars;
+                                        $gl->journal_title=$request->customer_r_name;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
@@ -1223,7 +1227,7 @@ class SalesController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$jvc->particulars;
+                                        $gl->journal_title=$request->customer_r_name;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
                                         $gl->sales_voucher_bkdn_id=$jvc->id;

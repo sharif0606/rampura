@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\Vouchers;
 
-use App\Http\Controllers\Controller;
 
-use App\Models\Settings\Company;
 use App\Models\Vouchers\PurchaseVoucher;
 use App\Models\Vouchers\PurVoucherBkdns;
-use App\Models\Vouchers\GeneralVoucher;
 use App\Models\Vouchers\GeneralLedger;
 use App\Models\Expenses\ExpenseOfPurchase;
 use App\Models\Accounts\Child_one;
@@ -19,7 +16,7 @@ use DB;
 use Session;
 use Exception;
 
-class PurchaseVoucherController extends Controller
+class PurchaseVoucherController extends VoucherController
 {
     use ResponseTrait;
     /**
@@ -75,36 +72,6 @@ class PurchaseVoucherController extends Controller
 			return view('voucher.purchaseVoucher.autocreate',compact('paymethod','expense'));
 		}else{
 			return view('voucher.purchaseVoucher.create',compact('paymethod'));
-		}
-    }
-	
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-
-    public function create_voucher_no(){
-		$voucher_no="";
-		$query = GeneralVoucher::latest()->first();
-		if(!empty($query)){
-		    $voucher_no = $query->voucher_no;
-			$voucher_no+=1;
-			$gv=new GeneralVoucher;
-			$gv->voucher_no=$voucher_no;
-			if($gv->save())
-				return $voucher_no;
-			else
-				return $voucher_no="";
-		}else {
-			$voucher_no=10000001;
-			$gv=new GeneralVoucher;
-			$gv->voucher_no=$voucher_no;
-			if($gv->save())
-				return $voucher_no;
-			else
-				return $voucher_no="";
 		}
     }
 
@@ -166,7 +133,7 @@ class PurchaseVoucherController extends Controller
     							$gl=new GeneralLedger;
                                 $gl->purchase_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=$jvb->particulars;
+                                $gl->journal_title=$jv->supplier;
                                 $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$request->current_date;
                                 $gl->lc_no=$jvb->lc_no;
@@ -201,7 +168,7 @@ class PurchaseVoucherController extends Controller
 							$gl=new GeneralLedger;
                             $gl->purchase_voucher_id=$jv->id;
                             $gl->company_id =company()['company_id'];
-                            $gl->journal_title=$jvb->particulars;
+                            $gl->journal_title=$jv->supplier;
                             $gl->account_title=$jvb->account_code;
                             $gl->rec_date=$request->current_date;
                             $gl->lc_no=$jvb->lc_no;
