@@ -89,11 +89,11 @@ class PurchaseVoucherController extends VoucherController
                 $jv=new PurchaseVoucher;
                 $jv->voucher_no=$voucher_no;
                 $jv->company_id =company()['company_id'];
-                $jv->supplier=$request->supplier_name?implode(', ',array_unique($request->supplier_name)):"";
+                $jv->supplier=$request->supplier_name;
                 $jv->lc_no=$request->lc_no?implode(', ',array_unique($request->lc_no)):"";
                 $jv->current_date=$request->current_date;
-                $jv->pay_name="";
-                $jv->purpose="";
+                $jv->pay_name=$request->supplier_name;
+                $jv->purpose=$request->purpose;
                 $jv->credit_sum=$request->debit_sum;
                 $jv->debit_sum=$request->debit_sum;
                 $jv->cheque_no=$request->cheque_no;
@@ -115,7 +115,7 @@ class PurchaseVoucherController extends VoucherController
                         foreach($account_codes as $i=>$acccode){
                             $jvb=new PurVoucherBkdns;
                             $jvb->purchase_voucher_id=$jv->id;
-                            $jvb->supplier_id=!empty($request->supplier_id[$i])?$request->supplier_id[$i]:0;
+                            $jvb->supplier_id=$request->supplier_id;
                             $jvb->lc_no=!empty($request->lc_no[$i])?$request->lc_no[$i]:0;
                             $jvb->company_id =company()['company_id'];
                             $jvb->particulars=!empty($request->remarks[$i])?$request->remarks[$i]:"";
@@ -133,7 +133,7 @@ class PurchaseVoucherController extends VoucherController
     							$gl=new GeneralLedger;
                                 $gl->purchase_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=$jv->supplier;
+                                $gl->journal_title=$request->supplier_id;
                                 $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$request->current_date;
                                 $gl->lc_no=$jvb->lc_no;
@@ -168,7 +168,7 @@ class PurchaseVoucherController extends VoucherController
 							$gl=new GeneralLedger;
                             $gl->purchase_voucher_id=$jv->id;
                             $gl->company_id =company()['company_id'];
-                            $gl->journal_title=$jv->supplier;
+                            $gl->journal_title=$request->supplier_id;
                             $gl->account_title=$jvb->account_code;
                             $gl->rec_date=$request->current_date;
                             $gl->lc_no=$jvb->lc_no;
@@ -191,7 +191,7 @@ class PurchaseVoucherController extends VoucherController
 				return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
 			}
 		}catch (Exception $e) {
-			// dd($e);
+			dd($e);
 			DB::rollBack();
 			return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
 		}

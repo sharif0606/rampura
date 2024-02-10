@@ -478,7 +478,7 @@ class SalesController extends Controller
                                     $gl=new GeneralLedger;
                                     $gl->sales_voucher_id=$jv->id;
                                     $gl->company_id =company()['company_id'];
-                                    $gl->journal_title=$request->customer_r_name;
+                                    $gl->journal_title=$request->customerName;
                                     $gl->account_title=$jvb->account_code;
                                     $gl->rec_date=$jv->current_date;
                                     $gl->jv_id=$voucher_no;
@@ -515,7 +515,7 @@ class SalesController extends Controller
                                 $gl=new GeneralLedger;
                                 $gl->sales_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=$request->customer_r_name;
+                                $gl->journal_title=$request->customerName;
                                 $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$jv->current_date;
                                 $gl->jv_id=$voucher_no;
@@ -553,7 +553,7 @@ class SalesController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$request->customer_r_name;
+                                        $gl->journal_title=$request->customerName;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
@@ -620,7 +620,7 @@ class SalesController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$request->customer_r_name;
+                                        $gl->journal_title=$request->customerName;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
@@ -652,7 +652,7 @@ class SalesController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$request->customer_r_name;
+                                        $gl->journal_title=$request->customerName;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
                                         $gl->sales_voucher_bkdn_id=$jvc->id;
@@ -1053,7 +1053,7 @@ class SalesController extends Controller
                                     $gl=new GeneralLedger;
                                     $gl->sales_voucher_id=$jv->id;
                                     $gl->company_id =company()['company_id'];
-                                    $gl->journal_title=$request->customer_r_name;
+                                    $gl->journal_title=$request->customerName;
                                     $gl->account_title=$jvb->account_code;
                                     $gl->rec_date=$jv->current_date;
                                     $gl->jv_id=$voucher_no;
@@ -1090,7 +1090,7 @@ class SalesController extends Controller
                                 $gl=new GeneralLedger;
                                 $gl->sales_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=$request->customer_r_name;
+                                $gl->journal_title=$request->customerName;
                                 $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$jv->current_date;
                                 $gl->jv_id=$voucher_no;
@@ -1128,7 +1128,7 @@ class SalesController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$request->customer_r_name;
+                                        $gl->journal_title=$request->customerName;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
@@ -1195,7 +1195,7 @@ class SalesController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$request->customer_r_name;
+                                        $gl->journal_title=$request->customerName;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
@@ -1227,7 +1227,7 @@ class SalesController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->sales_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$request->customer_r_name;
+                                        $gl->journal_title=$request->customerName;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->jv_id=$voucher_no;
                                         $gl->sales_voucher_bkdn_id=$jvc->id;

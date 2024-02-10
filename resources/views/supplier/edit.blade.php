@@ -40,7 +40,7 @@
                                     <div class="col-md-4 col-12">
                                         <div class="form-group">
                                             <label for="supplier_name">{{__('Supplier Name')}}<span class="text-danger">*</span></label>
-                                            <input type="text" id="supplier_name" class="form-control" value="{{ old('supplier_name',$supplier->supplier_name)}}" name="supplier_name" required>
+                                            <input type="text" onkeyup="removeCharacter(this)" id="supplier_name" class="form-control" value="{{ old('supplier_name',$supplier->supplier_name)}}" name="supplier_name" required>
                                             @if($errors->has('supplier_name'))
                                             <span class="text-danger"> {{ $errors->first('supplier_name') }}</span>
                                             @endif
@@ -195,9 +195,11 @@
         $('.upa').hide();
         $('.upa'+e).show();
     }
-
-    
-   
-    
+</script>
+<script>
+    function removeCharacter(e) {
+        newString = e.value.replace("-", " ");
+        e.value= newString;
+    }
 </script>
 @endpush

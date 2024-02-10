@@ -426,7 +426,9 @@ class ReportController extends Controller
         $cpjvid = GeneralLedger::whereIn('child_two_id',$receivable)
                             //->whereBetween('rec_date', [$fdate, $tdate])
                             ->pluck('jv_id');
-        $customerPayment = GeneralLedger::whereIn('jv_id',$cpjvid)->whereIn('child_two_id',$cash)->get();
+        $customerPayment = GeneralLedger::select(DB::raw('sum(dr) as dr'),'journal_title')
+                            ->groupBy('journal_title')
+                            ->whereIn('jv_id',$cpjvid)->whereIn('child_two_id',$cash)->get();
 
         $spjvid = GeneralLedger::whereIn('child_two_id',$payable)
                             //->whereBetween('rec_date', [$fdate, $tdate])

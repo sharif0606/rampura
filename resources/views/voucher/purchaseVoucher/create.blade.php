@@ -29,7 +29,15 @@
                                     <div class="col-lg-4 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="name">{{__('Pay to Name')}}</label>
-                                            <input type="text" id="pay_name" class="form-control" value="{{ old('pay_name')}}" name="pay_name">
+                                            <select name="supplier_id" class="form-control form-select choices" required onchange="addTextSupplier(this)">
+                                                <option value="">Select</option>
+                                                @forelse (App\Models\Suppliers\Supplier::where(company())->get() as $d)
+                                                    <option value="{{$d->id}}">{{$d->supplier_name}} ({{$d->upazila?->name}})</option>
+                                                @empty
+                                                    <option value="">No Data Found</option>
+                                                @endforelse
+                                            </select>
+                                            <input type='hidden' class="supplier_name" style='text-align:center; border:none;' name='supplier_name' value=''/>
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-md-6 col-sm-6">
@@ -62,7 +70,6 @@
                                                 <th>{{__('A/C Head')}}</th>
                                                 <th>{{__('Amount')}}</th>
                                                 <th>{{__('Lc Number')}}</th>
-                                                <th>{{__('Supplier')}}</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
@@ -96,19 +103,7 @@
                                                 </td>
                                                 <td style='text-align:left;'>
                                                     <input type='text' class=" form-control" name='lc_no[]' value='' maxlength='50' style='text-align:left;border:none;' />
-                                                </td>
-                                                <td style='text-align:left;'>
                                                     <input type='hidden' name='expense_id[]' value=''>
-                                                    <select name="supplier_id[]" class="form-control form-select" required onchange="addTextSupplier(this)">
-                                                        <option value="">Select</option>
-                                                        @forelse (App\Models\Suppliers\Supplier::where(company())->get() as $d)
-                                                            <option value="{{$d->id}}">{{$d->supplier_name}} ({{$d->upazila?->name}})</option>
-                                                        @empty
-                                                            <option value="">No Data Found</option>
-                                                        @endforelse
-                                                    </select>
-                                                        <input type='hidden' class="supplier_name" style='text-align:center; border:none;' name='supplier_name[]' value=''/>
-                                                        
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -174,14 +169,12 @@
             </div>
         </div>
     </section>
-    <!-- // Basic multiple Column Form section end -->
-</div>
 @endsection
 
 @push('scripts')
 <script>
     function addTextSupplier(e){
-        $(e).parent('td').find('.supplier_name').val($(e).find(':selected').text());
+        $('.supplier_name').val($(e).find(':selected').text());
     }
 	function add_row(){
 
@@ -200,19 +193,7 @@
 					<td style='text-align:left;'>\
 						<input type='text' name='debit[]' class='cls_debit form-control' value='' style='text-align:center; border:none;' maxlength='15' onkeyup='removeChar(this)' onBlur='return debit_entry(this);' autocomplete='off'/> \
 					</td>\
-					<td style='text-align:left;'><input type='text' name='lc_no[]' value='' class=' form-control' maxlength='50' style='text-align:left;border:none;' /></td>\
-                    <td style='text-align:left;'>\
-                        <input type='hidden' name='expense_id[]' value=''>\
-                        <select name='supplier_id[]' class='form-control select' required onchange='addTextSupplier(this)'>\
-                            <option value=''>Select</option>\
-                            @forelse (App\Models\Suppliers\Supplier::all() as $d) \
-                                <option value='{{$d->id}}'>{{$d->supplier_name}} ({{$d->contact}})</option>\
-                            @empty \
-                                <option value=''>No Data Found</option>\
-                            @endforelse \
-                        </select>\
-                            <input type='hidden' class='supplier_name' style='text-align:center; border:none;' name='supplier_name[]' value=''/>\
-                    </td>\
+					<td style='text-align:left;'><input type='hidden' name='expense_id[]' value=''><input type='text' name='lc_no[]' value='' class=' form-control' maxlength='50' style='text-align:left;border:none;' /></td>\
 				</tr>";
 		$('#account tbody').append(row);
 	}

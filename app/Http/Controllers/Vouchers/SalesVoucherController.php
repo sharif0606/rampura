@@ -92,10 +92,10 @@ class SalesVoucherController extends VoucherController
                 $jv=new SalesVoucher;
                 $jv->voucher_no=$voucher_no;
                 $jv->company_id =company()['company_id'];
-                $jv->customer=$request->customer_name?implode(', ',array_unique($request->customer_name)):"";
+                $jv->customer=$request->customer_name;
                 $jv->lc_no=$request->lc_no?implode(', ',array_unique($request->lc_no)):"";
                 $jv->current_date=$request->current_date;
-                $jv->pay_name=$request->pay_name;
+                $jv->pay_name=$request->customer_name;
                 $jv->purpose=$request->purpose;
                 $jv->credit_sum=$request->debit_sum;
                 $jv->debit_sum=$request->debit_sum;
@@ -137,7 +137,7 @@ class SalesVoucherController extends VoucherController
 							$gl=new GeneralLedger;
                             $gl->sales_voucher_id=$jv->id;
                             $gl->company_id =company()['company_id'];
-                            $gl->journal_title=$jv->customer;
+                            $gl->journal_title=$jv->customer_id;
                             $gl->account_title=$jvb->account_code;
                             $gl->rec_date=$request->current_date;
                             $gl->lc_no=$jvb->lc_no;
@@ -153,7 +153,7 @@ class SalesVoucherController extends VoucherController
                         foreach($account_codes as $i=>$acccode){
                             $jvb=new SalVoucherBkdns;
                             $jvb->sales_voucher_id=$jv->id;
-                            $jvb->customer_id=!empty($request->customer_id[$i])?$request->customer_id[$i]:0;
+                            $jvb->customer_id=$request->customer_id;
                             $jvb->lc_no=!empty($request->lc_no[$i])?$request->lc_no[$i]:0;
                             $jvb->company_id =company()['company_id'];
                             $jvb->particulars=!empty($request->remarks[$i])?$request->remarks[$i]:"";
@@ -171,7 +171,7 @@ class SalesVoucherController extends VoucherController
     							$gl=new GeneralLedger;
                                 $gl->sales_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=$jv->customer;
+                                $gl->journal_title=$request->customer_id;
                                 $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$request->current_date;
                                 $gl->lc_no=$jvb->lc_no;

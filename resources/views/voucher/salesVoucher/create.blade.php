@@ -29,7 +29,16 @@
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label for="name">{{__('Pay by name')}}</label>
-                                        <input type="text" id="pay_name" class="form-control" value="{{ old('pay_name')}}" name="pay_name">
+                                        <select name="customer_id" class="form-control form-select choices" required onchange="addTextCustomer(this)">
+                                            <option value="">Select</option>
+                                            @forelse (App\Models\Customers\Customer::where(company())->get() as $d)
+                                                <option value="{{$d->id}}">{{$d->customer_name}} ({{$d->upazila?->name}})</option>
+                                            @empty
+                                                <option value="">No Data Found</option>
+                                            @endforelse
+                                        </select>
+                                            <input type='hidden' class="customer_name" style='text-align:center; border:none;' name='customer_name' value=''/>
+                                            
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6 col-sm-6">
@@ -62,7 +71,6 @@
                                             <th>{{__('A/C Head')}}</th>
                                             <th>{{__('Amount')}}</th>
                                             <th>{{__('LC No')}}</th>
-                                            <th>{{__('Customer')}}</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -96,19 +104,7 @@
                                             </td>
                                             <td style='text-align:left;'>
                                                 <input type='text' class=" form-control" name='lc_no[]' value='' maxlength='50' style='text-align:left;border:none;' />
-                                            </td>
-                                            <td style='text-align:left;'>
                                                 <input type='hidden' name='expense_id[]' value=''>
-                                                <select name="customer_id[]" class="form-control form-select" required onchange="addTextCustomer(this)">
-                                                    <option value="">Select</option>
-                                                    @forelse (App\Models\Customers\Customer::where(company())->get() as $d)
-                                                        <option value="{{$d->id}}">{{$d->customer_name}} ({{$d->upazila?->name}})</option>
-                                                    @empty
-                                                        <option value="">No Data Found</option>
-                                                    @endforelse
-                                                </select>
-                                                    <input type='hidden' class="customer_name" style='text-align:center; border:none;' name='customer_name[]' value=''/>
-                                                    
                                             </td>
                                         </tr>
                                     </tbody>
@@ -179,7 +175,7 @@
 @push('scripts')
 <script>
     function addTextCustomer(e){
-        $(e).parent('td').find('.customer_name').val($(e).find(':selected').text());
+        $('.customer_name').val($(e).find(':selected').text());
     }
 	function add_row(){
 
@@ -198,19 +194,7 @@
 					<td style='text-align:left;'>\
 						<input type='text' name='debit[]' class='cls_debit form-control' value='' style='text-align:center; border:none;' maxlength='15' onkeyup='removeChar(this)' onBlur='return debit_entry(this);' autocomplete='off'/> \
 					</td>\
-					<td style='text-align:left;'><input type='text' name='lc_no[]' value='' class=' form-control' maxlength='50' style='text-align:left;border:none;' /></td>\
-                    <td style='text-align:left;'>\
-                        <input type='hidden' name='expense_id[]' value=''>\
-                        <select name='customer_id[]' class='form-control select' required onchange='addTextSupplier(this)'>\
-                            <option value=''>Select</option>\
-                            @forelse (App\Models\Customers\Customer::all() as $d) \
-                                <option value='{{$d->id}}'>{{$d->customer_name}} ({{$d->contact}})</option>\
-                            @empty \
-                                <option value=''>No Data Found</option>\
-                            @endforelse \
-                        </select>\
-                            <input type='hidden' class='customer_name' style='text-align:center; border:none;' name='customer_name[]' value=''/>\
-                    </td>\
+					<td style='text-align:left;'><input type='hidden' name='expense_id[]' value=''><input type='text' name='lc_no[]' value='' class=' form-control' maxlength='50' style='text-align:left;border:none;' /></td>\
 				</tr>";
 		$('#account tbody').append(row);
 	}

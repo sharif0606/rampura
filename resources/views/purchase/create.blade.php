@@ -57,7 +57,7 @@
                                                     <select class="form-control choices form-select" name="supplierName" id="supplierName" onchange="$('#supplier_r_name').val($(this).find('option:selected').text())">
                                                         <option value="">Select Supplier</option>
                                                         @forelse($suppliers as $d)
-                                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName')==$d->id?"selected":""}}> {{ $d->supplier_name}}-[{{ $d->upazila?->name}}]</option>
+                                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName')==$d->id?"selected":""}}> {{ $d->supplier_name}}-({{ $d->upazila?->name}})</option>
                                                         @empty
                                                             <option value="">No Supplier found</option>
                                                         @endforelse

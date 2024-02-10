@@ -390,7 +390,7 @@ class PurchaseController extends Controller
                                 $gl=new GeneralLedger;
                                 $gl->purchase_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=$request->supplier_r_name;
+                                $gl->journal_title=$request->supplierName;
                                 $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$jv->current_date;
                                 $gl->lc_no=$jvb->lc_no;
@@ -427,7 +427,7 @@ class PurchaseController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->purchase_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$request->supplier_r_name;
+                                        $gl->journal_title=$request->supplierName;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->lc_no=$jvb->lc_no;
@@ -465,7 +465,7 @@ class PurchaseController extends Controller
                                     $gl=new GeneralLedger;
                                     $gl->purchase_voucher_id=$jv->id;
                                     $gl->company_id =company()['company_id'];
-                                    $gl->journal_title=$request->supplier_r_name;
+                                    $gl->journal_title=$request->supplierName;
                                     $gl->account_title=$jvb->account_code;
                                     $gl->rec_date=$jv->current_date;
                                     $gl->lc_no=$jvb->lc_no;
@@ -529,7 +529,7 @@ class PurchaseController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->purchase_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$request->supplier_r_name;
+                                        $gl->journal_title=$request->supplierName;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->lc_no=$jvb->lc_no;
@@ -567,7 +567,7 @@ class PurchaseController extends Controller
                                             $gl=new GeneralLedger;
                                             $gl->purchase_voucher_id=$jv->id;
                                             $gl->company_id =company()['company_id'];
-                                            $gl->journal_title=$request->supplier_r_name;
+                                            $gl->journal_title=$request->supplierName;
                                             $gl->account_title=$jvb->account_code;
                                             $gl->rec_date=$jv->current_date;
                                             $gl->lc_no=$jvb->lc_no;
@@ -903,7 +903,7 @@ class PurchaseController extends Controller
                                 $gl=new GeneralLedger;
                                 $gl->purchase_voucher_id=$jv->id;
                                 $gl->company_id =company()['company_id'];
-                                $gl->journal_title=$request->supplier_r_name;
+                                $gl->journal_title=$request->supplierName;
                                 $gl->account_title=$jvb->account_code;
                                 $gl->rec_date=$jv->current_date;
                                 $gl->lc_no=$jvb->lc_no;
@@ -940,7 +940,7 @@ class PurchaseController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->purchase_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$request->supplier_r_name;
+                                        $gl->journal_title=$request->supplierName;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->lc_no=$jvb->lc_no;
@@ -978,7 +978,7 @@ class PurchaseController extends Controller
                                     $gl=new GeneralLedger;
                                     $gl->purchase_voucher_id=$jv->id;
                                     $gl->company_id =company()['company_id'];
-                                    $gl->journal_title=$request->supplier_r_name;
+                                    $gl->journal_title=$request->supplierName;
                                     $gl->account_title=$jvb->account_code;
                                     $gl->rec_date=$jv->current_date;
                                     $gl->lc_no=$jvb->lc_no;
@@ -1042,7 +1042,7 @@ class PurchaseController extends Controller
                                         $gl=new GeneralLedger;
                                         $gl->purchase_voucher_id=$jv->id;
                                         $gl->company_id =company()['company_id'];
-                                        $gl->journal_title=$request->supplier_r_name;
+                                        $gl->journal_title=$request->supplierName;
                                         $gl->account_title=$jvb->account_code;
                                         $gl->rec_date=$jv->current_date;
                                         $gl->lc_no=$jvb->lc_no;
@@ -1080,7 +1080,7 @@ class PurchaseController extends Controller
                                             $gl=new GeneralLedger;
                                             $gl->purchase_voucher_id=$jv->id;
                                             $gl->company_id =company()['company_id'];
-                                            $gl->journal_title=$request->supplier_r_name;
+                                            $gl->journal_title=$request->supplierName;
                                             $gl->account_title=$jvb->account_code;
                                             $gl->rec_date=$jv->current_date;
                                             $gl->lc_no=$jvb->lc_no;
