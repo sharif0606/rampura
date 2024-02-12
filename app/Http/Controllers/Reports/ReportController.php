@@ -19,6 +19,10 @@ use App\Models\Purchases\Purchase_details;
 use App\Models\Vouchers\GeneralLedger;
 use Illuminate\Http\Request;
 use App\Models\Settings\Company;
+use App\Models\Vouchers\CreditVoucher;
+use App\Models\Vouchers\DebitVoucher;
+use App\Models\Vouchers\PurchaseVoucher;
+use App\Models\Vouchers\SalesVoucher;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -423,7 +427,24 @@ class ReportController extends Controller
                             ->groupBy('journal_title')
                             ->whereIn('jv_id',$spjvid)->whereIn('child_two_id',$cash)->get();
                             //dd($cash);
-        return view('reports.statement', compact('customerPayment','supplierayment','cash'));
+        /* other sales and received  */
+        //->whereBetween('rec_date', [$fdate, $tdate])
+        $sales_jvid = SalesVoucher::where(company())->pluck('voucher_no')->toArray();
+        $rec_jvid = CreditVoucher::where(company())->pluck('voucher_no')->toArray();
+        $sales_rec_jvid = array_merge($sales_jvid,$rec_jvid);
+        $allreceive = GeneralLedger::groupBy('journal_title')
+        ->whereNotIn('jv_id',$cpjvid)->whereIn('jv_id',$sales_rec_jvid)->where('dr','>',"0")->get();
+
+
+        /* other Purchase and payment  */
+        //->whereBetween('rec_date', [$fdate, $tdate])
+        $purchase_jvid = PurchaseVoucher::where(company())->pluck('voucher_no')->toArray();
+        $pay_jvid = DebitVoucher::where(company())->pluck('voucher_no')->toArray();
+        $purchase_pay_jvid = array_merge($purchase_jvid,$pay_jvid);
+        $allPayment = GeneralLedger::groupBy('journal_title')
+        ->whereNotIn('jv_id',$spjvid)->whereIn('jv_id',$purchase_pay_jvid)->where('cr','>',"0")->get();
+        
+        return view('reports.statement', compact('customerPayment','supplierayment','cash','allreceive','allPayment'));
     }
     
 
