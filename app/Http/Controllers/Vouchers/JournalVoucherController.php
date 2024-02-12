@@ -11,7 +11,7 @@ use App\Models\Accounts\Child_one;
 use App\Models\Accounts\Child_two;
 use Illuminate\Http\Request;
 use App\Http\Traits\ResponseTrait;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Session;
 use Exception;
 

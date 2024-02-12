@@ -16,7 +16,7 @@ use App\Http\Requests\Product\UpdateRequest;
 use App\Http\Traits\ResponseTrait;
 use App\Http\Traits\ImageHandleTraits;
 use Exception;
-use DB;
+use Illuminate\Support\Facades\DB;
 use DNS1D;
 use DNS2D;
 

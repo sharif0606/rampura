@@ -4,6 +4,7 @@ namespace App\Http\Requests\Accounts\Subhead;
 
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -28,7 +29,14 @@ class UpdateRequest extends FormRequest
         return [
             'master_head'=> 'required',
             'head_name'=> 'required',
-            'head_code'=> 'required|unique:sub_heads,head_code,'.$id
+            // 'head_code'=> 'required|unique:sub_heads,head_code,'.$id
+            'head_code' => [
+                'required',
+                Rule::unique('sub_heads')->where(function ($query) use ($r) {
+                    return $query->where('head_code', $r->head_code)
+                       ->where(company());
+                 })->ignore($id),
+            ]
         ];
     }
     public function messages(){

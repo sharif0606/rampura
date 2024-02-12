@@ -19,7 +19,7 @@ use App\Models\Purchases\Purchase_details;
 use App\Models\Vouchers\GeneralLedger;
 use Illuminate\Http\Request;
 use App\Models\Settings\Company;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class ReportController extends Controller
@@ -390,19 +390,6 @@ class ReportController extends Controller
         return view('reports.lc_report', compact('lc_data'));
     }
 
-    // public function statement(Request $request) {
-
-    //     $childOne = Child_one::where('head_code', 1130)->where(company())->first();
-    //     $childTwo = Child_two::where('child_one_id', $childOne->id)->where(company())->get();
-    //     if ($childTwo->isNotEmpty()) {
-    //         $childTwoIds = $childTwo->pluck('id')->toArray();
-    //         $customerPayment = GeneralLedger::whereIn('child_two_id', $childTwoIds)->get();
-            
-    //     }else{
-    //         $customerPayment = 'No Data Found';
-    //     }
-    //     return view('reports.statement', compact('customerPayment'));
-    // }
     public function statement(Request $request) {
         if ($request->fdate && $request->tdate) {
             $fdate = Carbon::parse($request->fdate)->toDateString();
@@ -411,7 +398,6 @@ class ReportController extends Controller
             $fdate = Carbon::now()->toDateString();
             $tdate = Carbon::now()->toDateString();
         }
-        echo $fdate;
             //$query->whereBetween(DB::raw('DATE(regular_purchases.purchase_date)'), [$fdate, $tdate]);
             //  dd($query->toSql());
         
@@ -433,7 +419,9 @@ class ReportController extends Controller
         $spjvid = GeneralLedger::whereIn('child_two_id',$payable)
                             //->whereBetween('rec_date', [$fdate, $tdate])
                             ->pluck('jv_id');
-        $supplierayment = GeneralLedger::whereIn('jv_id',$spjvid)->whereIn('child_two_id',$cash)->get();
+        $supplierayment = GeneralLedger::select(DB::raw('sum(cr) as cr'),'journal_title')
+                            ->groupBy('journal_title')
+                            ->whereIn('jv_id',$spjvid)->whereIn('child_two_id',$cash)->get();
                             //dd($cash);
         return view('reports.statement', compact('customerPayment','supplierayment','cash'));
     }

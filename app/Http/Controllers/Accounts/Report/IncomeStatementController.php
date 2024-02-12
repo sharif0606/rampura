@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ResponseTrait;
 use App\Models\Settings\Company;
 use App\Models\Products\LcNumber;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class IncomeStatementController extends Controller
 {

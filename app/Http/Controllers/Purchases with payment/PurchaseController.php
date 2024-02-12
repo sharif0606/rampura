@@ -23,7 +23,7 @@ use App\Http\Traits\ResponseTrait;
 use App\Models\Suppliers\SupplierPayment;
 use App\Models\Suppliers\SupplierPaymentDetails;
 use Exception;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class PurchaseController extends Controller

@@ -13,7 +13,7 @@ use App\Models\Generalledger;
 
 use Illuminate\Http\Request;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class BalanceSheetController extends Controller{
     

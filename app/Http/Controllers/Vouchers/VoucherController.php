@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Vouchers\GeneralVoucher;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class VoucherController extends Controller
 {

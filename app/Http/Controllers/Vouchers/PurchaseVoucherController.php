@@ -11,8 +11,7 @@ use App\Models\Accounts\Child_one;
 use App\Models\Accounts\Child_two;
 use Illuminate\Http\Request;
 use App\Http\Traits\ResponseTrait;
-use App\Models\Customers\Customer;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Session;
 use Exception;
 
@@ -191,7 +190,7 @@ class PurchaseVoucherController extends VoucherController
 				return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
 			}
 		}catch (Exception $e) {
-			dd($e);
+			// dd($e);
 			DB::rollBack();
 			return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
 		}
@@ -203,10 +202,10 @@ class PurchaseVoucherController extends VoucherController
      * @param  \App\Models\CreditVoucher  $creditVoucher
      * @return \Illuminate\Http\Response
      */
-    public function show(CustomerVoucher $customerVoucher)
-    {
-        //
-    }
+    // public function show(CustomerVoucher $customerVoucher)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -252,8 +251,8 @@ class PurchaseVoucherController extends VoucherController
      * @param  \App\Models\CreditVoucher  $creditVoucher
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CustomerVoucher $customerVoucher)
-    {
-        //
-    }
+    // public function destroy(CustomerVoucher $customerVoucher)
+    // {
+    //     //
+    // }
 }

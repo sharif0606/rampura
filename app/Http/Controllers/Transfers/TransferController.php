@@ -12,7 +12,7 @@ use App\Models\Settings\Warehouse;
 use App\Models\Settings\Company;
 use Illuminate\Http\Request;
 use App\Http\Traits\ResponseTrait;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Exception;
 
 class TransferController extends Controller
@@ -76,7 +76,7 @@ class TransferController extends Controller
     public function product_scr_d(Request $request)
     {
         if($request->item_id){
-            $product=collect(\DB::select("SELECT products.id,products.price,products.product_name,products.bar_code,sum(stocks.quantity) as qty FROM `products` JOIN stocks on stocks.product_id=products.id WHERE stocks.company_id=".company()['company_id']." and stocks.branch_id=".$request->branch_id." and stocks.warehouse_id=".$request->warehouse_id." and products.id=".$request->item_id." GROUP BY products.id"))->first();
+            $product=collect(DB::select("SELECT products.id,products.price,products.product_name,products.bar_code,sum(stocks.quantity) as qty FROM `products` JOIN stocks on stocks.product_id=products.id WHERE stocks.company_id=".company()['company_id']." and stocks.branch_id=".$request->branch_id." and stocks.warehouse_id=".$request->warehouse_id." and products.id=".$request->item_id." GROUP BY products.id"))->first();
             
             $data='<tr class="productlist">';
             $data.='<td class="p-2">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'" class="product_id_list"><input name="stockqty[]" type="hidden" value="'.$product->qty.'" class="stockqty"></td>';

@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Accounts\Master;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AddNewRequest extends FormRequest
 {
@@ -21,16 +23,24 @@ class AddNewRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(Request $r)
     {
         return [
             'head_name'=> 'required',
-            'head_code'=> 'required|unique:master_accounts,head_code'
+            // 'head_code'=> 'required|unique:master_accounts,head_code'
+            'head_code' => [
+                'required',
+                Rule::unique('master_accounts')->where(function ($query) use ($r) {
+                    return $query->where('head_code', $r->head_code)
+                       ->where(company());
+                 }),
+            ]
         ]; 
     }
     public function messages(){
         return [
-            'required' => "The :attribute filed is required"
+            'required' => "The :attribute filed is required",
+            'unique' => "This :attribute is already used. Please try another",
         ];
     }
 }

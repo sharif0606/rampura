@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Accounts\ChildOne;
 
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AddNewRequest extends FormRequest
@@ -21,12 +23,19 @@ class AddNewRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(Request $r)
     {
         return [
             'sub_head'=> 'required',
             'head_name'=> 'required',
-            'head_code'=> 'required|unique:child_ones,head_code'
+            // 'head_code'=> 'required|unique:child_ones,head_code'
+            'head_code' => [
+                'required',
+                Rule::unique('child_ones')->where(function ($query) use ($r) {
+                    return $query->where('head_code', $r->head_code)
+                       ->where(company());
+                 }),
+            ]
         ];
     }
     public function messages(){

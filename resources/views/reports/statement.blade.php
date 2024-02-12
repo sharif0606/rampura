@@ -42,12 +42,16 @@
                                     <div class="table-responsive">
                                         <table class="table mb-5">
                                             <tbody>
-                                                <tr >
-                                                    <td width="50%">{{__('Revieved')}}</td>
-                                                    <td width="50%">{{__('Payment')}}</td>
+                                                <tr class="text-center">
+                                                    <th width="50%">{{__('Revieved')}}</th>
+                                                    <th width="50%">{{__('Payment')}}</th>
                                                 </tr>
                                                 <tr>
-                                                    <td>
+                                                    @php
+                                                        $drTotal = 0;
+                                                        $crTotal = 0;
+                                                    @endphp
+                                                    <td style="vertical-align: top; height: 0;">
                                                         <table class="table mb-5">
                                                             <tbody>
                                                                 <tr >
@@ -56,15 +60,46 @@
                                                                 </tr>
                                                                 @foreach ($customerPayment as $cp)
                                                                 <tr>
-                                                                    <td class="p-2">{{$cp->journal_title}}</td>
-                                                                    <td class="p-2">{{$cp->dr}}</td>
+                                                                    <td class="p-2">{{$cp->customer?->customer_name}}</td>
+                                                                    <td class="p-2">{{money_format($cp->dr)}}</td>
                                                                 </tr>
+                                                                @php
+                                                                $drTotal += $cp->dr;
+                                                                @endphp
                                                                 @endforeach
                                                             </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th>Total</th>
+                                                                    <th>{{money_format($drTotal)}}</th>
+                                                                </tr>
+                                                            </tfoot>
                                                         </table>
                                                     </td>
-                                                    <td>
-
+                                                    <td style="vertical-align: top; height: 0;">
+                                                        <table class="table mb-5">
+                                                            <tbody>
+                                                                <tr >
+                                                                    <th class="p-2">{{__('Account Title')}}</th>
+                                                                    <th class="p-2">{{__('Amount')}}</th>
+                                                                </tr>
+                                                                @foreach ($supplierayment as $sp)
+                                                                <tr>
+                                                                    <td class="p-2">{{$sp->supplier?->supplier_name}}</td>
+                                                                    <td class="p-2">{{money_format($sp->cr)}}</td>
+                                                                </tr>
+                                                                @php
+                                                                $crTotal += $sp->cr;
+                                                                @endphp
+                                                                @endforeach
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th>Total</th>
+                                                                    <th>{{money_format($crTotal)}}</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
                                                     </td>
                                                 </tr>
                                             </tbody>

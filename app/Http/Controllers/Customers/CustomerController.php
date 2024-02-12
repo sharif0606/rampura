@@ -17,7 +17,7 @@ use App\Http\Traits\ResponseTrait;
 use App\Models\Accounts\Child_one;
 use App\Models\Accounts\Child_two;
 use Exception;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {

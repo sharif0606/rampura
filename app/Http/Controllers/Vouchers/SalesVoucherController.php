@@ -11,7 +11,7 @@ use App\Models\Accounts\Child_one;
 use App\Models\Accounts\Child_two;
 use Illuminate\Http\Request;
 use App\Http\Traits\ResponseTrait;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Session;
 use Exception;
 use Illuminate\Support\Facades\Redis;
@@ -137,7 +137,7 @@ class SalesVoucherController extends VoucherController
 							$gl=new GeneralLedger;
                             $gl->sales_voucher_id=$jv->id;
                             $gl->company_id =company()['company_id'];
-                            $gl->journal_title=$jv->customer_id;
+                            $gl->journal_title=$request->customer_id;
                             $gl->account_title=$jvb->account_code;
                             $gl->rec_date=$request->current_date;
                             $gl->lc_no=$jvb->lc_no;
@@ -194,7 +194,7 @@ class SalesVoucherController extends VoucherController
 				return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
 			}
 		}catch (Exception $e) {
-			 dd($e);
+			//  dd($e);
 			DB::rollBack();
 			return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
 		}
@@ -206,10 +206,10 @@ class SalesVoucherController extends VoucherController
      * @param  \App\Models\CreditVoucher  $creditVoucher
      * @return \Illuminate\Http\Response
      */
-    public function show(CustomerVoucher $customerVoucher)
-    {
-        //
-    }
+    // public function show(CustomerVoucher $customerVoucher)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -255,8 +255,8 @@ class SalesVoucherController extends VoucherController
      * @param  \App\Models\CreditVoucher  $creditVoucher
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CustomerVoucher $customerVoucher)
-    {
-        //
-    }
+    // public function destroy(CustomerVoucher $customerVoucher)
+    // {
+    //     //
+    // }
 }

@@ -28,7 +28,7 @@ use App\Models\Vouchers\PurchaseVoucher;
 use App\Models\Vouchers\PurVoucherBkdns;
 use App\Models\Products\LcNumber;
 use Exception;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class BeparianPurchaseController extends Controller
