@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('lc_numbers', function (Blueprint $table) {
             $table->id();
+            $table->integer('company_id');
             $table->unsignedBigInteger('product_id')->nullable();
             $table->string('lot_name')->nullable();
             $table->string('lot_no')->nullable();
