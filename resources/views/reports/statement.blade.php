@@ -102,6 +102,33 @@
                                                         </table>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td style="vertical-align: top; height: 0;">
+                                                        <table class="table mb-5">
+                                                            <tbody>
+                                                                <tr >
+                                                                    <th class="p-2"></th>
+                                                                    <th class="p-2">{{__('Amount')}}</th>
+                                                                </tr>
+                                                                @foreach ($allreceive as $cp)
+                                                                <tr>
+                                                                    <td class="p-2">{{$cp->journal_title}}n{{$cp->account_title}}</td>
+                                                                    <td class="p-2">{{$cp->dr}}</td>
+                                                                </tr>
+                                                                @php
+                                                                $drTotal += $cp->dr;
+                                                                @endphp
+                                                                @endforeach
+                                                            </tbody>
+                                                            {{-- <tfoot>
+                                                                <tr>
+                                                                    <th>Total</th>
+                                                                    <th>{{money_format($drTotal)}}</th>
+                                                                </tr>
+                                                            </tfoot> --}}
+                                                        </table>
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>

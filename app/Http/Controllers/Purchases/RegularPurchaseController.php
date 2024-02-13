@@ -536,6 +536,7 @@ class RegularPurchaseController extends Controller
                         if(!$oldlc){
                             $newlc=new LcNumber;
                             $newlc->product_id=$request->product_id[$i];
+                            $newlc->company_id= company()['company_id'];
                             $newlc->lot_name=$lclotno;
                             $newlc->lot_no=$lclotno;
                             $newlc->billable=1;
@@ -1043,6 +1044,7 @@ class RegularPurchaseController extends Controller
                         if(!$oldlc){
                             $newlc=new LcNumber;
                             $newlc->product_id=$request->product_id[$i];
+                            $newlc->company_id= company()['company_id'];
                             $newlc->lot_name=$lclotno;
                             $newlc->lot_no=$lclotno;
                             $newlc->billable=1;

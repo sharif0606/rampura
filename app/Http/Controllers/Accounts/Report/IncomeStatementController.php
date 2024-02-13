@@ -656,7 +656,7 @@ class IncomeStatementController extends Controller
             $datae=$year."-12-31";
         }
         /* remove sales amount from non billable purchase */
-        $lot_no=LcNumber::where('billable',0)->pluck('lot_no');
+        $lot_no=LcNumber::where(company())->where('billable',0)->pluck('lot_no');
         $sales_acc_id=Child_one::where('head_code','4110')->where(company())->pluck('id');
         if($sales_acc_id)
             $salesincome=GeneralLedger::where(company())->whereBetween('rec_date',[$datas,$datae])->whereIn('lc_no',$lot_no)->whereIn('child_one_id',$sales_acc_id)->groupBy('child_one_id')->sum('cr');
