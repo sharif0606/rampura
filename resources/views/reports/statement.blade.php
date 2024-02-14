@@ -43,25 +43,26 @@
                                         <table class="table mb-5">
                                             <tbody>
                                                 <tr class="text-center">
-                                                    <th width="50%">{{__('Revieved')}}</th>
-                                                    <th width="50%">{{__('Payment')}}</th>
+                                                    <th width="50%"><h5>{{__('Revieved')}}</h5></th>
+                                                    <th width="50%"><h5>{{__('Payment')}}</h5></th>
                                                 </tr>
                                                 <tr>
                                                     @php
                                                         $drTotal = 0;
                                                         $crTotal = 0;
+                                                        $grandTotal = 0;
                                                     @endphp
                                                     <td style="vertical-align: top; height: 0;">
                                                         <table class="table mb-5">
                                                             <tbody>
                                                                 <tr >
-                                                                    <th class="p-2">{{__('Account Title')}}</th>
-                                                                    <th class="p-2">{{__('Amount')}}</th>
+                                                                    <th class=" text-start">{{__('Account Title')}}</th>
+                                                                    <th class=" text-end">{{__('Amount')}}</th>
                                                                 </tr>
                                                                 @foreach ($customerPayment as $cp)
                                                                 <tr>
-                                                                    <td class="p-2">{{$cp->customer?->customer_name}}</td>
-                                                                    <td class="p-2">{{money_format($cp->dr)}}</td>
+                                                                    <td class=" text-start">{{$cp->customer?->customer_name}}</td>
+                                                                    <td class=" text-end">{{money_format($cp->dr)}}</td>
                                                                 </tr>
                                                                 @php
                                                                 $drTotal += $cp->dr;
@@ -70,8 +71,8 @@
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
-                                                                    <th>Total</th>
-                                                                    <th>{{money_format($drTotal)}}</th>
+                                                                    <th class="text-start">Total</th>
+                                                                    <th class="text-end">{{money_format($drTotal)}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
@@ -80,13 +81,13 @@
                                                         <table class="table mb-5">
                                                             <tbody>
                                                                 <tr >
-                                                                    <th class="p-2">{{__('Account Title')}}</th>
-                                                                    <th class="p-2">{{__('Amount')}}</th>
+                                                                    <th class=" text-start">{{__('Account Title')}}</th>
+                                                                    <th class=" text-end">{{__('Amount')}}</th>
                                                                 </tr>
                                                                 @foreach ($supplierayment as $sp)
                                                                 <tr>
-                                                                    <td class="p-2">{{$sp->supplier?->supplier_name}}</td>
-                                                                    <td class="p-2">{{money_format($sp->cr)}}</td>
+                                                                    <td class=" text-start">{{$sp->supplier?->supplier_name}}</td>
+                                                                    <td class=" text-end">{{money_format($sp->cr)}}</td>
                                                                 </tr>
                                                                 @php
                                                                 $crTotal += $sp->cr;
@@ -95,37 +96,60 @@
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
-                                                                    <th>Total</th>
-                                                                    <th>{{money_format($crTotal)}}</th>
+                                                                    <th class="text-start">Total</th>
+                                                                    <th class="text-end">{{money_format($crTotal)}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="vertical-align: top; height: 0;">
+                                                    <td style="vertical-align: top; height: 0;" class="text-start">
                                                         <table class="table mb-5">
                                                             <tbody>
                                                                 <tr >
-                                                                    <th class="p-2"></th>
-                                                                    <th class="p-2">{{__('Amount')}}</th>
+                                                                    <th class=" text-start">Description</th>
+                                                                    <th class=" text-end">{{__('Amount')}}</th>
                                                                 </tr>
-                                                                @foreach ($allreceive as $cp)
+                                                                @foreach ($findSales as $sale)
                                                                 <tr>
-                                                                    <td class="p-2">{{$cp->journal_title}}n{{$cp->account_title}}</td>
-                                                                    <td class="p-2">{{$cp->dr}}</td>
+                                                                    <th class=" text-start">{{$sale->customer?->customer_name}}</th>
+                                                                    <th class=" text-end">{{money_format($sale->grand_total)}}</th>
                                                                 </tr>
                                                                 @php
-                                                                $drTotal += $cp->dr;
+                                                                $grandTotal += $sale->grand_total;
                                                                 @endphp
+                                                                <tr>
+                                                                    <td width="100%" class="text-start">
+                                                                        @if($sale->sale_lot)
+                                                                            @foreach ($sale->sale_lot as $sd)
+                                                                                <table width="90%">
+                                                                                    <tr>
+                                                                                        <td class="text-start">{{$sd->product?->product_name}}</td>
+                                                                                        <td class="text-end">({{money_format($sd->actual_quantity)}} * {{money_format($sd->rate_kg)}}) = {{money_format($sd->amount)}}</td>
+                                                                                    </tr>
+                                                                                    @if($sale->expense)
+                                                                                        @foreach ($sale->expense as $ex)
+                                                                                            <tr>
+                                                                                                <td class="text-start">{{$ex->expense?->head_name}}</td>
+                                                                                                <td class="text-end">{{money_format($ex->cost_amount)}}</td>
+                                                                                            </tr>
+                                                                                        @endforeach
+                                                                                    @endif
+                                                                                </table>
+                                                                            @endforeach
+                                                                        @endif
+                                                                    </td>
+                                                                </tr>
+                                                                
                                                                 @endforeach
                                                             </tbody>
-                                                            {{-- <tfoot>
+                                                            <tfoot>
                                                                 <tr>
-                                                                    <th>Total</th>
-                                                                    <th>{{money_format($drTotal)}}</th>
+                                                                    <th class="text-start">Total</th>
+                                                                    <th class="text-end">{{money_format($grandTotal)}}</th>
                                                                 </tr>
-                                                            </tfoot> --}}
+                                                            </tfoot>
                                                         </table>
                                                     </td>
                                                 </tr>

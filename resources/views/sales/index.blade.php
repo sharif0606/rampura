@@ -120,10 +120,10 @@
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
                                         @endif
-                                        <a href="javascript:void()" onclick="$('#form{{$s->id}}').submit()">
+                                        <a class="text-danger" href="javascript:void()" onclick="$('#form{{$s->id}}').submit()">
                                             <i class="bi bi-trash"></i>
                                         </a>
-                                        <form id="form{{$s->id}}" action="{{route(currentUser().'.sales.destroy',encryptor('encrypt',$s->id))}}" method="post">
+                                        <form id="form{{$s->id}}" onsubmit="return confirm('Are you sure?')" action="{{route(currentUser().'.sales.destroy',encryptor('encrypt',$s->id))}}" method="post">
                                             @csrf
                                             @method('delete')
                                         </form>

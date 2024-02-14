@@ -420,10 +420,12 @@ class ReportController extends Controller
                             ->groupBy('journal_title')
                             ->whereIn('jv_id',$cpjvid)->whereIn('child_two_id',$cash)->get();
 
+        $avoid_jv_id = GeneralLedger::whereIn('jv_id',$cpjvid)->whereIn('child_two_id',$cash)->pluck('jv_id');
+
         $spjvid = GeneralLedger::whereIn('child_two_id',$payable)
                             //->whereBetween('rec_date', [$fdate, $tdate])
                             ->pluck('jv_id');
-        $supplierayment = GeneralLedger::select(DB::raw('sum(cr) as cr'),'journal_title')
+                            $supplierayment = GeneralLedger::select(DB::raw('sum(cr) as cr'),'journal_title')
                             ->groupBy('journal_title')
                             ->whereIn('jv_id',$spjvid)->whereIn('child_two_id',$cash)->get();
                             //dd($cash);
@@ -432,9 +434,18 @@ class ReportController extends Controller
         $sales_jvid = SalesVoucher::where(company())->pluck('voucher_no')->toArray();
         $rec_jvid = CreditVoucher::where(company())->pluck('voucher_no')->toArray();
         $sales_rec_jvid = array_merge($sales_jvid,$rec_jvid);
-        $allreceive = GeneralLedger::groupBy('journal_title')
-        ->whereNotIn('jv_id',$cpjvid)->whereIn('jv_id',$sales_rec_jvid)->where('dr','>',"0")->get();
+        $allreceive = GeneralLedger::whereNotIN('jv_id',$avoid_jv_id)->whereIn('jv_id',$sales_rec_jvid)->where('dr','>',"0")->get();
 
+        $findSalesVoucherIds = GeneralLedger::where(company())->whereNotIn('child_two_id',$cash)->whereIn('child_two_id', $receivable)->pluck('sales_voucher_id');
+
+        // Query the Sales table based on the reference numbers obtained from GeneralLedger
+        $findSales = Sales::where(function ($query) use ($findSalesVoucherIds) {
+            foreach ($findSalesVoucherIds as $salesVoucherId) {
+                $query->orWhere('reference_no', 'like', "%$salesVoucherId%");
+            }
+        })->get();
+        // print_r($findSales); die();
+        
 
         /* other Purchase and payment  */
         //->whereBetween('rec_date', [$fdate, $tdate])
@@ -444,7 +455,7 @@ class ReportController extends Controller
         $allPayment = GeneralLedger::groupBy('journal_title')
         ->whereNotIn('jv_id',$spjvid)->whereIn('jv_id',$purchase_pay_jvid)->where('cr','>',"0")->get();
         
-        return view('reports.statement', compact('customerPayment','supplierayment','cash','allreceive','allPayment'));
+        return view('reports.statement', compact('customerPayment','supplierayment','cash','allreceive','allPayment','findSales'));
     }
     
 
