@@ -34,7 +34,7 @@
                                     <button type="submit" class="btn btn-sm btn-success me-1 mb-1 ps-5 pe-5">{{__('Show')}}</button>
                                 </div>
                                 <div class="col-6 d-flex justify-content-Start">
-                                    <a href="" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Reset')}}</a>
+                                    <a href="{{route(currentUser().'.statement_report')}}" class="btn pbtn btn-sm btn-warning me-1 mb-1 ps-5 pe-5">{{__('Reset')}}</a>
                                 </div>
                             </div>
                             <div class="row">
@@ -43,14 +43,16 @@
                                         <table class="table mb-5">
                                             <tbody>
                                                 <tr class="text-center">
-                                                    <th width="50%"><h5>{{__('Revieved')}}</h5></th>
-                                                    <th width="50%"><h5>{{__('Payment')}}</h5></th>
+                                                    <th width="48%"><h5>{{__('Revieved')}}</h5></th>
+                                                    <th width="4%"></th>
+                                                    <th width="48%"><h5>{{__('Payment')}}</h5></th>
                                                 </tr>
                                                 <tr>
                                                     @php
                                                         $drTotal = 0;
                                                         $crTotal = 0;
                                                         $grandTotal = 0;
+                                                        $purGrandTotal = 0;
                                                     @endphp
                                                     <td style="vertical-align: top; height: 0;">
                                                         <table class="table mb-5">
@@ -77,6 +79,7 @@
                                                             </tfoot>
                                                         </table>
                                                     </td>
+                                                    <td widtd="4%"></td>
                                                     <td style="vertical-align: top; height: 0;">
                                                         <table class="table mb-5">
                                                             <tbody>
@@ -148,6 +151,116 @@
                                                                 <tr>
                                                                     <th class="text-start">Total</th>
                                                                     <th class="text-end">{{money_format($grandTotal)}}</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </td>
+                                                    <td widtd="4%"></td>
+                                                    <td style="vertical-align: top; height: 0;" class="text-start">
+                                                        <table class="table mb-5">
+                                                            <tbody>
+                                                                <tr >
+                                                                    <th class=" text-start">Description</th>
+                                                                    <th class=" text-end">{{__('Amount')}}</th>
+                                                                </tr>
+                                                                @foreach ($findPurchase as $pr)
+                                                                    <tr>
+                                                                        <th class=" text-start">{{$pr->supplier?->supplier_name}}</th>
+                                                                        <th class=" text-end">{{money_format($pr->grand_total)}}</th>
+                                                                    </tr>
+                                                                    @php
+                                                                    $purGrandTotal += $pr->grand_total;
+                                                                    @endphp
+                                                                    <tr>
+                                                                        <td width="100%" class="text-start">
+                                                                            @if($pr->purchase_lot)
+                                                                                @foreach ($pr->purchase_lot as $pd)
+                                                                                    <table width="90%">
+                                                                                        <tr>
+                                                                                            <td class="text-start">{{$pd->product?->product_name}}</td>
+                                                                                            <td class="text-end">({{money_format($pd->actual_quantity)}} * {{money_format($pd->rate_kg)}}) = {{money_format($pd->amount)}}</td>
+                                                                                        </tr>
+                                                                                        @if($pr->expense)
+                                                                                            @foreach ($pr->expense as $ex)
+                                                                                                <tr>
+                                                                                                    <td class="text-start">{{$ex->expense?->head_name}}</td>
+                                                                                                    <td class="text-end">{{money_format($ex->cost_amount)}}</td>
+                                                                                                </tr>
+                                                                                            @endforeach
+                                                                                        @endif
+                                                                                    </table>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                                @foreach ($findBeparianPurchase as $pr)
+                                                                    <tr>
+                                                                        <th class=" text-start">{{$pr->supplier?->supplier_name}}</th>
+                                                                        <th class=" text-end">{{money_format($pr->grand_total)}}</th>
+                                                                    </tr>
+                                                                    @php
+                                                                    $purGrandTotal += $pr->grand_total;
+                                                                    @endphp
+                                                                    <tr>
+                                                                        <td width="100%" class="text-start">
+                                                                            @if($pr->purchase_lot)
+                                                                                @foreach ($pr->purchase_lot as $pd)
+                                                                                    <table width="90%">
+                                                                                        <tr>
+                                                                                            <td class="text-start">{{$pd->product?->product_name}}</td>
+                                                                                            <td class="text-end">({{money_format($pd->actual_quantity)}} * {{money_format($pd->rate_kg)}}) = {{money_format($pd->amount)}}</td>
+                                                                                        </tr>
+                                                                                        @if($pr->expense)
+                                                                                            @foreach ($pr->expense as $ex)
+                                                                                                <tr>
+                                                                                                    <td class="text-start">{{$ex->expense?->head_name}}</td>
+                                                                                                    <td class="text-end">{{money_format($ex->cost_amount)}}</td>
+                                                                                                </tr>
+                                                                                            @endforeach
+                                                                                        @endif
+                                                                                    </table>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                                @foreach ($findRegularPurchase as $pr)
+                                                                    <tr>
+                                                                        <th class=" text-start">{{$pr->supplier?->supplier_name}}</th>
+                                                                        <th class=" text-end">{{money_format($pr->grand_total)}}</th>
+                                                                    </tr>
+                                                                    @php
+                                                                    $purGrandTotal += $pr->grand_total;
+                                                                    @endphp
+                                                                    <tr>
+                                                                        <td width="100%" class="text-start">
+                                                                            @if($pr->purchase_lot)
+                                                                                @foreach ($pr->purchase_lot as $pd)
+                                                                                    <table width="90%">
+                                                                                        <tr>
+                                                                                            <td class="text-start">{{$pd->product?->product_name}}</td>
+                                                                                            <td class="text-end">({{money_format($pd->actual_quantity)}} * {{money_format($pd->rate_kg)}}) = {{money_format($pd->amount)}}</td>
+                                                                                        </tr>
+                                                                                        @if($pr->expense)
+                                                                                            @foreach ($pr->expense as $ex)
+                                                                                                <tr>
+                                                                                                    <td class="text-start">{{$ex->expense?->head_name}}</td>
+                                                                                                    <td class="text-end">{{money_format($ex->cost_amount)}}</td>
+                                                                                                </tr>
+                                                                                            @endforeach
+                                                                                        @endif
+                                                                                    </table>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th class="text-start">Total</th>
+                                                                    <th class="text-end">{{money_format($purGrandTotal)}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
