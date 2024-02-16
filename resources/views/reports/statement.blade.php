@@ -47,6 +47,7 @@
                                                     <th width="4%"></th>
                                                     <th width="48%"><h5>{{__('Payment')}}</h5></th>
                                                 </tr>
+                                                {{-- sales and purchase payment --}}
                                                 <tr>
                                                     @php
                                                         $drTotal = 0;
@@ -106,6 +107,8 @@
                                                         </table>
                                                     </td>
                                                 </tr>
+                                                {{-- sales and purchase payment --}}
+                                                {{-- sales and purchase --}}
                                                 <tr>
                                                     <td style="vertical-align: top; height: 0;" class="text-start">
                                                         <table class="table mb-5">
@@ -266,6 +269,49 @@
                                                         </table>
                                                     </td>
                                                 </tr>
+                                                {{-- sales and purchase --}}
+                                                {{-- summary --}}
+                                                <tr>
+                                                    <td></td>
+                                                    <td widtd="4%"></td>
+                                                    <td>
+                                                        <table class="table mb-5">
+                                                            <tbody>
+                                                                <tr >
+                                                                    <th class=" text-start"></th>
+                                                                    <th class=" text-end">{{__('Amount')}}</th>
+                                                                    <th width="5%"></th>
+                                                                    <th class=" text-start"></th>
+                                                                    <th class=" text-end">{{__('Amount')}}</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class=" text-start">Sale receive</td>
+                                                                    <td class=" text-end">{{money_format($drTotal)}}</td>
+                                                                    <td width="5%"></td>
+                                                                    <td class=" text-start">Purchase Payment</td>
+                                                                    <td class=" text-end">{{money_format($crTotal)}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class=" text-start">Sale</td>
+                                                                    <td class=" text-end">{{money_format($grandTotal)}}</td>
+                                                                    <td width="5%"></td>
+                                                                    <td class=" text-start">Purchase</td>
+                                                                    <td class=" text-end">{{money_format($purGrandTotal)}}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th class="text-start">Total</th>
+                                                                    <th class="text-end">{{money_format($drTotal + $grandTotal)}}</th>
+                                                                    <th width="5%"></th>
+                                                                    <th class="text-start">Total</th>
+                                                                    <th class="text-end">{{money_format($crTotal + $purGrandTotal)}}</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                {{-- summary --}}
                                             </tbody>
                                         </table>
                                     </div>
