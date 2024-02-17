@@ -96,7 +96,7 @@ class SupplierController extends Controller
                 $ach->head_code = '2130'.$sup->id;
                 $ach->opening_balance =$request->openingAmount ?? 0;
                 if($request->openingAmount > 0){
-                    $ach->created_at= $request->opening_balance_date;
+                    $ach->opening_balance_date= $request->opening_balance_date;
                 }
                 $ach->created_by=currentUserId();
                 if($ach->save()){
@@ -184,6 +184,9 @@ class SupplierController extends Controller
                     $ach->head_name=$request->supplier_name;
                     $ach->head_code = '2130'.$sup->id;
                     $ach->opening_balance =$request->openingAmount ?? 0;
+                    if($request->openingAmount > 0){
+                        $ach->opening_balance_date= $request->opening_balance_date;
+                    }
                     $ach->created_by=currentUserId();
                     $ach->save();
                     $sup->account_id= $ach->id;
