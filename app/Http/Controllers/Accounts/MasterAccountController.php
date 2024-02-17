@@ -52,6 +52,9 @@ class MasterAccountController extends Controller
             $mac->head_name= $request->head_name;
             $mac->head_code= $request->head_code;
             $mac->opening_balance= $request->opening_balance;
+            if($request->opening_balance > 0){
+                $mac->opening_balance_date= $request->opening_balance_date;
+            }
 
         if($mac->save())
                 return redirect()->route(currentUser().'.master.index')->with($this->resMessageHtml(true,null,'Successfully created'));
