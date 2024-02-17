@@ -389,7 +389,7 @@
                                                                     <td class=" text-end"></td>
                                                                     <td width="5%"></td>
                                                                     <td class=" text-start">নগদ</td>
-                                                                    <td class=" text-end">{{money_format(566500)}}</td>
+                                                                    <td class=" text-end">{{money_format(782000)}}</td>
                                                                 </tr>
                                                             </tbody>
                                                             <tfoot>
@@ -398,7 +398,7 @@
                                                                     <th class="text-end"></th>
                                                                     <th width="5%"></th>
                                                                     <th class="text-start"></th>
-                                                                    <th class="text-end">{{money_format(($lldhao+$purchase_cash_exp - $sale_cash_income)+566500)}}</th>
+                                                                    <th class="text-end">{{money_format(($lldhao+$purchase_cash_exp - $sale_cash_income)+782000)}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
