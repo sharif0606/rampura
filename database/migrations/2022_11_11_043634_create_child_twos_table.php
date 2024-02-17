@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('head_code');
             $table->unique(['company_id', 'head_code']);
             $table->string('opening_balance');
+            $table->date('opening_balance_date');
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->timestamps();

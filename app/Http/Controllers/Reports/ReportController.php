@@ -412,38 +412,37 @@ class ReportController extends Controller
         $receivable = Child_two::where('child_one_id', $childOne->id)->where(company())->pluck('id');
         $childOne = Child_one::where('head_code', 2130)->where(company())->first();
         $payable = Child_two::where('child_one_id', $childOne->id)->where(company())->pluck('id');
-        $childOne = Child_one::where('head_code', 1110)->where(company())->first();
-        $cash = Child_two::where('child_one_id', $childOne->id)->where(company())->pluck('id');
+        $childOne = Child_one::whereIn('head_code', ['1110','1120'])->where(company())->pluck('id');
+        $cash = Child_two::whereIn('child_one_id', $childOne)->where(company())->pluck('id');
 
         $cpjvid = GeneralLedger::whereIn('child_two_id',$receivable)
                             ->whereBetween('rec_date', [$fdate, $tdate])
                             ->pluck('jv_id');
-                            
-        $customerPayment = GeneralLedger::select(DB::raw('sum(dr) as dr'),'journal_title')
+
+        $customerPayment = GeneralLedger::with('customer')->select(DB::raw('sum(dr) as dr'),'journal_title')
                             ->groupBy('journal_title')
                             ->whereIn('jv_id',$cpjvid)->whereIn('child_two_id',$cash)->get();
-
+        
         $spjvid = GeneralLedger::whereIn('child_two_id',$payable)
                             ->whereBetween('rec_date', [$fdate, $tdate])
                             ->pluck('jv_id');
 
-        $supplierayment = GeneralLedger::select(DB::raw('sum(cr) as cr'),'journal_title')
+        $supplierayment = GeneralLedger::with('supplier')->select(DB::raw('sum(cr) as cr'),'journal_title')
                             ->groupBy('journal_title')
                             ->whereIn('jv_id',$spjvid)->whereIn('child_two_id',$cash)->get();
                             //dd($cash);
 
         /* other sales and received  */
-        // $sales_jvid = SalesVoucher::where(company())->whereBetween('current_date', [$fdate, $tdate])->pluck('voucher_no')->toArray();
-        // $rec_jvid = CreditVoucher::where(company())->whereBetween('current_date', [$fdate, $tdate])->pluck('voucher_no')->toArray();
+        // $sales_jvid = SalesVoucher::where(company())->where('current_date', '<',$fdate)->pluck('voucher_no')->toArray();
+        // $rec_jvid = CreditVoucher::where(company())->where('current_date', '<',$fdate)->pluck('voucher_no')->toArray();
         // $sales_rec_jvid = array_merge($sales_jvid,$rec_jvid);
-        // $allreceive = GeneralLedger::groupBy('journal_title')
-        //     ->whereNotIN('jv_id',$cpjvid)->whereIn('jv_id',$sales_rec_jvid)->where('dr','>',"0")->get();
+        // $allreceive = GeneralLedger::groupBy('journal_title')->whereIn('jv_id',$sales_rec_jvid)->where('dr','>',"0")->get();
 
-        $findSalesVoucherIds = GeneralLedger::where(company())->whereNotIn('child_two_id',$cash)->whereIn('child_two_id', $receivable)->pluck('sales_voucher_id');
+        $findSalesVoucherIds = GeneralLedger::where(company())->whereBetween('rec_date', [$fdate, $tdate])->whereNotIn('child_two_id',$cash)->whereIn('child_two_id', $receivable)->pluck('sales_voucher_id');
         // Query the Sales table based on the reference numbers obtained from GeneralLedger
-        $findSales = Sales::whereBetween('sales_date', [$fdate, $tdate])->where(function ($query) use ($findSalesVoucherIds) {
+        $findSales = Sales::with('customer')->where(function ($query) use ($findSalesVoucherIds) {
             foreach ($findSalesVoucherIds as $salesVoucherId) {
-                $query->orWhere('reference_no', 'like', "%$salesVoucherId%");
+                $query->orWhereRaw("find_in_set('".$salesVoucherId."',reference_no)");
             }
         })->get();
 
@@ -454,27 +453,51 @@ class ReportController extends Controller
         // $allPayment = GeneralLedger::groupBy('journal_title')
         // ->whereNotIn('jv_id',$spjvid)->whereIn('jv_id',$purchase_pay_jvid)->where('cr','>',"0")->get();
 
-        $findPurchaseVoucherIds = GeneralLedger::where(company())->whereNotIn('child_two_id',$cash)->whereIn('child_two_id', $payable)->pluck('purchase_voucher_id');
+        $findPurchaseVoucherIds = GeneralLedger::where(company())->whereBetween('rec_date', [$fdate, $tdate])->whereNotIn('child_two_id',$cash)->whereIn('child_two_id', $payable)->pluck('purchase_voucher_id');
         // Query the Purchase table based on the reference numbers obtained from GeneralLedger
-        $findPurchase = Purchase::whereBetween('purchase_date', [$fdate, $tdate])->where(function ($query) use ($findPurchaseVoucherIds) {
+        $findPurchase = Purchase::with('supplier')->where(function ($query) use ($findPurchaseVoucherIds) {
             foreach ($findPurchaseVoucherIds as $purchaseVoucherId) {
-                $query->orWhere('reference_no', 'like', "%$purchaseVoucherId%");
+                 $query->orWhereRaw("find_in_set('".$purchaseVoucherId."',reference_no)");
+            }
+        })->get();
+       // DB::enableQueryLog();
+
+        // and then you can get query log
+        
+       
+        $findBeparianPurchase = Beparian_purchase::with('supplier')->where(function ($query) use ($findPurchaseVoucherIds) {
+            foreach ($findPurchaseVoucherIds as $purchaseVoucherId) {
+                $query->orWhereRaw("find_in_set('".$purchaseVoucherId."',reference_no)");
+            }
+        })->get();
+        //dd(DB::getQueryLog());
+        $findRegularPurchase = Regular_purchase::with('supplier')->where(function ($query) use ($findPurchaseVoucherIds) {
+            foreach ($findPurchaseVoucherIds as $purchaseVoucherId) {
+                $query->orWhereRaw("find_in_set('".$purchaseVoucherId."',reference_no)");
+                //$query->orWhere('reference_no', 'like', "%$purchaseVoucherId%");
             }
         })->get();
 
-        $findBeparianPurchase = Beparian_purchase::whereBetween('purchase_date', [$fdate, $tdate])->where(function ($query) use ($findPurchaseVoucherIds) {
-            foreach ($findPurchaseVoucherIds as $purchaseVoucherId) {
-                $query->orWhere('reference_no', 'like', "%$purchaseVoucherId%");
-            }
-        })->get();
+        /* get all cash receieved ar payment jv id to avoid them from query */
+        $cp_jvid = GeneralLedger::whereIn('jv_id',$cpjvid)->whereIn('child_two_id',$cash)->pluck('jv_id')->toArray();
+        $cr_jvid = GeneralLedger::whereIn('jv_id',$spjvid)->whereIn('child_two_id',$cash)->pluck('jv_id')->toArray();
 
-        $findRegularPurchase = Regular_purchase::whereBetween('purchase_date', [$fdate, $tdate])->where(function ($query) use ($findPurchaseVoucherIds) {
-            foreach ($findPurchaseVoucherIds as $purchaseVoucherId) {
-                $query->orWhere('reference_no', 'like', "%$purchaseVoucherId%");
-            }
-        })->get();
+        if(count($cp_jvid) && count($cr_jvid))
+            $cashpayrecjvid=array_merge($cp_jvid,$cr_jvid);
+        else if($cp_jvid)
+            $cashpayrecjvid=$cp_jvid;
+        else if($cr_jvid)
+            $cashpayrecjvid=$cr_jvid;
+        else
+            $cashpayrecjvid=array();
 
-        return view('reports.statement', compact('customerPayment','supplierayment','cash','findSales','findPurchase','findBeparianPurchase','findRegularPurchase'));
+        $otherExpInc = GeneralLedger::whereNotIn('jv_id',$cashpayrecjvid)->whereIn('child_two_id',$cash)->get();
+        /* for getting old balance */
+        $accOldData=Generalledger::where('rec_date', '<',$fdate)->whereIn('child_two_id',$cash)->orderBy('rec_date')->where(company())->get();
+        $openingBalance = Child_two::whereIn('id', $cash)->where('opening_balance_date', '<',$fdate)->sum('opening_balance');
+
+        /* for getting old balance*/
+        return view('reports.statement', compact('customerPayment','supplierayment','cash','findSales','findPurchase','findBeparianPurchase','findRegularPurchase','otherExpInc','openingBalance','accOldData'));
     }
     
 

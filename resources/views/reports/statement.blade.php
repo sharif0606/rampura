@@ -40,6 +40,9 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="table-responsive">
+                                        @php
+                                            $sale_cash_income=$purchase_cash_exp=$sale_due_income=$purchase_due_exp=$other_exp=$other_income=0;
+                                        @endphp
                                         <table class="table mb-5">
                                             <tbody>
                                                 <tr class="text-center">
@@ -49,12 +52,6 @@
                                                 </tr>
                                                 {{-- sales and purchase payment --}}
                                                 <tr>
-                                                    @php
-                                                        $drTotal = 0;
-                                                        $crTotal = 0;
-                                                        $grandTotal = 0;
-                                                        $purGrandTotal = 0;
-                                                    @endphp
                                                     <td style="vertical-align: top; height: 0;">
                                                         <table class="table mb-5">
                                                             <tbody>
@@ -64,18 +61,18 @@
                                                                 </tr>
                                                                 @foreach ($customerPayment as $cp)
                                                                 <tr>
-                                                                    <td class=" text-start">{{$cp->customer?->customer_name}}</td>
+                                                                    <td class=" text-start">{{$cp->customer?$cp->customer->customer_name:$cp->journal_title}}</td>
                                                                     <td class=" text-end">{{money_format($cp->dr)}}</td>
                                                                 </tr>
                                                                 @php
-                                                                $drTotal += $cp->dr;
+                                                                $sale_cash_income += $cp->dr;
                                                                 @endphp
                                                                 @endforeach
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
                                                                     <th class="text-start">Total</th>
-                                                                    <th class="text-end">{{money_format($drTotal)}}</th>
+                                                                    <th class="text-end">{{money_format($sale_cash_income)}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
@@ -90,18 +87,18 @@
                                                                 </tr>
                                                                 @foreach ($supplierayment as $sp)
                                                                 <tr>
-                                                                    <td class=" text-start">{{$sp->supplier?->supplier_name}}</td>
+                                                                    <td class=" text-start">{{$sp->supplier?$sp->supplier->supplier_name:$sp->journal_title}}</td>
                                                                     <td class=" text-end">{{money_format($sp->cr)}}</td>
                                                                 </tr>
                                                                 @php
-                                                                $crTotal += $sp->cr;
+                                                                $purchase_cash_exp += $sp->cr;
                                                                 @endphp
                                                                 @endforeach
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
                                                                     <th class="text-start">Total</th>
-                                                                    <th class="text-end">{{money_format($crTotal)}}</th>
+                                                                    <th class="text-end">{{money_format($purchase_cash_exp)}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
@@ -123,7 +120,7 @@
                                                                     <th class=" text-end">{{money_format($sale->grand_total)}}</th>
                                                                 </tr>
                                                                 @php
-                                                                $grandTotal += $sale->grand_total;
+                                                                $sale_due_income += $sale->grand_total;
                                                                 @endphp
                                                                 <tr>
                                                                     <td width="100%" class="text-start">
@@ -153,7 +150,7 @@
                                                             <tfoot>
                                                                 <tr>
                                                                     <th class="text-start">Total</th>
-                                                                    <th class="text-end">{{money_format($grandTotal)}}</th>
+                                                                    <th class="text-end">{{money_format($sale_due_income)}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
@@ -172,7 +169,7 @@
                                                                         <th class=" text-end">{{money_format($pr->grand_total)}}</th>
                                                                     </tr>
                                                                     @php
-                                                                    $purGrandTotal += $pr->grand_total;
+                                                                    $purchase_due_exp += $pr->grand_total;
                                                                     @endphp
                                                                     <tr>
                                                                         <td width="100%" class="text-start">
@@ -203,7 +200,7 @@
                                                                         <th class=" text-end">{{money_format($pr->grand_total)}}</th>
                                                                     </tr>
                                                                     @php
-                                                                    $purGrandTotal += $pr->grand_total;
+                                                                    $purchase_due_exp += $pr->grand_total;
                                                                     @endphp
                                                                     <tr>
                                                                         <td width="100%" class="text-start">
@@ -234,7 +231,7 @@
                                                                         <th class=" text-end">{{money_format($pr->grand_total)}}</th>
                                                                     </tr>
                                                                     @php
-                                                                    $purGrandTotal += $pr->grand_total;
+                                                                    $purchase_due_exp += $pr->grand_total;
                                                                     @endphp
                                                                     <tr>
                                                                         <td width="100%" class="text-start">
@@ -263,7 +260,66 @@
                                                             <tfoot>
                                                                 <tr>
                                                                     <th class="text-start">Total</th>
-                                                                    <th class="text-end">{{money_format($purGrandTotal)}}</th>
+                                                                    <th class="text-end">{{money_format($purchase_due_exp)}}</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                {{-- sales and purchase --}}
+                                                {{-- Cash and bank --}}
+                                                <tr>
+                                                    <td style="vertical-align: top; height: 0;" class="text-start">
+                                                        <table class="table mb-5">
+                                                            <tbody>
+                                                                <tr >
+                                                                    <th class=" text-start">Description</th>
+                                                                    <th class=" text-end">{{__('Amount')}}</th>
+                                                                </tr>
+                                                                @foreach ($otherExpInc as $inc)
+                                                                    @if($inc->dr > 0)
+                                                                        <tr>
+                                                                            <th class=" text-start">{{$inc->account_title}}</th>
+                                                                            <th class=" text-end">{{money_format($inc->dr)}}</th>
+                                                                        </tr>
+                                                                        @php
+                                                                        $other_income += $inc->dr;
+                                                                        @endphp
+                                                                    @endif
+                                                                @endforeach
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th class="text-start">Total</th>
+                                                                    <th class="text-end">{{money_format($other_income)}}</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </td>
+                                                    <td widtd="4%"></td>
+                                                    <td style="vertical-align: top; height: 0;" class="text-start">
+                                                        <table class="table mb-5">
+                                                            <tbody>
+                                                                <tr >
+                                                                    <th class=" text-start">Description</th>
+                                                                    <th class=" text-end">{{__('Amount')}}</th>
+                                                                </tr>
+                                                                @foreach ($otherExpInc as $exp)
+                                                                    @if($inc->cr > 0)
+                                                                        <tr>
+                                                                            <th class=" text-start">{{$exp->account_title}}</th>
+                                                                            <th class=" text-end">{{money_format($exp->cr)}}</th>
+                                                                        </tr>
+                                                                        @php
+                                                                        $other_exp += $exp->cr;
+                                                                        @endphp
+                                                                    @endif
+                                                                @endforeach
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th class="text-start">Total</th>
+                                                                    <th class="text-end">{{money_format($other_exp)}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
@@ -272,7 +328,12 @@
                                                 {{-- sales and purchase --}}
                                                 {{-- summary --}}
                                                 <tr>
-                                                    <td></td>
+                                                    <td>
+
+                                                        @php $balance=$deb=$cre=0; @endphp
+                                                        @php $sumdr=$accOldData->sum('dr');$sumcr=$accOldData->sum('cr'); @endphp
+                                                        @php if($openingBalance>0) $sumdr+=$openingBalance; else $sumcr+=$openingBalance; @endphp
+                                                    </td>
                                                     <td widtd="4%"></td>
                                                     <td>
                                                         <table class="table mb-5">
@@ -284,28 +345,60 @@
                                                                     <th class=" text-start"></th>
                                                                     <th class=" text-end">{{__('Amount')}}</th>
                                                                 </tr>
+                                                                
+                                                                @php $oldtoho=500000; $lldhao=50000; @endphp
+                                                                
+                                                                
                                                                 <tr>
-                                                                    <td class=" text-start">Sale receive</td>
-                                                                    <td class=" text-end">{{money_format($drTotal)}}</td>
+                                                                    <td class=" text-start">সাবেক তহ: </td>
+                                                                    <td class=" text-end">{{money_format($oldtoho)}}</td>
                                                                     <td width="5%"></td>
-                                                                    <td class=" text-start">Purchase Payment</td>
-                                                                    <td class=" text-end">{{money_format($crTotal)}}</td>
+                                                                    <td class=" text-start">সাবেক হাও: </td>
+                                                                    <td class=" text-end">{{money_format($lldhao)}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td class=" text-start">Sale</td>
-                                                                    <td class=" text-end">{{money_format($grandTotal)}}</td>
+                                                                    <td class=" text-start">অদ্য তহ:</td>
+                                                                    <td class=" text-end">{{money_format($sale_due_income)}}</td>
                                                                     <td width="5%"></td>
-                                                                    <td class=" text-start">Purchase</td>
-                                                                    <td class=" text-end">{{money_format($purGrandTotal)}}</td>
+                                                                    <td class=" text-start">অদ্য হাও:</td>
+                                                                    <td class=" text-end">{{money_format($purchase_cash_exp)}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class=" text-start"></td>
+                                                                    <td class=" text-end" style="border-top:4px double">{{money_format($oldtoho + $sale_due_income)}}</td>
+                                                                    <td width="5%"></td>
+                                                                    <td class=" text-start"></td>
+                                                                    <td class=" text-end" style="border-top:4px double">{{money_format($lldhao+$purchase_cash_exp)}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class=" text-start">খরচ বাদ: </td>
+                                                                    <td class=" text-end">{{money_format($purchase_due_exp + $other_exp)}}</td>
+                                                                    <td width="5%"></td>
+                                                                    <td class=" text-start">হাও বাদ:</td>
+                                                                    <td class=" text-end">{{money_format($sale_cash_income)}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class=" text-start"></td>
+                                                                    <td class=" text-end" style="border-top:4px double">{{money_format(($oldtoho + $sale_due_income) - ($purchase_due_exp + $other_exp))}}</td>
+                                                                    <td width="5%"></td>
+                                                                    <td class=" text-start"></td>
+                                                                    <td class=" text-end" style="border-top:4px double">{{money_format($lldhao+$purchase_cash_exp - $sale_cash_income)}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class=" text-start"></td>
+                                                                    <td class=" text-end"></td>
+                                                                    <td width="5%"></td>
+                                                                    <td class=" text-start">নগদ</td>
+                                                                    <td class=" text-end">{{money_format(566500)}}</td>
                                                                 </tr>
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
-                                                                    <th class="text-start">Total</th>
-                                                                    <th class="text-end">{{money_format($drTotal + $grandTotal)}}</th>
+                                                                    <th class="text-start"></th>
+                                                                    <th class="text-end"></th>
                                                                     <th width="5%"></th>
-                                                                    <th class="text-start">Total</th>
-                                                                    <th class="text-end">{{money_format($crTotal + $purGrandTotal)}}</th>
+                                                                    <th class="text-start"></th>
+                                                                    <th class="text-end">{{money_format(($lldhao+$purchase_cash_exp - $sale_cash_income)+566500)}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
