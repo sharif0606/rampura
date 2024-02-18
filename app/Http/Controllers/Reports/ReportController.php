@@ -415,19 +415,19 @@ class ReportController extends Controller
         $childOne = Child_one::whereIn('head_code', ['1110','1120'])->where(company())->pluck('id');
         $cash = Child_two::whereIn('child_one_id', $childOne)->where(company())->pluck('id');
 
-        $cpjvid = GeneralLedger::whereIn('child_two_id',$receivable)
+        $cpjvid = GeneralLedger::whereIn('child_two_id',$receivable)->where(company())
                             ->whereBetween('rec_date', [$fdate, $tdate])
                             ->pluck('jv_id');
 
-        $customerPayment = GeneralLedger::with('customer')->select(DB::raw('sum(dr) as dr'),'journal_title')
+        $customerPayment = GeneralLedger::with('customer')->select(DB::raw('sum(dr) as dr'),'journal_title')->where(company())
                             ->groupBy('journal_title')
                             ->whereIn('jv_id',$cpjvid)->whereIn('child_two_id',$cash)->get();
         
-        $spjvid = GeneralLedger::whereIn('child_two_id',$payable)
+        $spjvid = GeneralLedger::whereIn('child_two_id',$payable)->where(company())
                             ->whereBetween('rec_date', [$fdate, $tdate])
                             ->pluck('jv_id');
 
-        $supplierayment = GeneralLedger::with('supplier')->select(DB::raw('sum(cr) as cr'),'journal_title')
+        $supplierayment = GeneralLedger::with('supplier')->select(DB::raw('sum(cr) as cr'),'journal_title')->where(company())
                             ->groupBy('journal_title')
                             ->whereIn('jv_id',$spjvid)->whereIn('child_two_id',$cash)->get();
                             //dd($cash);
@@ -465,13 +465,13 @@ class ReportController extends Controller
         // and then you can get query log
         
        
-        $findBeparianPurchase = Beparian_purchase::with('supplier')->where(function ($query) use ($findPurchaseVoucherIds) {
+        $findBeparianPurchase = Beparian_purchase::with('supplier')->where(company())->where(function ($query) use ($findPurchaseVoucherIds) {
             foreach ($findPurchaseVoucherIds as $purchaseVoucherId) {
                 $query->orWhereRaw("find_in_set('".$purchaseVoucherId."',reference_no)");
             }
         })->get();
         //dd(DB::getQueryLog());
-        $findRegularPurchase = Regular_purchase::with('supplier')->where(function ($query) use ($findPurchaseVoucherIds) {
+        $findRegularPurchase = Regular_purchase::with('supplier')->where(company())->where(function ($query) use ($findPurchaseVoucherIds) {
             foreach ($findPurchaseVoucherIds as $purchaseVoucherId) {
                 $query->orWhereRaw("find_in_set('".$purchaseVoucherId."',reference_no)");
                 //$query->orWhere('reference_no', 'like', "%$purchaseVoucherId%");
@@ -479,8 +479,8 @@ class ReportController extends Controller
         })->get();
 
         /* get all cash receieved ar payment jv id to avoid them from query */
-        $cp_jvid = GeneralLedger::whereIn('jv_id',$cpjvid)->whereIn('child_two_id',$cash)->pluck('jv_id')->toArray();
-        $cr_jvid = GeneralLedger::whereIn('jv_id',$spjvid)->whereIn('child_two_id',$cash)->pluck('jv_id')->toArray();
+        $cp_jvid = GeneralLedger::whereIn('jv_id',$cpjvid)->where(company())->whereIn('child_two_id',$cash)->pluck('jv_id')->toArray();
+        $cr_jvid = GeneralLedger::whereIn('jv_id',$spjvid)->where(company())->whereIn('child_two_id',$cash)->pluck('jv_id')->toArray();
 
         if(count($cp_jvid) && count($cr_jvid))
             $cashpayrecjvid=array_merge($cp_jvid,$cr_jvid);
@@ -493,7 +493,7 @@ class ReportController extends Controller
 
         $otherExpInc = GeneralLedger::whereNotIn('jv_id',$cashpayrecjvid)->whereIn('child_two_id',$cash)->get();
         /* for getting old balance */
-        $accOldData=Generalledger::where('rec_date', '<',$fdate)->whereIn('child_two_id',$cash)->orderBy('rec_date')->where(company())->get();
+        $accOldData=Generalledger::where('rec_date', '<',$tdate)->whereIn('child_two_id',$cash)->orderBy('rec_date')->where(company())->get();
         $openingBalance = Child_two::whereIn('id', $cash)->where('opening_balance_date', '<',$fdate)->sum('opening_balance');
 
         /* for getting old balance*/

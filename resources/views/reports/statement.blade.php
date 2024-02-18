@@ -277,7 +277,7 @@
                                                                     <th class=" text-end">{{__('Amount')}}</th>
                                                                 </tr>
                                                                 @foreach ($otherExpInc as $inc)
-                                                                    @if($inc->dr > 0)
+                                                                    @if($inc->dr > "0")
                                                                         <tr>
                                                                             <th class=" text-start">{{$inc->account_title}}</th>
                                                                             <th class=" text-end">{{money_format($inc->dr)}}</th>
@@ -305,7 +305,7 @@
                                                                     <th class=" text-end">{{__('Amount')}}</th>
                                                                 </tr>
                                                                 @foreach ($otherExpInc as $exp)
-                                                                    @if($inc->cr > 0)
+                                                                    @if($exp->cr > "0")
                                                                         <tr>
                                                                             <th class=" text-start">{{$exp->account_title}}</th>
                                                                             <th class=" text-end">{{money_format($exp->cr)}}</th>
@@ -389,7 +389,7 @@
                                                                     <td class=" text-end"></td>
                                                                     <td width="5%"></td>
                                                                     <td class=" text-start">নগদ</td>
-                                                                    <td class=" text-end">{{money_format(782000)}}</td>
+                                                                    <td class=" text-end">{{$sumdr > 0 ? money_format($sumdr) : money_format($sumcr)}}</td>
                                                                 </tr>
                                                             </tbody>
                                                             <tfoot>
@@ -398,7 +398,7 @@
                                                                     <th class="text-end"></th>
                                                                     <th width="5%"></th>
                                                                     <th class="text-start"></th>
-                                                                    <th class="text-end">{{money_format(($lldhao+$purchase_cash_exp - $sale_cash_income)+782000)}}</th>
+                                                                    <th class="text-end">{{money_format(($lldhao+$purchase_cash_exp - $sale_cash_income)+($sumdr > 0 ? $sumdr : $sumcr))}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>

@@ -18,7 +18,7 @@
                             <div class="row">
                                 <div class="input-group input-group-sm d-flex justify-content-between" >
                                     <div class="d-flex" style="width: 150px;">
-                                        <input type="text" name="name" value="{{isset($_GET['name'])?$_GET['name']:''}}" class="form-control float-start" placeholder="head name, head code" style="width: 200px;">
+                                        <input type="text" name="name" value="{{isset($_GET['name'])?$_GET['name']:''}}" class="form-control float-start" placeholder="Voucher No" style="width: 200px;">
                                     
                                         <div class="input-group-append" style="margin-left: 6px;">
                                             <button type="submit" class="btn btn-info">
