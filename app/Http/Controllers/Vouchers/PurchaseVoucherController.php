@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Vouchers;
 
-
 use App\Models\Vouchers\PurchaseVoucher;
 use App\Models\Vouchers\PurVoucherBkdns;
 use App\Models\Vouchers\GeneralLedger;

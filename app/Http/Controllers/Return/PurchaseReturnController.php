@@ -9,8 +9,10 @@ use App\Models\Purchases\Beparian_purchase;
 use App\Models\Purchases\Purchase;
 use App\Models\Purchases\Regular_purchase;
 use App\Models\Return\Purchase_return;
+use App\Models\Return\Purchase_return_details;
 use App\Models\Settings\Branch;
 use App\Models\Settings\Warehouse;
+use App\Models\Stock\Stock;
 use App\Models\Suppliers\Supplier;
 use Illuminate\Http\Request;
 use Exception;
@@ -148,6 +150,7 @@ class PurchaseReturnController extends Controller
             $data.='<td class="py-2 px-1"><input readonly name="brand[]" type="text" class="form-control brand"  value="'.$product->brand.'"></td>';
             $data.='<td class="py-2 px-1"><input  type="text" class="form-control stock_bag" value="'.$product->bag_qty.'" disabled></td>';
             $data.='<td class="py-2 px-1"><input  type="text" class="form-control" value="'.$product->qty.'" disabled></td>';
+            $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" class="form-control qty_bag" value="0"></td>';
             $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" class="form-control qty_kg" value="0"></td>';
             $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" class="form-control less_qty_kg" value="0"></td>';
             $data.='<td class="py-2 px-1"><input onkeyup="get_cal(this)" name="actual_qty[]" readonly type="text" class="form-control actual_qty" value="0"></td>';
@@ -168,7 +171,67 @@ class PurchaseReturnController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       
+        DB::beginTransaction();
+        
+        try{
+            $pur= new Purchase_return;
+            $pur->supplier_id=$request->supplierName;
+            $pur->voucher_no='VR-'.Carbon::now()->format('m-y').'-'. str_pad((Purchase_return::whereYear('created_at', Carbon::now()->year)->count() + 1),4,"0",STR_PAD_LEFT);
+            $pur->return_date = date('Y-m-d', strtotime($request->return_date));
+            $pur->grand_total=$request->tgrandtotal;
+            $pur->company_id=company()['company_id'];
+            $pur->branch_id=$request->branch_id;
+            $pur->warehouse_id=$request->warehouse_id;
+            $pur->note=$request->note;
+            $pur->created_by=currentUserId();
+            $pur->payment_status=0;
+            $pur->status=1;
+            if($pur->save()){
+                if($request->product_id){
+                    foreach($request->product_id as $i=>$product_id){
+                        $pd=new Purchase_return_details;
+                        $pd->company_id=company()['company_id'];
+                        $pd->purchase_return_id=$pur->id;
+                        $pd->product_id=$product_id;
+                        $pd->lot_no=$request->lot_no[$i];
+                        $pd->brand=$request->brand[$i];
+                        $pd->quantity_bag=$request->qty_bag[$i];
+                        $pd->quantity_kg=$request->qty_kg[$i];
+                        $pd->less_quantity_kg=$request->less_qty_kg[$i];
+                        $pd->actual_quantity=$request->actual_qty[$i];
+                        $pd->rate_kg=$request->rate_in_kg[$i];
+                        $pd->amount=$request->amount[$i];
+                        if($pd->save()){
+                            $stock=new Stock;
+                            $stock->purchase_return_id=$pur->id;
+                            $stock->product_id=$product_id;
+                            $stock->company_id=company()['company_id'];
+                            $stock->branch_id=$request->branch_id;
+                            $stock->warehouse_id=$request->warehouse_id;
+                            $stock->lot_no=$pd->lot_no;
+                            $stock->brand=$pd->brand;
+                            $stock->quantity='-'.$pd->actual_quantity;
+                            $stock->batch_id= $request->batch_id[$i];
+                            $stock->unit_price=$pd->rate_kg;
+                            $stock->quantity_bag='-'.$pd->quantity_bag;
+                            $stock->total_amount=$pd->amount;
+                            $stock->stock_date=$pur->return_date;
+                            $stock->save();
+                        }
+                    }
+                }
+                
+                DB::commit();
+                
+                return redirect()->route(currentUser().'.purchaseReturn.index')->with($this->resMessageHtml(true,null,'Successfully created'));
+            }else
+                return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+        }catch(Exception $e){
+            DB::rollback();
+            //  dd($e);
+            return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+        }
     }
 
     /**

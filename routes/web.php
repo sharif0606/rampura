@@ -177,6 +177,7 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::resource('purchase',purchase::class,['as'=>'owner']);
         Route::resource('purchaseReturn',purchaseReturn::class,['as'=>'owner']);
         Route::get('/product_search_return', [purchaseReturn::class,'product_search'])->name('owner.pur.product_search_return');
+        Route::get('/product_sc_d_return', [purchaseReturn::class,'product_sc_d'])->name('owner.pur.product_sc_d_return');
         Route::resource('bpurchase',bpurchase::class,['as'=>'owner']);
         Route::resource('rpurchase',rpurchase::class,['as'=>'owner']);
         Route::get('/purchase-pending-expense',[purPending::class,'purchase_pending_expense'])->name('owner.pur_pending_exp');

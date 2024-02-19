@@ -1,7 +1,7 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Create Purchase'))
-@section('pageSubTitle',trans('Create'))
+@section('pageTitle',trans('Purchase Return'))
+@section('pageSubTitle',trans('Return'))
 @push("styles")
 <link rel="stylesheet" href="{{ asset('assets/css/main/full-screen.css') }}">
 @endpush
@@ -89,9 +89,9 @@
                                                     <label for="date"><h6>Date<span class="text-danger">*</span></h6></label>
                                                 </th>
                                                 <td style="width: 40%;">
-                                                    <input type="text" id="datepicker" class="form-control" value="{{ old('purchase_date')}}" name="purchase_date" placeholder="dd/mm/yyyy" required>
-                                                    @if($errors->has('purchase_date'))
-                                                        <span class="text-danger"> {{ $errors->first('purchase_date') }}</span>
+                                                    <input type="text" id="datepicker" class="form-control" value="{{ old('return_date')}}" name="return_date" placeholder="dd/mm/yyyy" required>
+                                                    @if($errors->has('return_date'))
+                                                        <span class="text-danger"> {{ $errors->first('return_date') }}</span>
                                                     @endif 
                                                 </td>
                                             </tr>
@@ -110,14 +110,16 @@
                                         <thead>
                                             <tr class="bg-primary text-white text-center">
                                                 <th class="py-2 px-1" >Description of Goods</th>
-                                                <th class="py-2 px-1" >Lot/Lc No</th>
+                                                <th class="py-2 px-1" >Lot/Lc no</th>
                                                 <th class="py-2 px-1" >Trade Mark</th>
+                                                <th class="py-2 px-1" >Stock Total Bag</th>
+                                                <th class="py-2 px-1" >Stock Total Kg</th>
                                                 <th class="py-2 px-1" >Quantity Bag</th>
-                                                <th class="py-2 px-1" >Quantity kg</th>
+                                                <th class="py-2 px-1" >Quantity Kg</th>
                                                 <th class="py-2 px-1" >Less/Discount Kg</th>
-                                                <th class="py-2 px-1" >Actual Quantity</th>
-                                                <th class="py-2 px-1" >Rate in Per Kg</th>
-                                                <th class="py-2 px-1" >Total Amount</th>
+                                                <th class="py-2 px-1" >Actual Quantity Kg</th>
+                                                <th class="py-2 px-1" >Rate in Kg</th>
+                                                <th class="py-2 px-1" >Amount</th>
                                                 <th class="py-2 px-1">Action</th>
                                             </tr>
                                         </thead>
@@ -126,13 +128,13 @@
                                         </tbody>
                                         <tfoot>
                                             <tr class="bg-warning">
-                                                <th colspan="3" class="py-2 px-1 text-center">Total</th>
+                                                <th colspan="5" class="py-2 px-1 text-center">Total</th>
                                                 <th class="py-2 px-1 total_bag"></th>
                                                 <th class="py-2 px-1 total_quantity"></th>
                                                 <th class="py-2 px-1 total_less"></th>
                                                 <th class="py-2 px-1 total_actual_quantity"></th>
                                                 <th class="py-2 px-1"></th>
-                                                <th class="py-2 px-1 total_pur_amount"></th>
+                                                <th class="py-2 px-1 total_return_amount"></th>
                                                 <th class="py-2 px-1"></th>
                                             </tr>
                                         </tfoot>
@@ -297,15 +299,15 @@ $(function() {
                     var result;
                     result = [{label: 'No Records Found ',value: ''}];
                     if (res.length) {
-                        result = $.map(res, function(el){
-                            return {
-                                label: el.value +'--'+ el.label,
-                                value: '',
-                                id: el.id,
-                                item_name: el.value
-                            };
-                        });
-                    }
+                            result = $.map(res, function(el){
+                                return {
+                                    label: el.product_name+'-Lot_no/Lc_no-'+el.lot_no +' Brand-'+el.brand,
+                                    value: '',
+                                    id: el.id+"^"+el.lot_no+"^"+el.brand+"^"+el.batch_id,
+                                    item_name: el.product_name
+                                };
+                            });
+                        }
 
                     cb(result);
                 },error: function(e){
@@ -328,9 +330,9 @@ $(function() {
             select: function (e, ui) { 
                 if(typeof ui.content!='undefined'){
                 console.log("Autoselected first");
-                if(isNaN(ui.content[0].id)){
-                    return;
-                }
+                // if(isNaN(ui.content[0].id)){
+                //     return;
+                // }
                 var item_id=ui.content[0].id;
                 }
                 else{
@@ -346,24 +348,27 @@ $(function() {
 });
 
 function return_row_with_data(item_id){
-  $("#item_search").addClass('ui-autocomplete-loader-center');
+    $("#item_search").addClass('ui-autocomplete-loader-center');
+    let branch_id=$('#branch_id').val();
+    let warehouse_id=$('#warehouse_id').val();
+
     $.ajax({
-            autoFocus:true,
-                url: "{{route(currentUser().'.pur.product_search_data')}}",
-                method: 'GET',
-                dataType: 'json',
-                data: {
-                    item_id: item_id
-                },
-                success: function(res){
-                    $('#details_data').append(res);
-                    $("#item_search").val('');
-                    $("#item_search").removeClass('ui-autocomplete-loader-center');
-                },error: function(e){
-                    console.log("error "+e);
-                }
-            });
-	
+        autoFocus:true,
+        url: "{{route(currentUser().'.pur.product_sc_d_return')}}",
+        method: 'GET',
+        dataType: 'json',
+        data: {
+            item_id: item_id,branch_id:branch_id,warehouse_id:warehouse_id
+        },
+        success: function(res){
+            $('#details_data').append(res);
+            $("#item_search").val('');
+            $("#item_search").removeClass('ui-autocomplete-loader-center');
+        },error: function(e){
+            console.log("error "+e);
+        }
+    });
+    
 }
 //INCREMENT ITEM
 function removerow(e){
@@ -375,28 +380,36 @@ function removerow(e){
 
 //CALCUALATED SALES PRICE
 function get_cal(e){
-  var quantity_bag = (isNaN(parseFloat($(e).closest('tr').find('.qty_bag').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_bag').val().trim()); 
-  var quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_kg').val().trim()); 
-  var less_quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()); 
-  var rate_in_kg = (isNaN(parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim());
-  
- 
-  var actual_quantity = ((quantity_kg - less_quantity_kg));
-  var amount = ((actual_quantity * rate_in_kg));
+        // return check_product_qty(e)
+        var quantity_bag = (isNaN(parseFloat($(e).closest('tr').find('.qty_bag').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_bag').val().trim()); 
+        var stock_bag = (isNaN(parseFloat($(e).closest('tr').find('.stock_bag').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.stock_bag').val().trim()); 
+        var quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_kg').val().trim()); 
+        var less_quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()); 
+        var rate_in_kg = (isNaN(parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()); 
+        var stock = (isNaN(parseFloat($(e).closest('tr').find('.stockqty').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.stockqty').val().trim());
 
+        if(stock < quantity_kg){
+            alert("You cannot return more than "+stock);
+            quantity_kg=stock;
+            $(e).closest('tr').find('.qty_kg').val(stock)
+        }
 
-  $(e).closest('tr').find('.actual_qty').val(actual_quantity);
-  $(e).closest('tr').find('.amount').val(amount);
+        if(stock_bag < quantity_bag){
+            alert("You cannot return more than "+stock_bag);
+            quantity_bag=stock_bag;
+            $(e).closest('tr').find('.qty_bag').val(quantity_bag)
+        }
+        
+        var actualQuantity= ((quantity_kg - less_quantity_kg));
+        var amount = ((actualQuantity * rate_in_kg));
+        
+        $(e).closest('tr').find('.actual_qty').val(actualQuantity);
+        $(e).closest('tr').find('.amount').val(amount);
 
-
-    //   console.log('expense:', purExpense);
-  console.log('actual_quantity:', actual_quantity);
-  console.log('amount:', amount);
-
-  total_expense();
-  payment();
-  total_calculate();
-}
+        total_expense();
+        payment();
+        total_calculate();
+    }
 
 function get_amount(e){
   var amount = (isNaN(parseFloat($(e).closest('tr').find('.amount').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.amount').val().trim()); 
@@ -558,7 +571,7 @@ function total_calculate() {
     $('.total_quantity').text(quantityTotal.toFixed(2));
     $('.total_less').text(lessTotal.toFixed(2));
     $('.total_actual_quantity').text(actualTotal.toFixed(2));
-    $('.total_pur_amount').text(purChaseTotal.toFixed(2));
+    $('.total_return_amount').text(purChaseTotal.toFixed(2));
     $('.perKgCost').text(per_kg_costing.toFixed(2));
     $('.tgrandtotal').text(grandTotal.toFixed(2));
     $('.tgrandtotal_p').val(grandTotal.toFixed(2));

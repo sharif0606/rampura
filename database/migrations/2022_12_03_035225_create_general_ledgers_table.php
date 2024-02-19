@@ -35,8 +35,12 @@ return new class extends Migration
             $table->string('journal_voucher_bkdn_id')->nullable();
             $table->string('purchase_voucher_id')->nullable();
             $table->string('purchase_voucher_bkdn_id')->nullable();
+            $table->string('purchase_return_voucher_id')->nullable();
+            $table->string('purchase_return_voucher_bkdn_id')->nullable();
             $table->string('sales_voucher_id')->nullable();
             $table->string('sales_voucher_bkdn_id')->nullable();
+            $table->string('sale_return_voucher_id')->nullable();
+            $table->string('sale_return_voucher_bkdn_id')->nullable();
             $table->string('lc_no')->nullable();
 
             // default
