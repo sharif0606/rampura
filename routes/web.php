@@ -21,6 +21,7 @@ use App\Http\Controllers\Products\ProductController as product;
 use App\Http\Controllers\Suppliers\SupplierController as supplier;
 use App\Http\Controllers\Customers\CustomerController as customer;
 use App\Http\Controllers\Purchases\PurchaseController as purchase;
+use App\Http\Controllers\Return\PurchaseReturnController as purchaseReturn;
 use App\Http\Controllers\Purchases\BeparianPurchaseController as bpurchase;
 use App\Http\Controllers\Purchases\RegularPurchaseController as rpurchase;
 use App\Http\Controllers\Purchases\PurchasePendingsController as purPending;
@@ -174,6 +175,9 @@ Route::group(['middleware'=>isOwner::class],function(){
 
         //Purchase
         Route::resource('purchase',purchase::class,['as'=>'owner']);
+        Route::resource('purchaseReturn',purchaseReturn::class,['as'=>'owner']);
+        Route::get('/product_search_return', [purchaseReturn::class,'product_search'])->name('owner.pur.product_search_return');
+        Route::get('/product_sc_d_return', [purchaseReturn::class,'product_sc_d'])->name('owner.pur.product_sc_d_return');
         Route::resource('bpurchase',bpurchase::class,['as'=>'owner']);
         Route::resource('rpurchase',rpurchase::class,['as'=>'owner']);
         Route::get('/purchase-pending-expense',[purPending::class,'purchase_pending_expense'])->name('owner.pur_pending_exp');

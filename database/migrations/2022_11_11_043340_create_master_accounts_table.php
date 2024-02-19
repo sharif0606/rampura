@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->string('head_code');
             $table->unique(['company_id', 'head_code']);
             $table->string('opening_balance');
-            $table->date('opening_balance_date');
+            $table->date('opening_balance_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

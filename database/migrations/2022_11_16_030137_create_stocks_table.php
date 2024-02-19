@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id')->index()->nullable()->foreign()->references('id')->on('products')->onDelete('cascade');
             $table->unsignedBigInteger('purchase_id')->index()->nullable()->nullable()->foreign()->references('id')->on('purchases')->onDelete('cascade');
+            $table->unsignedBigInteger('purchase_return_id')->index()->nullable()->nullable()->foreign()->references('id')->on('purchase_returns')->onDelete('cascade');
             $table->unsignedBigInteger('beparian_purchase_id')->nullable()->index()->nullable()->foreign()->references('id')->on('beparian_purchases')->onDelete('cascade');
             $table->unsignedBigInteger('regular_purchase_id')->nullable()->index()->nullable()->foreign()->references('id')->on('regular_purchases')->onDelete('cascade');
             $table->unsignedBigInteger('sales_id')->index()->nullable()->foreign()->references('id')->on('sales')->onDelete('cascade');
