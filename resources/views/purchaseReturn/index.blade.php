@@ -10,8 +10,6 @@
         }
     }
 </style>
-
-<!-- Bordered table start -->
 <section class="section">
     <div class="row" id="table-bordered">
         <div class="col-12">
@@ -79,7 +77,7 @@
                                 <th scope="col">{{__('Lot Number')}}</th>
                                 <th scope="col">{{__('Created By')}}</th>
                                 <th scope="col">{{__('Updated By')}}</th>
-                                <th class="white-space-nowrap">{{__('Action') }}</th>
+                                {{-- <th class="white-space-nowrap">{{__('Action') }}</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -87,7 +85,7 @@
                             <tr>
                                 <th scope="row">{{ ++$loop->index }}</th>
                                 <td>{{$pur->supplier?->supplier_name}}</td>
-                                <td>{{$pur->purchase_date}}</td>
+                                <td>{{$pur->return_date}}</td>
                                 <td>{{$pur->grand_total}}</td>
                                 <td>{{$pur->warehouse?->name}}</td>
                                 {{-- <td>{{$st[$pur->status]}}</td>
@@ -102,13 +100,13 @@
                                 <td>{{$pur->createdBy?->name}}</td>
                                 <td>{{$pur->updatedBy?->name}}</td>
                                 <td class="white-space-nowrap">
-                                    <a href="{{route(currentUser().'.purchase.show',encryptor('encrypt',$pur->id))}}">
+                                    {{-- <a href="{{route(currentUser().'.purchase.show',encryptor('encrypt',$pur->id))}}">
                                         <i class="bi bi-eye-fill"></i>
-                                    </a>&nbsp;
+                                    </a>&nbsp; --}}
                                     @if(currentUser() == 'admin' || currentUser() == 'owner')
-                                        <a href="{{route(currentUser().'.purchaseReturn.edit',encryptor('encrypt',$pur->id))}}">
+                                        {{-- <a href="{{route(currentUser().'.purchaseReturn.edit',encryptor('encrypt',$pur->id))}}">
                                             <i class="bi bi-pencil-square"></i>
-                                        </a>
+                                        </a> --}}
                                         {{-- <a class="text-danger" href="javascript:void()" onclick="$('#form{{$pur->id}}').submit()">
                                             <i class="bi bi-trash"></i>
                                         </a>

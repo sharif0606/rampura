@@ -15,12 +15,14 @@ use App\Models\Settings\Warehouse;
 use App\Models\Stock\Stock;
 use App\Models\Suppliers\Supplier;
 use Illuminate\Http\Request;
+use App\Http\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class PurchaseReturnController extends Controller
 {
+    use ResponseTrait;
     /**
      * Display a listing of the resource.
      *
@@ -229,7 +231,7 @@ class PurchaseReturnController extends Controller
                 return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }catch(Exception $e){
             DB::rollback();
-            //  dd($e);
+             dd($e);
             return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
         }
     }
