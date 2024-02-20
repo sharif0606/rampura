@@ -494,7 +494,7 @@ class ReportController extends Controller
         $otherExpInc = GeneralLedger::whereNotIn('jv_id',$cashpayrecjvid)->whereIn('child_two_id',$cash)->get();
         /* for getting old balance */
         $accOldData=Generalledger::where('rec_date', '<',$tdate)->whereIn('child_two_id',$cash)->orderBy('rec_date')->where(company())->get();
-        $openingBalance = Child_two::whereIn('id', $cash)->where('opening_balance_date', '<',$fdate)->sum('opening_balance');
+        $openingBalance = Child_two::whereIn('id', $cash)->sum('opening_balance');
 
         /* for getting old balance*/
         return view('reports.statement', compact('customerPayment','supplierayment','cash','findSales','findPurchase','findBeparianPurchase','findRegularPurchase','otherExpInc','openingBalance','accOldData'));
