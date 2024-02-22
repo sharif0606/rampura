@@ -286,13 +286,17 @@ $(function() {
             let branch_id=$('#branch_id').val();
             let warehouse_id=$('#warehouse_id').val();
             let supplier_id=$('#supplierName').val();
+            let batch_id="";
+            $(".productlist").each(function(){
+                batch_id+='"'+$(this).find(".batch_id_list").val()+'",';
+            })
             $.ajax({
                 autoFocus:true,
                 url: "{{route(currentUser().'.pur.product_search_return')}}",
                 method: 'GET',
                 dataType: 'json',
                 data: {
-                    name: data.term, supplier_id:supplier_id , branch_id:branch_id, warehouse_id:warehouse_id
+                    name: data.term, supplier_id:supplier_id , branch_id:branch_id, warehouse_id:warehouse_id,batch_id:batch_id
                 },
                 success: function(res){
                 // console.log(res);

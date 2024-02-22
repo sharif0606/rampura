@@ -106,20 +106,8 @@ class PurchaseReturnController extends Controller
             }else{
                 $purchase_id="";
             }
-            $beparian_purchase_id = Beparian_purchase::where(company())->where('supplier_id',$request->supplier_id)->pluck('id')->toArray();
-            if($beparian_purchase_id){
-                $beparian_purchase_id=implode(',',$beparian_purchase_id);
-            }else{
-                $beparian_purchase_id=0;
-            }
-            $regular_purchase_id = Regular_purchase::where(company())->where('supplier_id',$request->supplier_id)->pluck('id')->toArray();
-            if($regular_purchase_id){
-                $regular_purchase_id=implode(',',$regular_purchase_id);
-            }else{
-                $regular_purchase_id=0;
-            }
-           
-            $product=DB::select("SELECT products.id,products.product_name,products.bar_code,stocks.lot_no,
+            if($request->batch_id){
+                $product=DB::select("SELECT products.id,products.product_name,products.bar_code,stocks.lot_no,
                                 stocks.unit_price,stocks.batch_id,stocks.brand,
                                 sum(stocks.quantity_bag) as bag_qty,
                                 sum(stocks.quantity) as qty FROM `products`
@@ -132,10 +120,26 @@ class PurchaseReturnController extends Controller
                                 or stocks.brand like '%". $request->name ."%' or 
                                 products.product_name like '%". $request->name ."%') 
                                 and (stocks.batch_id is not null or stocks.batch_id != '') 
-                                and ( purchase_details.purchase_id in ($purchase_id) or
-                                        purchase_details.beparian_purchase_id in ($beparian_purchase_id) or
-                                        purchase_details.regular_purchase_id in ($regular_purchase_id))
+                                and purchase_details.purchase_id in ($purchase_id)
+                                and stocks.batch_id not in (".rtrim($request->batch_id,',').")
                                 GROUP BY stocks.product_id,stocks.lot_no,stocks.brand");
+            }else{
+                $product=DB::select("SELECT products.id,products.product_name,products.bar_code,stocks.lot_no,
+                                stocks.unit_price,stocks.batch_id,stocks.brand,
+                                sum(stocks.quantity_bag) as bag_qty,
+                                sum(stocks.quantity) as qty FROM `products`
+                                JOIN stocks on stocks.product_id=products.id
+                                JOIN purchase_details on purchase_details.product_id=products.id
+                                WHERE stocks.company_id=".company()['company_id']."
+                                and stocks.branch_id=".$request->branch_id." 
+                                and stocks.warehouse_id=".$request->warehouse_id." 
+                                and (stocks.lot_no like '%". $request->name ."%' 
+                                or stocks.brand like '%". $request->name ."%' or 
+                                products.product_name like '%". $request->name ."%') 
+                                and (stocks.batch_id is not null or stocks.batch_id != '') 
+                                and purchase_details.purchase_id in ($purchase_id)
+                                GROUP BY stocks.product_id,stocks.lot_no,stocks.brand");
+            }
             
             print_r(json_encode($product));  
         }
@@ -197,6 +201,7 @@ class PurchaseReturnController extends Controller
                         $pd->purchase_return_id=$pur->id;
                         $pd->product_id=$product_id;
                         $pd->lot_no=$request->lot_no[$i];
+                        $pd->batch_id=$request->batch_id[$i];
                         $pd->brand=$request->brand[$i];
                         $pd->quantity_bag=$request->qty_bag[$i];
                         $pd->quantity_kg=$request->qty_kg[$i];
@@ -214,7 +219,7 @@ class PurchaseReturnController extends Controller
                             $stock->lot_no=$pd->lot_no;
                             $stock->brand=$pd->brand;
                             $stock->quantity='-'.$pd->actual_quantity;
-                            $stock->batch_id= $request->batch_id[$i];
+                            $stock->batch_id= $pd->batch_id;
                             $stock->unit_price=$pd->rate_kg;
                             $stock->quantity_bag='-'.$pd->quantity_bag;
                             $stock->total_amount=$pd->amount;
@@ -253,9 +258,52 @@ class PurchaseReturnController extends Controller
      * @param  \App\Models\Return\Purchase_return  $purchase_return
      * @return \Illuminate\Http\Response
      */
-    public function edit(Purchase_return $purchase_return)
+    public function edit($id)
     {
-        //
+        $branches = Branch::where(company())->get();
+        if( currentUser()=='owner'){
+            $suppliers = Supplier::where(company())->get();
+            $Warehouses = Warehouse::where(company())->get();
+        }else{
+            $suppliers = Supplier::where(company())->where(branch())->get();
+            $Warehouses = Warehouse::where(company())->where(branch())->get();
+        }
+
+        $return = Purchase_return::findOrFail(encryptor('decrypt',$id));
+        //$returnDetails = Purchase_return_details::where('purchase_return_id',$return->id)->get();
+        $returnDetails = DB::select("SELECT purchase_return_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=purchase_return_details.batch_id and stocks.product_id=purchase_return_details.product_id and stocks.deleted_at is null ) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=purchase_return_details.batch_id and stocks.product_id=purchase_return_details.product_id and stocks.deleted_at is null ) as qty , (select product_name from products where products.id=purchase_return_details.product_id) as productName FROM `purchase_return_details` where purchase_return_details.purchase_return_id=".$return->id."");
+        $childone = Child_one::where(company())->whereIn('head_code',[5310,4120])->pluck('id');
+        $childTow = Child_two::where(company())->whereIn('child_one_id',$childone)->get();
+
+        $paymethod=array();
+        $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
+        
+        if($account_data){
+            foreach($account_data as $ad){
+                $shead=Child_two::where('child_one_id',$ad->id);
+                if($shead->count() > 0){
+					$shead=$shead->get();
+                    foreach($shead as $sh){
+                        $paymethod[]=array(
+                                        'id'=>$sh->id,
+                                        'head_code'=>$sh->head_code,
+                                        'head_name'=>$sh->head_name,
+                                        'table_name'=>'child_twos'
+                                    );
+                    }
+                }else{
+                    $paymethod[]=array(
+                        'id'=>$ad->id,
+                        'head_code'=>$ad->head_code,
+                        'head_name'=>$ad->head_name,
+                        'table_name'=>'child_ones'
+                    );
+                }
+                
+            }
+        }
+        
+        return view('purchaseReturn.edit',compact('branches','suppliers','Warehouses','return','returnDetails','childTow'));
     }
 
     /**

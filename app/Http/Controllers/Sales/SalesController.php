@@ -725,7 +725,7 @@ class SalesController extends Controller
             $customers = Customer::whereNotIn('is_walking', [1])->where(company())->get();
             $Warehouses = Warehouse::where(company())->get();
             $sales = Sales::findOrFail(encryptor('decrypt',$id));
-            $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
+            $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null ) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null ) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id."");
             
             $bagDetailsBySalesDetail = [];
             $bagDetails = [];

@@ -1,5 +1,5 @@
 @extends('layout.app')
-@section('pageTitle',trans('Purchase Return List'))
+@section('pageTitle',trans('Beparian Return List'))
 @section('pageSubTitle',trans('List'))
 
 @section('content')
@@ -46,7 +46,7 @@
                                                 </button>
                                             </div>
                                             <div class="input-group-append" style="margin-left: -2px;">
-                                                <a class="btn btn-warning ms-2" href="{{route(currentUser().'.purchaseReturn.index')}}" title="Clear"><i class="bi bi-arrow-clockwise"></i></a>
+                                                <a class="btn btn-warning ms-2" href="{{route(currentUser().'.beparianReturn.index')}}" title="Clear"><i class="bi bi-arrow-clockwise"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -56,7 +56,7 @@
                     </div>
                     
                     <div class="col-2">
-                        <a class=" float-end" href="{{route(currentUser().'.purchaseReturn.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
+                        <a class=" float-end" href="{{route(currentUser().'.beparianReturn.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
                     </div>
                 </div>
                 <!-- table bordered -->
@@ -77,7 +77,7 @@
                                 <th scope="col">{{__('Lot Number')}}</th>
                                 <th scope="col">{{__('Created By')}}</th>
                                 <th scope="col">{{__('Updated By')}}</th>
-                                <th class="white-space-nowrap">{{__('Action') }}</th>
+                                {{-- <th class="white-space-nowrap">{{__('Action') }}</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -104,9 +104,9 @@
                                         <i class="bi bi-eye-fill"></i>
                                     </a>&nbsp; --}}
                                     @if(currentUser() == 'admin' || currentUser() == 'owner')
-                                        <a href="{{route(currentUser().'.purchaseReturn.edit',encryptor('encrypt',$pur->id))}}">
+                                        {{-- <a href="{{route(currentUser().'.purchaseReturn.edit',encryptor('encrypt',$pur->id))}}">
                                             <i class="bi bi-pencil-square"></i>
-                                        </a>
+                                        </a> --}}
                                         {{-- <a class="text-danger" href="javascript:void()" onclick="$('#form{{$pur->id}}').submit()">
                                             <i class="bi bi-trash"></i>
                                         </a>

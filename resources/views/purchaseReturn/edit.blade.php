@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Update Purchase'))
+@section('pageTitle',trans('Update Purchase Return'))
 @section('pageSubTitle',trans('update'))
 @push("styles")
     <link rel="stylesheet" href="{{ asset('assets/css/main/full-screen.css') }}">
@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form" method="post" action="{{route(currentUser().'.purchase.update',encryptor('encrypt',$purchase->id))}}">
+                        <form class="form" method="post" action="{{route(currentUser().'.purchaseReturn.update',encryptor('encrypt',$return->id))}}">
                             @csrf
                             @method('patch')
                             <div class="row">
@@ -34,7 +34,7 @@
                                         <select required onchange="change_data(this.value)" class="form-control form-select" name="branch_id" id="branch_id">
                                             {{-- <option value="">Select Branches</option>     --}}
                                             @forelse($branches as $b)
-                                                <option value="{{ $b->id }}" {{old('branch_id',$purchase->branch_id)==$b->id?'selected':''}}>{{ $b->name }}</option>
+                                                <option value="{{ $b->id }}" {{old('branch_id',$return->branch_id)==$b->id?'selected':''}}>{{ $b->name }}</option>
                                             @empty
                                                 <option value="">No branch found</option>
                                             @endforelse          
@@ -56,7 +56,7 @@
                                     <select class="form-control choices form-select" name="supplierName" id="supplierName" onchange="get_purchase()">
                                         <option value="">Select Supplier</option>
                                         @forelse($suppliers as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName',$purchase->supplier_id)==$d->id?"selected":""}}>{{ $d->supplier_name}}-({{ $d->upazila?->name}})</option>
+                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('supplierName',$return->supplier_id)==$d->id?"selected":""}}>{{ $d->supplier_name}}-({{ $d->upazila?->name}})</option>
                                         @empty
                                             <option value="">No Supplier found</option>
                                         @endforelse
@@ -75,7 +75,7 @@
                                     <select required class="form-control form-select" name="warehouse_id" id="warehouse_id">
                                         <option value="">Select Warehouse</option>
                                         @forelse($Warehouses as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('warehouse_id',$purchase->warehouse_id)==$d->id?"selected":""}}> {{ $d->name}}</option>
+                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('warehouse_id',$return->warehouse_id)==$d->id?"selected":""}}> {{ $d->name}}</option>
                                         @empty
                                             <option value="">No Warehouse found</option>
                                         @endforelse
@@ -90,10 +90,7 @@
                                     <label for="date" class="float-end"><h6>Date<span class="text-danger">*</span></h6></label>
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" id="datepicker" class="form-control" value="{{ old('purchase_date',$purchase->purchase_date)}}" name="purchase_date" placeholder="dd/mm/yyyy" required>
-                                    @if($errors->has('purchase_date'))
-                                        <span class="text-danger"> {{ $errors->first('purchase_date') }}</span>
-                                    @endif
+                                    <input type="text" id="datepicker" class="form-control" value="{{ old('return_date',$return->return_date)}}" name="return_date" placeholder="dd/mm/yyyy" required>
                                 </div>
                             </div>
                             <div class="row m-3">
@@ -107,14 +104,16 @@
                                         <thead>
                                             <tr class="bg-primary text-white text-center">
                                                 <th class="py-2 px-1" >Description of Goods</th>
-                                                <th class="py-2 px-1" >Lot/Lc No</th>
+                                                <th class="py-2 px-1" >Lot/Lc no</th>
                                                 <th class="py-2 px-1" >Trade Mark</th>
+                                                <th class="py-2 px-1" >Stock Total Bag</th>
+                                                <th class="py-2 px-1" >Stock Total Kg</th>
                                                 <th class="py-2 px-1" >Quantity Bag</th>
-                                                <th class="py-2 px-1" >Quantity kg</th>
+                                                <th class="py-2 px-1" >Quantity Kg</th>
                                                 <th class="py-2 px-1" >Less/Discount Kg</th>
-                                                <th class="py-2 px-1" >Actual Quantity</th>
-                                                <th class="py-2 px-1" >Rate in Per Kg</th>
-                                                <th class="py-2 px-1" >Total Amount</th>
+                                                <th class="py-2 px-1" >Actual Quantity Kg</th>
+                                                <th class="py-2 px-1" >Rate in Kg</th>
+                                                <th class="py-2 px-1" >Amount</th>
                                                 <th class="py-2 px-1">Action</th>
                                             </tr>
                                         </thead>
@@ -126,14 +125,16 @@
                                                 $amountTotal = 0;
                                                 $formattedPricePerKg = 0;
                                             @endphp
-                                            <?php $firstBatchId = optional($purchase->stock)->first()->batch_id; ?>
-                                            <input type="hidden" name="batch_id" value="{{$firstBatchId}}">
+                                            {{-- <?php $firstBatchId = optional($return->stock)->first()->batch_id; ?>
+                                            <input type="hidden" name="batch_id" value="{{$firstBatchId}}"> --}}
                                         <tbody id="details_data">
-                                            @forelse ($purchaseDetails as $p)
+                                            @forelse ($returnDetails as $p)
                                             <tr class="text-center">
                                                 <td class="py-2 px-1"><input type="hidden" name="product_id[]" value="{{$p->product_id}}">{{$p->product?->product_name}}</td>
                                                 <td class="py-2 px-1"><input name="lot_no[]" type="text" value="{{$p->lot_no}}" class="form-control lot_no" required></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="brand[]" type="text" value="{{$p->brand}}" class="form-control brand"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" type="text" value="{{$p->bag_qty+$p->quantity_bag}}" class="form-control stock_bag" disabled></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" type="text" value="{{$p->qty+$p->quantity_kg}}" class="form-control" disabled></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_bag[]" type="text" value="{{$p->quantity_bag}}" class="form-control qty_bag"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" value="{{$p->quantity_kg}}" class="form-control qty_kg"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" value="{{$p->less_quantity_kg}}" class="form-control less_qty_kg"></td>
@@ -157,89 +158,14 @@
                                         </tbody>
                                         <tfoot>
                                             <tr class="bg-warning">
-                                                <th colspan="3" class="py-2 px-1 text-center">Total</th>
+                                                <th colspan="5" class="py-2 px-1 text-center">Total</th>
                                                 <th class="py-2 px-1 total_bag">{{$bagTotal}}</th>
                                                 <th class="py-2 px-1 total_quantity">{{$qtyTotal}}</th>
                                                 <th class="py-2 px-1 total_less">{{$lessTotal}}</th>
                                                 <th class="py-2 px-1 total_actual_quantity">{{$actualQtyTotal}}</th>
                                                 <th class="py-2 px-1"></th>
-                                                <th class="py-2 px-1 total_pur_amount">{{$amountTotal}}</th>
+                                                <th class="py-2 px-1 total_return_amount">{{$amountTotal}}</th>
                                                 <th class="py-2 px-1"></th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                                <div class="col-lg-12 col-sm-12 col-md-12 mt-3">
-                                    <div><h5>TOTAL EXPENSES:</h5></div>
-                                    <table class="tbl_expense" style="width:100%;">
-                                        <tbody id="expense">
-                                            <tr class="tbl_expense text-center">
-                                                <th class="tbl_expense">Expense Head</th>
-                                                <th class="tbl_expense">Lc Number</th>
-                                                <th class="tbl_expense">Sign</th>
-                                                <th colspan="2" class="tbl_expense">Cost Amount</th>
-                                            </tr>
-                                            @forelse ($expense as $item)
-                                                <tr class="tbl_expense">
-                                                    <td class="tbl_expense">
-                                                        <select name="child_two_id[]" class="form-select">
-                                                            <option value="">select</option>
-                                                            @forelse ($childTow as $ex)
-                                                                <option value="child_twos~{{$ex->id}}~{{$ex['head_name']}}~{{$ex['head_code']}}" {{$item->child_two_id==$ex->id?'selected':''}}>{{$ex->head_name}}</option>
-                                                            @empty
-                                                                <option value="">No Data Found</option>
-                                                            @endforelse
-                                                        </select>
-                                                    </td>
-                                                    <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number" value="{{$item->lot_no}}"><span class="error-message" style="color: red; display: none;"></span></td>
-                                                    <td class="tbl_expense">
-                                                        <select name="sign_for_calculate[]" class="form-select">
-                                                            <option value="+" {{old('sign_for_calculate[]',$item->sign_for_calculate)== '+'?'selected':''}}>(+)</option>
-                                                            <option value="-" {{old('sign_for_calculate[]',$item->sign_for_calculate)== '-'?'selected':''}}>(-)</option>
-                                                        </select>
-                                                    </td>
-                                                    <td class="tbl_expense"><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value="{{$item->cost_amount}}"></td>
-                                                    <td class="tbl_expense text-center fs-4" style="width: 3%;">
-                                                        <span class="text-primary" onClick='addRow();'><i class="bi bi-plus-square-fill"></i></span>
-                                                        <span class="text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></span>
-                                                    </td>
-                                                </tr>
-                                            @empty
-                                                <tr class="tbl_expense">
-                                                    <td class="tbl_expense">
-                                                        <select name="child_two_id[]" class="form-select">
-                                                            <option value="">select</option>
-                                                            @forelse ($childTow as $ex)
-                                                                <option value="child_twos~{{$ex->id}}~{{$ex['head_name']}}~{{$ex['head_code']}}">{{$ex->head_name}}</option>
-                                                            @empty
-                                                                <option value="">No Data Found</option>
-                                                            @endforelse
-                                                        </select>
-                                                    </td>
-                                                    <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number" value=""><span class="error-message" style="color: red; display: none;"></span></td>
-                                                    <td class="tbl_expense">
-                                                        <select name="sign_for_calculate[]" class="form-select">
-                                                            <option value="+" {{old('sign_for_calculate[]')== '+'?'selected':''}}>(+)</option>
-                                                            <option value="-" {{old('sign_for_calculate[]')== '-'?'selected':''}}>(-)</option>
-                                                        </select>
-                                                    </td>
-                                                    <td class="tbl_expense"><input type="text" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" value=""></td>
-                                                    <td class="tbl_expense text-center fs-4" style="width: 3%;">
-                                                        <span class="text-primary" onClick='addRow();'><i class="bi bi-plus-square-fill"></i></span>
-                                                        <span class="text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></span>
-                                                    </td>
-                                                </tr>
-                                            @endforelse
-                                            
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="tbl_expense">
-                                                <th colspan="3" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL EXPENSES</h5></th>
-                                                <td class="tbl_expense text-end" >
-                                                    <h5 class="tgrandtotal" style=" padding-right: 10px;">{{$purchase->grand_total}}</h5>
-                                                    <input type="hidden" name="tgrandtotal" class="tgrandtotal_p" value="{{$purchase->grand_total}}">
-                                                    <input type="hidden"  class="sub_total">
-                                                </td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -256,7 +182,7 @@
                                         @php
                                         if($actualQtyTotal != 0){
 
-                                            $pricePerKg = $purchase->grand_total / $actualQtyTotal;
+                                            $pricePerKg = $return->grand_total / $actualQtyTotal;
                                             $formattedPricePerKg = number_format($pricePerKg, 2);
                                         }
                                         @endphp
@@ -264,133 +190,10 @@
                                     </label>
                                 </div>
                             </div>
-
-                            <div class="row d-none">
-                                <div class="col-lg-12 col-sm-12 col-md-12">
-                                    <div><h5>Payment:</h5></div>
-                                    <table class="tbl_expense" style="width:100%;">
-                                        <tbody id="payment">
-                                            <tr class="tbl_expense text-center">
-                                                <th class="tbl_expense">Payment Type</th>
-                                                <th class="tbl_expense">Lc Number</th>
-                                                <th colspan="2" class="tbl_expense"> Amount</th>
-                                            </tr>
-                                            @forelse ($supplierPaymentDetails as $spd)
-                                                <tr class="tbl_expense">
-                                                    <td class="tbl_expense">
-                                                        <select  class="form-control form-select" name="payment_head[]">
-                                                            @if($paymethod)
-                                                                @foreach($paymethod as $d)
-                                                                    <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}" {{old('payment_head',$spd->p_table_id)== $d['id']?'selected':''}}>{{$d['head_name']}}-{{$d['head_code']}}</option>
-                                                                @endforeach
-                                                            @endif
-                                                        </select>
-                                                    </td>
-                                                    <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no_payment[]" value="{{$spd->lc_no}}" placeholder="Lc Number"><span class="error-message" style="color: red; display: none;"></span></td>
-                                                    <td class="tbl_expense"><input type="text" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]" value="{{$spd->amount}}"></td>
-                                                    <td class="tbl_expense text-primary text-center fs-4" style="width: 3%;">
-                                                        <span class="text-primary" onClick='addPaymentRow();'><i class="bi bi-plus-square-fill"></i></span>
-                                                        <span class="text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></span>
-                                                    </td>
-                                                </tr>
-                                            @empty
-                                                <tr class="tbl_expense">
-                                                    <td class="tbl_expense">
-                                                        <select  class="form-control form-select" name="payment_head[]">
-                                                            @if($paymethod)
-                                                                @foreach($paymethod as $d)
-                                                                    <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
-                                                                @endforeach
-                                                            @endif
-                                                        </select>
-                                                    </td>
-                                                    <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no_payment[]" value="" placeholder="Lc Number"><span class="error-message" style="color: red; display: none;"></span></td>
-                                                    <td class="tbl_expense"><input type="text" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]" value=""></td>
-                                                    <td class="tbl_expense text-primary text-center fs-4" style="width: 3%;">
-                                                        <span class="text-primary" onClick='addPaymentRow();'><i class="bi bi-plus-square-fill"></i></span>
-                                                        <span class="text-danger" onClick='RemoveRow(this);'><i class="bi bi-trash"></i></span>
-                                                    </td>
-                                                </tr>
-                                            @endforelse
-                                            
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="tbl_expense">
-                                                <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL AMOUNT</h5></th>
-                                                <td class="tbl_expense text-end" >
-                                                    <h5 class="tgrandtotal" >{{$supplerPayment->total_amount}}</h5>
-                                                    <input type="hidden" name="total_pay_amount" class="tgrandtotal_p" value="{{$supplerPayment->total_amount}}">
-                                                </td>
-                                            </tr>
-                                            <tr class="tbl_expense">
-                                                <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL PAYMENT</h5></th>
-                                                <td class="tbl_expense text-end" >
-                                                    <h5 class="tpayment" >{{$supplerPayment->total_payment}}</h5>
-                                                    <input type="hidden" name="total_payment" class="tpayment_p" value="{{$supplerPayment->total_payment}}">
-                                                </td>
-                                            </tr>
-                                            <tr class="tbl_expense">
-                                                <th colspan="2" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL DUE</h5></th>
-                                                <td class="tbl_expense text-end" >
-                                                    <h5 class="tdue" >{{$supplerPayment->total_due}}</h5>
-                                                    <input type="hidden" name="total_due" class="tdue_p" value="{{$supplerPayment->total_due}}" >
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12 col-sm-12 col-md-12 mt-3 tbl-scroll">
-                                    <div><h5>Receiving Information:</h5></div>
-                                    <table class="tbl_expense" style="width:100%;">
-                                        <tbody id="expense">
-                                            <tr class="tbl_expense text-center">
-                                                <th class="tbl_expense">BL No</th>
-                                                <th class="tbl_expense">BL Date</th>
-                                                <th class="tbl_expense">Port No</th>
-                                                <th class="tbl_expense">Port Name</th>
-                                                <th class="tbl_expense">Assesment No</th>
-                                                <th class="tbl_expense">Date</th>
-                                                <th class="tbl_expense">Truck No</th>
-                                                <th class="tbl_expense">Date</th>
-                                                <th class="tbl_expense">Sea No</th>
-                                                <th class="tbl_expense">Date</th>
-                                            </tr>
-                                            <tr class="tbl_expense">
-                                                @forelse ($purReceiveInfo as $purReceiveInfo)
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="bl_no" value="{{old('bl_no',$purReceiveInfo->bl_no)}}"></td>
-                                                    <td class="tbl_expense"><input type="date" class="form-control" name="bl_date" value="{{old('bl_date',$purReceiveInfo->bl_date)}}"></td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="port_no" value="{{old('port_no',$purReceiveInfo->port_no)}}"></td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="port_name" value="{{old('port_name',$purReceiveInfo->port_name)}}"></td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="assesment_no" value="{{old('assesment_no',$purReceiveInfo->assesment_no)}}"></td>
-                                                    <td class="tbl_expense"><input type="date" class="form-control" name="assesment_date" value="{{old('assesment_date',$purReceiveInfo->assesment_date)}}"></td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="truck_no" value="{{old('truck_no',$purReceiveInfo->truck_no)}}"></td>
-                                                    <td class="tbl_expense"><input type="date" class="form-control" name="truck_date" value="{{old('truck_date',$purReceiveInfo->truck_date)}}"></td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="sea_no" value="{{old('sea_no',$purReceiveInfo->sea_no)}}"></td>
-                                                    <td class="tbl_expense"><input type="date" class="form-control" name="sea_date" value="{{old('sea_date',$purReceiveInfo->sea_date)}}"></td>
-                                                @empty
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="bl_no" value="{{old('bl_no')}}"></td>
-                                                    <td class="tbl_expense"><input type="date" class="form-control" name="bl_date" value="{{old('bl_date')}}"></td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="port_no" value="{{old('port_no')}}"></td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="port_name" value="{{old('port_name')}}"></td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="assesment_no" value="{{old('assesment_no')}}"></td>
-                                                    <td class="tbl_expense"><input type="date" class="form-control" name="assesment_date" value="{{old('assesment_date')}}"></td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="truck_no" value="{{old('truck_no')}}"></td>
-                                                    <td class="tbl_expense"><input type="date" class="form-control" name="truck_date" value="{{old('truck_date')}}"></td>
-                                                    <td class="tbl_expense"><input type="text" class="form-control" name="sea_no" value="{{old('sea_no')}}"></td>
-                                                    <td class="tbl_expense"><input type="date" class="form-control" name="sea_date" value="{{old('sea_date')}}"></td>
-                                                @endforelse
-                                            </tr>
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-12">
                                     <label for="" class="form-label"><b>Narration</b></label>
-                                    <textarea class="form-control" name="note" rows="3">{{old('note',$purchase->note)}}</textarea>
+                                    <textarea class="form-control" name="note" rows="3">{{old('note',$return->note)}}</textarea>
                                 </div>
                             </div>
                             
@@ -563,47 +366,10 @@ function get_amount(e){
 //row reapeter
 function addRow(){
 
-var row=`<tr class="tbl_expense">
-            <td class="tbl_expense">
-                <select required name="child_two_id[]" class="form-select">
-                    <option value="">select</option>
-                    @forelse ($childTow as $ex)
-                        <option value="child_twos~{{$ex->id}}~{{$ex['head_name']}}~{{$ex['head_code']}}">{{$ex->head_name}}</option>
-                    @empty
-                        <option value="">No Data Found</option>
-                    @endforelse
-                </select>
-            </td>
-            <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no[]" placeholder="Lc Number" required><span class="error-message" style="color: red; display: none;"></span></td>
-            <td class="tbl_expense">
-                <select name="sign_for_calculate[]" class="form-select">
-                    <option value="+" {{old('sign_for_calculate[]')== '+'?'selected':''}}>(+)</option>
-                    <option value="-" {{old('sign_for_calculate[]')== '-'?'selected':''}}>(-)</option>
-                </select>
-            </td>
-            <td class="tbl_expense"><input type="number" onkeyup="total_expense(this)" class="form-control expense_value text-end" name="cost_amount[]" required></td>
-            <td class="tbl_expense text-danger text-center" onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
-        </tr>`;
-    $('#expense').append(row);
 }
 
 function addPaymentRow(){
 
-var row=`<tr class="tbl_expense">
-            <td class="tbl_expense">
-                <select required  class="form-control form-select" name="payment_head[]">
-                    @if($paymethod)
-                        @foreach($paymethod as $d)
-                            <option value="{{$d['table_name']}}~{{$d['id']}}~{{$d['head_name']}}~{{$d['head_code']}}">{{$d['head_name']}}-{{$d['head_code']}}</option>
-                        @endforeach
-                    @endif
-                </select>
-            </td>
-            <td class="tbl_expense"><input type="text" onblur="checking_lc_no(this)" class="form-control" name="lc_no_payment[]" placeholder="Lc Number" required><span class="error-message" style="color: red; display: none;"></span></td>
-            <td class="tbl_expense"><input type="number" onkeyup="payment(this)" class="form-control pay_value text-end" name="pay_amount[]" required></td>
-            <td class="tbl_expense text-danger text-center" onClick='RemoveRow(this);' style="width: 3%;"><i style="font-size: 1.5rem;" class="bi bi-trash"></i></td>
-        </tr>`;
-    $('#payment').append(row);
 }
 
 function RemoveRow(e) {

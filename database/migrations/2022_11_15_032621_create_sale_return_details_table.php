@@ -29,6 +29,7 @@ return new class extends Migration
             $table->decimal('amount',14,2)->default(0);
             $table->decimal('total_amount',14,2)->nullable()->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
