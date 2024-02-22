@@ -11,10 +11,11 @@ use App\Models\Suppliers\SupplierPaymentDetails;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Purchase_return extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     public function supplier(){
         return $this->belongsTo(Supplier::class);
     }
