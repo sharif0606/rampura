@@ -31,7 +31,7 @@
 		</ul>   
     </li>
     <li class="sidebar-item has-sub">
-        <a href="#" class='sidebar-link'><i class="bi bi-cart-plus-fill"></i><span>{{__('Returns')}}</span></a>
+        <a href="#" class='sidebar-link'><i class="bi bi-cart-dash-fill"></i><span>{{__('Returns')}}</span></a>
         <ul class="submenu">
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.purchaseReturn.index')}}">{{__('Purchase Return')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.beparianReturn.index')}}">{{__('Beparian Return')}}</a></li>
