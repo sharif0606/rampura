@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Update Purchase Return'))
+@section('pageTitle',trans('Update Beparian Return'))
 @section('pageSubTitle',trans('update'))
 @push("styles")
     <link rel="stylesheet" href="{{ asset('assets/css/main/full-screen.css') }}">
@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form" method="post" action="{{route(currentUser().'.purchaseReturn.update',encryptor('encrypt',$return->id))}}">
+                        <form class="form" method="post" action="{{route(currentUser().'.beparianReturn.update',encryptor('encrypt',$return->id))}}">
                             @csrf
                             @method('patch')
                             <div class="row">
@@ -141,8 +141,8 @@
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="qty_kg[]" type="text" value="{{$p->quantity_kg}}" class="form-control qty_kg"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="less_qty_kg[]" type="text" value="{{$p->less_quantity_kg}}" class="form-control less_qty_kg"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="actual_qty[]" readonly type="text" class="form-control actual_qty" value="{{$p->actual_quantity}}"></td>
-                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value="{{$p->rate_kg}}"></td>
-                                                <td class="py-2 px-1"><input onkeyup="get_amount(this)" name="amount[]" type="text" class="form-control amount" value="{{$p->amount}}"></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="rate_in_kg[]" type="text" class="form-control rate_in_kg" value="{{$p->rate_kg}}" readonly></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_amount(this)" name="amount[]" type="text" class="form-control amount" value="{{$p->amount}}" readonly></td>
                                                 <td class="py-2 px-1 text-danger"><i style="font-size:1.7rem" onclick="removerow(this)" class="bi bi-dash-circle-fill"></i></td>
                                             </tr>
                                             @php

@@ -77,7 +77,7 @@
                                 <th scope="col">{{__('Lot Number')}}</th>
                                 <th scope="col">{{__('Created By')}}</th>
                                 <th scope="col">{{__('Updated By')}}</th>
-                                {{-- <th class="white-space-nowrap">{{__('Action') }}</th> --}}
+                                <th class="white-space-nowrap">{{__('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -104,9 +104,9 @@
                                         <i class="bi bi-eye-fill"></i>
                                     </a>&nbsp; --}}
                                     @if(currentUser() == 'admin' || currentUser() == 'owner')
-                                        {{-- <a href="{{route(currentUser().'.purchaseReturn.edit',encryptor('encrypt',$pur->id))}}">
+                                        <a href="{{route(currentUser().'.beparianReturn.edit',encryptor('encrypt',$pur->id))}}">
                                             <i class="bi bi-pencil-square"></i>
-                                        </a> --}}
+                                        </a>
                                         {{-- <a class="text-danger" href="javascript:void()" onclick="$('#form{{$pur->id}}').submit()">
                                             <i class="bi bi-trash"></i>
                                         </a>

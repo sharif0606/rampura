@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Update Purchase Return'))
+@section('pageTitle',trans('Update Regular Return'))
 @section('pageSubTitle',trans('update'))
 @push("styles")
     <link rel="stylesheet" href="{{ asset('assets/css/main/full-screen.css') }}">
@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form" method="post" action="{{route(currentUser().'.purchaseReturn.update',encryptor('encrypt',$return->id))}}">
+                        <form class="form" method="post" action="{{route(currentUser().'.regularReturn.update',encryptor('encrypt',$return->id))}}">
                             @csrf
                             @method('patch')
                             <div class="row">
