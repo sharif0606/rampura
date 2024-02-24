@@ -358,6 +358,7 @@ class SalesController extends Controller
                                     if($request->quantity_detail[$product_id][$b] > 0){
                                         $bag = new BagDetail;
                                         $bag->sales_id = $pur->id;
+                                        $bag->company_id=company()['company_id'];
                                         $bag->sales_details_id = $pd->id;
                                         $bag->product_id = $pd->product_id;
                                         $bag->lot_no = $bag_lot_no;
@@ -725,7 +726,7 @@ class SalesController extends Controller
             $customers = Customer::whereNotIn('is_walking', [1])->where(company())->get();
             $Warehouses = Warehouse::where(company())->get();
             $sales = Sales::findOrFail(encryptor('decrypt',$id));
-            $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null ) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null ) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id."");
+            $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null and sales_details.deleted_at is null ) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null and sales_details.deleted_at is null) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id."");
             
             $bagDetailsBySalesDetail = [];
             $bagDetails = [];
@@ -747,7 +748,7 @@ class SalesController extends Controller
             $customers = Customer::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
             $sales = Sales::findOrFail(encryptor('decrypt',$id));
-            $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
+            $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null and sales_details.deleted_at is null ) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null and sales_details.deleted_at is null) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id."");
         }
 
         $paymethod=array();
@@ -787,7 +788,8 @@ class SalesController extends Controller
             $walking_customer = Customer::whereNotIn('is_walking', [0])->where(company())->first();
             $Warehouses = Warehouse::where(company())->get();
             $sales = Sales::findOrFail(encryptor('decrypt',$id));
-            $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
+            // $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
+            $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null and sales_details.deleted_at is null ) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null and sales_details.deleted_at is null) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id."");
             
             $bagDetailsBySalesDetail = [];
             $bagDetails = [];
@@ -809,7 +811,7 @@ class SalesController extends Controller
             $customers = Customer::where(company())->where(branch())->get();
             $Warehouses = Warehouse::where(company())->where(branch())->get();
             $sales = Sales::findOrFail(encryptor('decrypt',$id));
-            $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id." ");
+            $salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null and sales_details.deleted_at is null ) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null and sales_details.deleted_at is null) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id."");
         }
 
         $paymethod=array();
@@ -926,6 +928,7 @@ class SalesController extends Controller
                                         if($request->quantity_detail[$product_id][$b] > 0){
                                             $bag = new BagDetail;
                                             $bag->sales_id = $pur->id;
+                                            $bag->company_id=company()['company_id'];
                                             $bag->sales_details_id = $pd->id;
                                             $bag->product_id = $pd->product_id;
                                             $bag->lot_no = $bag_lot_no;

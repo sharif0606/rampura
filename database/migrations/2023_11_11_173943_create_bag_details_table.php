@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('bag_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sales_id')->nullable();
+            $table->integer('company_id')->nullable();
             $table->unsignedBigInteger('sales_details_id')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();
             $table->string('lot_no')->nullable();

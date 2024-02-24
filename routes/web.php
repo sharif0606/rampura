@@ -82,6 +82,8 @@ Route::group(['middleware'=>isAdmin::class],function(){
         Route::get('/dashboard', [dash::class,'adminDashboard'])->name('admin.dashboard');
         /* settings */
         Route::get('/admincompany',[company::class,'admindex'])->name('admin.admincompany');
+        Route::get('/delete-data-company-wise', [company::class,'allCompany'])->name('admin.get_all_company');
+        Route::get('/data-deleted-by-company', [company::class,'deleteCompanyWise'])->name('admin.deleted_data_company_wise');
 
         //Adnin profile
         Route::get('/profile', [profile::class,'adminProfile'])->name('admin.profile');
@@ -108,6 +110,8 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/dashboard', [dash::class,'ownerDashboard'])->name('owner.dashboard');
         //settings
         Route::resource('company',company::class,['as'=>'owner']);
+        Route::get('/delete-data-company-wise', [company::class,'allCompany'])->name('owner.get_all_company');
+        Route::get('/data-deleted-by-company', [company::class,'deleteCompanyWise'])->name('owner.deleted_data_company_wise');
         Route::resource('users',user::class,['as'=>'owner']);
         Route::resource('brand',brand::class,['as'=>'owner']);
         Route::resource('branch',branch::class,['as'=>'owner']);

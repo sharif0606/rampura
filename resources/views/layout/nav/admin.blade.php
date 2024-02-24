@@ -77,4 +77,13 @@
             </li>
         </ul>
     </li>
+    <li class="sidebar-item has-sub">
+        <a href="#" class='sidebar-link'>
+            <i class="bi bi-archive-fill"></i>
+            <span>{{__('Backup and Delete')}}</span>
+        </a>
+        <ul class="submenu">
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.get_all_company')}}">{{__('Delete Data')}}</a></li>
+		</ul>
+    </li>
 </ul>
