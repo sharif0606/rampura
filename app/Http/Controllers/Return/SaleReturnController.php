@@ -25,9 +25,27 @@ class SaleReturnController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $customers = Customer::where(company())->get();
+        $sales = Sales::where(company());
+        $sales = Sales::with('sale_lot','customer','warehouse','createdBy','updatedBy')->where(company());
+
+        if($request->nane)
+            $sales=$sales->where('customer_id','like','%'.$request->nane.'%');
+        if($request->sales_date)
+            $sales=$sales->where('sales_date',$request->sales_date);
+
+        if($request->lot_no){
+            $lotno=$request->lot_no;
+            $sales=$sales->whereHas('sale_lot', function($q) use ($lotno){
+                $q->where('lot_no', $lotno);
+            });
+        }
+
+        $sales=$sales->orderBy('id', 'DESC')->paginate(12);
+
+        return view('sales.index',compact('sales','customers'));
     }
 
     /**
