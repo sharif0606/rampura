@@ -28,8 +28,8 @@ class SaleReturnController extends Controller
     public function index(Request $request)
     {
         $customers = Customer::where(company())->get();
-        $sales = Sales::where(company());
-        $sales = Sales::with('sale_lot','customer','warehouse','createdBy','updatedBy')->where(company());
+        $sales = Sale_return::where(company());
+        $sales = Sale_return::with('sale_lot','customer','warehouse','createdBy','updatedBy')->where(company());
 
         if($request->nane)
             $sales=$sales->where('customer_id','like','%'.$request->nane.'%');
@@ -45,7 +45,7 @@ class SaleReturnController extends Controller
 
         $sales=$sales->orderBy('id', 'DESC')->paginate(12);
 
-        return view('sales.index',compact('sales','customers'));
+        return view('salesReturn.index',compact('sales','customers'));
     }
 
     /**
