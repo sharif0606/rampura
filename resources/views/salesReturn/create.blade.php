@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Create Sales'))
+@section('pageTitle',trans('Create Sales Return'))
 @section('pageSubTitle',trans('Create'))
 @push("styles")
 <link rel="stylesheet" href="{{ asset('assets/css/main/full-screen.css') }}">
@@ -274,6 +274,7 @@
             source: function(data, cb){
             let branch_id=$('#branch_id').val();
             let warehouse_id=$('#warehouse_id').val();
+            let customer_id=$('#customerName').val();
             let batch_id="";
             $(".productlist").each(function(){
                 batch_id+='"'+$(this).find(".batch_id_list").val()+'",';
@@ -281,11 +282,11 @@
             //alert(batch_id);
                 $.ajax({
                     autoFocus:true,
-                    url: "{{route(currentUser().'.sales.product_sc')}}",
+                    url: "{{route(currentUser().'.sales.product_sc_return')}}",
                     method: 'GET',
                     dataType: 'json',
                     data: {
-                        name: data.term,branch_id:branch_id,warehouse_id:warehouse_id,batch_id:batch_id
+                        name: data.term,branch_id:branch_id,warehouse_id:warehouse_id,customer_id:customer_id,batch_id:batch_id
                     },
                     success: function(res){
                         console.log(res);
@@ -346,14 +347,15 @@
         $("#item_search").addClass('ui-autocomplete-loader-center');
         let branch_id=$('#branch_id').val();
         let warehouse_id=$('#warehouse_id').val();
+        let customer_id=$('#customerName').val();
 
         $.ajax({
             autoFocus:true,
-            url: "{{route(currentUser().'.sales.product_sc_d')}}",
+            url: "{{route(currentUser().'.sales.product_sc_d_return')}}",
             method: 'GET',
             dataType: 'json',
             data: {
-                item_id: item_id,branch_id:branch_id,warehouse_id:warehouse_id
+                item_id: item_id,branch_id:branch_id,warehouse_id:warehouse_id,customer_id:customer_id
             },
             success: function(res){
                 $('#details_data').append(res);

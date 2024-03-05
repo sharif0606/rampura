@@ -204,13 +204,15 @@ Route::group(['middleware'=>isOwner::class],function(){
         //Sale
         Route::resource('sales',sales::class,['as'=>'owner']);
         Route::resource('salesReturn',salesReturn::class,['as'=>'owner']);
+        Route::get('/product_sc_return', [salesReturn::class,'product_sc'])->name('owner.sales.product_sc_return');
+        Route::get('/product_sc_d_return', [salesReturn::class,'product_sc_d'])->name('owner.sales.product_sc_d_return');
         Route::get('/sales-cash', [sales::class,'cashSale'])->name('owner.sales.cash');
         Route::get('/sales-cash-edit/{id}', [sales::class,'cashSaleEdit'])->name('owner.sales_cash_edit');
         Route::get('/sale-view{id}', [sales::class,'saleView'])->name('owner.sales.view');
         Route::get('/sale-memo{id}', [sales::class,'saleMemo'])->name('owner.sales.memo');
         Route::get('/product_sc', [sales::class,'product_sc'])->name('owner.sales.product_sc');
         Route::get('/product_sc_d', [sales::class,'product_sc_d'])->name('owner.sales.product_sc_d');
-
+        
         Route::get('/sales-pending-expense',[salPending::class,'sales_pending_expense'])->name('owner.sales_pending_exp');
         Route::get('/sales-payment',[salPending::class,'sales_customer_payment'])->name('owner.sales_pending_pay');
 
