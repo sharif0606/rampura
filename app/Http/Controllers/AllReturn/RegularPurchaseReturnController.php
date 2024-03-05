@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Return;
+namespace App\Http\Controllers\AllReturn;
 use App\Http\Controllers\Controller;
 
-use App\Models\Return\Regular_purchase_return;
-use App\Models\Return\Regular_purchase_return_detail;
+use App\Models\AllReturn\Regular_purchase_return;
+use App\Models\AllReturn\Regular_purchase_return_detail;
 use App\Models\Accounts\Child_one;
 use App\Models\Accounts\Child_two;
 use App\Models\Purchases\Beparian_purchase;

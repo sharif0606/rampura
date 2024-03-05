@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Return;
+namespace App\Http\Controllers\AllReturn;
 use App\Http\Controllers\Controller;
 
 use App\Models\Accounts\Child_one;
@@ -8,12 +8,13 @@ use App\Models\Accounts\Child_two;
 use App\Models\Purchases\Beparian_purchase;
 use App\Models\Purchases\Purchase;
 use App\Models\Purchases\Regular_purchase;
-use App\Models\Return\Purchase_return;
-use App\Models\Return\Purchase_return_details;
+use App\Models\AllReturn\Purchase_return;
+use App\Models\AllReturn\Purchase_return_details;
 use App\Models\Settings\Branch;
 use App\Models\Settings\Warehouse;
 use App\Models\Stock\Stock;
 use App\Models\Suppliers\Supplier;
+use App\Models\Vouchers\GeneralVoucher;
 use Illuminate\Http\Request;
 use App\Http\Traits\ResponseTrait;
 use App\Models\Expenses\ExpenseOfPurchase;
@@ -97,7 +98,6 @@ class PurchaseReturnController extends Controller
         return view('purchaseReturn.create',compact('branches','suppliers','Warehouses','childTow','paymethod'));
         
     }
-
     public function product_search(Request $request)
     {
         if($request->name){
@@ -176,12 +176,34 @@ class PurchaseReturnController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-       
+    public function create_voucher_no(){
+		$voucher_no="";
+		$query = GeneralVoucher::where(company())->latest()->first();
+		if(!empty($query)){
+		    $voucher_no = $query->voucher_no;
+			$voucher_no+=1;
+			$gv=new GeneralVoucher;
+			$gv->voucher_no=$voucher_no;
+			$gv->company_id=company()['company_id'];
+			if($gv->save())
+				return $voucher_no;
+			else
+				return $voucher_no="";
+		}else {
+			$voucher_no=10000001;
+			$gv=new GeneralVoucher;
+			$gv->voucher_no=$voucher_no;
+			$gv->company_id=company()['company_id'];
+			if($gv->save())
+				return $voucher_no;
+			else
+				return $voucher_no="";
+		}
+    }
+    public function store(Request $request){
         DB::beginTransaction();
-        
         try{
+           
             $pur= new Purchase_return;
             $pur->supplier_id=$request->supplierName;
             $pur->voucher_no='VR-'.Carbon::now()->format('m-y').'-'. str_pad((Purchase_return::whereYear('created_at', Carbon::now()->year)->count() + 1),4,"0",STR_PAD_LEFT);

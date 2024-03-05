@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Return;
+namespace App\Models\AllReturn;
 
 use App\Models\Expenses\ExpenseOfPurchase;
 use App\Models\Settings\Branch;
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Beparian_purchase_return extends Model
+class Regular_purchase_return extends Model
 {
     use HasFactory,SoftDeletes;
     public function supplier(){
@@ -32,7 +32,7 @@ class Beparian_purchase_return extends Model
         return $this->belongsTo(User::class,'updated_by','id');
     }
     public function purchase_lot(){
-        return $this->hasMany(Beparian_purchase_return_detail::class,'purchase_return_id','id');
+        return $this->hasMany(Regular_purchase_return_detail::class,'purchase_return_id','id');
     }
     public function expense(){
         return $this->hasMany(ExpenseOfPurchase::class,'purchase_id','id');

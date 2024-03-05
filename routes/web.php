@@ -21,14 +21,14 @@ use App\Http\Controllers\Products\ProductController as product;
 use App\Http\Controllers\Suppliers\SupplierController as supplier;
 use App\Http\Controllers\Customers\CustomerController as customer;
 use App\Http\Controllers\Purchases\PurchaseController as purchase;
-use App\Http\Controllers\Return\PurchaseReturnController as purchaseReturn;
-use App\Http\Controllers\Return\BeparianPurchaseReturnController as beparianReturn;
-use App\Http\Controllers\Return\RegularPurchaseReturnController as regularReturn;
+use App\Http\Controllers\AllReturn\PurchaseReturnController as purchaseReturn;
+use App\Http\Controllers\AllReturn\BeparianPurchaseReturnController as beparianReturn;
+use App\Http\Controllers\AllReturn\RegularPurchaseReturnController as regularReturn;
 use App\Http\Controllers\Purchases\BeparianPurchaseController as bpurchase;
 use App\Http\Controllers\Purchases\RegularPurchaseController as rpurchase;
 use App\Http\Controllers\Purchases\PurchasePendingsController as purPending;
 use App\Http\Controllers\Sales\SalesController as sales;
-use App\Http\Controllers\Return\SaleReturnController as salesReturn;
+use App\Http\Controllers\AllReturn\SaleReturnController as salesReturn;
 use App\Http\Controllers\Sales\SalesPendingsController as salPending;
 use App\Http\Controllers\Settings\BranchController as branch;
 use App\Http\Controllers\Settings\WarehouseController as warehouse;
@@ -126,11 +126,9 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/profile', [profile::class,'ownerProfile'])->name('owner.profile');
         Route::post('/profile', [profile::class,'ownerProfile'])->name('owner.profile.update');
 
-
         //Supplier and Customer
         Route::resource('supplier',supplier::class,['as'=>'owner']);
         Route::resource('customer',customer::class,['as'=>'owner']);
-
 
         //report
         Route::get('/stock-report',[report::class,'stockreport'])->name('owner.sreport');
@@ -184,7 +182,7 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::resource('purchase',purchase::class,['as'=>'owner']);
         Route::resource('purchaseReturn',purchaseReturn::class,['as'=>'owner']);
         Route::get('/product_search_return', [purchaseReturn::class,'product_search'])->name('owner.pur.product_search_return');
-        Route::get('/product_sc_d_return', [purchaseReturn::class,'product_sc_d'])->name('owner.pur.product_sc_d_return');
+        Route::get('/pur_product_sc_d_return', [purchaseReturn::class,'product_sc_d'])->name('owner.pur.product_sc_d_return');
         Route::resource('beparianReturn',beparianReturn::class,['as'=>'owner']);
         Route::get('/product_search_beparian_return', [beparianReturn::class,'product_search'])->name('owner.pur.product_search_beparian_return');
         Route::get('/product_sc_d_beparian_return', [beparianReturn::class,'product_sc_d'])->name('owner.pur.product_sc_d_beparian_return');
@@ -205,7 +203,7 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::resource('sales',sales::class,['as'=>'owner']);
         Route::resource('salesReturn',salesReturn::class,['as'=>'owner']);
         Route::get('/product_sc_return', [salesReturn::class,'product_sc'])->name('owner.sales.product_sc_return');
-        Route::get('/product_sc_d_return', [salesReturn::class,'product_sc_d'])->name('owner.sales.product_sc_d_return');
+        Route::get('/sales_product_sc_d_return', [salesReturn::class,'product_sc_d'])->name('owner.sales.product_sc_d_return');
         Route::get('/sales-cash', [sales::class,'cashSale'])->name('owner.sales.cash');
         Route::get('/sales-cash-edit/{id}', [sales::class,'cashSaleEdit'])->name('owner.sales_cash_edit');
         Route::get('/sale-view{id}', [sales::class,'saleView'])->name('owner.sales.view');

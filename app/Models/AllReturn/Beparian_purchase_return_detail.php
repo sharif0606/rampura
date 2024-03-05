@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\Return;
+namespace App\Models\AllReturn;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Purchase_return_details extends Model
+class Beparian_purchase_return_detail extends Model
 {
     use HasFactory,SoftDeletes;
 }
