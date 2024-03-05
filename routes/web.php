@@ -28,6 +28,7 @@ use App\Http\Controllers\Purchases\BeparianPurchaseController as bpurchase;
 use App\Http\Controllers\Purchases\RegularPurchaseController as rpurchase;
 use App\Http\Controllers\Purchases\PurchasePendingsController as purPending;
 use App\Http\Controllers\Sales\SalesController as sales;
+use App\Http\Controllers\Return\SaleReturnController as salesReturn;
 use App\Http\Controllers\Sales\SalesPendingsController as salPending;
 use App\Http\Controllers\Settings\BranchController as branch;
 use App\Http\Controllers\Settings\WarehouseController as warehouse;
@@ -166,8 +167,8 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('incomeStatement',[statement::class,'index'])->name('owner.incomeStatement');
         Route::get('incomeStatement_details',[statement::class,'details'])->name('owner.incomeStatement.details');
         Route::get('incomeStatement_details_without_sales',[statement::class,'details_without_sales'])->name('owner.incomeStatement.details_without_sales');
-        Route::get('/profitloss', [profitloss::class, 'index'])->name('owner.profitloss');
-        Route::get('/balancesheet', [balancesheet::class, 'index'])->name('owner.balancesheet');
+        //Route::get('/profitloss', [profitloss::class, 'index'])->name('owner.profitloss');
+        //Route::get('/balancesheet', [balancesheet::class, 'index'])->name('owner.balancesheet');
         Route::get('/headreport', [headreport::class, 'index'])->name('owner.headreport');
 
         //Voucher
@@ -202,6 +203,7 @@ Route::group(['middleware'=>isOwner::class],function(){
 
         //Sale
         Route::resource('sales',sales::class,['as'=>'owner']);
+        Route::resource('salesReturn',salesReturn::class,['as'=>'owner']);
         Route::get('/sales-cash', [sales::class,'cashSale'])->name('owner.sales.cash');
         Route::get('/sales-cash-edit/{id}', [sales::class,'cashSaleEdit'])->name('owner.sales_cash_edit');
         Route::get('/sale-view{id}', [sales::class,'saleView'])->name('owner.sales.view');
@@ -270,8 +272,8 @@ Route::group(['middleware'=>isSalesmanager::class],function(){
 
         Route::get('incomeStatement',[statement::class,'index'])->name('manager.incomeStatement');
         Route::get('incomeStatement_details',[statement::class,'details'])->name('manager.incomeStatement.details');
-        Route::get('/profitloss', [profitloss::class, 'index'])->name('manager.profitloss');
-        Route::get('/balancesheet', [balancesheet::class, 'index'])->name('manager.balancesheet');
+        //Route::get('/profitloss', [profitloss::class, 'index'])->name('manager.profitloss');
+        //Route::get('/balancesheet', [balancesheet::class, 'index'])->name('manager.balancesheet');
         Route::get('/headreport', [headreport::class, 'index'])->name('manager.headreport');
 
         //Voucher
@@ -360,8 +362,8 @@ Route::group(['middleware'=>isSalesman::class],function(){
 
         Route::get('incomeStatement',[statement::class,'index'])->name('accountsofficer.incomeStatement');
         Route::get('incomeStatement_details',[statement::class,'details'])->name('accountsofficer.incomeStatement.details');
-        Route::get('/profitloss', [profitloss::class, 'index'])->name('accountsofficer.profitloss');
-        Route::get('/balancesheet', [balancesheet::class, 'index'])->name('accountsofficer.balancesheet');
+        //Route::get('/profitloss', [profitloss::class, 'index'])->name('accountsofficer.profitloss');
+        //Route::get('/balancesheet', [balancesheet::class, 'index'])->name('accountsofficer.balancesheet');
         Route::get('/headreport', [headreport::class, 'index'])->name('accountsofficer.headreport');
 
         //Voucher
@@ -450,8 +452,8 @@ Route::group(['middleware'=>isExecutive::class],function(){
 
         Route::get('incomeStatement',[statement::class,'index'])->name('executiveofficer.incomeStatement');
         Route::get('incomeStatement_details',[statement::class,'details'])->name('executiveofficer.incomeStatement.details');
-        Route::get('/profitloss', [profitloss::class, 'index'])->name('executiveofficer.profitloss');
-        Route::get('/balancesheet', [balancesheet::class, 'index'])->name('executiveofficer.balancesheet');
+        //Route::get('/profitloss', [profitloss::class, 'index'])->name('executiveofficer.profitloss');
+        //Route::get('/balancesheet', [balancesheet::class, 'index'])->name('executiveofficer.balancesheet');
         Route::get('/headreport', [headreport::class, 'index'])->name('executiveofficer.headreport');
 
         //Voucher

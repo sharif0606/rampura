@@ -36,6 +36,7 @@
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.purchaseReturn.index')}}">{{__('Purchase Return')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.beparianReturn.index')}}">{{__('Beparian Return')}}</a></li>
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.regularReturn.index')}}">{{__('Regular Return')}}</a></li>
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.salesReturn.index')}}">{{__('Sales Return')}}</a></li>
 		</ul>   
     </li>
     <li class="sidebar-item has-sub">

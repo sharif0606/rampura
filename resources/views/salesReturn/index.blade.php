@@ -1,42 +1,37 @@
 @extends('layout.app')
-@section('pageTitle',trans('Sales List'))
+@section('pageTitle',trans('Sales Return List'))
 @section('pageSubTitle',trans('List'))
 
 @section('content')
 <style>
     @media (min-width: 1192px){
         .choices__inner{
-            width: 450px !important;
+            width: 438px !important;
         }
     }
 </style>
 
-<!-- Bordered table start -->
 <section class="section">
     <div class="row" id="table-bordered">
         <div class="col-12">
             <div class="card">
-
                 @if(Session::has('response'))
                     {!!Session::get('response')['message']!!}
                 @endif
-                {{-- <div>
-                    <a class="float-end" href="{{route(currentUser().'.sales.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
-                </div> --}}
                 <div class="row pb-1">
                     <div class="col-10">
                         <form action="" method="get">
                             <div class="row">
                                 <div class="input-group input-group-sm d-flex justify-content-between">
                                     <div class="col-3 pe-1">
-                                        <label>Lot Number</label>
+                                        <label for=""> Lot Number</label>
                                         <input type="text" class="form-control" name="lot_no" value="{{request('lot_no')}}" placeholder="Lot Number">
                                     </div>
                                     <div class="col-3 pe-1">
-                                        <label>Sales Date</label>
-                                        <input type="date" id="datepicker" class="form-control hasDatepicker" name="sales_date" value="{{request('sales_date')}}" placeholder="dd-mm-yyyy"/>
+                                        <label for=""> Return Date</label>
+                                        <input type="date" id="datepicker" class="form-control hasDatepicker" name="return_date" value="{{request('return_date')}}" placeholder="dd-mm-yyyy"/>
                                     </div>
-                                    <div class="col-3">
+                                    {{-- <div class="col-3">
                                         <label>Customer</label><br>
                                         <select class="form-control choices" name="nane">
                                             <option value="">Select Customer</option>
@@ -51,7 +46,29 @@
                                         <button type="submit" class="btn btn-info ms-2 mt-3">
                                             <i class="bi bi-search"></i>
                                         </button>
-                                        <a class="btn btn-warning ms-2 mt-3" href="{{route(currentUser().'.sales.index')}}" title="Clear"><i class="bi bi-arrow-clockwise"></i></a>
+                                        <a class="btn btn-warning ms-2 mt-3" href="{{route(currentUser().'.salesReturn.index')}}" title="Clear"><i class="bi bi-arrow-clockwise"></i></a>
+                                    </div> --}}
+                                    <div class="col-6">
+                                        <label for=""> Customer</label>
+                                        <div class="d-flex">
+                                            <select class="form-control choices" name="nane">
+                                                <option value="">Select Customer</option>
+                                                @forelse($customers as $d)
+                                                    <option value="{{$d->id}}" {{ (request('nane') == $d->id ? 'selected' : '') }}> {{ $d->customer_name}}-[{{ $d->upazila?->name}}]</option>
+                                                @empty
+                                                    <option value="">No Data Found</option>
+                                                @endforelse
+                                            </select>
+                        
+                                            <div class="input-group-append" style="margin-left: 6px;">
+                                                <button type="submit" class="btn btn-info">
+                                                    <i class="bi bi-search"></i>
+                                                </button>
+                                            </div>
+                                            <div class="input-group-append" style="margin-left: -2px;">
+                                                <a class="btn btn-warning ms-2" href="{{route(currentUser().'.salesReturn.index')}}" title="Clear"><i class="bi bi-arrow-clockwise"></i></a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -59,7 +76,7 @@
                     </div>
                     
                     <div class="col-2">
-                        <a class=" float-end" href="{{route(currentUser().'.sales.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
+                        <a class=" float-end" href="{{route(currentUser().'.salesReturn.create')}}"style="font-size:1.7rem"><i class="bi bi-plus-square-fill"></i></a>
                     </div>
                 </div>
                 <!-- table bordered -->
@@ -71,7 +88,7 @@
                             <tr>
                                 <th scope="col">{{__('#SL')}}</th>
                                 <th scope="col">{{__('Customer')}}</th>
-                                <th scope="col">{{__('Date')}}</th>
+                                <th scope="col">{{__('Return Date')}}</th>
                                 <th scope="col">{{__('GrandTotal')}}</th>
                                 <th scope="col">{{__('Branch')}}</th>
                                 <th scope="col">{{__('Warehouse')}}</th>
@@ -88,7 +105,7 @@
                             <tr>
                                 <th scope="row">{{ ++$loop->index }}</th>
                                 <td>{{$s->customer?->customer_name}}</td>
-                                <td>{{ date('d-M-y', strtotime($s->sales_date)) }}</td>
+                                <td>{{ date('d-M-y', strtotime($s->return_date)) }}</td>
                                 <td>{{$s->grand_total}}</td>
                                 <td>{{$s->branch?->name}}</td>
                                 <td>{{$s->warehouse?->name}}</td>

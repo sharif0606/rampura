@@ -6,7 +6,7 @@
 <style>
     @media (min-width: 1192px){
         .choices__inner{
-            width: 450px !important;
+            width: 526px !important;
         }
     }
 </style>
@@ -28,10 +28,10 @@
                         <form action="" method="get">
                             <div class="row">
                                 <div class="input-group input-group-sm d-flex justify-content-between">
-                                    <div class="col-4 pe-1">
+                                    <div class="col-5 pe-1">
                                         <input type="text" class="form-control" name="lot_no" value="{{request('lot_no')}}" placeholder="Lot Number">
                                     </div>
-                                    <div class="col-8">
+                                    <div class="col-7">
                                         <div class="d-flex">
                                             <select class="form-control choices" name="nane">
                                                 <option value="">Select Supplier</option>

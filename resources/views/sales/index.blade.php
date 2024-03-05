@@ -6,7 +6,7 @@
 <style>
     @media (min-width: 1192px){
         .choices__inner{
-            width: 450px !important;
+            width: 268px !important;
         }
     }
 </style>
