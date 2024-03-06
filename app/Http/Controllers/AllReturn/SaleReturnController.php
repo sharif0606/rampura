@@ -13,6 +13,10 @@ use App\Models\Stock\Stock;
 use App\Models\Customers\Customer;
 use Illuminate\Http\Request;
 use App\Http\Traits\ResponseTrait;
+use App\Models\Customers\CustomerPayment;
+use App\Models\Customers\CustomerPaymentDetails;
+use App\Models\Expenses\ExpenseOfSales;
+use App\Models\Sales\BagDetail;
 use App\Models\Sales\Sales;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -202,9 +206,151 @@ class SaleReturnController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
+        DB::beginTransaction();
+        try{
+
+            $lot_noa=array();// lot/ lc no wise all cost
+            $customeranypayment=0;
+
+            $pur= new Sale_return;
+            $pur->customer_id=$request->customerName;
+            $pur->voucher_no='VR-'.Carbon::now()->format('m-y').'-'. str_pad((Sale_return::whereYear('created_at', Carbon::now()->year)->count() + 1),4,"0",STR_PAD_LEFT);
+            $pur->voucher_type= $request->voucher_type;
+            $pur->return_date=date('Y-m-d', strtotime($request->return_date));
+            $pur->grand_total=$request->tgrandtotal;
+            $pur->company_id=company()['company_id'];
+            $pur->branch_id=$request->branch_id;
+            $pur->warehouse_id=$request->warehouse_id;
+            $pur->note=$request->note;
+            $pur->created_by=currentUserId();
+
+            $pur->payment_status=0;
+            $pur->status=1;
+            if($pur->save()){
+                if($request->product_id){
+                    foreach($request->product_id as $i=>$product_id){
+                        $pd=new Sale_return_detail;
+                        $pd->company_id=company()['company_id'];
+                        $pd->sales_return_id=$pur->id;
+                        $pd->product_id=$product_id;
+                        $pd->lot_no=$request->lot_no[$i];
+                        $pd->batch_id=$request->batch_id[$i];
+                        $pd->brand=$request->brand[$i];
+                        $pd->quantity_bag=$request->qty_bag[$i];
+                        $pd->quantity_kg=$request->qty_kg[$i];
+                        $pd->less_quantity_kg=$request->less_qty_kg[$i];
+                        $pd->actual_quantity=$request->actual_qty[$i];
+                        $pd->rate_kg=$request->rate_in_kg[$i];
+                        $pd->amount=$request->amount[$i];
+                        if($pd->save()){
+                            $stock=new Stock;
+                            $stock->product_id=$product_id;
+                            $stock->sales_return_id=$pur->id;
+                            $stock->company_id=company()['company_id'];
+                            $stock->branch_id=$request->branch_id;
+                            $stock->warehouse_id=$request->warehouse_id;
+                            $stock->quantity=$pd->actual_quantity;
+                            $stock->quantity_bag=$pd->quantity_bag;
+                            $stock->lot_no=$pd->lot_no;
+                            $stock->brand=$pd->brand;
+                            $stock->batch_id=$pd->batch_id;
+                            $stock->unit_price=$pd->rate_kg;
+                            $stock->total_amount=$pd->amount;
+                            $stock->stock_date=$pur->return_date;
+                            $stock->save();
+                            //calculate lot/lc payment
+                            if(isset($lot_noa[$pd->lot_no])){
+                                $lot_noa[$pd->lot_no]= $lot_noa[$pd->lot_no] + $pd->amount;
+                            }else{
+                                $lot_noa[$pd->lot_no]=$pd->amount;
+                            }
+
+                            if(isset($request->bag_lot_no[$product_id])){
+                                foreach($request->bag_lot_no[$product_id] as $b=>$bag_lot_no){
+                                    if($request->quantity_detail[$product_id][$b] > 0){
+                                        $bag = new BagDetail;
+                                        $bag->sales_return_id = $pur->id;
+                                        $bag->company_id=company()['company_id'];
+                                        $bag->sales_return_detail_id = $pd->id;
+                                        $bag->product_id = $pd->product_id;
+                                        $bag->lot_no = $bag_lot_no;
+                                        $bag->bag_no = $request->bag_no[$product_id][$b];
+                                        $bag->quantity_kg = $request->quantity_detail[$product_id][$b];
+                                        $bag->comment = $request->bag_comment[$product_id][$b];
+                                        $bag->save();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if($request->child_two_id){
+                    foreach($request->child_two_id as $j=>$child_two_id){
+                        if($request->cost_amount[$j] > 0){
+                            $ex = new ExpenseOfSales;
+                            $ex->company_id=company()['company_id'];
+                            $ex->sales_return_id=$pur->id;
+                            $ex->child_two_id=explode('~',$child_two_id)[1];
+                            $ex->sign_for_calculate=$request->sign_for_calculate[$j];
+                            $ex->cost_amount=$request->cost_amount[$j];
+                            $ex->lot_no=$request->lc_no[$j];
+                            $ex->status= 0;
+                            $ex->save();
+                             //calculate lot/lc payment
+                            if(isset($lot_noa[$request->lc_no[$j]])){
+                                $lot_noa[$request->lc_no[$j]]= $lot_noa[$request->lc_no[$j]] + $request->cost_amount[$j];
+                            }else{
+                                $lot_noa[$request->lc_no[$j]]=$request->cost_amount[$j];
+                            }
+                        }
+                    }
+                }
+              
+                if($request->total_pay_amount){
+                    $payment=new CustomerPayment;
+                    $payment->sales_return_id = $pur->id;
+                    $payment->company_id = company()['company_id'];
+                    $payment->customer_id = $request->customerName;
+                    $payment->sales_date = date('Y-m-d', strtotime($request->sales_date));
+                    $payment->sales_invoice = $pur->voucher_no;
+                    $payment->total_amount = $request->total_pay_amount;
+                    $payment->total_payment = $request->total_payment;
+                    $payment->total_due = $request->total_due;
+                    $payment->status=0;
+                    if($payment->save()){
+                        if($request->payment_head){
+                            foreach($request->payment_head as $i=>$ph){
+                                if($request->pay_amount[$i] > 0){
+                                    $customeranypayment=1;// check if full due or partial due 1= partial due or paid, 0 = full due
+                                    $pay=new CustomerPaymentDetails;
+                                    $pay->sales_return_id = $pur->id;
+                                    $pay->company_id=company()['company_id'];
+                                    $pay->customer_payment_id=$payment->id;
+                                    $pay->customer_id=$request->customerName;
+                                    $pay->p_table_name=explode('~',$ph)[0];
+                                    $pay->p_table_id=explode('~',$ph)[1];
+                                    $pay->p_head_name=explode('~',$ph)[2];
+                                    $pay->p_head_code=explode('~',$ph)[3];
+                                    $pay->lc_no=$request->lc_no_payment[$i];
+                                    $pay->amount=$request->pay_amount[$i];
+                                    $pay->status=0;
+                                    $pay->save();
+                                }
+                            }
+                        }
+                    }
+                }
+                DB::commit();
+                return redirect()->route(currentUser().'.salesReturn.index')->with($this->resMessageHtml(true,null,'Successfully created'));
+            }else
+                return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+        }catch(Exception $e){
+            DB::rollback();
+             //dd($e);
+            return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+        }
     }
 
     /**

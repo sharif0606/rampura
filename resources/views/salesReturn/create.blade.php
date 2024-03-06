@@ -24,7 +24,7 @@
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form" method="post" action="{{route(currentUser().'.sales.store')}}">
+                        <form class="form" method="post" action="{{route(currentUser().'.salesReturn.store')}}">
                             @csrf
                             <input type="hidden" name="voucher_type" value="0">
                             <div class="row">
@@ -88,9 +88,9 @@
                                     <label for="date" class="float-end"><h6>{{__('Date')}}<span class="text-danger">*</span></h6></label>
                                 </div>
                                 <div class="col-md-4 mt-2">
-                                    <input type="text" id="datepicker" class="form-control" value="{{ old('sales_date')}}" name="sales_date" placeholder="dd-mm-yyyy" required>
-                                    @if($errors->has('sales_date'))
-                                        <span class="text-danger"> {{ $errors->first('sales_date') }}</span>
+                                    <input type="text" id="datepicker" class="form-control" value="{{ old('return_date')}}" name="return_date" placeholder="dd-mm-yyyy" required>
+                                    @if($errors->has('return_date'))
+                                        <span class="text-danger"> {{ $errors->first('return_date') }}</span>
                                     @endif
                                 </div>
                             </div>

@@ -18,7 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
             $table->unsignedBigInteger('customer_id')->index()->foreign()->references('id')->on('customers')->onDelete('cascade');
             $table->integer('customer_payment_id')->nullable();
-            $table->unsignedBigInteger('sales_id')->index()->foreign()->references('id')->on('sales')->onDelete('cascade');
+            $table->unsignedBigInteger('sales_id')->nullable()->index()->foreign()->references('id')->on('sales')->onDelete('cascade');
+            $table->integer('sales_return_id')->nullable();
             $table->string('p_table_name')->nullable();
             $table->unsignedBigInteger('p_table_id')->nullable();
             $table->string('p_head_name')->nullable();

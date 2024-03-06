@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('customer_payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sales_id')->index()->foreign()->references('id')->on('sales')->onDelete('cascade');
+            $table->unsignedBigInteger('sales_id')->nullable()->index()->foreign()->references('id')->on('sales')->onDelete('cascade');
+            $table->integer('sales_return_id')->nullable();
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
             $table->unsignedBigInteger('customer_id')->index()->foreign()->references('id')->on('customers')->onDelete('cascade');
             $table->date('sales_date')->nullable();
