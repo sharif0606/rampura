@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Return;
+namespace App\Models\AllReturn;
 
 use App\Models\Customers\Customer;
 use App\Models\Customers\CustomerPayment;

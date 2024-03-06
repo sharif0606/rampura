@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Models\Return;
+namespace App\Models\AllReturn;
 
 use App\Models\Expenses\ExpenseOfPurchase;
 use App\Models\Settings\Branch;
+use App\Models\Suppliers\Supplier;
 use App\Models\Settings\Warehouse;
 use App\Models\Stock\Stock;
-use App\Models\Suppliers\Supplier;
 use App\Models\Suppliers\SupplierPaymentDetails;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Regular_purchase_return extends Model
+class Purchase_return extends Model
 {
     use HasFactory,SoftDeletes;
     public function supplier(){
@@ -32,7 +32,7 @@ class Regular_purchase_return extends Model
         return $this->belongsTo(User::class,'updated_by','id');
     }
     public function purchase_lot(){
-        return $this->hasMany(Regular_purchase_return_detail::class,'purchase_return_id','id');
+        return $this->hasMany(Purchase_return_details::class,'purchase_return_id','id');
     }
     public function expense(){
         return $this->hasMany(ExpenseOfPurchase::class,'purchase_id','id');
