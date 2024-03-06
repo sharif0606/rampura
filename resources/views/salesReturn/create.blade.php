@@ -107,10 +107,10 @@
                                                 <th class="py-2 px-1" >Description of Goods</th>
                                                 <th class="py-2 px-1" >Lot/Lc no</th>
                                                 <th class="py-2 px-1" >Trade Mark</th>
-                                                <th class="py-2 px-1" >Stock Total Bag</th>
-                                                <th class="py-2 px-1" >Stock Total Kg</th>
-                                                <th class="py-2 px-1" >Quantity Bag</th>
-                                                <th class="py-2 px-1" >Quantity Kg</th>
+                                                <th class="py-2 px-1" >Sold Out Bag</th>
+                                                <th class="py-2 px-1" >Sold Out Kg</th>
+                                                <th class="py-2 px-1" >Return Bag</th>
+                                                <th class="py-2 px-1" >Return Kg</th>
                                                 <th class="py-2 px-1" >Less/Discount Kg</th>
                                                 <th class="py-2 px-1" >Actual Quantity Kg</th>
                                                 <th class="py-2 px-1" >Rate in Kg</th>
@@ -381,22 +381,21 @@
     // }
     //CALCUALATED SALES PRICE
     function get_cal(e){
-        // return check_product_qty(e)
-        var quantity_bag = (isNaN(parseFloat($(e).closest('tr').find('.qty_bag').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_bag').val().trim()); 
-        var stock_bag = (isNaN(parseFloat($(e).closest('tr').find('.stock_bag').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.stock_bag').val().trim()); 
-        var quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_kg').val().trim()); 
-        var less_quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()); 
-        var rate_in_kg = (isNaN(parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()); 
-        var stock = (isNaN(parseFloat($(e).closest('tr').find('.stockqty').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.stockqty').val().trim());
+        var quantity_bag = (parseFloat($(e).closest('tr').find('.qty_bag').val().trim())) || 0;
+        var stock_bag = (parseFloat($(e).closest('tr').find('.stock_bag').val().trim())) || 0;
+        var quantity_kg = (parseFloat($(e).closest('tr').find('.qty_kg').val().trim())) || 0;
+        var less_quantity_kg = (parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim())) || 0;
+        var rate_in_kg = (parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim())) || 0;
+        var stock = (parseFloat($(e).closest('tr').find('.stockqty').val().trim())) || 0;
 
         if(stock < quantity_kg){
-            alert("You cannot sell more than "+stock);
+            alert("You cannot return more than "+stock);
             quantity_kg=stock;
             $(e).closest('tr').find('.qty_kg').val(stock)
         }
 
         if(stock_bag < quantity_bag){
-            alert("You cannot sell more than "+stock_bag);
+            alert("You cannot return more than "+stock_bag);
             quantity_bag=stock_bag;
             $(e).closest('tr').find('.qty_bag').val(quantity_bag)
         }

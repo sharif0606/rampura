@@ -130,15 +130,18 @@ class SaleReturnController extends Controller
 
     public function product_sc_d(Request $request){
         if($request->item_id){
+            $salesIds = Sales::where(company())->where('customer_id', $request->customer_id)->pluck('id')->toArray();
+            $salesIds = implode(',', $salesIds);
+
             list($item_id,$lot_no,$brand,$batch_id)=explode("^",$request->item_id);
-            $product=collect(DB::select("SELECT products.id,products.product_name,products.bar_code,stocks.lot_no,stocks.unit_price,stocks.quantity_bag as bag_qty, stocks.quantity as qty, stocks.brand FROM `products` JOIN stocks on stocks.product_id=products.id WHERE stocks.company_id=".company()['company_id']." and stocks.branch_id=".$request->branch_id." and stocks.warehouse_id=".$request->warehouse_id." and stocks.product_id=".$item_id." and stocks.lot_no='".$lot_no."' and stocks.brand='".$brand."' and stocks.batch_id='".$batch_id."' and stocks.deleted_at is null GROUP BY stocks.batch_id"))->first();
+            $product=collect(DB::select("SELECT products.id,products.product_name,products.bar_code,stocks.lot_no,stocks.unit_price, sum(stocks.quantity_bag) as bag_qty, sum(stocks.quantity) as qty, stocks.brand FROM `products` JOIN stocks on stocks.product_id=products.id WHERE stocks.company_id=".company()['company_id']." and stocks.branch_id=".$request->branch_id." and stocks.sales_id in ($salesIds) and stocks.sales_id is not null and stocks.warehouse_id=".$request->warehouse_id." and stocks.product_id=".$item_id." and stocks.lot_no='".$lot_no."' and stocks.brand='".$brand."' and stocks.batch_id='".$batch_id."' and stocks.deleted_at is null GROUP BY stocks.batch_id"))->first();
 
             $data='<tr class="productlist text-center">';
-            $data.='<td class="py-2 px-1">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'" class="product_id_list"><input name="stockqty[]" type="hidden" value="'.$product->qty.'" class="stockqty"><input name="batch_id[]" type="hidden" value="'.$batch_id.'" class="batch_id_list"></td>';
+            $data.='<td class="py-2 px-1">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'" class="product_id_list"><input name="stockqty[]" type="hidden" value="'.abs($product->qty).'" class="stockqty"><input name="batch_id[]" type="hidden" value="'.$batch_id.'" class="batch_id_list"></td>';
             $data.='<td class="py-2 px-1"><input readonly name="lot_no[]" type="text" class="form-control lot_no" value="'.$product->lot_no.'"></td>';
             $data.='<td class="py-2 px-1"><input readonly name="brand[]" type="text" class="form-control brand"  value="'.$product->brand.'"></td>';
-            $data.='<td class="py-2 px-1"><input  type="text" class="form-control stock_bag" value="'.$product->bag_qty.'" disabled></td>';
-            $data.='<td class="py-2 px-1"><input  type="text" class="form-control" value="'.$product->qty.'" disabled></td>';
+            $data.='<td class="py-2 px-1"><input  type="text" class="form-control stock_bag" value="'.abs($product->bag_qty).'" disabled></td>';
+            $data.='<td class="py-2 px-1"><input  type="text" class="form-control" value="'.abs($product->qty).'" disabled></td>';
             $data.='<td class="py-2 px-1" style="position:relative;">
                         <input onkeyup="get_cal(this)" name="qty_bag[]" type="text" class="form-control qty_bag" value="0">
                         <button type="button" data-bs-toggle="modal" data-bs-target="#bagDetail'.$product->id.'" style="position:absolute; right:3px; top:14px; border:none; background-color:transparent; color: #435EBE; font-size:1.2rem;"><i class="bi bi-plus-square-fill"></i></button>
