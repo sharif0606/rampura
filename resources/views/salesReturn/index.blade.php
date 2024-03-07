@@ -92,8 +92,6 @@
                                 <th scope="col">{{__('GrandTotal')}}</th>
                                 <th scope="col">{{__('Branch')}}</th>
                                 <th scope="col">{{__('Warehouse')}}</th>
-                                {{-- <th scope="col">{{__('Status')}}</th> --}}
-                                {{-- <th scope="col">{{__('Payment Status')}}</th> --}}
                                 <th scope="col">{{__('Lot Number')}}</th>
                                 <th scope="col">{{__('Created By')}}</th>
                                 <th scope="col">{{__('Updated By')}}</th>
@@ -109,8 +107,6 @@
                                 <td>{{$s->grand_total}}</td>
                                 <td>{{$s->branch?->name}}</td>
                                 <td>{{$s->warehouse?->name}}</td>
-                                {{-- <td>{{$st[$s->status]}}</td> --}}
-                                {{-- <td>{{$pst[$s->payment_status]}}</td> --}}
                                 <td>
                                     @if($s->sale_lot)
                                         @foreach ($s->sale_lot as $lot)
@@ -121,29 +117,10 @@
                                 <td>{{$s->createdBy?->name}}</td>
                                 <td>{{$s->updatedBy?->name}}</td>
                                 <td class="white-space-nowrap">
-                                    <a href="{{route(currentUser().'.sales.show',encryptor('encrypt',$s->id))}}">
-                                        <i class="bi bi-eye-fill"></i>
-                                    </a>&nbsp;
-                                    <a href="{{route(currentUser().'.sales.memo',encryptor('encrypt',$s->id))}}">
-                                        <i class="bi bi-receipt"></i>
-                                    </a>&nbsp;
                                     @if(currentUser() == 'admin' || currentUser() == 'owner')
-                                        @if ($s->voucher_type != '1')
-                                            <a href="{{route(currentUser().'.sales.edit',encryptor('encrypt',$s->id))}}">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
-                                        @else
-                                            <a href="{{route(currentUser().'.sales_cash_edit',encryptor('encrypt',$s->id))}}">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
-                                        @endif
-                                        <a class="text-danger" href="javascript:void()" onclick="$('#form{{$s->id}}').submit()">
-                                            <i class="bi bi-trash"></i>
+                                        <a href="{{route(currentUser().'.salesReturn.edit',encryptor('encrypt',$s->id))}}">
+                                            <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <form id="form{{$s->id}}" onsubmit="return confirm('Are you sure?')" action="{{route(currentUser().'.sales.destroy',encryptor('encrypt',$s->id))}}" method="post">
-                                            @csrf
-                                            @method('delete')
-                                        </form>
                                     @endif
                                 </td>
                             </tr>
