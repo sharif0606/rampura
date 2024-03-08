@@ -268,7 +268,7 @@ class BeparianPurchaseReturnController extends Controller
                     foreach($request->child_two_id as $j=>$child_two_id){
                         if($request->cost_amount[$j] > 0){
                             $ex = new ExpenseOfPurchase;
-                            $ex->beparian_purchase_id=$pur->id;
+                            $ex->beparian_return_id=$pur->id;
                             $ex->company_id=company()['company_id'];
                             $ex->child_two_id=explode('~',$child_two_id)[1];
                             $ex->sign_for_calculate=$request->sign_for_calculate[$j];
