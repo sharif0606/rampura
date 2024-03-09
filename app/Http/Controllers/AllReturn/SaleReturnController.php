@@ -106,7 +106,7 @@ class SaleReturnController extends Controller
             $batchIdCondition = $request->batch_id ? "stocks.batch_id NOT IN (". rtrim($request->batch_id, ','). ")" : '';
 
             $products = DB::table('products')
-                ->select('products.id', 'products.product_name', 'products.bar_code', 'stocks.lot_no', 'stocks.unit_price', 'stocks.batch_id', 'stocks.brand', 'stocks.quantity_bag as bag_qty', 'stocks.quantity as qty')
+                ->select('products.id', 'products.product_name', 'products.bar_code', 'stocks.lot_no', 'stocks.unit_price', 'stocks.batch_id', 'stocks.brand', DB::raw('sum(stocks.quantity_bag) as bag_qty'), DB::raw('sum(stocks.quantity) as qty'))
                 ->join('stocks', 'stocks.product_id', '=', 'products.id')
                 ->join('sales_details', 'sales_details.product_id', '=', 'products.id')
                 ->where('stocks.company_id', company()['company_id'])
@@ -138,10 +138,10 @@ class SaleReturnController extends Controller
             $salesIds = implode(',', $salesIds);
 
             list($item_id,$lot_no,$brand,$batch_id)=explode("^",$request->item_id);
-            $product=collect(DB::select("SELECT products.id,products.product_name,products.bar_code,stocks.lot_no,stocks.unit_price, sum(stocks.quantity_bag) as bag_qty, sum(stocks.quantity) as qty, stocks.brand FROM `products` JOIN stocks on stocks.product_id=products.id WHERE stocks.company_id=".company()['company_id']." and stocks.branch_id=".$request->branch_id." and stocks.sales_id in ($salesIds) and stocks.sales_id is not null and stocks.warehouse_id=".$request->warehouse_id." and stocks.product_id=".$item_id." and stocks.lot_no='".$lot_no."' and stocks.brand='".$brand."' and stocks.batch_id='".$batch_id."' and stocks.deleted_at is null GROUP BY stocks.batch_id"))->first();
+            $product=collect(DB::select("SELECT products.id,products.product_name,products.bar_code,stocks.lot_no,stocks.sales_id,stocks.unit_price, sum(stocks.quantity_bag) as bag_qty, sum(stocks.quantity) as qty, stocks.brand FROM `products` JOIN stocks on stocks.product_id=products.id WHERE stocks.company_id=".company()['company_id']." and stocks.branch_id=".$request->branch_id." and stocks.sales_id in ($salesIds) and stocks.sales_id is not null and stocks.warehouse_id=".$request->warehouse_id." and stocks.product_id=".$item_id." and stocks.lot_no='".$lot_no."' and stocks.brand='".$brand."' and stocks.batch_id='".$batch_id."' and stocks.deleted_at is null GROUP BY stocks.batch_id"))->first();
 
             $data='<tr class="productlist text-center">';
-            $data.='<td class="py-2 px-1">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'" class="product_id_list"><input name="stockqty[]" type="hidden" value="'.abs($product->qty).'" class="stockqty"><input name="batch_id[]" type="hidden" value="'.$batch_id.'" class="batch_id_list"></td>';
+            $data.='<td class="py-2 px-1">'.$product->product_name.'<input name="product_id[]" type="hidden" value="'.$product->id.'" class="product_id_list"><input name="stockqty[]" type="hidden" value="'.abs($product->qty).'" class="stockqty"><input name="batch_id[]" type="hidden" value="'.$batch_id.'" class="batch_id_list"><input name="salesId[]" type="hidden" value="'.$product->sales_id.'"></td>';
             $data.='<td class="py-2 px-1"><input readonly name="lot_no[]" type="text" class="form-control lot_no" value="'.$product->lot_no.'"></td>';
             $data.='<td class="py-2 px-1"><input readonly name="brand[]" type="text" class="form-control brand"  value="'.$product->brand.'"></td>';
             $data.='<td class="py-2 px-1"><input  type="text" class="form-control stock_bag" value="'.abs($product->bag_qty).'" disabled></td>';
@@ -235,6 +235,7 @@ class SaleReturnController extends Controller
                         $pd->sales_return_id=$pur->id;
                         $pd->product_id=$product_id;
                         $pd->lot_no=$request->lot_no[$i];
+                        $pd->sales_id=$request->salesId[$i];
                         $pd->batch_id=$request->batch_id[$i];
                         $pd->brand=$request->brand[$i];
                         $pd->quantity_bag=$request->qty_bag[$i];
@@ -247,6 +248,7 @@ class SaleReturnController extends Controller
                             $stock=new Stock;
                             $stock->product_id=$product_id;
                             $stock->sales_return_id=$pur->id;
+                            $stock->sales_id= $pd->sales_id;
                             $stock->company_id=company()['company_id'];
                             $stock->branch_id=$request->branch_id;
                             $stock->warehouse_id=$request->warehouse_id;
@@ -370,9 +372,88 @@ class SaleReturnController extends Controller
      * @param  \App\Models\Return\Sale_return  $sale_return
      * @return \Illuminate\Http\Response
      */
-    public function edit(Sale_return $sale_return)
+    public function edit($id)
     {
-        //
+        $branches = Branch::where(company())->get();
+        if( currentUser()=='owner'){
+            $customers = Customer::where(company())->get();
+            $Warehouses = Warehouse::where(company())->get();
+            $return = Sale_return::findOrFail(encryptor('decrypt',$id));
+            //$salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null and sales_details.deleted_at is null ) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null and sales_details.deleted_at is null) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id."");
+
+            $returnDetails = DB::table('sale_return_details')
+            ->select(
+                'sale_return_details.*',
+                DB::raw('(SELECT SUM(stocks.quantity_bag) FROM stocks WHERE stocks.batch_id = sale_return_details.batch_id AND stocks.product_id = sale_return_details.product_id AND stocks.deleted_at IS NULL AND stocks.sales_id = '.$return->sales_id.') AS bag_qty'),
+                DB::raw('(SELECT SUM(stocks.quantity) FROM stocks WHERE stocks.batch_id = sale_return_details.batch_id AND stocks.product_id = sale_return_details.product_id AND stocks.deleted_at IS NULL AND stocks.sales_id = '.$return->sales_id.') AS qty'),
+                DB::raw('(SELECT product_name FROM products WHERE products.id = sale_return_details.product_id) AS productName')
+            )
+            ->where('sale_return_details.sales_return_id', $return->id)
+            ->whereNull('sale_return_details.deleted_at')
+            ->get();
+            
+            $bagDetailsBySalesDetail = [];
+            $bagDetails = [];
+            foreach ($returnDetails as $sd) {
+                $bagDetails = BagDetail::where('sales_return_id', $return->id)
+                    ->where('sales_return_detail_id', $sd->id)
+                    ->get();
+
+                $bagDetailsBySalesDetail[$sd->id] = $bagDetails;
+            }
+
+            $childone = Child_one::where(company())->where('head_code',5320)->first();
+            $childTow = Child_two::where(company())->where('child_one_id',$childone->id)->get();
+            // $expense = ExpenseOfSales::where('sales_id',$sales->id)->pluck('cost_amount','child_two_id');
+            $expense = ExpenseOfSales::where('sales_return_id',$return->id)->get();
+            $customerPayment = CustomerPayment::where(company())->where('sales_return_id',$return->id)->first();
+            $customerPaymentDetails = CustomerPaymentDetails::where(company())->where('customer_payment_id',$customerPayment->id)->get();
+        }else{
+            $customers = Customer::where(company())->where(branch())->get();
+            $Warehouses = Warehouse::where(company())->where(branch())->get();
+            $return = Sale_return::findOrFail(encryptor('decrypt',$id));
+            //$salesDetails = DB::select("SELECT sales_details.*, (select sum(stocks.quantity_bag) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null and sales_details.deleted_at is null ) as bag_qty ,(select sum(stocks.quantity) as bag_qty from stocks where stocks.batch_id=sales_details.batch_id and stocks.product_id=sales_details.product_id and stocks.deleted_at is null and sales_details.deleted_at is null) as qty , (select product_name from products where products.id=sales_details.product_id) as productName FROM `sales_details` where sales_details.sales_id=".$sales->id."");
+            $returnDetails = DB::table('sale_return_details')
+            ->select(
+                'sale_return_details.*',
+                DB::raw('(SELECT SUM(stocks.quantity_bag) FROM stocks WHERE stocks.batch_id = sale_return_details.batch_id AND stocks.product_id = sale_return_details.product_id AND stocks.deleted_at IS NULL AND stocks.sales_id = '.$return->sales_id.') AS bag_qty'),
+                DB::raw('(SELECT SUM(stocks.quantity) FROM stocks WHERE stocks.batch_id = sale_return_details.batch_id AND stocks.product_id = sale_return_details.product_id AND stocks.deleted_at IS NULL AND stocks.sales_id = '.$return->sales_id.') AS qty'),
+                DB::raw('(SELECT product_name FROM products WHERE products.id = sale_return_details.product_id) AS productName')
+            )
+            ->where('sale_return_details.sales_return_id', $return->id)
+            ->whereNull('sale_return_details.deleted_at')
+            ->get();
+        }
+
+        $paymethod=array();
+        $account_data=Child_one::whereIn('head_code',[1110,1120])->where(company())->get();
+        
+        if($account_data){
+            foreach($account_data as $ad){
+                $shead=Child_two::where('child_one_id',$ad->id);
+                if($shead->count() > 0){
+					$shead=$shead->get();
+                    foreach($shead as $sh){
+                        $paymethod[]=array(
+                                        'id'=>$sh->id,
+                                        'head_code'=>$sh->head_code,
+                                        'head_name'=>$sh->head_name,
+                                        'table_name'=>'child_twos'
+                                    );
+                    }
+                }else{
+                    $paymethod[]=array(
+                        'id'=>$ad->id,
+                        'head_code'=>$ad->head_code,
+                        'head_name'=>$ad->head_name,
+                        'table_name'=>'child_ones'
+                    );
+                }
+                
+            }
+        }
+
+        return view('salesReturn.edit',compact('branches','customers','Warehouses','return','returnDetails','bagDetails','bagDetailsBySalesDetail','childTow','expense','paymethod','customerPayment','customerPaymentDetails'));
     }
 
     /**
@@ -382,9 +463,159 @@ class SaleReturnController extends Controller
      * @param  \App\Models\Return\Sale_return  $sale_return
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Sale_return $sale_return)
+    public function update(Request $request, $id)
     {
-        //
+        DB::beginTransaction();
+        try{
+
+            $lot_noa=array();// lot/ lc no wise all cost
+            $customeranypayment=0;
+
+            $pur= Sale_return::findOrFail(encryptor('decrypt',$id));
+            $pur->customer_id=$request->customerName;
+            $pur->voucher_type= $request->voucher_type;
+            $pur->return_date=date('Y-m-d', strtotime($request->return_date));
+            $pur->grand_total=$request->tgrandtotal;
+            $pur->company_id=company()['company_id'];
+            $pur->branch_id=$request->branch_id;
+            $pur->warehouse_id=$request->warehouse_id;
+            $pur->note=$request->note;
+            $pur->created_by=currentUserId();
+
+            $pur->payment_status=0;
+            $pur->status=1;
+            if($pur->save()){
+                if($request->product_id){
+                    Sale_return_detail::where('sales_return_id',$pur->id)->forceDelete();
+                    BagDetail::where('sales_return_id',$pur->id)->forceDelete();
+                    Stock::where('sales_return_id',$pur->id)->forceDelete();
+                    foreach($request->product_id as $i=>$product_id){
+                        $pd=new Sale_return_detail;
+                        $pd->company_id=company()['company_id'];
+                        $pd->sales_return_id=$pur->id;
+                        $pd->product_id=$product_id;
+                        $pd->lot_no=$request->lot_no[$i];
+                        $pd->sales_id=$request->salesId[$i];
+                        $pd->batch_id=$request->batch_id[$i];
+                        $pd->brand=$request->brand[$i];
+                        $pd->quantity_bag=$request->qty_bag[$i];
+                        $pd->quantity_kg=$request->qty_kg[$i];
+                        $pd->less_quantity_kg=$request->less_qty_kg[$i];
+                        $pd->actual_quantity=$request->actual_qty[$i];
+                        $pd->rate_kg=$request->rate_in_kg[$i];
+                        $pd->amount=$request->amount[$i];
+                        if($pd->save()){
+                            $stock=new Stock;
+                            $stock->product_id=$product_id;
+                            $stock->sales_return_id=$pur->id;
+                            $stock->sales_id= $pd->sales_id;
+                            $stock->company_id=company()['company_id'];
+                            $stock->branch_id=$request->branch_id;
+                            $stock->warehouse_id=$request->warehouse_id;
+                            $stock->quantity=$pd->actual_quantity;
+                            $stock->quantity_bag=$pd->quantity_bag;
+                            $stock->lot_no=$pd->lot_no;
+                            $stock->brand=$pd->brand;
+                            $stock->batch_id=$pd->batch_id;
+                            $stock->unit_price=$pd->rate_kg;
+                            $stock->total_amount=$pd->amount;
+                            $stock->stock_date=$pur->return_date;
+                            $stock->save();
+                            //calculate lot/lc payment
+                            if(isset($lot_noa[$pd->lot_no])){
+                                $lot_noa[$pd->lot_no]= $lot_noa[$pd->lot_no] + $pd->amount;
+                            }else{
+                                $lot_noa[$pd->lot_no]=$pd->amount;
+                            }
+
+                            if(isset($request->bag_lot_no[$product_id])){
+                                foreach($request->bag_lot_no[$product_id] as $b=>$bag_lot_no){
+                                    if($request->quantity_detail[$product_id][$b] > 0){
+                                        $bag = new BagDetail;
+                                        $bag->sales_return_id = $pur->id;
+                                        $bag->company_id=company()['company_id'];
+                                        $bag->sales_return_detail_id = $pd->id;
+                                        $bag->product_id = $pd->product_id;
+                                        $bag->lot_no = $bag_lot_no;
+                                        $bag->bag_no = $request->bag_no[$product_id][$b];
+                                        $bag->quantity_kg = $request->quantity_detail[$product_id][$b];
+                                        $bag->comment = $request->bag_comment[$product_id][$b];
+                                        $bag->save();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if($request->child_two_id){
+                    ExpenseOfSales::where('sales_return_id',$pur->id)->forceDelete();
+                    foreach($request->child_two_id as $j=>$child_two_id){
+                        if($request->cost_amount[$j] > 0){
+                            $ex = new ExpenseOfSales;
+                            $ex->company_id=company()['company_id'];
+                            $ex->sales_return_id=$pur->id;
+                            $ex->child_two_id=explode('~',$child_two_id)[1];
+                            $ex->sign_for_calculate=$request->sign_for_calculate[$j];
+                            $ex->cost_amount=$request->cost_amount[$j];
+                            $ex->lot_no=$request->lc_no[$j];
+                            $ex->status= 0;
+                            $ex->save();
+                             //calculate lot/lc payment
+                            if(isset($lot_noa[$request->lc_no[$j]])){
+                                $lot_noa[$request->lc_no[$j]]= $lot_noa[$request->lc_no[$j]] + $request->cost_amount[$j];
+                            }else{
+                                $lot_noa[$request->lc_no[$j]]=$request->cost_amount[$j];
+                            }
+                        }
+                    }
+                }
+              
+                if($request->total_pay_amount){
+                    CustomerPayment::where('sales_return_id',$pur->id)->forceDelete();
+                    CustomerPaymentDetails::where('sales_return_id',$pur->id)->forceDelete();
+                    $payment=new CustomerPayment;
+                    $payment->sales_return_id = $pur->id;
+                    $payment->company_id = company()['company_id'];
+                    $payment->customer_id = $request->customerName;
+                    $payment->sales_date = date('Y-m-d', strtotime($request->sales_date));
+                    $payment->sales_invoice = $pur->voucher_no;
+                    $payment->total_amount = $request->total_pay_amount;
+                    $payment->total_payment = $request->total_payment;
+                    $payment->total_due = $request->total_due;
+                    $payment->status=0;
+                    if($payment->save()){
+                        if($request->payment_head){
+                            foreach($request->payment_head as $i=>$ph){
+                                if($request->pay_amount[$i] > 0){
+                                    $customeranypayment=1;// check if full due or partial due 1= partial due or paid, 0 = full due
+                                    $pay=new CustomerPaymentDetails;
+                                    $pay->sales_return_id = $pur->id;
+                                    $pay->company_id=company()['company_id'];
+                                    $pay->customer_payment_id=$payment->id;
+                                    $pay->customer_id=$request->customerName;
+                                    $pay->p_table_name=explode('~',$ph)[0];
+                                    $pay->p_table_id=explode('~',$ph)[1];
+                                    $pay->p_head_name=explode('~',$ph)[2];
+                                    $pay->p_head_code=explode('~',$ph)[3];
+                                    $pay->lc_no=$request->lc_no_payment[$i];
+                                    $pay->amount=$request->pay_amount[$i];
+                                    $pay->status=0;
+                                    $pay->save();
+                                }
+                            }
+                        }
+                    }
+                }
+                DB::commit();
+                return redirect()->route(currentUser().'.salesReturn.index')->with($this->resMessageHtml(true,null,'Successfully Updated'));
+            }else
+                return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+        }catch(Exception $e){
+            DB::rollback();
+             //dd($e);
+            return redirect()->back()->withInput()->with($this->resMessageHtml(false,'error','Please try again'));
+        }
     }
 
     /**

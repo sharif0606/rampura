@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('company_id')->index()->foreign()->references('id')->on('companies')->onDelete('cascade');
             $table->unsignedBigInteger('sales_return_id')->index()->foreign()->references('id')->on('sale_returns')->onDelete('cascade');
             $table->unsignedBigInteger('product_id')->index()->foreign()->references('id')->on('products')->onDelete('cascade');
+            $table->unsignedBigInteger('sales_id')->nullable();
             $table->string('lot_no')->nullable();
             $table->string('batch_id')->nullable();
             $table->string('brand')->nullable();

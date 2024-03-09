@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('pageTitle',trans('Update Sales'))
+@section('pageTitle',trans('Update Sales Return'))
 @section('pageSubTitle',trans('update'))
 @push("styles")
 <link rel="stylesheet" href="{{ asset('assets/css/main/full-screen.css') }}">
@@ -24,7 +24,7 @@
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form" method="post" action="{{route(currentUser().'.sales.update',encryptor('encrypt',$sales->id))}}">
+                        <form class="form" method="post" action="{{route(currentUser().'.salesReturn.update',encryptor('encrypt',$return->id))}}">
                             @csrf
                             @method('patch')
                             <div class="row">
@@ -35,7 +35,7 @@
                                     <div class="col-md-4 form-group">
                                         <select required onchange="change_data(this.value)" class="form-control form-select" name="branch_id" id="branch_id">
                                             @forelse($branches as $b)
-                                                <option value="{{ $b->id }}" {{old('branch_id',$sales->branch_id)==$b->id?'selected':''}}>{{ $b->name }}</option>
+                                                <option value="{{ $b->id }}" {{old('branch_id',$return->branch_id)==$b->id?'selected':''}}>{{ $b->name }}</option>
                                             @empty
                                                 <option value="">No branch found</option>
                                             @endforelse          
@@ -58,7 +58,7 @@
                                     <select class="choices form-select" name="customerName" id="customerName" onchange="get_customer()">
                                         <option value="">Select Customer</option>
                                         @forelse($customers as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('customerName',$sales->customer_id)==$d->id?"selected":""}}> {{ $d->customer_name}}-({{ $d->upazila?->name}})</option>
+                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('customerName',$return->customer_id)==$d->id?"selected":""}}> {{ $d->customer_name}}-({{ $d->upazila?->name}})</option>
                                         @empty
                                             <option value="">No Data found</option>
                                         @endforelse
@@ -78,7 +78,7 @@
                                     <select required class="form-control form-select" name="warehouse_id" id="warehouse_id">
                                         
                                         @forelse($Warehouses as $d)
-                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('warehouse_id',$sales->warehouse_id )==$d->id?"selected":""}}> {{ $d->name}}</option>
+                                            <option class="brnch brnch{{$d->branch_id}}" value="{{$d->id}}" {{ old('warehouse_id',$return->warehouse_id )==$d->id?"selected":""}}> {{ $d->name}}</option>
                                         @empty
                                             <option value="">No Data found</option>
                                         @endforelse
@@ -94,9 +94,9 @@
                                     <label for="date" class="float-end"><h6>{{__('Date')}}<span class="text-danger">*</span></h6></label>
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" id="datepicker" class="form-control" value="{{ old('sales_date',$sales->sales_date)}}" name="sales_date" placeholder="dd/mm/yyyy" required>
-                                    @if($errors->has('sales_date'))
-                                        <span class="text-danger"> {{ $errors->first('sales_date') }}</span>
+                                    <input type="text" id="datepicker" class="form-control" value="{{ old('return_date',$return->return_date)}}" name="return_date" placeholder="dd/mm/yyyy" required>
+                                    @if($errors->has('return_date'))
+                                        <span class="text-danger"> {{ $errors->first('return_date') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -133,17 +133,18 @@
                                             @endphp
                                         <tbody id="details_data">
 
-                                            @forelse ($salesDetails as $p)
+                                            @forelse ($returnDetails as $p)
                                             <tr class="productlist text-center">
                                                 <td class="p-2">{{$p->productName}}
                                                     <input name="product_id[]" type="hidden" value="{{$p->product_id}}" class="product_id_list">
-                                                    <input name="stockqty[]" type="hidden" value="{{$p->qty+$p->quantity_kg}}" class="stockqty">
+                                                    <input name="stockqty[]" type="hidden" value="{{abs($p->qty)+$p->quantity_kg}}" class="stockqty">
                                                     <input name="batch_id[]" type="hidden" value="{{$p->batch_id}}" class="batch_id_list">
+                                                    <input name="salesId[]" type="hidden" value="{{$p->sales_id}}">
                                                 </td>
                                                 <td class="py-2 px-1"><input name="lot_no[]" type="text" value="{{$p->lot_no}}" class="form-control lot_no"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="brand[]" type="text" value="{{$p->brand}}" class="form-control brand"></td>
-                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" type="text" value="{{$p->bag_qty+$p->quantity_bag}}" class="form-control stock_bag" disabled></td>
-                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" type="text" value="{{$p->qty+$p->quantity_kg}}" class="form-control" disabled></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" type="text" value="{{abs($p->bag_qty)+$p->quantity_bag}}" class="form-control stock_bag" disabled></td>
+                                                <td class="py-2 px-1"><input onkeyup="get_cal(this)" type="text" value="{{abs($p->qty)+$p->quantity_kg}}" class="form-control" disabled></td>
                                                 <td class="py-2 px-1" style="position:relative;">
                                                     <input onkeyup="get_cal(this)" name="qty_bag[]" type="text" value="{{$p->quantity_bag}}" class="form-control qty_bag">
 
@@ -316,8 +317,8 @@
                                             <tr class="tbl_expense">
                                                 <th colspan="3" class="tbl_expense"  style="text-align: end; padding-right: 8px;"><h5>TOTAL RECEIVABLE AMOUNT</h5></th>
                                                 <td class="tbl_expense text-end" >
-                                                    <h5 class="tgrandtotal" >{{$sales->grand_total}}</h5>
-                                                    <input type="hidden" name="tgrandtotal" class="tgrandtotal_p" value="{{$sales->grand_total}}">
+                                                    <h5 class="tgrandtotal" >{{$return->grand_total}}</h5>
+                                                    <input type="hidden" name="tgrandtotal" class="tgrandtotal_p" value="{{$return->grand_total}}">
                                                     <input type="hidden"  class="sub_total" value="">
                                                 </td>
                                             </tr>
@@ -404,7 +405,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <label for="" class="form-label"><b>Narration</b></label>
-                                    <textarea class="form-control" name="note" rows="3">{{old('note',$sales->note)}}</textarea>
+                                    <textarea class="form-control" name="note" rows="3">{{old('note',$return->note)}}</textarea>
                                 </div>
                             </div>
                             
@@ -451,6 +452,7 @@ $(function() {
         source: function(data, cb){
           let branch_id=$('#branch_id').val();
           let warehouse_id=$('#warehouse_id').val();
+          let customer_id=$('#customerName').val();
           let batch_id="";
           $(".productlist").each(function(){
             batch_id+='"'+$(this).find(".batch_id_list").val()+'",';
@@ -462,7 +464,7 @@ $(function() {
                 method: 'GET',
                 dataType: 'json',
                 data: {
-                    name: data.term,branch_id:branch_id,warehouse_id:warehouse_id,batch_id:batch_id
+                    name: data.term,branch_id:branch_id,warehouse_id:warehouse_id,customer_id:customer_id,batch_id:batch_id
                 },
                 success: function(res){
                     console.log(res);
@@ -523,6 +525,7 @@ function return_row_with_data(item_id){
     $("#item_search").addClass('ui-autocomplete-loader-center');
     let branch_id=$('#branch_id').val();
     let warehouse_id=$('#warehouse_id').val();
+    let customer_id=$('#customerName').val();
     
     $.ajax({
         autoFocus:true,
@@ -530,7 +533,7 @@ function return_row_with_data(item_id){
         method: 'GET',
         dataType: 'json',
         data: {
-            item_id: item_id,branch_id:branch_id,warehouse_id:warehouse_id
+            item_id: item_id,branch_id:branch_id,warehouse_id:warehouse_id,customer_id:customer_id
         },
         success: function(res){
             $('#details_data').append(res);
@@ -554,37 +557,38 @@ function removerow(e){
 //END
 //CALCUALATED SALES PRICE
 function get_cal(e){
-  var quantity_bag = (isNaN(parseFloat($(e).closest('tr').find('.qty_bag').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_bag').val().trim()); 
-  var stock_bag = (isNaN(parseFloat($(e).closest('tr').find('.stock_bag').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.stock_bag').val().trim()); 
-  var quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.qty_kg').val().trim()); 
-  var less_quantity_kg = (isNaN(parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim()); 
-  var rate_in_kg = (isNaN(parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim()); 
-  var stock = (isNaN(parseFloat($(e).closest('tr').find('.stockqty').val().trim()))) ? 0 :parseFloat($(e).closest('tr').find('.stockqty').val().trim());
+        var quantity_bag = (parseFloat($(e).closest('tr').find('.qty_bag').val().trim())) || 0;
+        var stock_bag = (parseFloat($(e).closest('tr').find('.stock_bag').val().trim())) || 0;
+        var quantity_kg = (parseFloat($(e).closest('tr').find('.qty_kg').val().trim())) || 0;
+        var less_quantity_kg = (parseFloat($(e).closest('tr').find('.less_qty_kg').val().trim())) || 0;
+        var rate_in_kg = (parseFloat($(e).closest('tr').find('.rate_in_kg').val().trim())) || 0;
+        var stock = (parseFloat($(e).closest('tr').find('.stockqty').val().trim())) || 0;
 
-  if(stock < quantity_kg){
-    alert("You cannot sell more than "+stock);
-    quantity_kg=stock;
-    $(e).closest('tr').find('.qty_kg').val(stock)
-  }
+        if(stock < quantity_kg){
+            alert("You cannot return more than "+stock);
+            quantity_kg=stock;
+            $(e).closest('tr').find('.qty_kg').val(stock)
+        }
 
-  if(stock_bag < quantity_bag){
-    alert("You cannot sell more than "+stock_bag);
-    quantity_bag=stock_bag;
-    $(e).closest('tr').find('.qty_bag').val(quantity_bag)
-  }
-  
-  var actualQuantity= ((quantity_kg - less_quantity_kg));
-  var amount = ((actualQuantity * rate_in_kg));
+        if(stock_bag < quantity_bag){
+            alert("You cannot return more than "+stock_bag);
+            quantity_bag=stock_bag;
+            $(e).closest('tr').find('.qty_bag').val(quantity_bag)
+        }
+        
+        var actualQuantity= ((quantity_kg - less_quantity_kg));
+        var amount = ((actualQuantity * rate_in_kg));
 
-  
-  
-  $(e).closest('tr').find('.actual_qty').val(actualQuantity);
-  $(e).closest('tr').find('.amount').val(amount);
+        
+        
+        $(e).closest('tr').find('.actual_qty').val(actualQuantity);
+        $(e).closest('tr').find('.amount').val(amount);
 
-  total_expense();
-  payment();
-  total_calculate();
-}
+        total_expense();
+        payment();
+        total_calculate();
+    }
+
 
 //row reapeter
 function addRow(){

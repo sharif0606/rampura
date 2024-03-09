@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('sale_returns', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_id')->index()->foreign()->references('id')->on('customers')->onDelete('cascade');
+            $table->unsignedBigInteger('sales_id')->nullable();
             $table->string('voucher_no')->nullable();
             $table->integer('voucher_type')->default(0)->comment('0 regular voucher,1 cash voucher');
             $table->string('voucher_note')->nullable();
