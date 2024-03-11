@@ -139,7 +139,7 @@
                                                     <input name="product_id[]" type="hidden" value="{{$p->product_id}}" class="product_id_list">
                                                     <input name="stockqty[]" type="hidden" value="{{abs($p->qty)+$p->quantity_kg}}" class="stockqty">
                                                     <input name="batch_id[]" type="hidden" value="{{$p->batch_id}}" class="batch_id_list">
-                                                    <input name="salesId[]" type="hidden" value="{{$p->sales_id}}">
+                                                    <input name="salesId" type="hidden" value="{{$p->sales_id}}">
                                                 </td>
                                                 <td class="py-2 px-1"><input name="lot_no[]" type="text" value="{{$p->lot_no}}" class="form-control lot_no"></td>
                                                 <td class="py-2 px-1"><input onkeyup="get_cal(this)" name="brand[]" type="text" value="{{$p->brand}}" class="form-control brand"></td>
