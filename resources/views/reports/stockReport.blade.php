@@ -120,12 +120,12 @@
                                                 {{$wh->name}}
                                             </td>
                                             <td>{{$s->unit_price}}</td>
-                                            <td>{{money_format($s->qty*$s->avunitprice)}}</td>
+                                            <td>{{money_format($s->qty*$s->unit_price)}}</td>
                                         </tr>
                                         @php
                                             $totalBagQty += $s->bagQty;
                                             $totalQty += $s->qty;
-                                            $totalAmount += ($s->qty * $s->avunitprice);
+                                            $totalAmount += ($s->qty * $s->unit_price);
                                         @endphp
                                         @empty
                                         <tr>
