@@ -21,6 +21,7 @@ use App\Http\Controllers\Products\ProductController as product;
 use App\Http\Controllers\Suppliers\SupplierController as supplier;
 use App\Http\Controllers\Customers\CustomerController as customer;
 use App\Http\Controllers\Purchases\PurchaseController as purchase;
+use App\Http\Controllers\Purchases\InitialStockController as initialStock;
 use App\Http\Controllers\AllReturn\PurchaseReturnController as purchaseReturn;
 use App\Http\Controllers\AllReturn\BeparianPurchaseReturnController as beparianReturn;
 use App\Http\Controllers\AllReturn\RegularPurchaseReturnController as regularReturn;
@@ -195,7 +196,10 @@ Route::group(['middleware'=>isOwner::class],function(){
         Route::get('/product_search', [purchase::class,'product_search'])->name('owner.pur.product_search');
         Route::get('/product_search_data', [purchase::class,'product_search_data'])->name('owner.pur.product_search_data');
         Route::get('/beparian_product_search_data', [bpurchase::class,'beparian_product_search_data'])->name('owner.pur.beparian_product_search_data');
-
+        
+        // Initial Stock
+        Route::resource('initialStock',initialStock::class,['as'=>'owner']);
+        
         //lc check
         Route::get('/check-lc', [purchase::class, 'checkLcNo'])->name('owner.checkLcNo');
 

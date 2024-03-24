@@ -21,7 +21,8 @@ return new class extends Migration
             $table->unsignedBigInteger('beparian_purchase_id')->nullable()->index()->nullable()->foreign()->references('id')->on('beparian_purchases')->onDelete('cascade');
             $table->unsignedBigInteger('beparian_purchase_return_id')->index()->nullable()->nullable()->foreign()->references('id')->on('beparian_purchase_returns')->onDelete('cascade');
             $table->unsignedBigInteger('regular_purchase_id')->nullable()->index()->nullable()->foreign()->references('id')->on('regular_purchases')->onDelete('cascade');
-            $table->unsignedBigInteger('regular_purchase_return_id')->index()->nullable()->nullable()->foreign()->references('id')->on('regular_purchase_returns')->onDelete('cascade');
+            $table->unsignedBigInteger('regular_purchase_return_id')->index()->nullable()->foreign()->references('id')->on('regular_purchase_returns')->onDelete('cascade');
+            $table->unsignedBigInteger('initial_stock_id')->index()->nullable()->foreign()->references('id')->on('initial_stocks')->onDelete('cascade');
             $table->unsignedBigInteger('sales_id')->index()->nullable()->foreign()->references('id')->on('sales')->onDelete('cascade');
             $table->unsignedBigInteger('sales_return_id')->index()->nullable()->foreign()->references('id')->on('sale_returns')->onDelete('cascade');
             $table->unsignedBigInteger('transfer_id')->index()->nullable()->foreign()->references('id')->on('transfers')->onDelete('cascade');

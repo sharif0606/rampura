@@ -31,6 +31,12 @@
 		</ul>   
     </li>
     <li class="sidebar-item has-sub">
+        <a href="#" class='sidebar-link'><i class="bi bi-cart-plus-fill"></i><span>{{__('Initial Stock')}}</span></a>
+        <ul class="submenu">
+            <li class="py-1 submenu-item"><a href="{{route(currentUser().'.initialStock.index')}}">{{__('Initial Stock')}}</a></li>
+		</ul>   
+    </li>
+    <li class="sidebar-item has-sub">
         <a href="#" class='sidebar-link'><i class="bi bi-cart-dash-fill"></i><span>{{__('Returns')}}</span></a>
         <ul class="submenu">
             <li class="py-1 submenu-item"><a href="{{route(currentUser().'.purchaseReturn.index')}}">{{__('Purchase Return')}}</a></li>
