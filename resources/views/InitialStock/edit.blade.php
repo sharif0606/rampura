@@ -164,6 +164,7 @@
                                                 <th class="py-2 px-1"></th>
                                                 <th class="py-2 px-1 total_pur_amount">{{$amountTotal}}</th>
                                                 <th class="py-2 px-1"></th>
+                                                <input type="hidden" class="grandTotal" name="tgrandtotal" value="{{$purchase->grand_total}}">
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -314,8 +315,6 @@ function return_row_with_data(item_id){
 //INCREMENT ITEM
 function removerow(e){
   $(e).closest('tr').remove();
-  total_expense();
-  payment();
   total_calculate();
 }
 
