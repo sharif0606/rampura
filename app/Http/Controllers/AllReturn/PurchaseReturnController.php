@@ -252,6 +252,7 @@ class PurchaseReturnController extends Controller
                             $stock->quantity_bag='-'.$pd->quantity_bag;
                             $stock->total_amount=$pd->amount;
                             $stock->stock_date=$pur->return_date;
+                            $stock->purchase_return_detail_id=$pd->id;
                             $stock->save();
 
                             //calculate lot/lc payment
@@ -683,6 +684,7 @@ class PurchaseReturnController extends Controller
                                 $stock->quantity_bag='-'.$pd->quantity_bag;
                                 $stock->total_amount=$pd->amount;
                                 $stock->stock_date=$pur->return_date;
+                                $stock->purchase_return_detail_id=$pd->id;
                                 $stock->save();
 
                                 //calculate lot/lc payment

@@ -3,6 +3,7 @@
 namespace App\Models\Purchases;
 
 use App\Models\Products\Product;
+use App\Models\Stock\Stock;
 use App\Models\Suppliers\Supplier;
 use App\Models\Suppliers\SupplierPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +22,9 @@ class Purchase_details extends Model
         return $this->belongsTo(Beparian_purchase::class,'beparian_purchase_id','id');
     }
 
+    public function stock(){
+        return $this->hasOne(Stock::class,'purchase_details_id','id');
+    }
     public function purchase(){
         return $this->belongsTo(Purchase::class,'purchase_id','id');
     }

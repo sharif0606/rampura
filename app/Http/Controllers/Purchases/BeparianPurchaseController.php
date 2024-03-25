@@ -234,6 +234,7 @@ class BeparianPurchaseController extends Controller
                             $stock->quantity_bag=$pd->quantity_bag;
                             $stock->total_amount=$pd->amount;
                             $stock->stock_date=$pur->purchase_date;
+                            $stock->purchase_details_id=$pd->id;
                             $stock->save();
                             
                             //calculate lot/lc payment
@@ -731,11 +732,12 @@ class BeparianPurchaseController extends Controller
                                 $stock->lot_no=$pd->lot_no;
                                 $stock->brand=$pd->brand;
                                 $stock->quantity=$pd->actual_quantity;
-                                $stock->batch_id=$request->batch_id;
+                                $stock->batch_id=$request->batch_id[$i] ?? rand(111,999).uniqid().$product_id;
                                 $stock->unit_price=$pd->rate_kg;
                                 $stock->quantity_bag=$pd->quantity_bag;
                                 $stock->total_amount=$pd->amount;
                                 $stock->stock_date=$pur->purchase_date;
+                                $stock->purchase_details_id=$pd->id;
                                 $stock->save();
                                 
                                 //calculate lot/lc payment

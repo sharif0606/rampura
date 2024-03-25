@@ -18,6 +18,9 @@ class InitialStockDetail extends Model
     public function supplier(){
         return $this->belongsTo(Supplier::class);
     }
+    public function stock(){
+        return $this->hasOne(Stock::class,'initial_stock_detail_id','id');
+    }
     public function purchase(){
         return $this->belongsTo(InitialStock::class,'initial_stock_id','id');
     }

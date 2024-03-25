@@ -290,6 +290,7 @@ class SaleReturnController extends Controller
                             $stock->unit_price=$pd->rate_kg;
                             $stock->total_amount=$pd->amount;
                             $stock->stock_date=$pur->return_date;
+                            $stock->sale_return_detail_id=$pd->id;
                             $stock->save();
                             //calculate lot/lc payment
                             if(isset($lot_noa[$pd->lot_no])){
@@ -792,6 +793,7 @@ class SaleReturnController extends Controller
                             $stock->unit_price=$pd->rate_kg;
                             $stock->total_amount=$pd->amount;
                             $stock->stock_date=$pur->return_date;
+                            $stock->sale_return_detail_id=$pd->id;
                             $stock->save();
                             //calculate lot/lc payment
                             if(isset($lot_noa[$pd->lot_no])){
