@@ -35,6 +35,8 @@ use App\Models\AllReturn\Sale_return_detail;
 use App\Models\Sales\BagDetail;
 use App\Models\Sales\Sales;
 use App\Models\Sales\Sales_details;
+use App\Models\Stock\InitialStock;
+use App\Models\Stock\InitialStockDetail;
 use App\Models\Stock\Stock;
 use App\Models\Suppliers\SupplierPayment;
 use App\Models\Suppliers\SupplierPaymentDetails;
@@ -83,6 +85,8 @@ class CompanyController extends Controller
             if($request->company_id){
                 $id = $request->company_id;
                 Stock::where('company_id',$id)->delete();
+                InitialStock::where('company_id',$id)->delete();
+                InitialStockDetail::where('company_id',$id)->delete();
                 Purchase::where('company_id',$id)->delete();
                 Purchase_details::where('company_id',$id)->delete();
                 Purchase_return::where('company_id',$id)->delete();
@@ -91,6 +95,7 @@ class CompanyController extends Controller
                 Beparian_purchase_return::where('company_id',$id)->delete();
                 Beparian_purchase_return_detail::where('company_id',$id)->delete();
                 Regular_purchase::where('company_id',$id)->delete();
+                Regular_purchase_return::where('company_id',$id)->delete();
                 Regular_purchase_return_detail::where('company_id',$id)->delete();
                 ExpenseOfPurchase::where('company_id',$id)->delete();
                 PurReceiveInformation::where('company_id',$id)->delete();

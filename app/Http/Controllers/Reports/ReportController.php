@@ -455,7 +455,7 @@ class ReportController extends Controller
 
         $findPurchaseVoucherIds = GeneralLedger::where(company())->whereBetween('rec_date', [$fdate, $tdate])->whereNotIn('child_two_id',$cash)->whereIn('child_two_id', $payable)->pluck('purchase_voucher_id');
         // Query the Purchase table based on the reference numbers obtained from GeneralLedger
-        $findPurchase = Purchase::with('supplier')->where(function ($query) use ($findPurchaseVoucherIds) {
+        $findPurchase = Purchase::with('supplier')->where(company())->where(function ($query) use ($findPurchaseVoucherIds) {
             foreach ($findPurchaseVoucherIds as $purchaseVoucherId) {
                  $query->orWhereRaw("find_in_set('".$purchaseVoucherId."',reference_no)");
             }

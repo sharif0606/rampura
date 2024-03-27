@@ -15,6 +15,13 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use App\Http\Traits\ResponseTrait;
+use App\Models\Accounts\Child_one;
+use App\Models\Accounts\Child_two;
+use App\Models\Vouchers\GeneralVoucher;
+use App\Models\Vouchers\InitialStockVoucher;
+use App\Models\Vouchers\InitialStockVoucherBkdn;
+use App\Models\Vouchers\PurchaseVoucher;
+use App\Models\Vouchers\PurVoucherBkdns;
 use Carbon\Carbon;
 
 class InitialStockController extends Controller
@@ -55,6 +62,38 @@ class InitialStockController extends Controller
         $Warehouses = Warehouse::where(company())->get();
         return view('InitialStock.create',compact('branches','suppliers','Warehouses'));
     }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+     public function create_voucher_no(){
+		$voucher_no="";
+		$query = GeneralVoucher::where(company())->latest()->first();
+		if(!empty($query)){
+		    $voucher_no = $query->voucher_no;
+			$voucher_no+=1;
+			$gv=new GeneralVoucher;
+			$gv->voucher_no=$voucher_no;
+			$gv->company_id=company()['company_id'];
+			if($gv->save())
+				return $voucher_no;
+			else
+				return $voucher_no="";
+		}else {
+			$voucher_no=10000001;
+			$gv=new GeneralVoucher;
+			$gv->voucher_no=$voucher_no;
+			$gv->company_id=company()['company_id'];
+			if($gv->save())
+				return $voucher_no;
+			else
+				return $voucher_no="";
+		}
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -65,6 +104,9 @@ class InitialStockController extends Controller
     {
         DB::beginTransaction();
         try{
+
+            $lot_noa=array();// lot/ lc no wise all cost
+
             $pur= new InitialStock;
             $pur->supplier_id=$request->supplierName;
             $pur->voucher_no='VR-'.Carbon::now()->format('m-y').'-'. str_pad((InitialStock::whereYear('created_at', Carbon::now()->year)->count() + 1),4,"0",STR_PAD_LEFT);
@@ -95,6 +137,7 @@ class InitialStockController extends Controller
                         if($pd->save()){
                             $stock=new Stock;
                             $stock->initial_stock_id=$pur->id;
+                            $stock->initial_stock_detail_id=$pd->id;
                             $stock->product_id=$product_id;
                             $stock->company_id=company()['company_id'];
                             $stock->branch_id=$request->branch_id;
@@ -107,11 +150,120 @@ class InitialStockController extends Controller
                             $stock->quantity_bag=$pd->quantity_bag;
                             $stock->total_amount=$pd->amount;
                             $stock->stock_date=$pur->purchase_date;
-                            $stock->initial_stock_detail_id=$pd->id;
                             $stock->save();
+
+                            //calculate lot/lc payment
+                            if(isset($lot_noa[$pd->lot_no])){
+                                $lot_noa[$pd->lot_no]= $lot_noa[$pd->lot_no] + $pd->amount;
+                            }else{
+                                $lot_noa[$pd->lot_no]=$pd->amount;
+                            }
                         }
                     }
                 }
+
+                /* hit to account voucher */
+                $vouchersIds=array();
+                /* create due voucher */
+                $voucher_no = $this->create_voucher_no();
+                if(!empty($voucher_no)){
+                    $jv=new InitialStockVoucher;
+                    $jv->voucher_no=$voucher_no;
+                    $jv->company_id =company()['company_id'];
+                    $jv->supplier=$request->supplier_r_name;
+                    $jv->lc_no=$request->lot_no?implode(', ',array_unique($request->lot_no)):"";
+                    $jv->current_date=date('Y-m-d', strtotime($request->purchase_date));
+                    $jv->pay_name=$request->supplier_r_name;
+                    $jv->purpose="Intial Stock Due";
+                    $jv->credit_sum=$request->tgrandtotal;
+                    $jv->debit_sum=$request->tgrandtotal;
+                    $jv->cheque_no="";
+                    $jv->bank="";
+                    $jv->cheque_dt="";
+                    $jv->created_by=currentUserId();
+                    if($request->has('slip')){
+                        $imageName= rand(111,999).time().'.'.$request->slip->extension();
+                        $request->slip->move(public_path('uploads/slip'), $imageName);
+                        $jv->slip=$imageName;
+                    }
+                    if($jv->save()){
+                        $vouchersIds[]=$jv->id;
+                        // debit side purchase
+                        foreach($request->product_id as $i=>$product_id){
+                            $jvb=new InitialStockVoucherBkdn;
+                            $jvb->initial_stock_voucher_id=$jv->id;
+                            $jvb->supplier_id=$request->supplierName;
+                            $jvb->lc_no=$request->lot_no[$i]?$request->lot_no[$i]:"";
+
+                            $jvb->company_id =company()['company_id'];
+                            $jvb->particulars="Opening Stock";
+                            $jvb->account_code="1150-Opening Stock";
+                            $jvb->table_name="child_ones";
+                            $jvb->table_id=Child_one::select('id')->where(company())->where('head_code',"1150")->first()->toArray()['id'];
+                            $jvb->debit=$request->amount[$i];
+                            $jvb->created_at=$jv->current_date;
+                            if($jvb->save()){
+                                $table_name=$jvb->table_name;
+                                if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                $gl=new GeneralLedger;
+                                $gl->initial_stock_voucher_id=$jv->id;
+                                $gl->company_id =company()['company_id'];
+                                $gl->journal_title=$request->supplierName;
+                                $gl->account_title=$jvb->account_code;
+                                $gl->rec_date=$jv->current_date;
+                                $gl->lc_no=$jvb->lc_no;
+                                $gl->jv_id=$voucher_no;
+                                $gl->initial_stock_voucher_bkdn_id=$jvb->id;
+                                $gl->created_by=currentUserId();
+                                $gl->dr=$jvb->debit;
+                                $gl->{$field_name}=$jvb->table_id;
+                                $gl->save();
+                            }
+                        }
+                        
+                        // credit side purchase
+                        $sup_head=Child_two::select('id')->where(company())->where('head_code',"2130".$request->supplierName)->first()->toArray()['id'];
+                        foreach($lot_noa as $lc=>$amount){
+                            if($amount > 0){
+                                $jvb=new InitialStockVoucherBkdn;
+                                $jvb->initial_stock_voucher_id=$jv->id;
+                                $jvb->supplier_id=$request->supplierName;
+                                $jvb->lc_no=$lc;
+                                $jvb->company_id =company()['company_id'];
+                                $jvb->particulars="OS-Purchase due";
+                                $jvb->account_code="2130".$request->supplierName.'-'.$request->supplier_r_name; //2=>head name 3=> head code
+                                $jvb->table_name="child_twos";
+                                $jvb->table_id=$sup_head;
+                                $jvb->credit=$amount;
+                                $jvb->created_at=$jv->current_date;
+                                if($jvb->save()){
+                                    $table_name=$jvb->table_name;
+                                    if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                    else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                    else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                    else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                    $gl=new GeneralLedger;
+                                    $gl->initial_stock_voucher_id=$jv->id;
+                                    $gl->company_id =company()['company_id'];
+                                    $gl->journal_title=$request->supplierName;
+                                    $gl->account_title=$jvb->account_code;
+                                    $gl->rec_date=$jv->current_date;
+                                    $gl->lc_no=$jvb->lc_no;
+                                    $gl->jv_id=$voucher_no;
+                                    $gl->initial_stock_voucher_bkdn_id=$jvb->id;
+                                    $gl->created_by=currentUserId();
+                                    $gl->cr=$jvb->credit;
+                                    $gl->{$field_name}=$jvb->table_id;
+                                    $gl->save();
+                                }
+                            }
+                        }
+                    }
+                }
+                InitialStock::where('id', $pur->id)->update(['reference_no' =>implode(',',$vouchersIds)]);
 
                 if($request->lot_no){
                     foreach($request->lot_no as $i=>$lclotno){
@@ -179,6 +331,8 @@ class InitialStockController extends Controller
     {
         DB::beginTransaction();
         try{
+            $lot_noa=array();// lot/ lc no wise all cost
+
             $pur= InitialStock::findOrFail(encryptor('decrypt',$id));
             $pur->supplier_id=$request->supplierName;
             $pur->voucher_no='VR-'.Carbon::now()->format('m-y').'-'. str_pad((InitialStock::whereYear('created_at', Carbon::now()->year)->count() + 1),4,"0",STR_PAD_LEFT);
@@ -225,9 +379,126 @@ class InitialStockController extends Controller
                             $stock->stock_date=$pur->purchase_date;
                             $stock->initial_stock_detail_id=$pd->id;
                             $stock->save();
+
+                            //calculate lot/lc payment
+                            if(isset($lot_noa[$pd->lot_no])){
+                                $lot_noa[$pd->lot_no]= $lot_noa[$pd->lot_no] + $pd->amount;
+                            }else{
+                                $lot_noa[$pd->lot_no]=$pd->amount;
+                            }
                         }
                     }
                 }
+
+                /* hit to account voucher */
+                $purrefArr=explode(',',$pur->reference_no);
+                $vnon=InitialStockVoucher::whereIn('id',$purrefArr)->pluck('voucher_no');
+                GeneralVoucher::whereIn('voucher_no',$vnon)->forceDelete();
+                InitialStockVoucher::whereIn('id',$purrefArr)->delete();
+                InitialStockVoucherBkdn::whereIn('initial_stock_voucher_id',$purrefArr)->delete();
+                GeneralLedger::whereIn('initial_stock_voucher_id',$purrefArr)->delete();
+
+                $vouchersIds=array();
+                /* create due voucher */
+                $voucher_no = $this->create_voucher_no();
+                if(!empty($voucher_no)){
+                    $jv=new InitialStockVoucher;
+                    $jv->voucher_no=$voucher_no;
+                    $jv->company_id =company()['company_id'];
+                    $jv->supplier=$request->supplier_r_name;
+                    $jv->lc_no=$request->lot_no?implode(', ',array_unique($request->lot_no)):"";
+                    $jv->current_date=date('Y-m-d', strtotime($request->purchase_date));
+                    $jv->pay_name=$request->supplier_r_name;
+                    $jv->purpose="Intial Stock Due";
+                    $jv->credit_sum=$request->tgrandtotal;
+                    $jv->debit_sum=$request->tgrandtotal;
+                    $jv->cheque_no="";
+                    $jv->bank="";
+                    $jv->cheque_dt="";
+                    $jv->created_by=currentUserId();
+                    if($request->has('slip')){
+                        $imageName= rand(111,999).time().'.'.$request->slip->extension();
+                        $request->slip->move(public_path('uploads/slip'), $imageName);
+                        $jv->slip=$imageName;
+                    }
+                    if($jv->save()){
+                        $vouchersIds[]=$jv->id;
+                        // debit side purchase
+                        foreach($request->product_id as $i=>$product_id){
+                            $jvb=new InitialStockVoucherBkdn;
+                            $jvb->initial_stock_voucher_id=$jv->id;
+                            $jvb->supplier_id=$request->supplierName;
+                            $jvb->lc_no=$request->lot_no[$i]?$request->lot_no[$i]:"";
+
+                            $jvb->company_id =company()['company_id'];
+                            $jvb->particulars="Opening Stock";
+                            $jvb->account_code="1150-Opening Stock";
+                            $jvb->table_name="child_ones";
+                            $jvb->table_id=Child_one::select('id')->where(company())->where('head_code',"1150")->first()->toArray()['id'];
+                            $jvb->debit=$request->amount[$i];
+                            $jvb->created_at=$jv->current_date;
+                            if($jvb->save()){
+                                $table_name=$jvb->table_name;
+                                if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                $gl=new GeneralLedger;
+                                $gl->initial_stock_voucher_id=$jv->id;
+                                $gl->company_id =company()['company_id'];
+                                $gl->journal_title=$request->supplierName;
+                                $gl->account_title=$jvb->account_code;
+                                $gl->rec_date=$jv->current_date;
+                                $gl->lc_no=$jvb->lc_no;
+                                $gl->jv_id=$voucher_no;
+                                $gl->initial_stock_voucher_bkdn_id=$jvb->id;
+                                $gl->created_by=currentUserId();
+                                $gl->dr=$jvb->debit;
+                                $gl->{$field_name}=$jvb->table_id;
+                                $gl->save();
+                            }
+                        }
+                        
+                        // credit side purchase
+                        $sup_head=Child_two::select('id')->where(company())->where('head_code',"2130".$request->supplierName)->first()->toArray()['id'];
+                        foreach($lot_noa as $lc=>$amount){
+                            if($amount > 0){
+                                $jvb=new InitialStockVoucherBkdn;
+                                $jvb->initial_stock_voucher_id=$jv->id;
+                                $jvb->supplier_id=$request->supplierName;
+                                $jvb->lc_no=$lc;
+                                $jvb->company_id =company()['company_id'];
+                                $jvb->particulars="OS-Purchase due";
+                                $jvb->account_code="2130".$request->supplierName.'-'.$request->supplier_r_name; //2=>head name 3=> head code
+                                $jvb->table_name="child_twos";
+                                $jvb->table_id=$sup_head;
+                                $jvb->credit=$amount;
+                                $jvb->created_at=$jv->current_date;
+                                if($jvb->save()){
+                                    $table_name=$jvb->table_name;
+                                    if($table_name=="master_accounts"){$field_name="master_account_id";}
+                                    else if($table_name=="sub_heads"){$field_name="sub_head_id";}
+                                    else if($table_name=="child_ones"){$field_name="child_one_id";}
+                                    else if($table_name=="child_twos"){$field_name="child_two_id";}
+                                    $gl=new GeneralLedger;
+                                    $gl->initial_stock_voucher_id=$jv->id;
+                                    $gl->company_id =company()['company_id'];
+                                    $gl->journal_title=$request->supplierName;
+                                    $gl->account_title=$jvb->account_code;
+                                    $gl->rec_date=$jv->current_date;
+                                    $gl->lc_no=$jvb->lc_no;
+                                    $gl->jv_id=$voucher_no;
+                                    $gl->initial_stock_voucher_bkdn_id=$jvb->id;
+                                    $gl->created_by=currentUserId();
+                                    $gl->cr=$jvb->credit;
+                                    $gl->{$field_name}=$jvb->table_id;
+                                    $gl->save();
+                                }
+                            }
+                        }
+                    }
+                }
+                InitialStock::where('id', $pur->id)->update(['reference_no' =>implode(',',$vouchersIds)]);
 
                 if($request->lot_no){
                     foreach($request->lot_no as $i=>$lclotno){
