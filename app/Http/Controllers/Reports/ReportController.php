@@ -500,5 +500,4 @@ class ReportController extends Controller
         return view('reports.statement', compact('customerPayment','supplierayment','cash','findSales','findPurchase','findBeparianPurchase','findRegularPurchase','otherExpInc','openingBalance','accOldData'));
     }
     
-
 }
