@@ -461,9 +461,7 @@ class ReportController extends Controller
             }
         })->get();
        // DB::enableQueryLog();
-
         // and then you can get query log
-        
        
         $findBeparianPurchase = Beparian_purchase::with('supplier')->where(company())->where(function ($query) use ($findPurchaseVoucherIds) {
             foreach ($findPurchaseVoucherIds as $purchaseVoucherId) {
