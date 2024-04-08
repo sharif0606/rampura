@@ -460,7 +460,7 @@ class ReportController extends Controller
                  $query->orWhereRaw("find_in_set('".$purchaseVoucherId."',reference_no)");
             }
         })->get();
-       // DB::enableQueryLog();
+        // DB::enableQueryLog();
         // and then you can get query log
        
         $findBeparianPurchase = Beparian_purchase::with('supplier')->where(company())->where(function ($query) use ($findPurchaseVoucherIds) {
