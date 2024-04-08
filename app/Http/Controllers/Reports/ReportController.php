@@ -404,8 +404,8 @@ class ReportController extends Controller
             $fdate = Carbon::now()->toDateString();
             $tdate = Carbon::now()->toDateString();
         }
-            //$query->whereBetween(DB::raw('DATE(regular_purchases.purchase_date)'), [$fdate, $tdate]);
-            //  dd($query->toSql());
+        //$query->whereBetween(DB::raw('DATE(regular_purchases.purchase_date)'), [$fdate, $tdate]);
+        //  dd($query->toSql());
         
 
         $childOne = Child_one::where('head_code', 1130)->where(company())->first();
