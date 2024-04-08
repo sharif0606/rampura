@@ -430,7 +430,7 @@ class ReportController extends Controller
         $supplierayment = GeneralLedger::with('supplier')->select(DB::raw('sum(cr) as cr'),'journal_title')->where(company())
                             ->groupBy('journal_title')
                             ->whereIn('jv_id',$spjvid)->whereIn('child_two_id',$cash)->get();
-                            //dd($cash);
+                        //dd($cash);
 
         /* other sales and received  */
         // $sales_jvid = SalesVoucher::where(company())->where('current_date', '<',$fdate)->pluck('voucher_no')->toArray();
