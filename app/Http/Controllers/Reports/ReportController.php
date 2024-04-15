@@ -433,10 +433,6 @@ class ReportController extends Controller
                         //dd($cash);
 
         /* other sales and received  */
-        // $sales_jvid = SalesVoucher::where(company())->where('current_date', '<',$fdate)->pluck('voucher_no')->toArray();
-        // $rec_jvid = CreditVoucher::where(company())->where('current_date', '<',$fdate)->pluck('voucher_no')->toArray();
-        // $sales_rec_jvid = array_merge($sales_jvid,$rec_jvid);
-        // $allreceive = GeneralLedger::groupBy('journal_title')->whereIn('jv_id',$sales_rec_jvid)->where('dr','>',"0")->get();
 
         $findSalesVoucherIds = GeneralLedger::where(company())->whereBetween('rec_date', [$fdate, $tdate])->whereNotIn('child_two_id',$cash)->whereIn('child_two_id', $receivable)->pluck('sales_voucher_id');
         // Query the Sales table based on the reference numbers obtained from GeneralLedger
@@ -447,11 +443,6 @@ class ReportController extends Controller
         })->get();
 
         /* other Purchase and payment  */
-        // $purchase_jvid = PurchaseVoucher::where(company())->whereBetween('current_date', [$fdate, $tdate])->pluck('voucher_no')->toArray();
-        // $pay_jvid = DebitVoucher::where(company())->whereBetween('current_date', [$fdate, $tdate])->pluck('voucher_no')->toArray();
-        // $purchase_pay_jvid = array_merge($purchase_jvid,$pay_jvid);
-        // $allPayment = GeneralLedger::groupBy('journal_title')
-        // ->whereNotIn('jv_id',$spjvid)->whereIn('jv_id',$purchase_pay_jvid)->where('cr','>',"0")->get();
 
         $findPurchaseVoucherIds = GeneralLedger::where(company())->whereBetween('rec_date', [$fdate, $tdate])->whereNotIn('child_two_id',$cash)->whereIn('child_two_id', $payable)->pluck('purchase_voucher_id');
         // Query the Purchase table based on the reference numbers obtained from GeneralLedger
