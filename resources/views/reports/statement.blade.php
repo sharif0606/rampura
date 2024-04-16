@@ -90,7 +90,7 @@
                                                             <tfoot>
                                                                 <tr>
                                                                     <th class="text-start">Total</th>
-                                                                    <th class="text-end">{{money_format($sale_cash_income)}} <br> {{$customerPaymentOld}}</th>
+                                                                    <th class="text-end">{{money_format($sale_cash_income)}} <br>{{$customerPaymentOld}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
