@@ -422,7 +422,18 @@ class ReportController extends Controller
         $customerPayment = GeneralLedger::with('customer')->select(DB::raw('sum(dr) as dr'),'journal_title')->where(company())
                             ->groupBy('journal_title')
                             ->whereIn('jv_id',$cpjvid)->whereIn('child_two_id',$cash)->get();
-        
+
+        $cpjvidOld = GeneralLedger::where(company())->whereIn('child_two_id', $receivable)
+                            ->where(function ($query) use ($fdate, $tdate) {
+                                $query->where('rec_date', '<', $fdate)
+                                    ->orWhere('rec_date', '>', $tdate);
+                            })
+                            ->pluck('jv_id');
+    
+        $customerPaymentOld = GeneralLedger::with('customer')->select(DB::raw('sum(dr) as dr'),'journal_title')->where(company())
+                                ->groupBy('journal_title')
+                                ->whereIn('jv_id',$cpjvidOld)->whereIn('child_two_id',$cash)->sum('dr');
+
         $spjvid = GeneralLedger::whereIn('child_two_id',$payable)->where(company())
                             ->whereBetween('rec_date', [$fdate, $tdate])
                             ->pluck('jv_id');
@@ -436,11 +447,25 @@ class ReportController extends Controller
 
         $findSalesVoucherIds = GeneralLedger::where(company())->whereBetween('rec_date', [$fdate, $tdate])->whereNotIn('child_two_id',$cash)->whereIn('child_two_id', $receivable)->pluck('sales_voucher_id');
         // Query the Sales table based on the reference numbers obtained from GeneralLedger
-        $findSales = Sales::with('customer')->where(function ($query) use ($findSalesVoucherIds) {
+        $findSales = Sales::with('customer')->where(company())->where(function ($query) use ($findSalesVoucherIds) {
             foreach ($findSalesVoucherIds as $salesVoucherId) {
                 $query->orWhereRaw("find_in_set('".$salesVoucherId."',reference_no)");
             }
         })->get();
+
+        // previous all data excepts fdate and tdate
+        $findSalesOldVoucherIds = GeneralLedger::where(company())->whereNotIn('child_two_id', $cash)->whereIn('child_two_id', $receivable)
+                                            ->where(function ($query) use ($fdate, $tdate) {
+                                                $query->where('rec_date', '<', $fdate)
+                                                    ->orWhere('rec_date', '>', $tdate);
+                                            })
+                                            ->pluck('sales_voucher_id');
+
+        $findSalesOld = Sales::with('customer')->where(company())->where(function ($query) use ($findSalesOldVoucherIds) {
+            foreach ($findSalesOldVoucherIds as $salesVoucherId) {
+                $query->orWhereRaw("find_in_set('".$salesVoucherId."',reference_no)");
+            }
+        })->sum('grand_total');
 
         /* other Purchase and payment  */
 
@@ -451,7 +476,6 @@ class ReportController extends Controller
                  $query->orWhereRaw("find_in_set('".$purchaseVoucherId."',reference_no)");
             }
         })->get();
-        // DB::enableQueryLog();
        
         $findBeparianPurchase = Beparian_purchase::with('supplier')->where(company())->where(function ($query) use ($findPurchaseVoucherIds) {
             foreach ($findPurchaseVoucherIds as $purchaseVoucherId) {
@@ -465,6 +489,33 @@ class ReportController extends Controller
                 //$query->orWhere('reference_no', 'like', "%$purchaseVoucherId%");
             }
         })->get();
+
+         // previous all data excepts fdate and tdate
+         $findPurchaseOldVoucherIds = GeneralLedger::where(company())->whereNotIn('child_two_id', $cash)->whereIn('child_two_id', $payable)
+                                                    ->where(function ($query) use ($fdate, $tdate) {
+                                                        $query->where('rec_date', '<', $fdate)
+                                                            ->orWhere('rec_date', '>', $tdate);
+                                                    })
+                                                    ->pluck('purchase_voucher_id');
+
+        $findPurchaseOld = Purchase::with('supplier')->where(company())->where(function ($query) use ($findPurchaseOldVoucherIds) {
+            foreach ($findPurchaseOldVoucherIds as $purchaseVoucherId) {
+                $query->orWhereRaw("find_in_set('".$purchaseVoucherId."',reference_no)");
+            }
+        })->sum('grand_total');
+
+        $findBeparianPurchaseOld = Beparian_purchase::with('supplier')->where(company())->where(function ($query) use ($findPurchaseOldVoucherIds) {
+            foreach ($findPurchaseOldVoucherIds as $purchaseVoucherId) {
+                $query->orWhereRaw("find_in_set('".$purchaseVoucherId."',reference_no)");
+            }
+        })->sum('grand_total');
+
+        $findRegularPurchaseOld = Regular_purchase::with('supplier')->where(company())->where(function ($query) use ($findPurchaseOldVoucherIds) {
+            foreach ($findPurchaseOldVoucherIds as $purchaseVoucherId) {
+                $query->orWhereRaw("find_in_set('".$purchaseVoucherId."',reference_no)");
+            }
+        })->sum('grand_total');
+
 
         /* get all cash receieved ar payment jv id to avoid them from query */
         $cp_jvid = GeneralLedger::whereIn('jv_id',$cpjvid)->where(company())->whereIn('child_two_id',$cash)->pluck('jv_id')->toArray();
@@ -485,6 +536,6 @@ class ReportController extends Controller
         $openingBalance = Child_two::whereIn('id', $cash)->sum('opening_balance');
 
         /* for getting old balance*/
-        return view('reports.statement', compact('customerPayment','supplierayment','cash','findSales','findPurchase','findBeparianPurchase','findRegularPurchase','otherExpInc','openingBalance','accOldData'));
+        return view('reports.statement', compact('customerPayment','customerPaymentOld','supplierayment','cash','findSales','findSalesOld','findPurchaseOld','findBeparianPurchaseOld','findRegularPurchaseOld','findPurchase','findBeparianPurchase','findRegularPurchase','otherExpInc','openingBalance','accOldData'));
     } 
 }

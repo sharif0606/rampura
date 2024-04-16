@@ -90,7 +90,7 @@
                                                             <tfoot>
                                                                 <tr>
                                                                     <th class="text-start">Total</th>
-                                                                    <th class="text-end">{{money_format($sale_cash_income)}}</th>
+                                                                    <th class="text-end">{{money_format($sale_cash_income)}} <br> {{$customerPaymentOld}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
@@ -168,7 +168,7 @@
                                                             <tfoot>
                                                                 <tr>
                                                                     <th class="text-start">Total</th>
-                                                                    <th class="text-end">{{money_format($sale_due_income)}}</th>
+                                                                    <th class="text-end">{{money_format($sale_due_income)}} {{$findSalesOld}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
@@ -278,7 +278,7 @@
                                                             <tfoot>
                                                                 <tr>
                                                                     <th class="text-start">Total</th>
-                                                                    <th class="text-end">{{money_format($purchase_due_exp)}}</th>
+                                                                    <th class="text-end">{{money_format($purchase_due_exp)}} {{$findPurchaseOld+$findBeparianPurchaseOld+$findRegularPurchaseOld}}</th>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
